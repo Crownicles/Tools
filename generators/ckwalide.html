@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +24,7 @@
             margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
 
@@ -37,7 +38,7 @@
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .header p {
@@ -71,7 +72,9 @@
             color: #495057;
         }
 
-        select, input, button {
+        select,
+        input,
+        button {
             padding: 10px 15px;
             border: 2px solid #dee2e6;
             border-radius: 8px;
@@ -79,7 +82,8 @@
             transition: all 0.3s ease;
         }
 
-        select:focus, input:focus {
+        select:focus,
+        input:focus {
             outline: none;
             border-color: #b95e4b;
             box-shadow: 0 0 0 3px rgba(185, 94, 75, 0.1);
@@ -145,8 +149,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .stats {
@@ -163,7 +172,7 @@
             padding: 15px 20px;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid transparent;
@@ -200,7 +209,7 @@
             background: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         th {
@@ -267,13 +276,40 @@
             letter-spacing: 0.5px;
         }
 
-        .type-item { background: #e9ecef; color: #495057; }
-        .type-weapons { background: #ffebee; color: #c62828; }
-        .type-armors { background: #e8f5e8; color: #2e7d32; }
-        .type-objects { background: #fff3e0; color: #ef6c00; }
-        .type-potions { background: #f3e5f5; color: #7b1fa2; }
-        .type-pets { background: #e1f5fe; color: #0277bd; }
-        .type-places { background: #fce4ec; color: #ad1457; }
+        .type-item {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .type-weapons {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .type-armors {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .type-objects {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .type-potions {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .type-pets {
+            background: #e1f5fe;
+            color: #0277bd;
+        }
+
+        .type-places {
+            background: #fce4ec;
+            color: #ad1457;
+        }
 
         .no-data {
             text-align: center;
@@ -311,7 +347,7 @@
             background: rgba(255, 255, 255, 0.95);
             border-radius: 8px;
             padding: 10px 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border: 1px solid #dee2e6;
             font-size: 12px;
             z-index: 1000;
@@ -365,6 +401,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -408,6 +445,10 @@
                 <div class="stat-label">Lieux</div>
             </div>
             <div class="stat-item">
+                <div class="stat-number" id="small-events-count">0</div>
+                <div class="stat-label">Petits Événements</div>
+            </div>
+            <div class="stat-item">
                 <div class="stat-number" id="total-count">0</div>
                 <div class="stat-label">Total</div>
             </div>
@@ -426,7 +467,7 @@
                 <tbody id="results-body">
                 </tbody>
             </table>
-            
+
             <div class="no-data" id="no-data">
                 Cliquez sur "Charger les données" pour commencer
             </div>
@@ -448,8 +489,8 @@
                 this.cacheExpiry = 30 * 60 * 1000; // 30 minutes
                 this.currentSort = { column: null, direction: 'asc' };
                 this.currentDisplayData = [];
-                this.currentFilter = null; // 'item', 'pet', 'place', ou null pour tout
-                
+                this.currentFilter = null; // 'item', 'pet', 'place', 'smallEvent', ou null pour tout
+
                 this.elements = {
                     branchSelect: document.getElementById('branch-select'),
                     loadBtn: document.getElementById('load-btn'),
@@ -463,6 +504,7 @@
                     itemsCount: document.getElementById('items-count'),
                     petsCount: document.getElementById('pets-count'),
                     placesCount: document.getElementById('places-count'),
+                    smallEventsCount: document.getElementById('small-events-count'),
                     totalCount: document.getElementById('total-count'),
                     apiStatus: document.getElementById('api-status'),
                     apiLimitText: document.getElementById('api-limit-text'),
@@ -470,7 +512,7 @@
                 };
 
                 this.initializeEventListeners();
-                this.loadBranches(); // Charger les branches au démarrage
+                this.loadBranches();
                 this.checkCache();
             }
 
@@ -483,26 +525,19 @@
                     }
                 } catch (error) {
                     console.warn('Impossible de charger les branches:', error);
-                    // Garder les branches par défaut si erreur
                 }
             }
 
             populateBranchSelect(branches) {
                 const select = this.elements.branchSelect;
                 const currentValue = select.value;
-                
-                // Vider le select
                 select.innerHTML = '';
-                
-                // Ajouter toutes les branches
                 branches.forEach(branch => {
                     const option = document.createElement('option');
                     option.value = branch.name;
                     option.textContent = branch.name;
                     select.appendChild(option);
                 });
-                
-                // Restaurer la valeur sélectionnée ou sélectionner master par défaut
                 if (branches.find(b => b.name === currentValue)) {
                     select.value = currentValue;
                 } else if (branches.find(b => b.name === 'master')) {
@@ -512,82 +547,54 @@
                 } else if (branches.length > 0) {
                     select.value = branches[0].name;
                 }
-                
                 this.currentBranch = select.value;
             }
 
             initializeEventListeners() {
                 this.elements.loadBtn.addEventListener('click', () => this.loadData());
                 this.elements.searchInput.addEventListener('input', (e) => this.search(e.target.value));
-                
-                // Ajouter les événements de tri sur les en-têtes
                 this.initializeSortListeners();
-                
-                // Ajouter les événements de filtrage sur les statistiques
                 this.initializeStatListeners();
             }
 
             initializeStatListeners() {
                 const statItems = this.elements.stats.querySelectorAll('.stat-item');
-                
-                // Items
                 statItems[0].addEventListener('click', () => this.filterByCategory('item'));
-                // Familiers
                 statItems[1].addEventListener('click', () => this.filterByCategory('pet'));
-                // Lieux
                 statItems[2].addEventListener('click', () => this.filterByCategory('place'));
-                // Total (afficher tout)
-                statItems[3].addEventListener('click', () => this.filterByCategory(null));
+                statItems[3].addEventListener('click', () => this.filterByCategory('smallEvent'));
+                statItems[4].addEventListener('click', () => this.filterByCategory(null));
             }
 
             filterByCategory(category) {
-                // Mettre à jour le filtre actuel
                 this.currentFilter = category;
-                
-                // Mettre à jour les indicateurs visuels des stats
                 this.updateStatIndicators(category);
-                
-                // Appliquer le filtrage
                 this.applyCurrentFilters();
             }
 
             updateStatIndicators(activeCategory) {
                 const statItems = this.elements.stats.querySelectorAll('.stat-item');
-                
-                statItems.forEach((item, index) => {
-                    item.classList.remove('active');
-                });
-                
-                // Activer la stat correspondante
-                if (activeCategory === 'item') {
-                    statItems[0].classList.add('active');
-                } else if (activeCategory === 'pet') {
-                    statItems[1].classList.add('active');
-                } else if (activeCategory === 'place') {
-                    statItems[2].classList.add('active');
-                } else if (activeCategory === null) {
-                    statItems[3].classList.add('active');
-                }
+                statItems.forEach((item) => item.classList.remove('active'));
+                if (activeCategory === 'item') statItems[0].classList.add('active');
+                else if (activeCategory === 'pet') statItems[1].classList.add('active');
+                else if (activeCategory === 'place') statItems[2].classList.add('active');
+                else if (activeCategory === 'smallEvent') statItems[3].classList.add('active');
+                else if (activeCategory === null) statItems[4].classList.add('active');
             }
 
             applyCurrentFilters() {
                 let filteredData = [...this.allData];
-                
-                // Appliquer le filtre de catégorie si actif
                 if (this.currentFilter) {
                     filteredData = filteredData.filter(item => item.category === this.currentFilter);
                 }
-                
-                // Appliquer le filtre de recherche si actif
                 const searchTerm = this.elements.searchInput.value.trim().toLowerCase();
                 if (searchTerm) {
-                    filteredData = filteredData.filter(item => 
+                    filteredData = filteredData.filter(item =>
                         item.name.toLowerCase().includes(searchTerm) ||
                         item.id.toString().includes(searchTerm) ||
                         item.type.toLowerCase().includes(searchTerm)
                     );
                 }
-                
                 this.displayResults(filteredData);
             }
 
@@ -602,68 +609,38 @@
             sortByColumn(columnIndex) {
                 const columns = ['emoji', 'name', 'type', 'id'];
                 const column = columns[columnIndex];
-                
-                // Déterminer la direction du tri
                 if (this.currentSort.column === column) {
                     this.currentSort.direction = this.currentSort.direction === 'asc' ? 'desc' : 'asc';
                 } else {
                     this.currentSort.column = column;
                     this.currentSort.direction = 'asc';
                 }
-                
-                // Appliquer le tri
                 this.applySorting();
-                
-                // Mettre à jour les indicateurs visuels
                 this.updateSortIndicators(columnIndex);
             }
 
             applySorting() {
                 if (!this.currentSort.column) return;
-                
                 this.currentDisplayData.sort((a, b) => {
                     let valueA, valueB;
-                    
                     switch (this.currentSort.column) {
-                        case 'emoji':
-                            valueA = a.emoji;
-                            valueB = b.emoji;
-                            break;
-                        case 'name':
-                            valueA = a.name.toLowerCase();
-                            valueB = b.name.toLowerCase();
-                            break;
-                        case 'type':
-                            valueA = a.type.toLowerCase();
-                            valueB = b.type.toLowerCase();
-                            break;
-                        case 'id':
-                            valueA = a.id;
-                            valueB = b.id;
-                            break;
-                        default:
-                            return 0;
+                        case 'emoji': valueA = a.emoji; valueB = b.emoji; break;
+                        case 'name': valueA = a.name.toLowerCase(); valueB = b.name.toLowerCase(); break;
+                        case 'type': valueA = a.type.toLowerCase(); valueB = b.type.toLowerCase(); break;
+                        case 'id': valueA = a.id; valueB = b.id; break;
+                        default: return 0;
                     }
-                    
-                    if (valueA < valueB) {
-                        return this.currentSort.direction === 'asc' ? -1 : 1;
-                    }
-                    if (valueA > valueB) {
-                        return this.currentSort.direction === 'asc' ? 1 : -1;
-                    }
+                    if (valueA < valueB) return this.currentSort.direction === 'asc' ? -1 : 1;
+                    if (valueA > valueB) return this.currentSort.direction === 'asc' ? 1 : -1;
                     return 0;
                 });
-                
-                // Re-rendre le tableau avec les données triées
                 this.renderTable();
             }
 
             updateSortIndicators(activeColumnIndex) {
                 const headers = this.elements.table.querySelectorAll('th');
-                
                 headers.forEach((header, index) => {
                     header.classList.remove('sorted-asc', 'sorted-desc');
-                    
                     if (index === activeColumnIndex) {
                         if (this.currentSort.direction === 'asc') {
                             header.classList.add('sorted-asc');
@@ -676,7 +653,6 @@
 
             renderTable() {
                 this.elements.tableBody.innerHTML = '';
-                
                 this.currentDisplayData.forEach(item => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -692,12 +668,10 @@
             checkCache() {
                 const cacheKey = `${this.cachePrefix}${this.currentBranch}`;
                 const cached = localStorage.getItem(cacheKey);
-                
                 if (cached) {
                     try {
                         const { data, timestamp } = JSON.parse(cached);
                         const now = Date.now();
-                        
                         if (now - timestamp < this.cacheExpiry) {
                             this.allData = data;
                             this.updateStats();
@@ -722,7 +696,6 @@
                     data: this.allData,
                     timestamp: Date.now()
                 };
-                
                 try {
                     localStorage.setItem(cacheKey, JSON.stringify(cacheData));
                 } catch (error) {
@@ -734,22 +707,15 @@
                 const infoDiv = document.createElement('div');
                 infoDiv.className = 'status-message status-info';
                 infoDiv.textContent = 'Données chargées depuis le cache (30min)';
-                
                 const container = document.querySelector('.container');
                 container.appendChild(infoDiv);
-                
                 setTimeout(() => infoDiv.remove(), 3000);
             }
 
             async loadData(forceRefresh = true) {
                 if (this.isLoading) return;
-                
                 this.isLoading = true;
                 this.currentBranch = this.elements.branchSelect.value;
-                
-                // Le bouton "Charger les données" force toujours un refresh
-                // Le cache n'est utilisé que lors du checkCache() au chargement de la page
-                
                 this.elements.loading.style.display = 'block';
                 this.elements.stats.style.display = 'none';
                 this.elements.table.style.display = 'none';
@@ -759,25 +725,18 @@
 
                 try {
                     this.allData = [];
-                    
-                    // Charger les noms d'abord (une seule requête)
                     await this.loadNames();
-                    
-                    // Charger tous les types de données en parallèle
                     await Promise.all([
                         this.loadItems(),
                         this.loadPets(),
-                        this.loadPlaces()
+                        this.loadPlaces(),
+                        this.loadSmallEvents()
                     ]);
-                    
-                    // Sauvegarder en cache après chargement frais
                     this.saveToCache();
-                    
                     this.updateStats();
                     this.elements.searchInput.disabled = false;
                     this.elements.searchInput.placeholder = "Recherchez un nom, ID ou type...";
                     this.displayResults(this.allData);
-                    
                 } catch (error) {
                     console.error('Erreur lors du chargement:', error);
                     this.showError(`Erreur: ${error.message}`);
@@ -791,16 +750,12 @@
             async makeApiRequest(url) {
                 try {
                     const response = await fetch(url);
-                    
-                    // Extraire les informations de limite d'API des headers
                     const remaining = response.headers.get('X-RateLimit-Remaining');
                     const limit = response.headers.get('X-RateLimit-Limit');
                     const reset = response.headers.get('X-RateLimit-Reset');
-                    
                     if (remaining !== null && limit !== null) {
                         this.updateApiStatus(parseInt(remaining), parseInt(limit), reset ? parseInt(reset) : null);
                     }
-                    
                     return response;
                 } catch (error) {
                     console.error('Erreur lors de la requête API:', error);
@@ -810,29 +765,17 @@
 
             updateApiStatus(remaining, limit, resetTimestamp) {
                 const percentage = (remaining / limit) * 100;
-                
-                // Déterminer la classe CSS selon le pourcentage restant
                 let statusClass = 'api-status-good';
-                if (percentage < 20) {
-                    statusClass = 'api-status-danger';
-                } else if (percentage < 50) {
-                    statusClass = 'api-status-warning';
-                }
-                
-                // Mettre à jour le texte
+                if (percentage < 20) statusClass = 'api-status-danger';
+                else if (percentage < 50) statusClass = 'api-status-warning';
                 this.elements.apiLimitText.textContent = `API GitHub: ${remaining}/${limit} requêtes restantes`;
-                
                 if (resetTimestamp) {
                     const resetDate = new Date(resetTimestamp * 1000);
                     const now = new Date();
                     const diffMinutes = Math.ceil((resetDate - now) / (1000 * 60));
                     this.elements.apiResetText.textContent = `Reset dans ${diffMinutes} minutes`;
                 }
-                
-                // Appliquer les styles
                 this.elements.apiStatus.className = `api-status visible ${statusClass}`;
-                
-                // Masquer automatiquement après 10 secondes si tout va bien
                 if (statusClass === 'api-status-good') {
                     setTimeout(() => {
                         if (this.elements.apiStatus.classList.contains('api-status-good')) {
@@ -847,7 +790,6 @@
                 this.itemNames = {};
                 this.petNames = {};
                 this.placeNames = {};
-                
                 try {
                     const response = await this.makeApiRequest(`https://raw.githubusercontent.com/Crownicles/Crownicles/${this.currentBranch}/Lang/fr/models.json`);
                     if (response.ok) {
@@ -860,6 +802,7 @@
                         };
                         this.petNames = i18nData.pets || {};
                         this.placeNames = i18nData.map_locations || {};
+                        // nothing needed for smallEvents here, loaded separately
                     }
                 } catch (error) {
                     console.warn('Impossible de charger les noms:', error);
@@ -869,37 +812,26 @@
             async loadItems() {
                 const itemTypes = ['weapons', 'armors', 'objects', 'potions'];
                 let totalLoaded = 0;
-                
                 for (const type of itemTypes) {
                     this.elements.loadingStatus.textContent = `Chargement des ${type}...`;
-                    
                     try {
-                        // Récupérer la liste des fichiers
                         const dirResponse = await this.makeApiRequest(`https://api.github.com/repos/Crownicles/Crownicles/contents/Core/resources/${type}?ref=${this.currentBranch}`);
                         if (!dirResponse.ok) continue;
-                        
                         const files = await dirResponse.json();
                         const jsonFiles = files.filter(file => file.name.endsWith('.json'));
-                        
                         this.elements.loadingStatus.textContent = `Chargement des ${type} (${jsonFiles.length} fichiers)...`;
-                        
-                        // Traiter par batch de 15 pour éviter de surcharger l'API
                         const batchSize = 15;
                         for (let i = 0; i < jsonFiles.length; i += batchSize) {
                             const batch = jsonFiles.slice(i, i + batchSize);
-                            
                             const batchPromises = batch.map(async (file) => {
                                 try {
                                     const itemResponse = await this.makeApiRequest(file.download_url);
                                     if (!itemResponse.ok) return null;
-                                    
                                     const item = await itemResponse.json();
                                     const id = parseInt(file.name.split('.')[0]);
-                                    
-                                    const itemName = this.itemNames[type] && this.itemNames[type][id.toString()] 
+                                    const itemName = this.itemNames[type] && this.itemNames[type][id.toString()]
                                         ? this.itemNames[type][id.toString()]
                                         : `${type.slice(0, -1)} ${id}`;
-                                    
                                     return {
                                         id: id,
                                         name: itemName,
@@ -912,17 +844,13 @@
                                     return null;
                                 }
                             });
-                            
                             const batchResults = await Promise.all(batchPromises);
                             const validResults = batchResults.filter(item => item !== null);
                             validResults.forEach(item => {
                                 this.allData.push(item);
                             });
-                            
                             totalLoaded += validResults.length;
                             this.elements.loadingStatus.textContent = `Chargement des ${type} (${totalLoaded}/${jsonFiles.length})...`;
-                            
-                            // Délai pour éviter de surcharger l'API
                             await new Promise(resolve => setTimeout(resolve, 200));
                         }
                     } catch (error) {
@@ -933,36 +861,25 @@
 
             async loadPets() {
                 this.elements.loadingStatus.textContent = 'Chargement des familiers...';
-                
                 try {
-                    // Récupérer la liste des fichiers
                     const dirResponse = await this.makeApiRequest(`https://api.github.com/repos/Crownicles/Crownicles/contents/Core/resources/pets?ref=${this.currentBranch}`);
                     if (!dirResponse.ok) return;
-                    
                     const files = await dirResponse.json();
                     const jsonFiles = files.filter(file => file.name.endsWith('.json'));
-                    
                     this.elements.loadingStatus.textContent = `Chargement des familiers (${jsonFiles.length} fichiers)...`;
                     let totalLoaded = 0;
-                    
-                    // Traiter par batch de 15
                     const batchSize = 15;
                     for (let i = 0; i < jsonFiles.length; i += batchSize) {
                         const batch = jsonFiles.slice(i, i + batchSize);
-                        
                         const batchPromises = batch.map(async (file) => {
                             try {
                                 const petResponse = await this.makeApiRequest(file.download_url);
                                 if (!petResponse.ok) return null;
-                                
                                 const pet = await petResponse.json();
                                 const id = parseInt(file.name.split('.')[0]);
-                                
-                                // Utiliser le nom masculin depuis le format {id}_male
-                                const petName = this.petNames[`${id}_male`] 
+                                const petName = this.petNames[`${id}_male`]
                                     ? this.petNames[`${id}_male`]
                                     : `Familier ${id}`;
-                                
                                 return {
                                     id: id,
                                     name: petName,
@@ -975,17 +892,13 @@
                                 return null;
                             }
                         });
-                        
                         const batchResults = await Promise.all(batchPromises);
                         const validResults = batchResults.filter(item => item !== null);
                         validResults.forEach(item => {
                             this.allData.push(item);
                         });
-                        
                         totalLoaded += validResults.length;
                         this.elements.loadingStatus.textContent = `Chargement des familiers (${totalLoaded}/${jsonFiles.length})...`;
-                        
-                        // Délai pour éviter de surcharger l'API
                         await new Promise(resolve => setTimeout(resolve, 200));
                     }
                 } catch (error) {
@@ -995,35 +908,25 @@
 
             async loadPlaces() {
                 this.elements.loadingStatus.textContent = 'Chargement des lieux...';
-                
                 try {
-                    // Récupérer la liste des fichiers
                     const dirResponse = await this.makeApiRequest(`https://api.github.com/repos/Crownicles/Crownicles/contents/Core/resources/mapLocations?ref=${this.currentBranch}`);
                     if (!dirResponse.ok) return;
-                    
                     const files = await dirResponse.json();
                     const jsonFiles = files.filter(file => file.name.endsWith('.json'));
-                    
                     this.elements.loadingStatus.textContent = `Chargement des lieux (${jsonFiles.length} fichiers)...`;
                     let totalLoaded = 0;
-                    
-                    // Traiter par batch de 15
                     const batchSize = 15;
                     for (let i = 0; i < jsonFiles.length; i += batchSize) {
                         const batch = jsonFiles.slice(i, i + batchSize);
-                        
                         const batchPromises = batch.map(async (file) => {
                             try {
                                 const placeResponse = await this.makeApiRequest(file.download_url);
                                 if (!placeResponse.ok) return null;
-                                
                                 const place = await placeResponse.json();
                                 const id = parseInt(file.name.split('.')[0]);
-                                
                                 const placeName = this.placeNames[id.toString()] && this.placeNames[id.toString()].name
                                     ? this.placeNames[id.toString()].name
                                     : `Lieu ${id}`;
-                                
                                 return {
                                     id: id,
                                     name: placeName,
@@ -1036,21 +939,39 @@
                                 return null;
                             }
                         });
-                        
                         const batchResults = await Promise.all(batchPromises);
                         const validResults = batchResults.filter(item => item !== null);
                         validResults.forEach(item => {
                             this.allData.push(item);
                         });
-                        
                         totalLoaded += validResults.length;
                         this.elements.loadingStatus.textContent = `Chargement des lieux (${totalLoaded}/${jsonFiles.length})...`;
-                        
-                        // Délai pour éviter de surcharger l'API
                         await new Promise(resolve => setTimeout(resolve, 200));
                     }
                 } catch (error) {
                     console.warn('Erreur lors du chargement des lieux:', error);
+                }
+            }
+
+            async loadSmallEvents() {
+                this.elements.loadingStatus.textContent = 'Chargement des petits événements...';
+                try {
+                    const response = await this.makeApiRequest(`https://raw.githubusercontent.com/Crownicles/Crownicles/${this.currentBranch}/Lang/fr/smallEvents.json`);
+                    if (!response.ok) return;
+                    const smallEvents = await response.json();
+                    // Ignorer les événements "intro" et "end"
+                    Object.keys(smallEvents).forEach((key) => {
+                        if (key === "intro" || key === "end") return;
+                        this.allData.push({
+                            id: key,
+                            name: key,
+                            type: 'smallEvent',
+                            category: 'smallEvent',
+                            emoji: '📝'
+                        });
+                    });
+                } catch (error) {
+                    console.warn('Erreur lors du chargement des petits événements:', error);
                 }
             }
 
@@ -1068,44 +989,37 @@
                 const itemsCount = this.allData.filter(item => item.category === 'item').length;
                 const petsCount = this.allData.filter(item => item.category === 'pet').length;
                 const placesCount = this.allData.filter(item => item.category === 'place').length;
+                const smallEventsCount = this.allData.filter(item => item.category === 'smallEvent').length;
                 const totalCount = this.allData.length;
 
                 this.elements.itemsCount.textContent = itemsCount;
                 this.elements.petsCount.textContent = petsCount;
                 this.elements.placesCount.textContent = placesCount;
+                this.elements.smallEventsCount.textContent = smallEventsCount;
                 this.elements.totalCount.textContent = totalCount;
-                
                 this.elements.stats.style.display = 'flex';
             }
 
             search(query) {
-                // La recherche travaille maintenant avec le filtre actuel
                 this.applyCurrentFilters();
             }
 
             displayResults(data) {
                 this.currentDisplayData = [...data];
-                
                 if (data.length === 0) {
                     this.elements.table.style.display = 'none';
                     this.elements.noData.style.display = 'block';
                     this.elements.noData.textContent = 'Aucun résultat trouvé';
                     return;
                 }
-
                 this.elements.table.style.display = 'table';
                 this.elements.noData.style.display = 'none';
-
-                // Appliquer le tri actuel si il y en a un
                 if (this.currentSort.column) {
                     this.applySorting();
                 } else {
-                    // Tri par défaut par ID
                     this.currentDisplayData.sort((a, b) => a.id - b.id);
                     this.renderTable();
                 }
-                
-                // Réinitialiser les listeners de tri après affichage du tableau
                 this.initializeSortListeners();
             }
 
@@ -1113,18 +1027,15 @@
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'error';
                 errorDiv.textContent = message;
-                
                 const container = document.querySelector('.container');
                 container.appendChild(errorDiv);
-                
                 setTimeout(() => errorDiv.remove(), 5000);
             }
         }
-
-        // Initialiser l'application
         document.addEventListener('DOMContentLoaded', () => {
             new CkwalideApp();
         });
     </script>
 </body>
+
 </html>
