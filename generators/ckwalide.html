@@ -449,6 +449,10 @@
                 <div class="stat-label">Petits Événements</div>
             </div>
             <div class="stat-item">
+                <div class="stat-number" id="classes-count">0</div>
+                <div class="stat-label">Classes</div>
+            </div>
+            <div class="stat-item">
                 <div class="stat-number" id="total-count">0</div>
                 <div class="stat-label">Total</div>
             </div>
@@ -505,6 +509,7 @@
                     petsCount: document.getElementById('pets-count'),
                     placesCount: document.getElementById('places-count'),
                     smallEventsCount: document.getElementById('small-events-count'),
+                    classesCount: document.getElementById('classes-count'),
                     totalCount: document.getElementById('total-count'),
                     apiStatus: document.getElementById('api-status'),
                     apiLimitText: document.getElementById('api-limit-text'),
@@ -563,7 +568,8 @@
                 statItems[1].addEventListener('click', () => this.filterByCategory('pet'));
                 statItems[2].addEventListener('click', () => this.filterByCategory('place'));
                 statItems[3].addEventListener('click', () => this.filterByCategory('smallEvent'));
-                statItems[4].addEventListener('click', () => this.filterByCategory(null));
+                statItems[4].addEventListener('click', () => this.filterByCategory('class'));
+                statItems[5].addEventListener('click', () => this.filterByCategory(null));
             }
 
             filterByCategory(category) {
@@ -579,7 +585,8 @@
                 else if (activeCategory === 'pet') statItems[1].classList.add('active');
                 else if (activeCategory === 'place') statItems[2].classList.add('active');
                 else if (activeCategory === 'smallEvent') statItems[3].classList.add('active');
-                else if (activeCategory === null) statItems[4].classList.add('active');
+                else if (activeCategory === 'class') statItems[4].classList.add('active');
+                else if (activeCategory === null) statItems[5].classList.add('active');
             }
 
             applyCurrentFilters() {
@@ -732,6 +739,7 @@
                         this.loadPlaces(),
                         this.loadSmallEvents()
                     ]);
+                    await this.loadClasses();
                     this.saveToCache();
                     this.updateStats();
                     this.elements.searchInput.disabled = false;
@@ -790,6 +798,7 @@
                 this.itemNames = {};
                 this.petNames = {};
                 this.placeNames = {};
+                this.classNames = {};
                 try {
                     const response = await this.makeApiRequest(`https://raw.githubusercontent.com/Crownicles/Crownicles/${this.currentBranch}/Lang/fr/models.json`);
                     if (response.ok) {
@@ -802,6 +811,7 @@
                         };
                         this.petNames = i18nData.pets || {};
                         this.placeNames = i18nData.map_locations || {};
+                        this.classNames = i18nData.classes || {};
                         // nothing needed for smallEvents here, loaded separately
                     }
                 } catch (error) {
@@ -975,6 +985,30 @@
                 }
             }
 
+            async loadClasses() {
+                this.elements.loadingStatus.textContent = 'Chargement des classes...';
+                try {
+                    const classNames = this.classNames || {};
+                    let totalLoaded = 0;
+                    for (const id in classNames) {
+                        if (!classNames.hasOwnProperty(id)) continue;
+                        const className = classNames[id];
+                        this.allData.push({
+                            id: id,
+                            name: className,
+                            type: 'class',
+                            category: 'class',
+                            emoji: '🎓'
+                        });
+                        totalLoaded++;
+                    }
+                    this.elements.loadingStatus.textContent = `Chargement des classes (${totalLoaded})...`;
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                } catch (error) {
+                    console.warn('Erreur lors du chargement des classes:', error);
+                }
+            }
+
             getItemEmoji(type, id) {
                 const emojis = {
                     weapon: '⚔️',
@@ -990,12 +1024,14 @@
                 const petsCount = this.allData.filter(item => item.category === 'pet').length;
                 const placesCount = this.allData.filter(item => item.category === 'place').length;
                 const smallEventsCount = this.allData.filter(item => item.category === 'smallEvent').length;
+                const classesCount = this.allData.filter(item => item.category === 'class').length;
                 const totalCount = this.allData.length;
 
                 this.elements.itemsCount.textContent = itemsCount;
                 this.elements.petsCount.textContent = petsCount;
                 this.elements.placesCount.textContent = placesCount;
                 this.elements.smallEventsCount.textContent = smallEventsCount;
+                this.elements.classesCount.textContent = classesCount;
                 this.elements.totalCount.textContent = totalCount;
                 this.elements.stats.style.display = 'flex';
             }
