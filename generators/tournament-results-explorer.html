@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Results Explorer - Analyse des combats DraftBot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        select,
+        input,
+        button {
+            padding: 10px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus,
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .file-input-label {
+            padding: 10px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-label:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            background: #e9ecef;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: #dee2e6;
+        }
+
+        .tab.active {
+            background: white;
+            border-bottom-color: #667eea;
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 25px;
+            font-size: 18px;
+            border: 3px solid #dee2e6;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.1);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        th:hover {
+            background: linear-gradient(45deg, #5568d3, #6a3f8f);
+        }
+
+        th.sortable::after {
+            content: " ↕️";
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+
+        th.sorted-asc::after {
+            content: " ▲";
+            font-size: 0.8em;
+            color: #fff;
+        }
+
+        th.sorted-desc::after {
+            content: " ▼";
+            font-size: 0.8em;
+            color: #fff;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: #e3f2fd;
+            transition: background 0.3s ease;
+        }
+
+        .winrate-bar {
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .winrate-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .winrate-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            font-size: 0.8em;
+            color: #495057;
+            z-index: 1;
+        }
+
+        .matchup-detail {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .matchup-detail strong {
+            color: #667eea;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+            font-size: 1.2em;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .control-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .tab {
+                padding: 15px 10px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Tournament Results Explorer</h1>
+            <p>Analysez les résultats des combats de tournoi - Winrates, matchups et statistiques</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-row">
+                <div class="control-group">
+                    <label for="branch-select">Branche :</label>
+                    <select id="branch-select">
+                        <option value="master">master</option>
+                        <option value="development">development</option>
+                    </select>
+                </div>
+                <button id="load-metadata-btn">Charger les métadonnées</button>
+                <div class="file-input-wrapper">
+                    <label for="csv-file" class="file-input-label" id="file-label">
+                        📁 Choisir un fichier CSV
+                    </label>
+                    <input type="file" id="csv-file" accept=".csv" disabled>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="loader"></div>
+            <p id="loading-status">Chargement...</p>
+        </div>
+
+        <div class="tabs" id="tabs" style="display: none;">
+            <div class="tab active" data-tab="pets">🐾 Familiers</div>
+            <div class="tab" data-tab="classes">🎓 Classes</div>
+            <div class="tab" data-tab="overview">📊 Vue d'ensemble</div>
+        </div>
+
+        <div id="pets-tab" class="tab-content active">
+            <div class="search-container">
+                <input type="text" id="search-pets" class="search-box" placeholder="Rechercher un familier...">
+            </div>
+            <div class="stats-overview" id="pets-stats"></div>
+            <div class="table-container">
+                <table id="pets-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Emoji</th>
+                            <th>Nom</th>
+                            <th>Combats totaux</th>
+                            <th>Victoires</th>
+                            <th>Défaites</th>
+                            <th>Égalités</th>
+                            <th>Winrate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pets-body"></tbody>
+                </table>
+                <div class="no-data" id="pets-no-data">
+                    Chargez un fichier CSV pour voir les résultats des familiers
+                </div>
+            </div>
+        </div>
+
+        <div id="classes-tab" class="tab-content">
+            <div class="search-container">
+                <input type="text" id="search-classes" class="search-box" placeholder="Rechercher une classe...">
+            </div>
+            <div class="stats-overview" id="classes-stats"></div>
+            <div class="table-container">
+                <table id="classes-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Emoji</th>
+                            <th>Nom</th>
+                            <th>Combats totaux</th>
+                            <th>Victoires</th>
+                            <th>Défaites</th>
+                            <th>Égalités</th>
+                            <th>Winrate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="classes-body"></tbody>
+                </table>
+                <div class="no-data" id="classes-no-data">
+                    Chargez un fichier CSV pour voir les résultats des classes
+                </div>
+            </div>
+        </div>
+
+        <div id="overview-tab" class="tab-content">
+            <div class="stats-overview" id="overview-stats"></div>
+            <div id="overview-content"></div>
+        </div>
+    </div>
+
+    <script>
+        class TournamentResultsExplorer {
+            constructor() {
+                this.csvData = [];
+                this.petNames = {};
+                this.classNames = {};
+                this.petEmojis = {};
+                this.currentBranch = 'master';
+                this.metadataLoaded = false;
+                this.currentSort = {
+                    pets: { column: null, direction: 'asc' },
+                    classes: { column: null, direction: 'asc' }
+                };
+
+                this.elements = {
+                    branchSelect: document.getElementById('branch-select'),
+                    loadMetadataBtn: document.getElementById('load-metadata-btn'),
+                    csvFile: document.getElementById('csv-file'),
+                    fileLabel: document.getElementById('file-label'),
+                    loading: document.getElementById('loading'),
+                    loadingStatus: document.getElementById('loading-status'),
+                    tabs: document.getElementById('tabs'),
+                    searchPets: document.getElementById('search-pets'),
+                    searchClasses: document.getElementById('search-classes'),
+                    petsStats: document.getElementById('pets-stats'),
+                    classesStats: document.getElementById('classes-stats'),
+                    overviewStats: document.getElementById('overview-stats'),
+                    petsTable: document.getElementById('pets-table'),
+                    classesTable: document.getElementById('classes-table'),
+                    petsBody: document.getElementById('pets-body'),
+                    classesBody: document.getElementById('classes-body'),
+                    petsNoData: document.getElementById('pets-no-data'),
+                    classesNoData: document.getElementById('classes-no-data'),
+                    overviewContent: document.getElementById('overview-content')
+                };
+
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                this.elements.loadMetadataBtn.addEventListener('click', () => this.loadMetadata());
+                this.elements.csvFile.addEventListener('change', (e) => this.handleFileUpload(e));
+                this.elements.searchPets.addEventListener('input', (e) => this.searchPets(e.target.value));
+                this.elements.searchClasses.addEventListener('input', (e) => this.searchClasses(e.target.value));
+
+                // Tab switching
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
+                });
+            }
+
+            switchTab(tabName) {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+            }
+
+            async loadMetadata() {
+                this.elements.loading.style.display = 'block';
+                this.elements.loadingStatus.textContent = 'Chargement des métadonnées...';
+                this.elements.loadMetadataBtn.disabled = true;
+                this.currentBranch = this.elements.branchSelect.value;
+
+                try {
+                    // Load pet and class names
+                    const response = await fetch(`https://raw.githubusercontent.com/Crownicles/Crownicles/${this.currentBranch}/Lang/fr/models.json`);
+                    if (response.ok) {
+                        const i18nData = await response.json();
+                        this.petNames = i18nData.pets || {};
+                        this.classNames = i18nData.classes || {};
+                    }
+
+                    // Load pet emojis
+                    await this.loadPetEmojis();
+
+                    this.metadataLoaded = true;
+                    this.elements.csvFile.disabled = false;
+                    this.elements.fileLabel.textContent = '📁 Choisir un fichier CSV de résultats';
+                    this.elements.fileLabel.style.background = '#d4edda';
+                    this.showSuccess('Métadonnées chargées avec succès ! Vous pouvez maintenant charger un fichier CSV.');
+                } catch (error) {
+                    console.error('Erreur lors du chargement des métadonnées:', error);
+                    this.showError(`Erreur: ${error.message}`);
+                } finally {
+                    this.elements.loading.style.display = 'none';
+                    this.elements.loadMetadataBtn.disabled = false;
+                }
+            }
+
+            async loadPetEmojis() {
+                this.elements.loadingStatus.textContent = 'Chargement des emojis des familiers...';
+                try {
+                    const dirResponse = await fetch(`https://api.github.com/repos/Crownicles/Crownicles/contents/Core/resources/pets?ref=${this.currentBranch}`);
+                    if (!dirResponse.ok) return;
+
+                    const files = await dirResponse.json();
+                    const jsonFiles = files.filter(file => file.name.endsWith('.json'));
+
+                    // Load in batches to avoid rate limiting
+                    const batchSize = 10;
+                    for (let i = 0; i < jsonFiles.length; i += batchSize) {
+                        const batch = jsonFiles.slice(i, i + batchSize);
+                        const batchPromises = batch.map(async (file) => {
+                            try {
+                                const petResponse = await fetch(file.download_url);
+                                if (!petResponse.ok) return;
+                                const pet = await petResponse.json();
+                                const id = parseInt(file.name.split('.')[0]);
+                                this.petEmojis[id] = pet.emoteMale || '🐾';
+                            } catch (error) {
+                                console.warn(`Erreur pour ${file.name}:`, error);
+                            }
+                        });
+                        await Promise.all(batchPromises);
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                } catch (error) {
+                    console.warn('Erreur lors du chargement des emojis:', error);
+                }
+            }
+
+            handleFileUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                if (!this.metadataLoaded) {
+                    this.showError('Veuillez d\'abord charger les métadonnées !');
+                    event.target.value = '';
+                    return;
+                }
+
+                this.elements.loading.style.display = 'block';
+                this.elements.loadingStatus.textContent = 'Lecture du fichier CSV...';
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        this.parseCSV(e.target.result);
+                        this.processData();
+                        this.elements.tabs.style.display = 'flex';
+                        this.showSuccess('Fichier CSV chargé avec succès !');
+                    } catch (error) {
+                        console.error('Erreur lors du parsing CSV:', error);
+                        this.showError(`Erreur lors du parsing: ${error.message}`);
+                    } finally {
+                        this.elements.loading.style.display = 'none';
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            parseCSV(csvText) {
+                const lines = csvText.trim().split('\n');
+                const headers = lines[0].split(',');
+
+                this.csvData = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',');
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index];
+                    });
+                    this.csvData.push(row);
+                }
+            }
+
+            processData() {
+                this.processPetData();
+                this.processClassData();
+                this.processOverviewData();
+            }
+
+            processPetData() {
+                const petStats = {};
+
+                // Aggregate data for each pet
+                this.csvData.filter(row => row.category === 'pet').forEach(row => {
+                    const idA = parseInt(row.entity_a_id);
+                    const idB = parseInt(row.entity_b_id);
+                    const totalFights = parseInt(row.total_fights);
+                    const draws = parseInt(row.draws);
+                    const winsA = parseInt(row.entity_a_wins);
+                    const winsB = parseInt(row.entity_b_wins);
+
+                    // Initialize stats for entity A
+                    if (!petStats[idA]) {
+                        petStats[idA] = {
+                            id: idA,
+                            totalFights: 0,
+                            wins: 0,
+                            losses: 0,
+                            draws: 0
+                        };
+                    }
+
+                    // Initialize stats for entity B
+                    if (!petStats[idB]) {
+                        petStats[idB] = {
+                            id: idB,
+                            totalFights: 0,
+                            wins: 0,
+                            losses: 0,
+                            draws: 0
+                        };
+                    }
+
+                    // Update stats for entity A
+                    petStats[idA].totalFights += totalFights;
+                    petStats[idA].wins += winsA;
+                    petStats[idA].losses += winsB;
+                    petStats[idA].draws += draws;
+
+                    // Update stats for entity B
+                    petStats[idB].totalFights += totalFights;
+                    petStats[idB].wins += winsB;
+                    petStats[idB].losses += winsA;
+                    petStats[idB].draws += draws;
+                });
+
+                this.petStats = Object.values(petStats);
+                this.displayPetStats();
+            }
+
+            processClassData() {
+                const classStats = {};
+
+                // Aggregate data for each class
+                this.csvData.filter(row => row.category === 'class').forEach(row => {
+                    const idA = parseInt(row.entity_a_id);
+                    const idB = parseInt(row.entity_b_id);
+                    const totalFights = parseInt(row.total_fights);
+                    const draws = parseInt(row.draws);
+                    const winsA = parseInt(row.entity_a_wins);
+                    const winsB = parseInt(row.entity_b_wins);
+
+                    // Initialize stats for entity A
+                    if (!classStats[idA]) {
+                        classStats[idA] = {
+                            id: idA,
+                            totalFights: 0,
+                            wins: 0,
+                            losses: 0,
+                            draws: 0
+                        };
+                    }
+
+                    // Initialize stats for entity B
+                    if (!classStats[idB]) {
+                        classStats[idB] = {
+                            id: idB,
+                            totalFights: 0,
+                            wins: 0,
+                            losses: 0,
+                            draws: 0
+                        };
+                    }
+
+                    // Update stats for entity A
+                    classStats[idA].totalFights += totalFights;
+                    classStats[idA].wins += winsA;
+                    classStats[idA].losses += winsB;
+                    classStats[idA].draws += draws;
+
+                    // Update stats for entity B
+                    classStats[idB].totalFights += totalFights;
+                    classStats[idB].wins += winsB;
+                    classStats[idB].losses += winsA;
+                    classStats[idB].draws += draws;
+                });
+
+                this.classStats = Object.values(classStats);
+                this.displayClassStats();
+            }
+
+            processOverviewData() {
+                const totalPetFights = this.csvData.filter(row => row.category === 'pet')
+                    .reduce((sum, row) => sum + parseInt(row.total_fights), 0);
+
+                const totalClassFights = this.csvData.filter(row => row.category === 'class')
+                    .reduce((sum, row) => sum + parseInt(row.total_fights), 0);
+
+                const totalPetDraws = this.csvData.filter(row => row.category === 'pet')
+                    .reduce((sum, row) => sum + parseInt(row.draws), 0);
+
+                const totalClassDraws = this.csvData.filter(row => row.category === 'class')
+                    .reduce((sum, row) => sum + parseInt(row.draws), 0);
+
+                this.elements.overviewStats.innerHTML = `
+                    <div class="stat-card">
+                        <h3>Matchups de familiers</h3>
+                        <div class="value">${this.csvData.filter(row => row.category === 'pet').length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Matchups de classes</h3>
+                        <div class="value">${this.csvData.filter(row => row.category === 'class').length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Combats de familiers</h3>
+                        <div class="value">${totalPetFights.toLocaleString()}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Combats de classes</h3>
+                        <div class="value">${totalClassFights.toLocaleString()}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Égalités (Familiers)</h3>
+                        <div class="value">${totalPetDraws.toLocaleString()}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Égalités (Classes)</h3>
+                        <div class="value">${totalClassDraws.toLocaleString()}</div>
+                    </div>
+                `;
+
+                // Add top performers
+                const topPets = [...this.petStats]
+                    .sort((a, b) => this.calculateWinrate(b) - this.calculateWinrate(a))
+                    .slice(0, 5);
+
+                const topClasses = [...this.classStats]
+                    .sort((a, b) => this.calculateWinrate(b) - this.calculateWinrate(a))
+                    .slice(0, 5);
+
+                this.elements.overviewContent.innerHTML = `
+                    <h2 style="margin-top: 30px; margin-bottom: 20px;">🏅 Top 5 Familiers par Winrate</h2>
+                    ${topPets.map(pet => `
+                        <div class="matchup-detail">
+                            <strong>${this.petEmojis[pet.id] || '🐾'} ${this.getPetName(pet.id)}</strong> - 
+                            Winrate: ${this.calculateWinrate(pet).toFixed(2)}% 
+                            (${pet.wins}W / ${pet.losses}L / ${pet.draws}D sur ${pet.totalFights} combats)
+                        </div>
+                    `).join('')}
+                    
+                    <h2 style="margin-top: 30px; margin-bottom: 20px;">🏅 Top 5 Classes par Winrate</h2>
+                    ${topClasses.map(cls => `
+                        <div class="matchup-detail">
+                            <strong>🎓 ${this.getClassName(cls.id)}</strong> - 
+                            Winrate: ${this.calculateWinrate(cls).toFixed(2)}% 
+                            (${cls.wins}W / ${cls.losses}L / ${cls.draws}D sur ${cls.totalFights} combats)
+                        </div>
+                    `).join('')}
+                `;
+            }
+
+            displayPetStats() {
+                const totalPets = this.petStats.length;
+                const totalFights = this.petStats.reduce((sum, p) => sum + p.totalFights, 0);
+                const avgWinrate = this.petStats.reduce((sum, p) => sum + this.calculateWinrate(p), 0) / totalPets;
+
+                this.elements.petsStats.innerHTML = `
+                    <div class="stat-card">
+                        <h3>Familiers uniques</h3>
+                        <div class="value">${totalPets}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total combats</h3>
+                        <div class="value">${totalFights.toLocaleString()}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Winrate moyen</h3>
+                        <div class="value">${avgWinrate.toFixed(1)}%</div>
+                    </div>
+                `;
+
+                this.renderPetTable(this.petStats);
+            }
+
+            displayClassStats() {
+                const totalClasses = this.classStats.length;
+                const totalFights = this.classStats.reduce((sum, c) => sum + c.totalFights, 0);
+                const avgWinrate = this.classStats.reduce((sum, c) => sum + this.calculateWinrate(c), 0) / totalClasses;
+
+                this.elements.classesStats.innerHTML = `
+                    <div class="stat-card">
+                        <h3>Classes uniques</h3>
+                        <div class="value">${totalClasses}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total combats</h3>
+                        <div class="value">${totalFights.toLocaleString()}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Winrate moyen</h3>
+                        <div class="value">${avgWinrate.toFixed(1)}%</div>
+                    </div>
+                `;
+
+                this.renderClassTable(this.classStats);
+            }
+
+            calculateWinrate(stats) {
+                const decisions = stats.wins + stats.losses;
+                if (decisions === 0) return 0;
+                return (stats.wins / decisions) * 100;
+            }
+
+            renderPetTable(data) {
+                if (data.length === 0) {
+                    this.elements.petsTable.style.display = 'none';
+                    this.elements.petsNoData.style.display = 'block';
+                    return;
+                }
+
+                this.elements.petsTable.style.display = 'table';
+                this.elements.petsNoData.style.display = 'none';
+
+                this.elements.petsBody.innerHTML = data.map(pet => {
+                    const winrate = this.calculateWinrate(pet);
+                    return `
+                        <tr>
+                            <td><strong>${pet.id}</strong></td>
+                            <td class="emoji">${this.petEmojis[pet.id] || '🐾'}</td>
+                            <td>${this.getPetName(pet.id)}</td>
+                            <td>${pet.totalFights.toLocaleString()}</td>
+                            <td>${pet.wins.toLocaleString()}</td>
+                            <td>${pet.losses.toLocaleString()}</td>
+                            <td>${pet.draws.toLocaleString()}</td>
+                            <td>
+                                <div class="winrate-bar">
+                                    <div class="winrate-fill" style="width: ${winrate}%"></div>
+                                    <div class="winrate-text">${winrate.toFixed(2)}%</div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                this.initializeSortListeners('pets');
+            }
+
+            renderClassTable(data) {
+                if (data.length === 0) {
+                    this.elements.classesTable.style.display = 'none';
+                    this.elements.classesNoData.style.display = 'block';
+                    return;
+                }
+
+                this.elements.classesTable.style.display = 'table';
+                this.elements.classesNoData.style.display = 'none';
+
+                this.elements.classesBody.innerHTML = data.map(cls => {
+                    const winrate = this.calculateWinrate(cls);
+                    return `
+                        <tr>
+                            <td><strong>${cls.id}</strong></td>
+                            <td class="emoji">🎓</td>
+                            <td>${this.getClassName(cls.id)}</td>
+                            <td>${cls.totalFights.toLocaleString()}</td>
+                            <td>${cls.wins.toLocaleString()}</td>
+                            <td>${cls.losses.toLocaleString()}</td>
+                            <td>${cls.draws.toLocaleString()}</td>
+                            <td>
+                                <div class="winrate-bar">
+                                    <div class="winrate-fill" style="width: ${winrate}%"></div>
+                                    <div class="winrate-text">${winrate.toFixed(2)}%</div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                this.initializeSortListeners('classes');
+            }
+
+            initializeSortListeners(type) {
+                const table = type === 'pets' ? this.elements.petsTable : this.elements.classesTable;
+                const headers = table.querySelectorAll('th');
+                headers.forEach((header, index) => {
+                    header.classList.add('sortable');
+                    header.addEventListener('click', () => this.sortTable(type, index));
+                });
+            }
+
+            sortTable(type, columnIndex) {
+                const columns = ['id', 'emoji', 'name', 'totalFights', 'wins', 'losses', 'draws', 'winrate'];
+                const column = columns[columnIndex];
+                const sortInfo = this.currentSort[type];
+
+                if (sortInfo.column === column) {
+                    sortInfo.direction = sortInfo.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortInfo.column = column;
+                    sortInfo.direction = 'asc';
+                }
+
+                const data = type === 'pets' ? [...this.petStats] : [...this.classStats];
+                data.sort((a, b) => {
+                    let valueA, valueB;
+
+                    if (column === 'winrate') {
+                        valueA = this.calculateWinrate(a);
+                        valueB = this.calculateWinrate(b);
+                    } else if (column === 'name') {
+                        if (type === 'pets') {
+                            valueA = this.getPetName(a.id).toLowerCase();
+                            valueB = this.getPetName(b.id).toLowerCase();
+                        } else {
+                            valueA = this.getClassName(a.id).toLowerCase();
+                            valueB = this.getClassName(b.id).toLowerCase();
+                        }
+                    } else {
+                        valueA = a[column];
+                        valueB = b[column];
+                    }
+
+                    if (valueA < valueB) return sortInfo.direction === 'asc' ? -1 : 1;
+                    if (valueA > valueB) return sortInfo.direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+
+                if (type === 'pets') {
+                    this.renderPetTable(data);
+                } else {
+                    this.renderClassTable(data);
+                }
+
+                this.updateSortIndicators(type, columnIndex);
+            }
+
+            updateSortIndicators(type, activeColumnIndex) {
+                const table = type === 'pets' ? this.elements.petsTable : this.elements.classesTable;
+                const headers = table.querySelectorAll('th');
+                const sortInfo = this.currentSort[type];
+
+                headers.forEach((header, index) => {
+                    header.classList.remove('sorted-asc', 'sorted-desc');
+                    if (index === activeColumnIndex) {
+                        if (sortInfo.direction === 'asc') {
+                            header.classList.add('sorted-asc');
+                        } else {
+                            header.classList.add('sorted-desc');
+                        }
+                    }
+                });
+            }
+
+            searchPets(query) {
+                const filtered = this.petStats.filter(pet => {
+                    const name = this.getPetName(pet.id).toLowerCase();
+                    const id = pet.id.toString();
+                    const searchTerm = query.toLowerCase();
+                    return name.includes(searchTerm) || id.includes(searchTerm);
+                });
+                this.renderPetTable(filtered);
+            }
+
+            searchClasses(query) {
+                const filtered = this.classStats.filter(cls => {
+                    const name = this.getClassName(cls.id).toLowerCase();
+                    const id = cls.id.toString();
+                    const searchTerm = query.toLowerCase();
+                    return name.includes(searchTerm) || id.includes(searchTerm);
+                });
+                this.renderClassTable(filtered);
+            }
+
+            getPetName(id) {
+                const maleKey = `${id}_male`;
+                const femaleKey = `${id}_female`;
+                return this.petNames[maleKey] || this.petNames[femaleKey] || `Familier ${id}`;
+            }
+
+            getClassName(id) {
+                return this.classNames[id] || `Classe ${id}`;
+            }
+
+            showSuccess(message) {
+                const successDiv = document.createElement('div');
+                successDiv.className = 'error';
+                successDiv.style.background = '#d4edda';
+                successDiv.style.color = '#155724';
+                successDiv.style.borderColor = '#c3e6cb';
+                successDiv.textContent = message;
+                const container = document.querySelector('.container');
+                container.appendChild(successDiv);
+                setTimeout(() => successDiv.remove(), 3000);
+            }
+
+            showError(message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.textContent = message;
+                const container = document.querySelector('.container');
+                container.appendChild(errorDiv);
+                setTimeout(() => errorDiv.remove(), 5000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new TournamentResultsExplorer();
+        });
+    </script>
+</body>
+
+</html>
