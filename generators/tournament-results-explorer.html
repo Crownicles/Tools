@@ -349,6 +349,103 @@
             color: #667eea;
         }
 
+        .matchup-matrix {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        .matchup-matrix h2 {
+            margin-bottom: 20px;
+            color: #495057;
+        }
+
+        .matchup-matrix table {
+            min-width: 100%;
+            font-size: 0.85em;
+        }
+
+        .matchup-matrix th {
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.75em;
+            padding: 10px 5px;
+        }
+
+        .matchup-matrix td {
+            min-width: 80px;
+            text-align: center;
+            padding: 8px 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .matchup-matrix td:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            position: relative;
+        }
+
+        .matchup-matrix .class-name-cell {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+            min-width: 120px;
+            text-align: left;
+            padding-left: 15px;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+        }
+
+        .matchup-cell {
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .matchup-diagonal {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .winrate-excellent {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .winrate-good {
+            background: linear-gradient(135deg, #20c997, #17a2b8);
+            color: white;
+        }
+
+        .winrate-neutral {
+            background: #ffc107;
+            color: #495057;
+        }
+
+        .winrate-bad {
+            background: linear-gradient(135deg, #fd7e14, #dc3545);
+            color: white;
+        }
+
+        .winrate-terrible {
+            background: linear-gradient(135deg, #dc3545, #bd2130);
+            color: white;
+        }
+
+        .matchup-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            z-index: 1000;
+            pointer-events: none;
+            white-space: nowrap;
+            display: none;
+        }
+
         .no-data {
             text-align: center;
             padding: 60px 20px;
@@ -481,6 +578,26 @@
                     Chargez un fichier CSV pour voir les résultats des classes
                 </div>
             </div>
+            
+            <div class="matchup-matrix" id="class-matchup-matrix" style="display: none;">
+                <h2>📊 Matrice des Matchups - Classes vs Classes</h2>
+                <p style="color: #6c757d; margin-bottom: 15px;">
+                    <strong>Comment lire :</strong> Chaque cellule montre le <strong>winrate de la classe de la LIGNE</strong> contre la classe de la COLONNE.<br>
+                    Par exemple : Si vous regardez la ligne "Guerrier" et la colonne "Mage", le pourcentage indique combien de fois Guerrier bat Mage.<br>
+                    ℹ️ Cliquez sur une cellule pour voir les détails complets.
+                </p>
+                <div style="overflow-x: auto;">
+                    <table id="matchup-matrix-table"></table>
+                </div>
+                <div style="margin-top: 15px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 0.85em;">
+                    <span style="font-weight: 600;">Légende:</span>
+                    <span class="matchup-cell winrate-excellent" style="padding: 5px 10px; border-radius: 5px;">≥ 60% Excellent</span>
+                    <span class="matchup-cell winrate-good" style="padding: 5px 10px; border-radius: 5px;">≥ 55% Bon</span>
+                    <span class="matchup-cell winrate-neutral" style="padding: 5px 10px; border-radius: 5px;">45-55% Équilibré</span>
+                    <span class="matchup-cell winrate-bad" style="padding: 5px 10px; border-radius: 5px;">≥ 40% Mauvais</span>
+                    <span class="matchup-cell winrate-terrible" style="padding: 5px 10px; border-radius: 5px;">< 40% Terrible</span>
+                </div>
+            </div>
         </div>
 
         <div id="overview-tab" class="tab-content">
@@ -522,7 +639,9 @@
                     classesBody: document.getElementById('classes-body'),
                     petsNoData: document.getElementById('pets-no-data'),
                     classesNoData: document.getElementById('classes-no-data'),
-                    overviewContent: document.getElementById('overview-content')
+                    overviewContent: document.getElementById('overview-content'),
+                    classMatchupMatrix: document.getElementById('class-matchup-matrix'),
+                    matchupMatrixTable: document.getElementById('matchup-matrix-table')
                 };
 
                 this.initializeEventListeners();
@@ -716,6 +835,7 @@
 
             processClassData() {
                 const classStats = {};
+                this.classMatchups = {}; // Store individual matchup data
 
                 // Aggregate data for each class
                 this.csvData.filter(row => row.category === 'class').forEach(row => {
@@ -725,6 +845,21 @@
                     const draws = parseInt(row.draws);
                     const winsA = parseInt(row.entity_a_wins);
                     const winsB = parseInt(row.entity_b_wins);
+
+                    // Store matchup data for matrix
+                    const matchupKey = `${idA}-${idB}`;
+                    const decisions = winsA + winsB; // Only count actual wins, not draws
+                    this.classMatchups[matchupKey] = {
+                        idA,
+                        idB,
+                        totalFights,
+                        draws,
+                        winsA,
+                        winsB,
+                        decisions, // Total fights with a winner
+                        winrateA: decisions > 0 ? (winsA / decisions) * 100 : 0,
+                        winrateB: decisions > 0 ? (winsB / decisions) * 100 : 0
+                    };
 
                     // Initialize stats for entity A
                     if (!classStats[idA]) {
@@ -763,6 +898,7 @@
 
                 this.classStats = Object.values(classStats);
                 this.displayClassStats();
+                this.displayClassMatchupMatrix();
             }
 
             processOverviewData() {
@@ -1045,6 +1181,143 @@
                     return name.includes(searchTerm) || id.includes(searchTerm);
                 });
                 this.renderClassTable(filtered);
+            }
+
+            displayClassMatchupMatrix() {
+                if (!this.classStats || this.classStats.length === 0) {
+                    this.elements.classMatchupMatrix.style.display = 'none';
+                    return;
+                }
+
+                this.elements.classMatchupMatrix.style.display = 'block';
+
+                // Sort classes by ID for consistent display
+                const sortedClasses = [...this.classStats].sort((a, b) => a.id - b.id);
+                
+                // Build matrix HTML
+                let html = '<thead><tr><th class="class-name-cell">Classe</th>';
+                
+                // Column headers
+                sortedClasses.forEach(cls => {
+                    html += `<th title="${this.getClassName(cls.id)}">${this.getClassName(cls.id)}</th>`;
+                });
+                html += '</tr></thead><tbody>';
+
+                // Rows
+                sortedClasses.forEach(rowClass => {
+                    html += '<tr>';
+                    html += `<td class="class-name-cell">${this.getClassName(rowClass.id)}</td>`;
+                    
+                    sortedClasses.forEach(colClass => {
+                        // Check both possible matchup keys (including same class matchups)
+                        const matchupKey1 = `${rowClass.id}-${colClass.id}`;
+                        const matchupKey2 = `${colClass.id}-${rowClass.id}`;
+                        
+                        let matchup = this.classMatchups[matchupKey1];
+                        let isReversed = false;
+                        
+                        if (!matchup && rowClass.id !== colClass.id) {
+                            matchup = this.classMatchups[matchupKey2];
+                            isReversed = true;
+                        }
+
+                        if (matchup) {
+                            // Get the winrate for the row class against column class
+                            let winrate;
+                            if (rowClass.id === colClass.id) {
+                                // Same class matchup - use winrateA
+                                winrate = matchup.winrateA;
+                            } else if (isReversed) {
+                                // If we're using the reversed matchup, we want winrateB
+                                winrate = matchup.idA === rowClass.id ? matchup.winrateA : matchup.winrateB;
+                            } else {
+                                // Normal matchup
+                                winrate = matchup.idA === rowClass.id ? matchup.winrateA : matchup.winrateB;
+                            }
+
+                            const colorClass = this.getWinrateColorClass(winrate);
+                            const wins = isReversed 
+                                ? (matchup.idB === rowClass.id ? matchup.winsB : matchup.winsA)
+                                : (matchup.idA === rowClass.id ? matchup.winsA : matchup.winsB);
+                            const losses = isReversed
+                                ? (matchup.idB === rowClass.id ? matchup.winsA : matchup.winsB)
+                                : (matchup.idA === rowClass.id ? matchup.winsB : matchup.winsA);
+                            
+                            html += `<td class="matchup-cell ${colorClass}" 
+                                data-row="${rowClass.id}" 
+                                data-col="${colClass.id}"
+                                data-winrate="${winrate.toFixed(1)}"
+                                data-wins="${wins}"
+                                data-losses="${losses}"
+                                data-draws="${matchup.draws}"
+                                data-total="${matchup.totalFights}"
+                                title="${this.getClassName(rowClass.id)} vs ${this.getClassName(colClass.id)}: ${winrate.toFixed(1)}% (${wins}W/${losses}L/${matchup.draws}D)">
+                                ${winrate.toFixed(0)}%
+                            </td>`;
+                        } else {
+                            html += '<td class="matchup-cell" style="background: #f8f9fa; color: #adb5bd;">N/A</td>';
+                        }
+                    });
+                    
+                    html += '</tr>';
+                });
+
+                html += '</tbody>';
+                this.elements.matchupMatrixTable.innerHTML = html;
+
+                // Add click handlers for details
+                this.elements.matchupMatrixTable.querySelectorAll('.matchup-cell[data-row]').forEach(cell => {
+                    cell.addEventListener('click', (e) => {
+                        const rowId = e.target.dataset.row;
+                        const colId = e.target.dataset.col;
+                        const winrate = e.target.dataset.winrate;
+                        const wins = e.target.dataset.wins;
+                        const losses = e.target.dataset.losses;
+                        const draws = e.target.dataset.draws;
+                        const total = e.target.dataset.total;
+                        
+                        this.showMatchupDetail(
+                            this.getClassName(rowId),
+                            this.getClassName(colId),
+                            winrate,
+                            wins,
+                            losses,
+                            draws,
+                            total
+                        );
+                    });
+                });
+            }
+
+            getWinrateColorClass(winrate) {
+                if (winrate >= 60) return 'winrate-excellent';
+                if (winrate >= 55) return 'winrate-good';
+                if (winrate >= 45) return 'winrate-neutral';
+                if (winrate >= 40) return 'winrate-bad';
+                return 'winrate-terrible';
+            }
+
+            showMatchupDetail(classA, classB, winrate, wins, losses, draws, total) {
+                const decisions = parseInt(wins) + parseInt(losses);
+                const drawRate = total > 0 ? ((parseInt(draws) / parseInt(total)) * 100).toFixed(1) : 0;
+                
+                const message = `
+📊 Matchup Détaillé
+                
+${classA} vs ${classB}
+
+Winrate de ${classA}: ${winrate}%
+(calculé sur ${decisions} combats décidés)
+━━━━━━━━━━━━━━━
+✅ Victoires de ${classA}: ${wins}
+❌ Défaites de ${classA}: ${losses}
+⚖️ Égalités: ${draws} (${drawRate}%)
+📈 Total combats: ${total}
+
+${parseFloat(winrate) >= 55 ? `💪 ${classA} domine ce matchup !` : parseFloat(winrate) <= 45 ? `⚠️ ${classA} est en difficulté dans ce matchup` : '⚖️ Matchup équilibré'}
+                `.trim();
+
+                alert(message);
             }
 
             getPetName(id) {
