@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crownicles - Map Visualizer</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <link rel="stylesheet" href="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Crownicles - Map Visualizer</h1>
+      <p>Charge les mapLocations et mapLinks directement depuis le repo Crownicles ou via tes fichiers JSON.</p>
+    </header>
+    <main>
+      <aside id="controls">
+        <section>
+          <h2>Vue</h2>
+          <div class="button-row">
+            <button id="zoomIn" type="button">Zoom in</button>
+            <button id="zoomOut" type="button">Zoom out</button>
+            <button id="fit" type="button">Fit</button>
+            <button id="center" type="button">Center</button>
+          </div>
+        </section>
+        <section>
+          <h2>Filtres</h2>
+          <label for="filterType">Type</label>
+          <select id="filterType">
+            <option value="all">Tous</option>
+          </select>
+          <label for="filterAttribute">Attribut</label>
+          <select id="filterAttribute">
+            <option value="all">Tous</option>
+          </select>
+        </section>
+        <section>
+          <h2>Chargement GitHub</h2>
+          <label for="branchInput">Branche</label>
+          <input id="branchInput" type="text" value="master" autocomplete="off" />
+          <button id="reload" type="button">Charger depuis GitHub</button>
+          <p class="hint">Utilise Core/resources/mapLocations et Core/resources/mapLinks.</p>
+          <div id="githubStatus" class="status-message">Aucune requete GitHub lancee.</div>
+        </section>
+        <section>
+          <h2>Chargement manuel</h2>
+          <p>Upload tes JSON locaux (dossiers ou fichiers).</p>
+          <label for="fileLocations">MapLocations</label>
+          <input id="fileLocations" type="file" accept=".json" webkitdirectory directory multiple />
+          <label for="fileLinks">MapLinks</label>
+          <input id="fileLinks" type="file" accept=".json" webkitdirectory directory multiple />
+          <div class="button-row">
+            <button id="loadUploaded" type="button">Utiliser les uploads</button>
+            <button id="clearUploaded" type="button">Vider</button>
+          </div>
+          <div id="uploadStatus" class="status-subtle">Aucun fichier charge.</div>
+        </section>
+        <section>
+          <h2>Etat</h2>
+          <div id="debug" class="status-subtle">
+            Aucun chargement automatique: importez vos fichiers JSON ou utilisez GitHub.
+          </div>
+          <div id="info">
+            <strong>Noeud selectionne:</strong>
+            <pre id="nodeInfo">Aucun</pre>
+          </div>
+        </section>
+      </aside>
+      <section id="network" aria-label="Graphique vis-network"></section>
+    </main>
+    <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

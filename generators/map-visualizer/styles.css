@@ -1,0 +1,174 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, Roboto, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+header {
+  padding: 16px 24px;
+  background: #1f2937;
+  color: #fff;
+}
+
+header h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+}
+
+header p {
+  margin: 0;
+  opacity: 0.85;
+  font-size: 0.95rem;
+}
+
+main {
+  display: flex;
+  height: calc(100vh - 88px);
+}
+
+#controls {
+  width: 340px;
+  padding: 16px;
+  background: #f9fafb;
+  border-right: 1px solid #e5e7eb;
+  overflow-y: auto;
+}
+
+#controls section {
+  margin-bottom: 18px;
+}
+
+#controls h2 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #4b5563;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #374151;
+}
+
+select,
+input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  background: #fff;
+}
+
+button {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+#network {
+  flex: 1;
+  height: 100%;
+  min-height: 400px;
+}
+
+#info {
+  margin-top: 12px;
+}
+
+pre {
+  background: #111827;
+  color: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 0.85rem;
+}
+
+input[type="file"] {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.status-message {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+}
+
+.status-message.error {
+  background: #fee2e2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.status-subtle {
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 8px 0 0;
+}
+
+.error-panel {
+  padding: 20px;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  border-radius: 8px;
+  margin: 16px;
+}
+
+@media (max-width: 960px) {
+  main {
+    flex-direction: column;
+  }
+  #controls {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  #network {
+    height: 60vh;
+  }
+}
