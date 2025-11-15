@@ -10,6 +10,7 @@ Ce repo présente différents outils pour travailler sur Crownicles
 - [Explorateur d'Objets](https://crownicles.github.io/Tools/generators/item-explorer/) - Interface de comparaison d'objets avec filtrage, recherche et analyse statistique avancée.
 - [Ckwalidé](https://crownicles.github.io/Tools/generators/ckwalide.html) - Recherche rapide d'IDs pour les items, familiers et lieux de Crownicles
 - [Classes](https://crownicles.github.io/Tools/generators/classBalancing.html) - Permet de visualiser des équilibrages de changement de stats de classes
+- [Tournament Results Explorer](https://crownicles.github.io/Tools/generators/tournament-results-explorer.html) - Outil d'analyse des résultats de tournois (CSV). Affiche winrates, matrices de matchups, top performers pour les familiers et les classes.
 
 ## Autres liens
 
