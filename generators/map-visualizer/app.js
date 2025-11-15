@@ -305,6 +305,16 @@ function extractUniqueValues(map, key) {
   return Array.from(set).sort();
 }
 
+function formatDurationMinutes(mins) {
+  const m = Number(mins) || 0;
+  const h = Math.floor(m / 60);
+  const mm = m % 60;
+  if (h > 0) {
+    return `${h}h${mm > 0 ? mm + 'm' : ''}`;
+  }
+  return `${mm}m`;
+}
+
 function buildFilterOptions() {
   const types = extractUniqueValues(state.locations, "type");
   const attributes = extractUniqueValues(state.locations, "attribute");
@@ -368,10 +378,11 @@ function buildGraph(filter = {}) {
     const toId = `n${link.endMap}`;
     if (!nodes.get(fromId) || !nodes.get(toId)) return;
     try {
+      const durationLabel = link.tripDuration ? formatDurationMinutes(link.tripDuration) : "";
       edges.add({
         from: fromId,
         to: toId,
-        label: link.tripDuration ? `${link.tripDuration}s` : ""
+        label: durationLabel
       });
     } catch (error) {
       console.warn(`Arete ignoree ${JSON.stringify(link)}: ${error.message}`);
