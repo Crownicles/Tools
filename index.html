@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outils Crownicles</title>
+    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👑</text></svg>">
+</head>
+<body>
+
+    <header class="hero">
+        <div class="hero-content">
+            <div class="logo-area">
+                <div class="logo-icon">👑</div>
+            </div>
+            <h1>Outils Crownicles</h1>
+            <p class="subtitle">Collection d'utilitaires, générateurs et outils d'analyse pour l'univers de Crownicles.</p>
+            
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Rechercher outils, tags ou descriptions...">
+            </div>
+        </div>
+    </header>
+
+    <main class="container" id="tools-container">
+        <!-- Tools will be injected here by JavaScript -->
+    </main>
+
+    <script src="assets/js/tools-config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('tools-container');
+            const searchInput = document.getElementById('search-input');
+
+            // Category Order
+            const categoryOrder = ['Principal', 'Simulation', 'Développement', 'Générateurs', 'Visualisation'];
+
+            function renderTools(filterText = '') {
+                container.innerHTML = '';
+                const lowerFilter = filterText.toLowerCase();
+
+                // Filter tools
+                const filteredTools = toolsConfig.filter(tool => {
+                    const searchStr = `${tool.title} ${tool.description} ${tool.tags.join(' ')}`.toLowerCase();
+                    return searchStr.includes(lowerFilter);
+                });
+
+                if (filteredTools.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding: 40px;">Aucun outil correspondant à votre recherche.</div>';
+                    return;
+                }
+
+                // Group by category
+                const grouped = filteredTools.reduce((acc, tool) => {
+                    if (!acc[tool.category]) acc[tool.category] = [];
+                    acc[tool.category].push(tool);
+                    return acc;
+                }, {});
+
+                // Render categories in order
+                const categoriesToRender = categoryOrder.filter(c => grouped[c]).concat(
+                    Object.keys(grouped).filter(c => !categoryOrder.includes(c))
+                );
+
+                categoriesToRender.forEach(category => {
+                    const tools = grouped[category];
+                    if (!tools || tools.length === 0) return;
+
+                    const section = document.createElement('section');
+                    section.className = 'category-section';
+
+                    const title = document.createElement('h2');
+                    title.className = 'category-title';
+                    title.textContent = category;
+                    section.appendChild(title);
+
+                    const grid = document.createElement('div');
+                    grid.className = 'tools-grid';
+
+                    tools.forEach(tool => {
+                        const card = document.createElement('a');
+                        card.href = tool.path;
+                        card.className = 'tool-card';
+                        
+                        const statusClass = `status-${tool.status}`;
+                        const statusLabel = tool.status === 'active' ? 'Actif' : 
+                                          tool.status === 'legacy' ? 'Ancien' : 'Obsolète';
+
+                        card.innerHTML = `
+                            <div class="tool-header">
+                                <div class="tool-icon">${tool.icon}</div>
+                                <span class="tool-status ${statusClass}">${statusLabel}</span>
+                            </div>
+                            <div class="tool-title">${tool.title}</div>
+                            <div class="tool-description">${tool.description}</div>
+                            <div class="tool-tags">
+                                ${tool.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+
+                    section.appendChild(grid);
+                    container.appendChild(section);
+                });
+            }
+
+            // Initial Render
+            renderTools();
+
+            // Search Listener
+            searchInput.addEventListener('input', (e) => {
+                renderTools(e.target.value);
+            });
+        });
+    </script>
+</body>
+</html>

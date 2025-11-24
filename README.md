@@ -1,6 +1,8 @@
 # Outils
 Ce repo présente différents outils pour travailler sur Crownicles
 
+> 💡 **Accédez à la page d'accueil interactive (FR)** : [https://crownicles.github.io/Tools/](https://crownicles.github.io/Tools/)
+
 ## Générateurs
 
 - [Missions](https://crownicles.github.io/Tools/generators/missions.html) - Permet de générer les JSONs pour les missions
