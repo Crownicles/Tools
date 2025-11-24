@@ -107,7 +107,7 @@ const toolsConfig = [
         category: 'Visualisation',
         tags: ['Carte', 'Nœuds'],
         icon: '🕸️',
-        status: 'active'
+        status: 'obsolete'
     },
     {
         id: 'mission-p2p',
