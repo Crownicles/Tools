@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur d'Expéditions - Crownicles</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --accent: #e94560;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--accent);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 5px;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid var(--bg-tertiary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.4);
+        }
+
+        button:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(233, 69, 96, 0.1);
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .success-rate {
+            color: var(--success);
+        }
+
+        .partial-rate {
+            color: var(--warning);
+        }
+
+        .failure-rate {
+            color: var(--danger);
+        }
+
+        .info-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success { background: var(--success); color: #000; }
+        .badge-warning { background: var(--warning); color: #000; }
+        .badge-danger { background: var(--danger); color: #fff; }
+        .badge-info { background: var(--info); color: #fff; }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+        }
+
+        .loading::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--danger);
+            padding: 15px;
+            border-radius: 8px;
+            color: var(--danger);
+        }
+
+        .slider-container {
+            position: relative;
+            padding-top: 5px;
+        }
+
+        .slider-value {
+            position: absolute;
+            right: 0;
+            top: -5px;
+            background: var(--accent);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--bg-tertiary);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            accent-color: var(--accent);
+        }
+
+        .pet-info {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .pet-stat {
+            background: var(--bg-tertiary);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            display: flex;
+        }
+
+        .progress-success {
+            background: var(--success);
+        }
+
+        .progress-partial {
+            background: var(--warning);
+        }
+
+        .progress-failure {
+            background: var(--danger);
+        }
+
+        .results-section {
+            margin-top: 30px;
+        }
+
+        /* Searchable select styles */
+        .searchable-select-container {
+            position: relative;
+        }
+
+        .pet-search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid var(--bg-tertiary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .pet-search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .pet-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 300px;
+            overflow-y: auto;
+            background: var(--bg-primary);
+            border: 2px solid var(--bg-tertiary);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .pet-dropdown.show {
+            display: block;
+        }
+
+        .pet-option {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+
+        .pet-option:hover, .pet-option.selected {
+            background: var(--bg-tertiary);
+        }
+
+        .pet-option:last-child {
+            border-bottom: none;
+        }
+
+        .pet-option-name {
+            font-weight: 500;
+        }
+
+        .pet-option-stats {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .no-results {
+            padding: 15px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--success);
+            color: #000;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Location type selector */
+        .location-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .location-option {
+            padding: 10px;
+            border: 2px solid var(--bg-tertiary);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .location-option:hover {
+            border-color: var(--accent);
+        }
+
+        .location-option.selected {
+            border-color: var(--accent);
+            background: rgba(233, 69, 96, 0.2);
+        }
+
+        .location-option .icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .location-option .name {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Duration inputs */
+        .duration-inputs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .duration-input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .duration-input-group input {
+            width: 70px;
+            text-align: center;
+        }
+
+        .duration-input-group span {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 Simulateur d'Expéditions de Familier</h1>
+
+        <!-- Toast notification -->
+        <div id="toast" class="toast">✅ Résultats calculés !</div>
+
+        <!-- Section: Source des données -->
+        <div class="card">
+            <h2>📦 Source des données</h2>
+            <div class="form-group">
+                <label for="branchSelect">Branche GitHub</label>
+                <select id="branchSelect">
+                    <option value="main">main</option>
+                    <option value="petexploration" selected>petexploration</option>
+                    <option value="develop">develop</option>
+                </select>
+            </div>
+            <button id="loadDataBtn">Charger les données des familiers</button>
+            <div id="loadingStatus" class="loading hidden">Chargement des données</div>
+            <div id="errorStatus" class="error hidden"></div>
+        </div>
+
+        <!-- Section: Configuration de l'expédition -->
+        <div class="card" id="configSection">
+            <h2>⚙️ Configuration de l'expédition</h2>
+            
+            <div class="grid-2">
+                <!-- Sélection du familier avec recherche -->
+                <div class="form-group">
+                    <label>Familier à envoyer</label>
+                    <div class="searchable-select-container">
+                        <input type="text" id="petSearchInput" class="pet-search-input" placeholder="Chargez d'abord les données..." disabled>
+                        <div id="petDropdown" class="pet-dropdown"></div>
+                        <input type="hidden" id="selectedPetId" value="">
+                    </div>
+                    <div id="petInfo" class="pet-info hidden">
+                        <span class="pet-stat">Force: <strong id="petForce">-</strong></span>
+                        <span class="pet-stat">Vitesse: <strong id="petSpeed">-</strong></span>
+                        <span class="pet-stat">Rareté: <strong id="petRarity">-</strong></span>
+                    </div>
+                </div>
+
+                <!-- Points d'amour du familier -->
+                <div class="form-group">
+                    <label for="lovePoints">Points d'amour du familier (0-110)</label>
+                    <div class="slider-container">
+                        <span class="slider-value" id="lovePointsValue">100</span>
+                        <input type="range" id="lovePoints" min="0" max="110" value="100">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type d'expédition (lieu) -->
+            <div class="form-group">
+                <label>Type d'expédition (lieu)</label>
+                <div class="location-grid" id="locationGrid">
+                    <div class="location-option selected" data-location="plains">
+                        <span class="icon">🌾</span>
+                        <span class="name">Plaines</span>
+                    </div>
+                    <div class="location-option" data-location="forest">
+                        <span class="icon">🌲</span>
+                        <span class="name">Forêt</span>
+                    </div>
+                    <div class="location-option" data-location="mountain">
+                        <span class="icon">⛰️</span>
+                        <span class="name">Montagne</span>
+                    </div>
+                    <div class="location-option" data-location="desert">
+                        <span class="icon">🏜️</span>
+                        <span class="name">Désert</span>
+                    </div>
+                    <div class="location-option" data-location="swamp">
+                        <span class="icon">🐸</span>
+                        <span class="name">Marais</span>
+                    </div>
+                    <div class="location-option" data-location="coast">
+                        <span class="icon">🏖️</span>
+                        <span class="name">Côte</span>
+                    </div>
+                    <div class="location-option" data-location="ruins">
+                        <span class="icon">🏛️</span>
+                        <span class="name">Ruines</span>
+                    </div>
+                    <div class="location-option" data-location="cave">
+                        <span class="icon">🕳️</span>
+                        <span class="name">Caverne</span>
+                    </div>
+                </div>
+                <small id="locationInfo" style="color: var(--text-secondary); margin-top: 10px; display: block;">
+                    Bonus: Argent ×1, XP ×1.5, Points ×1
+                </small>
+            </div>
+
+            <div class="grid-3">
+                <!-- Richesse -->
+                <div class="form-group">
+                    <label for="wealthRate">Richesse (0.0 - 2.0)</label>
+                    <div class="slider-container">
+                        <span class="slider-value" id="wealthRateValue">1.0</span>
+                        <input type="range" id="wealthRate" min="0" max="200" value="100" step="1">
+                    </div>
+                    <small id="wealthCategory" style="color: var(--text-secondary);">Catégorie: Modestes</small>
+                </div>
+
+                <!-- Dangerosité -->
+                <div class="form-group">
+                    <label for="riskRate">Dangerosité (0 - 100)</label>
+                    <div class="slider-container">
+                        <span class="slider-value" id="riskRateValue">30</span>
+                        <input type="range" id="riskRate" min="0" max="100" value="30">
+                    </div>
+                    <small id="riskCategory" style="color: var(--text-secondary);">Catégorie: Peu risqué</small>
+                </div>
+
+                <!-- Difficulté du terrain -->
+                <div class="form-group">
+                    <label for="difficulty">Difficulté du terrain (0 - 100)</label>
+                    <div class="slider-container">
+                        <span class="slider-value" id="difficultyValue">30</span>
+                        <input type="range" id="difficulty" min="0" max="100" value="30">
+                    </div>
+                    <small id="difficultyCategory" style="color: var(--text-secondary);">Catégorie: Accessible</small>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <!-- Durée de l'expédition -->
+                <div class="form-group">
+                    <label>Durée de l'expédition</label>
+                    <div class="duration-inputs">
+                        <div class="duration-input-group">
+                            <input type="number" id="durationDays" min="0" max="3" value="0">
+                            <span>jours</span>
+                        </div>
+                        <div class="duration-input-group">
+                            <input type="number" id="durationHours" min="0" max="23" value="1">
+                            <span>heures</span>
+                        </div>
+                        <div class="duration-input-group">
+                            <input type="number" id="durationMinutes" min="0" max="59" value="0">
+                            <span>min</span>
+                        </div>
+                    </div>
+                    <small id="durationDisplay" style="color: var(--text-secondary); margin-top: 5px; display: block;">= 60 minutes au total</small>
+                </div>
+
+                <!-- Options -->
+                <div class="form-group">
+                    <label>Options</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="hasCloneTalisman">
+                        <label for="hasCloneTalisman" style="margin-bottom: 0; cursor: pointer;">
+                            Possède déjà le Talisman de Clonage
+                        </label>
+                    </div>
+                    <div class="checkbox-group" style="margin-top: 10px;">
+                        <input type="checkbox" id="hasCloneTalismanBonus">
+                        <label for="hasCloneTalismanBonus" style="margin-bottom: 0; cursor: pointer;">
+                            Expédition avec bonus Talisman de Clonage
+                        </label>
+                    </div>
+                    <div class="checkbox-group" style="margin-top: 10px;">
+                        <input type="checkbox" id="hasFood" checked>
+                        <label for="hasFood" style="margin-bottom: 0; cursor: pointer;">
+                            A assez de provisions
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button id="calculateBtn">Calculer les résultats</button>
+        </div>
+
+        <!-- Section: Résultats -->
+        <div class="card results-section" id="resultsSection">
+            <h2>📊 Résultats de l'estimation</h2>
+
+            <!-- Tableau récapitulatif de l'expédition -->
+            <h3 style="margin: 20px 0 10px 0; color: var(--info);">📋 Récapitulatif de l'expédition</h3>
+            <table id="summaryTable">
+                <thead>
+                    <tr>
+                        <th>Paramètre</th>
+                        <th>Valeur</th>
+                        <th>Catégorie</th>
+                    </tr>
+                </thead>
+                <tbody id="summaryBody">
+                    <tr><td colspan="3" style="text-align: center; color: var(--text-secondary);">Cliquez sur "Calculer les résultats"</td></tr>
+                </tbody>
+            </table>
+
+            <!-- Barre de progression des taux -->
+            <h3 style="margin: 30px 0 10px 0; color: var(--info);">🎯 Taux de succès</h3>
+            <div class="progress-bar">
+                <div class="progress-bar-inner" id="successBar">
+                    <div class="progress-success" style="width: 0%"></div>
+                    <div class="progress-partial" style="width: 0%"></div>
+                    <div class="progress-failure" style="width: 0%"></div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 12px;">
+                <span class="success-rate">🟢 Succès total: <span id="totalSuccessRate">-</span></span>
+                <span class="partial-rate">🟡 Succès partiel: <span id="partialSuccessRate">-</span></span>
+                <span class="failure-rate">🔴 Échec: <span id="failureRate">-</span></span>
+            </div>
+
+            <!-- Tableau des récompenses estimées -->
+            <h3 style="margin: 30px 0 10px 0; color: var(--info);">💰 Récompenses estimées</h3>
+            <table id="rewardsTable">
+                <thead>
+                    <tr>
+                        <th>Récompense</th>
+                        <th>Estimation (succès total)</th>
+                        <th>Estimation (succès partiel)</th>
+                    </tr>
+                </thead>
+                <tbody id="rewardsBody">
+                    <tr><td colspan="3" style="text-align: center; color: var(--text-secondary);">Cliquez sur "Calculer les résultats"</td></tr>
+                </tbody>
+            </table>
+
+            <!-- Tableau des chances d'items -->
+            <h3 style="margin: 30px 0 10px 0; color: var(--info);">🎁 Chances d'items et talisman</h3>
+            <table id="itemsTable">
+                <thead>
+                    <tr>
+                        <th>Élément</th>
+                        <th>Chance / Valeur</th>
+                    </tr>
+                </thead>
+                <tbody id="itemsBody">
+                    <tr><td colspan="2" style="text-align: center; color: var(--text-secondary);">Cliquez sur "Calculer les résultats"</td></tr>
+                </tbody>
+            </table>
+
+            <!-- Tableau des effets sur l'amour -->
+            <h3 style="margin: 30px 0 10px 0; color: var(--info);">💕 Effets sur les points d'amour</h3>
+            <table id="loveTable">
+                <thead>
+                    <tr>
+                        <th>Résultat</th>
+                        <th>Changement d'amour</th>
+                        <th>Probabilité</th>
+                    </tr>
+                </thead>
+                <tbody id="loveBody">
+                    <tr><td colspan="3" style="text-align: center; color: var(--text-secondary);">Cliquez sur "Calculer les résultats"</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        // Constants (mirroring ExpeditionConstants from the TypeScript code)
+        const ExpeditionConstants = {
+            DURATION: {
+                MIN_MINUTES: 10,
+                MAX_MINUTES: 3 * 24 * 60 // 3 days
+            },
+            RISK_RATE: { MIN: 0, MAX: 100 },
+            DIFFICULTY: { MIN: 0, MAX: 100 },
+            WEALTH_RATE: { MIN: 0.0, MAX: 2.0 },
+            RISK_DISPLAY_CATEGORIES: {
+                VERY_LOW: { MAX: 15, NAME: "veryLow" },
+                LOW: { MAX: 30, NAME: "low" },
+                MEDIUM: { MAX: 50, NAME: "medium" },
+                HIGH: { MAX: 70, NAME: "high" },
+                VERY_HIGH: { MAX: 100, NAME: "veryHigh" }
+            },
+            DIFFICULTY_DISPLAY_CATEGORIES: {
+                TRIVIAL: { MAX: 20, NAME: "trivial" },
+                EASY: { MAX: 40, NAME: "easy" },
+                MODERATE: { MAX: 60, NAME: "moderate" },
+                CHALLENGING: { MAX: 80, NAME: "challenging" },
+                TREACHEROUS: { MAX: 100, NAME: "treacherous" }
+            },
+            REWARD_DISPLAY_CATEGORIES: {
+                MEAGER: { MAX: 1, NAME: "meager" },
+                MODEST: { MAX: 3, NAME: "modest" },
+                SUBSTANTIAL: { MAX: 5, NAME: "substantial" },
+                BOUNTIFUL: { MAX: 7, NAME: "bountiful" },
+                LEGENDARY: { MAX: 9, NAME: "legendary" }
+            },
+            REWARD_TABLES: {
+                MONEY: [50, 120, 235, 435, 710, 1300, 2100, 3200, 4200, 5000],
+                EXPERIENCE: [50, 150, 350, 600, 950, 1400, 1950, 2550, 3000, 3500],
+                POINTS: [6, 20, 75, 145, 210, 340, 420, 585, 650, 710]
+            },
+            FOOD_CONSUMPTION: [1, 3, 5, 6, 8, 10, 12, 15, 25, 32],
+            WEALTH_RATE_REWARD_INDEX_BONUS: 0.30,
+            EFFECTIVE_RISK_FORMULA: {
+                DIFFICULTY_DIVISOR: 3,
+                LOVE_DIVISOR: 10
+            },
+            NO_FOOD_RISK_MULTIPLIER: 3,
+            LOVE_CHANGES: {
+                TOTAL_FAILURE: -10,
+                TOTAL_SUCCESS: 5
+            },
+            CLONE_TALISMAN: {
+                BASE_DROP_CHANCE: 0.5,
+                REWARD_INDEX_BONUS_PER_POINT: 0.5,
+                BONUS_EXPEDITION_MULTIPLIER: 10
+            },
+            ITEM_REWARD: {
+                MIN_RARITY_OFFSET: 3,
+                MIN_RARITY_FLOOR: 1,
+                MAX_RARITY_BY_REWARD_INDEX: [5, 5, 6, 7, 8, 8, 8, 8, 8, 8]
+            },
+            SPEED_DURATION_MODIFIER: {
+                MIN_SPEED: 0,
+                MAX_SPEED: 30,
+                MAX_SPEED_MULTIPLIER: 0.70,
+                MIN_SPEED_MULTIPLIER: 1.20
+            },
+            LOCATION_REWARD_WEIGHTS: {
+                forest: { money: 0.8, experience: 1.3, points: 0.9 },
+                mountain: { money: 1.9, experience: 1, points: 0.3 },
+                desert: { money: 0.6, experience: 0.4, points: 1.5 },
+                swamp: { money: 0.4, experience: 1, points: 1.6 },
+                ruins: { money: 1.7, experience: 1, points: 0.5 },
+                cave: { money: 2.2, experience: 0.5, points: 0.2 },
+                plains: { money: 1, experience: 1, points: 1 },
+                coast: { money: 1.2, experience: 0.7, points: 0.8 }
+            }
+        };
+
+        // Translations (from Lang/fr/commands.json)
+        const translations = {
+            riskCategories: {
+                veryLow: "Paisible",
+                low: "Peu risqué",
+                medium: "Modéré",
+                high: "Dangereux",
+                veryHigh: "Périlleux"
+            },
+            difficultyCategories: {
+                trivial: "Aisé",
+                easy: "Accessible",
+                moderate: "Exigeant",
+                challenging: "Ardu",
+                treacherous: "Impitoyable"
+            },
+            rewardCategories: {
+                meager: "Maigres",
+                modest: "Modestes",
+                substantial: "Correctes",
+                bountiful: "Abondantes",
+                legendary: "Exceptionnelles"
+            },
+            itemRarities: [
+                "Basique",
+                "Commun",
+                "Peu commun",
+                "Exotique",
+                "Rare",
+                "Spécial",
+                "Épique",
+                "Légendaire",
+                "Mythique"
+            ],
+            // Rareté des pets: 1=Commun à 6=Légendaire (le max est 6, pas 7!)
+            petRarities: [
+                "Aucun",      // 0
+                "Commun",     // 1
+                "Peu commun", // 2
+                "Rare",       // 3
+                "Spécial",    // 4
+                "Épique",     // 5
+                "Légendaire"  // 6
+            ],
+            locationNames: {
+                plains: "Plaines",
+                forest: "Forêt",
+                mountain: "Montagne",
+                desert: "Désert",
+                swamp: "Marais",
+                coast: "Côte",
+                ruins: "Ruines",
+                cave: "Caverne"
+            }
+        };
+
+        // Pet data storage
+        let petsData = {};
+        let petNames = {};
+        let petsArray = []; // For searchable select
+        let selectedLocation = "plains";
+
+        // DOM Elements
+        const branchSelect = document.getElementById('branchSelect');
+        const loadDataBtn = document.getElementById('loadDataBtn');
+        const loadingStatus = document.getElementById('loadingStatus');
+        const errorStatus = document.getElementById('errorStatus');
+        const petSearchInput = document.getElementById('petSearchInput');
+        const petDropdown = document.getElementById('petDropdown');
+        const selectedPetIdInput = document.getElementById('selectedPetId');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const locationGrid = document.getElementById('locationGrid');
+        const locationInfo = document.getElementById('locationInfo');
+
+        // Slider elements
+        const sliders = {
+            lovePoints: { element: document.getElementById('lovePoints'), display: document.getElementById('lovePointsValue') },
+            wealthRate: { element: document.getElementById('wealthRate'), display: document.getElementById('wealthRateValue'), category: document.getElementById('wealthCategory') },
+            riskRate: { element: document.getElementById('riskRate'), display: document.getElementById('riskRateValue'), category: document.getElementById('riskCategory') },
+            difficulty: { element: document.getElementById('difficulty'), display: document.getElementById('difficultyValue'), category: document.getElementById('difficultyCategory') }
+        };
+
+        // Duration inputs
+        const durationInputs = {
+            days: document.getElementById('durationDays'),
+            hours: document.getElementById('durationHours'),
+            minutes: document.getElementById('durationMinutes'),
+            display: document.getElementById('durationDisplay')
+        };
+
+        // Helper functions
+        function getRiskCategoryName(riskRate) {
+            const cats = ExpeditionConstants.RISK_DISPLAY_CATEGORIES;
+            if (riskRate <= cats.VERY_LOW.MAX) return cats.VERY_LOW.NAME;
+            if (riskRate <= cats.LOW.MAX) return cats.LOW.NAME;
+            if (riskRate <= cats.MEDIUM.MAX) return cats.MEDIUM.NAME;
+            if (riskRate <= cats.HIGH.MAX) return cats.HIGH.NAME;
+            return cats.VERY_HIGH.NAME;
+        }
+
+        function getDifficultyCategoryName(difficulty) {
+            const cats = ExpeditionConstants.DIFFICULTY_DISPLAY_CATEGORIES;
+            if (difficulty <= cats.TRIVIAL.MAX) return cats.TRIVIAL.NAME;
+            if (difficulty <= cats.EASY.MAX) return cats.EASY.NAME;
+            if (difficulty <= cats.MODERATE.MAX) return cats.MODERATE.NAME;
+            if (difficulty <= cats.CHALLENGING.MAX) return cats.CHALLENGING.NAME;
+            return cats.TREACHEROUS.NAME;
+        }
+
+        function getRewardCategoryName(rewardIndex) {
+            const cats = ExpeditionConstants.REWARD_DISPLAY_CATEGORIES;
+            if (rewardIndex <= cats.MEAGER.MAX) return cats.MEAGER.NAME;
+            if (rewardIndex <= cats.MODEST.MAX) return cats.MODEST.NAME;
+            if (rewardIndex <= cats.SUBSTANTIAL.MAX) return cats.SUBSTANTIAL.NAME;
+            if (rewardIndex <= cats.BOUNTIFUL.MAX) return cats.BOUNTIFUL.NAME;
+            return cats.LEGENDARY.NAME;
+        }
+
+        function getWealthCategoryName(wealthRate) {
+            if (wealthRate <= 0.5) return "meager";
+            if (wealthRate <= 1.0) return "modest";
+            if (wealthRate <= 1.5) return "substantial";
+            return "legendary";
+        }
+
+        function formatDuration(minutes) {
+            if (minutes < 60) return `${minutes} min`;
+            if (minutes < 1440) {
+                const hours = Math.floor(minutes / 60);
+                const mins = minutes % 60;
+                return mins > 0 ? `${hours}h ${mins}min` : `${hours}h`;
+            }
+            const days = Math.floor(minutes / 1440);
+            const hours = Math.floor((minutes % 1440) / 60);
+            return hours > 0 ? `${days}j ${hours}h` : `${days}j`;
+        }
+
+        function calculateLinearScore(value, min, max) {
+            const percentage = (value - min) / (max - min);
+            return percentage * 3;
+        }
+
+        function calculateRewardIndex(duration, riskRate, difficulty, wealthRate) {
+            const durationScore = calculateLinearScore(
+                duration,
+                ExpeditionConstants.DURATION.MIN_MINUTES,
+                ExpeditionConstants.DURATION.MAX_MINUTES
+            );
+            const riskScore = calculateLinearScore(
+                riskRate,
+                ExpeditionConstants.RISK_RATE.MIN,
+                ExpeditionConstants.RISK_RATE.MAX
+            );
+            const difficultyScore = calculateLinearScore(
+                difficulty,
+                ExpeditionConstants.DIFFICULTY.MIN,
+                ExpeditionConstants.DIFFICULTY.MAX
+            );
+
+            const baseIndex = (durationScore * 3) + riskScore + difficultyScore;
+            const wealthRateMultiplier = 1 + (wealthRate - 1) * ExpeditionConstants.WEALTH_RATE_REWARD_INDEX_BONUS;
+            const adjustedIndex = baseIndex * wealthRateMultiplier;
+
+            return Math.max(0, Math.min(9, Math.round(adjustedIndex)));
+        }
+
+        function calculateEffectiveRisk(riskRate, difficulty, petForce, lovePoints, hasFood) {
+            let effectiveRisk = riskRate
+                + difficulty / ExpeditionConstants.EFFECTIVE_RISK_FORMULA.DIFFICULTY_DIVISOR
+                - petForce
+                - lovePoints / ExpeditionConstants.EFFECTIVE_RISK_FORMULA.LOVE_DIVISOR;
+
+            if (!hasFood) {
+                effectiveRisk *= ExpeditionConstants.NO_FOOD_RISK_MULTIPLIER;
+            }
+
+            return Math.max(0, Math.min(100, effectiveRisk));
+        }
+
+        function calculateCloneTalismanChance(rewardIndex, hasCloneTalisman, hasBonus) {
+            if (hasCloneTalisman) return 0;
+
+            let dropChance = ExpeditionConstants.CLONE_TALISMAN.BASE_DROP_CHANCE
+                + rewardIndex * ExpeditionConstants.CLONE_TALISMAN.REWARD_INDEX_BONUS_PER_POINT;
+
+            if (hasBonus) {
+                dropChance *= ExpeditionConstants.CLONE_TALISMAN.BONUS_EXPEDITION_MULTIPLIER;
+            }
+
+            return dropChance;
+        }
+
+        function calculateItemRarityRange(rewardIndex) {
+            const minRarity = Math.max(
+                ExpeditionConstants.ITEM_REWARD.MIN_RARITY_FLOOR,
+                rewardIndex - ExpeditionConstants.ITEM_REWARD.MIN_RARITY_OFFSET
+            );
+            const maxRarity = ExpeditionConstants.ITEM_REWARD.MAX_RARITY_BY_REWARD_INDEX[rewardIndex];
+            return { minRarity, maxRarity };
+        }
+
+        function calculateBaseRewards(rewardIndex, locationType) {
+            const locationWeights = ExpeditionConstants.LOCATION_REWARD_WEIGHTS[locationType] || { money: 1, experience: 1, points: 1 };
+            return {
+                money: Math.round(ExpeditionConstants.REWARD_TABLES.MONEY[rewardIndex] * locationWeights.money),
+                experience: Math.round(ExpeditionConstants.REWARD_TABLES.EXPERIENCE[rewardIndex] * locationWeights.experience),
+                points: Math.round(ExpeditionConstants.REWARD_TABLES.POINTS[rewardIndex] * locationWeights.points)
+            };
+        }
+
+        function calculateSpeedModifier(petSpeed) {
+            const speedRange = ExpeditionConstants.SPEED_DURATION_MODIFIER.MAX_SPEED - ExpeditionConstants.SPEED_DURATION_MODIFIER.MIN_SPEED;
+            const speedProgress = (petSpeed - ExpeditionConstants.SPEED_DURATION_MODIFIER.MIN_SPEED) / speedRange;
+            const multiplierRange = ExpeditionConstants.SPEED_DURATION_MODIFIER.MIN_SPEED_MULTIPLIER - ExpeditionConstants.SPEED_DURATION_MODIFIER.MAX_SPEED_MULTIPLIER;
+            return ExpeditionConstants.SPEED_DURATION_MODIFIER.MIN_SPEED_MULTIPLIER - (speedProgress * multiplierRange);
+        }
+
+        // Update slider displays
+        function updateSliderDisplays() {
+            // Love points
+            sliders.lovePoints.display.textContent = sliders.lovePoints.element.value;
+
+            // Wealth rate
+            const wealthRate = parseInt(sliders.wealthRate.element.value) / 100;
+            sliders.wealthRate.display.textContent = wealthRate.toFixed(2);
+            const wealthCat = getWealthCategoryName(wealthRate);
+            sliders.wealthRate.category.textContent = `Catégorie: ${translations.rewardCategories[wealthCat] || wealthCat}`;
+
+            // Risk rate
+            const riskRate = parseInt(sliders.riskRate.element.value);
+            sliders.riskRate.display.textContent = riskRate;
+            const riskCat = getRiskCategoryName(riskRate);
+            sliders.riskRate.category.textContent = `Catégorie: ${translations.riskCategories[riskCat]}`;
+
+            // Difficulty
+            const difficulty = parseInt(sliders.difficulty.element.value);
+            sliders.difficulty.display.textContent = difficulty;
+            const diffCat = getDifficultyCategoryName(difficulty);
+            sliders.difficulty.category.textContent = `Catégorie: ${translations.difficultyCategories[diffCat]}`;
+        }
+
+        // Get total duration in minutes
+        function getTotalDurationMinutes() {
+            const days = parseInt(durationInputs.days.value) || 0;
+            const hours = parseInt(durationInputs.hours.value) || 0;
+            const minutes = parseInt(durationInputs.minutes.value) || 0;
+            return (days * 24 * 60) + (hours * 60) + minutes;
+        }
+
+        // Update duration display
+        function updateDurationDisplay() {
+            const total = getTotalDurationMinutes();
+            const clamped = Math.max(ExpeditionConstants.DURATION.MIN_MINUTES, Math.min(ExpeditionConstants.DURATION.MAX_MINUTES, total));
+            
+            let displayText = `= ${clamped} minutes au total`;
+            if (clamped !== total) {
+                displayText += ` (limité: min ${ExpeditionConstants.DURATION.MIN_MINUTES} min, max 3 jours)`;
+            }
+            durationInputs.display.textContent = displayText;
+        }
+
+        // Add event listeners to sliders
+        Object.values(sliders).forEach(slider => {
+            slider.element.addEventListener('input', updateSliderDisplays);
+        });
+
+        // Add event listeners to duration inputs
+        Object.values(durationInputs).forEach(input => {
+            if (input.tagName === 'INPUT') {
+                input.addEventListener('input', updateDurationDisplay);
+            }
+        });
+        durationInputs.days.addEventListener('input', updateDurationDisplay);
+        durationInputs.hours.addEventListener('input', updateDurationDisplay);
+        durationInputs.minutes.addEventListener('input', updateDurationDisplay);
+
+        // Location selection
+        function updateLocationInfo() {
+            const weights = ExpeditionConstants.LOCATION_REWARD_WEIGHTS[selectedLocation];
+            let infoText = `Bonus: Argent ×${weights.money}, XP ×${weights.experience}, Points ×${weights.points}`;
+            locationInfo.textContent = infoText;
+        }
+
+        locationGrid.querySelectorAll('.location-option').forEach(option => {
+            option.addEventListener('click', () => {
+                locationGrid.querySelectorAll('.location-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedLocation = option.dataset.location;
+                updateLocationInfo();
+            });
+        });
+
+        // Searchable pet select
+        function renderPetDropdown(filter = '') {
+            const filterLower = filter.toLowerCase();
+            const filtered = petsArray.filter(pet => 
+                pet.name.toLowerCase().includes(filterLower) ||
+                translations.petRarities[pet.rarity]?.toLowerCase().includes(filterLower)
+            );
+
+            if (filtered.length === 0) {
+                petDropdown.innerHTML = '<div class="no-results">Aucun familier trouvé</div>';
+            } else {
+                petDropdown.innerHTML = filtered.map(pet => `
+                    <div class="pet-option" data-id="${pet.id}">
+                        <div class="pet-option-name">${pet.name}</div>
+                        <div class="pet-option-stats">Rareté: ${translations.petRarities[pet.rarity] || pet.rarity} | Force: ${pet.force} | Vitesse: ${pet.speed}</div>
+                    </div>
+                `).join('');
+
+                // Add click handlers
+                petDropdown.querySelectorAll('.pet-option').forEach(option => {
+                    option.addEventListener('click', () => selectPet(option.dataset.id));
+                });
+            }
+        }
+
+        function selectPet(petId) {
+            const pet = petsData[petId];
+            if (!pet) return;
+
+            selectedPetIdInput.value = petId;
+            petSearchInput.value = petNames[petId]?.male || `Familier #${petId}`;
+            petDropdown.classList.remove('show');
+
+            // Update pet info display
+            const petInfo = document.getElementById('petInfo');
+            document.getElementById('petForce').textContent = pet.force;
+            document.getElementById('petSpeed').textContent = pet.speed;
+            document.getElementById('petRarity').textContent = translations.petRarities[pet.rarity] || pet.rarity;
+            petInfo.classList.remove('hidden');
+        }
+
+        petSearchInput.addEventListener('focus', () => {
+            renderPetDropdown(petSearchInput.value);
+            petDropdown.classList.add('show');
+        });
+
+        petSearchInput.addEventListener('input', () => {
+            renderPetDropdown(petSearchInput.value);
+            petDropdown.classList.add('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!petSearchInput.contains(e.target) && !petDropdown.contains(e.target)) {
+                petDropdown.classList.remove('show');
+            }
+        });
+
+        // Load pet data from GitHub
+        async function loadPetData() {
+            const branch = branchSelect.value;
+            loadingStatus.classList.remove('hidden');
+            errorStatus.classList.add('hidden');
+            loadDataBtn.disabled = true;
+
+            try {
+                // Load pet names from French translations
+                const langUrl = `https://raw.githubusercontent.com/Crownicles/Crownicles/${branch}/Lang/fr/models.json`;
+                const langResponse = await fetch(langUrl);
+                if (!langResponse.ok) throw new Error(`Failed to load translations: ${langResponse.status}`);
+                const langData = await langResponse.json();
+
+                // Extract pet names
+                petNames = {};
+                Object.keys(langData.pets || {}).forEach(key => {
+                    const match = key.match(/^(\d+)_(male|female)$/);
+                    if (match) {
+                        const id = match[1];
+                        const gender = match[2];
+                        if (!petNames[id]) petNames[id] = {};
+                        petNames[id][gender] = langData.pets[key];
+                    }
+                });
+
+                // Load pet data
+                petsData = {};
+                const petIds = Array.from({ length: 102 }, (_, i) => i); // 0 to 101
+
+                // Load all pet data in parallel
+                const petPromises = petIds.map(async (id) => {
+                    const url = `https://raw.githubusercontent.com/Crownicles/Crownicles/${branch}/Core/resources/pets/${id}.json`;
+                    try {
+                        const response = await fetch(url);
+                        if (response.ok) {
+                            const data = await response.json();
+                            petsData[id] = data;
+                        }
+                    } catch (e) {
+                        // Pet doesn't exist, skip
+                    }
+                });
+
+                await Promise.all(petPromises);
+
+                // Build pets array for searchable select
+                petsArray = [];
+                Object.keys(petsData).sort((a, b) => parseInt(a) - parseInt(b)).forEach(id => {
+                    if (id === '0' || petsData[id].rarity === 0) return; // Skip "no pet"
+                    const pet = petsData[id];
+                    const name = petNames[id]?.male || `Familier #${id}`;
+                    petsArray.push({
+                        id,
+                        name,
+                        rarity: pet.rarity,
+                        force: pet.force,
+                        speed: pet.speed
+                    });
+                });
+
+                petSearchInput.disabled = false;
+                petSearchInput.placeholder = "Rechercher un familier...";
+                loadingStatus.classList.add('hidden');
+                loadDataBtn.textContent = '✓ Données chargées';
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                errorStatus.textContent = `Erreur: ${error.message}`;
+                errorStatus.classList.remove('hidden');
+                loadingStatus.classList.add('hidden');
+                loadDataBtn.disabled = false;
+            }
+        }
+
+        // Calculate results
+        function calculateResults() {
+            const petId = selectedPetIdInput.value;
+            if (!petId || !petsData[petId]) {
+                alert('Veuillez sélectionner un familier.');
+                return;
+            }
+
+            const pet = petsData[petId];
+            const lovePoints = parseInt(sliders.lovePoints.element.value);
+            const wealthRate = parseInt(sliders.wealthRate.element.value) / 100;
+            const riskRate = parseInt(sliders.riskRate.element.value);
+            const difficulty = parseInt(sliders.difficulty.element.value);
+            const duration = Math.max(ExpeditionConstants.DURATION.MIN_MINUTES, Math.min(ExpeditionConstants.DURATION.MAX_MINUTES, getTotalDurationMinutes()));
+            const hasCloneTalisman = document.getElementById('hasCloneTalisman').checked;
+            const hasCloneTalismanBonus = document.getElementById('hasCloneTalismanBonus').checked;
+            const hasFood = document.getElementById('hasFood').checked;
+
+            // Calculate metrics
+            const rewardIndex = calculateRewardIndex(duration, riskRate, difficulty, wealthRate);
+            const effectiveRisk = calculateEffectiveRisk(riskRate, difficulty, pet.force, lovePoints, hasFood);
+            const speedModifier = calculateSpeedModifier(pet.speed);
+            const adjustedDuration = Math.round(duration * speedModifier);
+
+            // Calculate success rates
+            const failureRate = effectiveRisk / 100;
+            const totalSuccessRate = (1 - failureRate) * (1 - failureRate);
+            const partialSuccessRate = (1 - failureRate) * failureRate;
+
+            // Calculate rewards with location bonus
+            const baseRewards = calculateBaseRewards(rewardIndex, selectedLocation);
+            const foodCost = ExpeditionConstants.FOOD_CONSUMPTION[rewardIndex];
+
+            // Calculate clone talisman chance
+            const cloneTalismanChance = calculateCloneTalismanChance(rewardIndex, hasCloneTalisman, hasCloneTalismanBonus);
+            
+            // Calculate weighted talisman chance (only on success - total or partial)
+            const successRate = totalSuccessRate + partialSuccessRate;
+            const weightedTalismanChance = cloneTalismanChance * successRate;
+
+            // Calculate item rarity range
+            const itemRarity = calculateItemRarityRange(rewardIndex);
+
+            // Update summary table
+            const summaryBody = document.getElementById('summaryBody');
+            const riskCatName = getRiskCategoryName(riskRate);
+            const diffCatName = getDifficultyCategoryName(difficulty);
+            const rewardCatName = getRewardCategoryName(rewardIndex);
+            const wealthCatName = getWealthCategoryName(wealthRate);
+
+            summaryBody.innerHTML = `
+                <tr>
+                    <td>Familier</td>
+                    <td>${petNames[petId]?.male || `#${petId}`}</td>
+                    <td><span class="info-badge badge-info">Force: ${pet.force} | Vitesse: ${pet.speed}</span></td>
+                </tr>
+                <tr>
+                    <td>Points d'amour</td>
+                    <td>${lovePoints}</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Type d'expédition</td>
+                    <td>${translations.locationNames[selectedLocation]}</td>
+                    <td><span class="info-badge badge-info">Lieu</span></td>
+                </tr>
+                <tr>
+                    <td>Richesse</td>
+                    <td>${wealthRate.toFixed(2)}</td>
+                    <td><span class="info-badge badge-info">${translations.rewardCategories[wealthCatName] || wealthCatName}</span></td>
+                </tr>
+                <tr>
+                    <td>Dangerosité</td>
+                    <td>${riskRate}%</td>
+                    <td><span class="info-badge ${riskRate > 50 ? 'badge-danger' : riskRate > 30 ? 'badge-warning' : 'badge-success'}">${translations.riskCategories[riskCatName]}</span></td>
+                </tr>
+                <tr>
+                    <td>Difficulté du terrain</td>
+                    <td>${difficulty}%</td>
+                    <td><span class="info-badge ${difficulty > 60 ? 'badge-danger' : difficulty > 40 ? 'badge-warning' : 'badge-success'}">${translations.difficultyCategories[diffCatName]}</span></td>
+                </tr>
+                <tr>
+                    <td>Durée (base)</td>
+                    <td>${formatDuration(duration)}</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Durée (ajustée vitesse)</td>
+                    <td>${formatDuration(adjustedDuration)}</td>
+                    <td><span class="info-badge ${speedModifier < 1 ? 'badge-success' : 'badge-warning'}">×${speedModifier.toFixed(2)}</span></td>
+                </tr>
+                <tr>
+                    <td>Index de récompense</td>
+                    <td>${rewardIndex}/9</td>
+                    <td><span class="info-badge badge-info">${translations.rewardCategories[rewardCatName]}</span></td>
+                </tr>
+                <tr>
+                    <td>Provisions requises</td>
+                    <td>${foodCost} rations</td>
+                    <td><span class="info-badge ${hasFood ? 'badge-success' : 'badge-danger'}">${hasFood ? 'OK' : 'Manquantes (×3 risque)'}</span></td>
+                </tr>
+                <tr>
+                    <td>Risque effectif</td>
+                    <td>${effectiveRisk.toFixed(1)}%</td>
+                    <td><span class="info-badge ${effectiveRisk > 50 ? 'badge-danger' : effectiveRisk > 30 ? 'badge-warning' : 'badge-success'}">${effectiveRisk > 50 ? 'Élevé' : effectiveRisk > 30 ? 'Modéré' : 'Faible'}</span></td>
+                </tr>
+            `;
+
+            // Update success bar
+            const successBar = document.getElementById('successBar');
+            successBar.innerHTML = `
+                <div class="progress-success" style="width: ${totalSuccessRate * 100}%"></div>
+                <div class="progress-partial" style="width: ${partialSuccessRate * 100}%"></div>
+                <div class="progress-failure" style="width: ${failureRate * 100}%"></div>
+            `;
+            document.getElementById('totalSuccessRate').textContent = `${(totalSuccessRate * 100).toFixed(1)}%`;
+            document.getElementById('partialSuccessRate').textContent = `${(partialSuccessRate * 100).toFixed(1)}%`;
+            document.getElementById('failureRate').textContent = `${(failureRate * 100).toFixed(1)}%`;
+
+            // Update rewards table
+            const rewardsBody = document.getElementById('rewardsBody');
+            const locationWeights = ExpeditionConstants.LOCATION_REWARD_WEIGHTS[selectedLocation];
+            rewardsBody.innerHTML = `
+                <tr>
+                    <td>💰 Argent <small>(×${locationWeights.money})</small></td>
+                    <td class="stat-value">${baseRewards.money.toLocaleString()}</td>
+                    <td class="stat-value">${Math.round(baseRewards.money / 2).toLocaleString()}</td>
+                </tr>
+                <tr>
+                    <td>⭐ Points <small>(×${locationWeights.points})</small></td>
+                    <td class="stat-value">${baseRewards.points.toLocaleString()}</td>
+                    <td class="stat-value">${Math.round(baseRewards.points / 2).toLocaleString()}</td>
+                </tr>
+                <tr>
+                    <td>✨ Expérience <small>(×${locationWeights.experience})</small></td>
+                    <td class="stat-value">${baseRewards.experience.toLocaleString()}</td>
+                    <td class="stat-value">${Math.round(baseRewards.experience / 2).toLocaleString()}</td>
+                </tr>
+            `;
+
+            // Update items table
+            const itemsBody = document.getElementById('itemsBody');
+            itemsBody.innerHTML = `
+                <tr>
+                    <td>🎁 Rareté item obtenu</td>
+                    <td>
+                        <span class="info-badge badge-info">${translations.itemRarities[itemRarity.minRarity]}</span>
+                        à
+                        <span class="info-badge badge-info">${translations.itemRarities[itemRarity.maxRarity]}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>🔮 Chance Talisman de Clonage (si succès)</td>
+                    <td>
+                        <span class="stat-value ${cloneTalismanChance > 0 ? 'success-rate' : 'failure-rate'}">
+                            ${hasCloneTalisman ? 'Déjà possédé' : `${cloneTalismanChance.toFixed(2)}%`}
+                        </span>
+                        ${hasCloneTalismanBonus && !hasCloneTalisman ? '<span class="info-badge badge-success">Bonus ×10!</span>' : ''}
+                    </td>
+                </tr>
+                <tr>
+                    <td>🔮 Chance Talisman pondérée (avec taux de succès)</td>
+                    <td>
+                        <span class="stat-value ${weightedTalismanChance > 0 ? 'partial-rate' : 'failure-rate'}">
+                            ${hasCloneTalisman ? 'Déjà possédé' : `${weightedTalismanChance.toFixed(3)}%`}
+                        </span>
+                        <small style="color: var(--text-secondary);">(chance réelle par expédition)</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td>📦 Obtention d'un item</td>
+                    <td><span class="info-badge badge-success">100% (si succès)</span></td>
+                </tr>
+            `;
+
+            // Update love table
+            const loveBody = document.getElementById('loveBody');
+            const loveGainSuccess = ExpeditionConstants.LOVE_CHANGES.TOTAL_SUCCESS;
+            const loveLossFailure = ExpeditionConstants.LOVE_CHANGES.TOTAL_FAILURE;
+            
+            // Calculate expected love change
+            const expectedLoveChange = (totalSuccessRate * loveGainSuccess) + (failureRate * loveLossFailure);
+            
+            loveBody.innerHTML = `
+                <tr>
+                    <td class="success-rate">🟢 Succès total</td>
+                    <td><span class="stat-value success-rate">+${loveGainSuccess} points d'amour</span></td>
+                    <td>${(totalSuccessRate * 100).toFixed(1)}%</td>
+                </tr>
+                <tr>
+                    <td class="partial-rate">🟡 Succès partiel</td>
+                    <td><span class="stat-value partial-rate">±0 points d'amour</span></td>
+                    <td>${(partialSuccessRate * 100).toFixed(1)}%</td>
+                </tr>
+                <tr>
+                    <td class="failure-rate">🔴 Échec total</td>
+                    <td><span class="stat-value failure-rate">${loveLossFailure} points d'amour</span></td>
+                    <td>${(failureRate * 100).toFixed(1)}%</td>
+                </tr>
+                <tr style="background: var(--bg-tertiary);">
+                    <td><strong>📊 Espérance mathématique</strong></td>
+                    <td><span class="stat-value ${expectedLoveChange >= 0 ? 'success-rate' : 'failure-rate'}">${expectedLoveChange >= 0 ? '+' : ''}${expectedLoveChange.toFixed(2)} points/expédition</span></td>
+                    <td>-</td>
+                </tr>
+            `;
+
+            // Show toast notification
+            showToast('✅ Résultats calculés !');
+        }
+
+        // Event listeners
+        loadDataBtn.addEventListener('click', loadPetData);
+        calculateBtn.addEventListener('click', calculateResults);
+
+        // Toast notification function
+        function showToast(message = '✅ Résultats calculés !') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Initialize slider displays and location info
+        updateSliderDisplays();
+        updateLocationInfo();
+        updateDurationDisplay();
+    </script>
+</body>
+</html>

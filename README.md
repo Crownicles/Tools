@@ -8,6 +8,7 @@ Ce repo présente différents outils pour travailler sur Crownicles
 - [Missions](https://crownicles.github.io/Tools/generators/missions.html) - Permet de générer les JSONs pour les missions
 - [Monstres](https://crownicles.github.io/Tools/generators/monsters.html) - Permet de générer les JSONs pour les monstres
 - [Pet Food Simulator](https://crownicles.github.io/Tools/generators/pet-food-simulator.html) - Simulateur de courbe de probabilité de recherche de nourriture pour familiers
+- [Pet Expedition Simulator](https://crownicles.github.io/Tools/generators/expedition-simulator.html) - Simulateur d'expéditions pour familiers
 - [Events](https://crownicles.github.io/Tools/generators/events.html)  - Permet de générer les JSONs pour les évents
 - [Items json to csv](https://crownicles.github.io/Tools/generators/itemCSVGenerator.html) - convertit les JSONs d'objets en CSV pour une utilisation dans Excel
 - [Explorateur d'Objets](https://crownicles.github.io/Tools/generators/item-explorer/) - Interface de comparaison d'objets avec filtrage, recherche et analyse statistique avancée.

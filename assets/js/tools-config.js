@@ -19,6 +19,16 @@ const toolsConfig = [
         icon: '🍖',
         status: 'active'
     },
+        {
+        id: 'pet-exploration',
+        title: 'Simulateur pour les expéditions (familiers)',
+        description: 'Simule les expéditions.',
+        path: 'generators/expedition-simulator.html',
+        category: 'Simulation',
+        tags: ['Familiers', 'Probabilité', 'Mathématiques'],
+        icon: '📊',
+        status: 'active'
+    },
     {
         id: 'item-explorer',
         title: 'Explorateur d\'Objets',
