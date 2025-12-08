@@ -6,17 +6,18 @@
     <title>Crownicles Campaign Visualizer</title>
     <style>
         :root {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --bg-tertiary: #0f3460;
-            --text-primary: #e8e8e8;
-            --text-secondary: #a0a0a0;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
             --accent-primary: #e94560;
-            --accent-secondary: #0f3460;
-            --border-color: #2a2a4a;
-            --success: #4ade80;
-            --warning: #fbbf24;
-            --info: #60a5fa;
+            --accent-secondary: #6366f1;
+            --border-color: #e2e8f0;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --shadow: rgba(0, 0, 0, 0.08);
         }
 
         .github-section {
@@ -30,6 +31,7 @@
             background: var(--bg-secondary);
             border-radius: 15px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
         .github-input-group {
@@ -41,13 +43,14 @@
         .github-input-group label {
             color: var(--text-secondary);
             font-size: 0.85rem;
+            font-weight: 500;
         }
 
         .github-input-group input, .github-input-group select {
             padding: 10px 15px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            background: var(--bg-tertiary);
+            background: var(--bg-tertiary);;
             color: var(--text-primary);
             font-size: 0.95rem;
             min-width: 200px;
@@ -131,36 +134,37 @@
             margin-top: 5px;
         }
 
-        /* Mission Categories Colors */
-        .category-expedition { --cat-color: #f59e0b; --cat-bg: rgba(245, 158, 11, 0.15); }
-        .category-combat { --cat-color: #ef4444; --cat-bg: rgba(239, 68, 68, 0.15); }
-        .category-guild { --cat-color: #8b5cf6; --cat-bg: rgba(139, 92, 246, 0.15); }
-        .category-pet { --cat-color: #ec4899; --cat-bg: rgba(236, 72, 153, 0.15); }
-        .category-economy { --cat-color: #10b981; --cat-bg: rgba(16, 185, 129, 0.15); }
-        .category-progression { --cat-color: #3b82f6; --cat-bg: rgba(59, 130, 246, 0.15); }
-        .category-travel { --cat-color: #06b6d4; --cat-bg: rgba(6, 182, 212, 0.15); }
-        .category-potion { --cat-color: #a855f7; --cat-bg: rgba(168, 85, 247, 0.15); }
-        .category-npc { --cat-color: #f97316; --cat-bg: rgba(249, 115, 22, 0.15); }
-        .category-tokens { --cat-color: #eab308; --cat-bg: rgba(234, 179, 8, 0.15); }
-        .category-other { --cat-color: #6b7280; --cat-bg: rgba(107, 114, 128, 0.15); }
+        /* Mission Categories Colors - Strong Contrast on White */
+        .category-expedition { --cat-color: #b45309; --cat-bg: rgba(180, 83, 9, 0.15); --cat-border: rgba(180, 83, 9, 0.35); }
+        .category-combat { --cat-color: #b91c1c; --cat-bg: rgba(185, 28, 28, 0.15); --cat-border: rgba(185, 28, 28, 0.35); }
+        .category-guild { --cat-color: #6d28d9; --cat-bg: rgba(109, 40, 217, 0.15); --cat-border: rgba(109, 40, 217, 0.35); }
+        .category-pet { --cat-color: #be185d; --cat-bg: rgba(190, 24, 93, 0.15); --cat-border: rgba(190, 24, 93, 0.35); }
+        .category-economy { --cat-color: #047857; --cat-bg: rgba(4, 120, 87, 0.15); --cat-border: rgba(4, 120, 87, 0.35); }
+        .category-progression { --cat-color: #1d4ed8; --cat-bg: rgba(29, 78, 216, 0.15); --cat-border: rgba(29, 78, 216, 0.35); }
+        .category-travel { --cat-color: #0e7490; --cat-bg: rgba(14, 116, 144, 0.15); --cat-border: rgba(14, 116, 144, 0.35); }
+        .category-potion { --cat-color: #7e22ce; --cat-bg: rgba(126, 34, 206, 0.15); --cat-border: rgba(126, 34, 206, 0.35); }
+        .category-npc { --cat-color: #c2410c; --cat-bg: rgba(194, 65, 12, 0.15); --cat-border: rgba(194, 65, 12, 0.35); }
+        .category-tokens { --cat-color: #a16207; --cat-bg: rgba(161, 98, 7, 0.15); --cat-border: rgba(161, 98, 7, 0.35); }
+        .category-other { --cat-color: #4b5563; --cat-bg: rgba(75, 85, 99, 0.12); --cat-border: rgba(75, 85, 99, 0.30); }
 
         .mission-card.categorized {
-            border-left: 4px solid var(--cat-color);
+            border-left: 5px solid var(--cat-color);
             background: var(--cat-bg);
         }
 
         .mission-card.categorized:hover {
             border-color: var(--cat-color);
+            box-shadow: 0 8px 24px var(--cat-border);
         }
 
         .category-badge {
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            padding: 3px 10px;
+            padding: 4px 10px;
             border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.7rem;
+            font-weight: 700;
             background: var(--cat-color);
             color: white;
             text-transform: uppercase;
@@ -168,8 +172,12 @@
         }
 
         .list-row.categorized {
-            border-left: 4px solid var(--cat-color);
+            border-left: 5px solid var(--cat-color);
             background: var(--cat-bg);
+        }
+
+        .list-row.categorized:hover {
+            background: var(--cat-border);
         }
 
         .category-legend {
@@ -181,37 +189,42 @@
             background: var(--bg-secondary);
             border-radius: 12px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .legend-item {
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s ease;
             border: 2px solid transparent;
+            font-weight: 500;
+            background: var(--bg-tertiary);
         }
 
         .legend-item:hover {
             transform: scale(1.05);
+            border-color: currentColor;
         }
 
         .legend-item.active {
-            border-color: white;
+            border-color: currentColor;
+            box-shadow: 0 2px 8px currentColor;
         }
 
         .legend-color {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
         }
 
         .legend-count {
             font-weight: bold;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         * {
@@ -222,7 +235,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             padding: 20px;
@@ -240,6 +253,7 @@
             background: var(--bg-secondary);
             border-radius: 15px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
         h1 {
@@ -263,6 +277,7 @@
             background: var(--bg-secondary);
             border-radius: 15px;
             border: 2px dashed var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
         .file-upload-box {
@@ -274,6 +289,7 @@
             background: var(--bg-tertiary);
             border-radius: 10px;
             min-width: 280px;
+            border: 1px solid var(--border-color);
         }
 
         .file-upload-box h3 {
@@ -328,6 +344,7 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
             text-align: center;
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .stat-value {
@@ -351,6 +368,7 @@
             background: var(--bg-secondary);
             border-radius: 12px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .search-box {
@@ -363,7 +381,7 @@
             padding: 12px 15px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            background: var(--bg-tertiary);
+            background: var(--bg-secondary);
             color: var(--text-primary);
             font-size: 1rem;
         }
@@ -371,6 +389,7 @@
         .search-box input:focus {
             outline: none;
             border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.1);
         }
 
         .view-toggle {
@@ -381,20 +400,23 @@
         .view-btn {
             padding: 10px 20px;
             border: 1px solid var(--border-color);
-            background: var(--bg-tertiary);
+            background: var(--bg-secondary);
             color: var(--text-primary);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: 500;
         }
 
         .view-btn.active {
             background: var(--accent-primary);
             border-color: var(--accent-primary);
+            color: white;
         }
 
         .view-btn:hover:not(.active) {
-            background: var(--accent-secondary);
+            background: var(--bg-tertiary);
+            border-color: var(--accent-secondary);
         }
 
         .campaign-container {
@@ -418,11 +440,12 @@
             padding: 20px;
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .mission-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
             border-color: var(--accent-primary);
         }
 
@@ -436,7 +459,7 @@
         .mission-id {
             font-size: 1.1rem;
             font-weight: bold;
-            color: var(--accent-primary);
+            color: var(--text-primary);
             word-break: break-word;
         }
 
@@ -457,6 +480,7 @@
             font-weight: bold;
             font-size: 0.9rem;
             white-space: nowrap;
+            color: white;
         }
 
         .mission-details {
@@ -469,6 +493,7 @@
             background: var(--bg-tertiary);
             padding: 10px;
             border-radius: 8px;
+            border: 1px solid var(--border-color);
         }
 
         .detail-label {
@@ -476,12 +501,14 @@
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-weight: 500;
         }
 
         .detail-value {
             font-size: 1rem;
             font-weight: 600;
             margin-top: 3px;
+            color: var(--text-primary);
         }
 
         /* List View */
@@ -490,6 +517,7 @@
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .list-header {
@@ -502,6 +530,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--text-secondary);
+            border-bottom: 2px solid var(--border-color);
         }
 
         .list-row {
@@ -527,12 +556,13 @@
             padding: 20px;
             margin-bottom: 30px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .chart-title {
             font-size: 1.3rem;
             margin-bottom: 20px;
-            color: var(--accent-primary);
+            color: var(--text-primary);
         }
 
         .chart-container {
@@ -620,13 +650,14 @@
             bottom: 100%;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            padding: 5px 10px;
-            border-radius: 5px;
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 6px;
             font-size: 0.8rem;
             white-space: nowrap;
             z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
@@ -692,66 +723,66 @@
         let rateLimitReset = null;
         let activeCategory = null; // For filtering
 
-        // Mission Categories Definition
+        // Mission Categories Definition - Strong Contrast on White
         const missionCategories = {
             expedition: {
                 name: 'Expédition',
                 icon: '🗺️',
-                color: '#f59e0b',
+                color: '#b45309',
                 keywords: ['expedition', 'doExpeditions', 'dangerousExpedition', 'expeditionStreak', 'longExpedition', 'joinPVEIsland', 'wealthyPayForPVEIsland', 'joinMemberOnBoat']
             },
             combat: {
                 name: 'Combat',
                 icon: '⚔️',
-                color: '#ef4444',
+                color: '#b91c1c',
                 keywords: ['fight', 'anyFight', 'fightAttacks', 'fightHealthPercent', 'fightMinTurns', 'fightStreak', 'finishWithAttack', 'winBoss', 'gainRage', 'petAssistedFight']
             },
             guild: {
                 name: 'Guilde',
                 icon: '🏰',
-                color: '#8b5cf6',
+                color: '#6d28d9',
                 keywords: ['guild', 'guildDaily', 'guildDailyFromSomeoneElse', 'guildHasPoints', 'guildLevel', 'joinGuild']
             },
             pet: {
                 name: 'Familier',
                 icon: '🐾',
-                color: '#ec4899',
+                color: '#be185d',
                 keywords: ['pet', 'havePet', 'petCaress', 'petEarnHealth', 'sellOrTradePet', 'tamedPet', 'trainedPet', 'showPetsToTalvar']
             },
             economy: {
                 name: 'Économie',
                 icon: '💰',
-                color: '#10b981',
+                color: '#047857',
                 keywords: ['money', 'earnMoney', 'spendMoney', 'sellItems', 'sellItemWithGivenCost', 'buyItemFromAlderic', 'findOrBuyItem', 'kingsMoneyValue', 'spendGems']
             },
             progression: {
                 name: 'Progression',
                 icon: '📈',
-                color: '#3b82f6',
+                color: '#1d4ed8',
                 keywords: ['level', 'reachLevel', 'reachScore', 'reachGlory', 'earnXP', 'earnPoints', 'chooseClass', 'chooseClassTier', 'earnLifePoints', 'unlock', 'dailyStreak']
             },
             travel: {
                 name: 'Voyage',
                 icon: '🧭',
-                color: '#06b6d4',
+                color: '#0e7490',
                 keywords: ['travel', 'travelHours', 'goToPlace', 'fromPlaceToPlace', 'exploreDifferentPlaces']
             },
             potion: {
                 name: 'Potions',
                 icon: '🧪',
-                color: '#a855f7',
+                color: '#7e22ce',
                 keywords: ['potion', 'drinkPotion', 'drinkAlcohol', 'drinkEnergyPotion', 'drinkPotionRarity', 'drinkPotionWithoutEffect', 'havePotions', 'dailyPotionsStock', 'buyUltimateSoups', 'recoverAlteration', 'bigFeast']
             },
             npc: {
                 name: 'PNJ',
                 icon: '👤',
-                color: '#f97316',
+                color: '#c2410c',
                 keywords: ['meet', 'meetDifferentPlayers', 'meetGruffo', 'meetHermit', 'meetSirRowan', 'meetTalvar', 'meetVelanna', 'showCloneToTalvar']
             },
             tokens: {
                 name: 'Jetons',
                 icon: '🎫',
-                color: '#eab308',
+                color: '#a16207',
                 keywords: ['token', 'earnTokens', 'useTokens', 'buyTokensFromShop', 'spendTokensInOneDay', 'maxTokensReached']
             }
         };
@@ -773,7 +804,7 @@
                 key: 'other', 
                 name: 'Autre', 
                 icon: '📋', 
-                color: '#6b7280',
+                color: '#4b5563',
                 keywords: []
             };
         }
