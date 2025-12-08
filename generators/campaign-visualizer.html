@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crownicles Campaign Visualizer</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a0a0a0;
+            --accent-primary: #e94560;
+            --accent-secondary: #0f3460;
+            --border-color: #2a2a4a;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --info: #60a5fa;
+        }
+
+        .github-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 20px;
+            padding: 25px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .github-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .github-input-group label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .github-input-group input, .github-input-group select {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            min-width: 200px;
+        }
+
+        .github-input-group input:focus, .github-input-group select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .github-load-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .github-load-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .github-load-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .github-status {
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .github-status.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            display: block;
+        }
+
+        .github-status.success {
+            background: rgba(74, 222, 128, 0.2);
+            color: var(--success);
+            display: block;
+        }
+
+        .github-status.loading {
+            background: rgba(96, 165, 250, 0.2);
+            color: var(--info);
+            display: block;
+        }
+
+        .rate-limit-info {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* Mission Categories Colors */
+        .category-expedition { --cat-color: #f59e0b; --cat-bg: rgba(245, 158, 11, 0.15); }
+        .category-combat { --cat-color: #ef4444; --cat-bg: rgba(239, 68, 68, 0.15); }
+        .category-guild { --cat-color: #8b5cf6; --cat-bg: rgba(139, 92, 246, 0.15); }
+        .category-pet { --cat-color: #ec4899; --cat-bg: rgba(236, 72, 153, 0.15); }
+        .category-economy { --cat-color: #10b981; --cat-bg: rgba(16, 185, 129, 0.15); }
+        .category-progression { --cat-color: #3b82f6; --cat-bg: rgba(59, 130, 246, 0.15); }
+        .category-travel { --cat-color: #06b6d4; --cat-bg: rgba(6, 182, 212, 0.15); }
+        .category-potion { --cat-color: #a855f7; --cat-bg: rgba(168, 85, 247, 0.15); }
+        .category-npc { --cat-color: #f97316; --cat-bg: rgba(249, 115, 22, 0.15); }
+        .category-tokens { --cat-color: #eab308; --cat-bg: rgba(234, 179, 8, 0.15); }
+        .category-other { --cat-color: #6b7280; --cat-bg: rgba(107, 114, 128, 0.15); }
+
+        .mission-card.categorized {
+            border-left: 4px solid var(--cat-color);
+            background: var(--cat-bg);
+        }
+
+        .mission-card.categorized:hover {
+            border-color: var(--cat-color);
+        }
+
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--cat-color);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .list-row.categorized {
+            border-left: 4px solid var(--cat-color);
+            background: var(--cat-bg);
+        }
+
+        .category-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .legend-item:hover {
+            transform: scale(1.05);
+        }
+
+        .legend-item.active {
+            border-color: white;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-count {
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            color: var(--accent-primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .file-upload-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 2px dashed var(--border-color);
+        }
+
+        .file-upload-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            min-width: 280px;
+        }
+
+        .file-upload-box h3 {
+            color: var(--accent-primary);
+            font-size: 1rem;
+        }
+
+        .file-upload-box p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 12px 25px;
+            background: var(--accent-primary);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .file-label:hover {
+            background: #d13a52;
+            transform: translateY(-2px);
+        }
+
+        .file-label.loaded {
+            background: var(--success);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-primary);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+        }
+
+        .view-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .view-btn:hover:not(.active) {
+            background: var(--accent-secondary);
+        }
+
+        .campaign-container {
+            display: none;
+        }
+
+        .campaign-container.active {
+            display: block;
+        }
+
+        /* Grid View */
+        .grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .mission-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .mission-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-primary);
+        }
+
+        .mission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .mission-id {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-primary);
+            word-break: break-word;
+        }
+
+        .mission-translation {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .mission-gems {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .mission-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .detail-item {
+            background: var(--bg-tertiary);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        /* List View */
+        .list-view {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .list-header {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
+            padding: 15px 20px;
+            background: var(--bg-tertiary);
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+
+        .list-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+
+        .list-row:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .list-row:last-child {
+            border-bottom: none;
+        }
+
+        /* Chart Section */
+        .chart-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--accent-primary);
+        }
+
+        .chart-container {
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 20px 10px;
+        }
+
+        .chart-bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 40px;
+        }
+
+        .chart-bar {
+            width: 30px;
+            background: linear-gradient(to top, var(--accent-primary), var(--accent-secondary));
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .chart-bar:hover {
+            opacity: 0.8;
+            transform: scaleX(1.1);
+        }
+
+        .chart-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            max-height: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chart-value {
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .no-data-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .list-header, .list-row {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            .list-header > *:nth-child(n+4),
+            .list-row > *:nth-child(n+4) {
+                display: none;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏰 Crownicles Campaign Visualizer</h1>
+            <p class="subtitle">Visualisez et analysez les données de campaign.json depuis GitHub</p>
+        </header>
+
+        <div class="github-section">
+            <div class="github-input-group">
+                <label for="repoOwner">👤 Propriétaire</label>
+                <input type="text" id="repoOwner" value="DraftBot-A-Discord-Adventure" placeholder="Propriétaire du repo">
+            </div>
+            <div class="github-input-group">
+                <label for="repoName">📁 Repository</label>
+                <input type="text" id="repoName" value="DraftBot" placeholder="Nom du repository">
+            </div>
+            <div class="github-input-group">
+                <label for="branchName">🌿 Branche</label>
+                <input type="text" id="branchName" value="missiontokens" placeholder="Nom de la branche">
+            </div>
+            <button class="github-load-btn" id="loadFromGithub" onclick="loadFromGithub()">
+                <span class="loading-spinner" id="loadingSpinner"></span>
+                <span id="loadBtnText">🚀 Charger depuis GitHub</span>
+            </button>
+            <div class="github-status" id="githubStatus"></div>
+            <div class="rate-limit-info" id="rateLimitInfo"></div>
+        </div>
+
+        <div class="file-upload-section">
+            <div class="file-upload-box">
+                <h3>📋 Fichier Campaign (Local)</h3>
+                <p>Ou chargez manuellement<br>(Core/resources/campaign.json)</p>
+                <div class="file-input-wrapper">
+                    <input type="file" id="campaignFile" accept=".json">
+                    <label for="campaignFile" class="file-label" id="campaignLabel">📁 Charger campaign.json</label>
+                </div>
+            </div>
+            <div class="file-upload-box">
+                <h3>🇫🇷 Traductions (Local)</h3>
+                <p>Ou chargez manuellement<br>(Lang/fr/models.json)</p>
+                <div class="file-input-wrapper">
+                    <input type="file" id="translationsFile" accept=".json">
+                    <label for="translationsFile" class="file-label" id="translationsLabel">📁 Charger models.json</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="content">
+            <div class="no-data">
+                <div class="no-data-icon">📂</div>
+                <p>Chargez un fichier campaign.json pour commencer</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let campaignData = null;
+        let translationsData = null;
+        let rateLimitRemaining = null;
+        let rateLimitReset = null;
+        let activeCategory = null; // For filtering
+
+        // Mission Categories Definition
+        const missionCategories = {
+            expedition: {
+                name: 'Expédition',
+                icon: '🗺️',
+                color: '#f59e0b',
+                keywords: ['expedition', 'doExpeditions', 'dangerousExpedition', 'expeditionStreak', 'longExpedition', 'joinPVEIsland', 'wealthyPayForPVEIsland', 'joinMemberOnBoat']
+            },
+            combat: {
+                name: 'Combat',
+                icon: '⚔️',
+                color: '#ef4444',
+                keywords: ['fight', 'anyFight', 'fightAttacks', 'fightHealthPercent', 'fightMinTurns', 'fightStreak', 'finishWithAttack', 'winBoss', 'gainRage', 'petAssistedFight']
+            },
+            guild: {
+                name: 'Guilde',
+                icon: '🏰',
+                color: '#8b5cf6',
+                keywords: ['guild', 'guildDaily', 'guildDailyFromSomeoneElse', 'guildHasPoints', 'guildLevel', 'joinGuild']
+            },
+            pet: {
+                name: 'Familier',
+                icon: '🐾',
+                color: '#ec4899',
+                keywords: ['pet', 'havePet', 'petCaress', 'petEarnHealth', 'sellOrTradePet', 'tamedPet', 'trainedPet', 'showPetsToTalvar']
+            },
+            economy: {
+                name: 'Économie',
+                icon: '💰',
+                color: '#10b981',
+                keywords: ['money', 'earnMoney', 'spendMoney', 'sellItems', 'sellItemWithGivenCost', 'buyItemFromAlderic', 'findOrBuyItem', 'kingsMoneyValue', 'spendGems']
+            },
+            progression: {
+                name: 'Progression',
+                icon: '📈',
+                color: '#3b82f6',
+                keywords: ['level', 'reachLevel', 'reachScore', 'reachGlory', 'earnXP', 'earnPoints', 'chooseClass', 'chooseClassTier', 'earnLifePoints', 'unlock', 'dailyStreak']
+            },
+            travel: {
+                name: 'Voyage',
+                icon: '🧭',
+                color: '#06b6d4',
+                keywords: ['travel', 'travelHours', 'goToPlace', 'fromPlaceToPlace', 'exploreDifferentPlaces']
+            },
+            potion: {
+                name: 'Potions',
+                icon: '🧪',
+                color: '#a855f7',
+                keywords: ['potion', 'drinkPotion', 'drinkAlcohol', 'drinkEnergyPotion', 'drinkPotionRarity', 'drinkPotionWithoutEffect', 'havePotions', 'dailyPotionsStock', 'buyUltimateSoups', 'recoverAlteration', 'bigFeast']
+            },
+            npc: {
+                name: 'PNJ',
+                icon: '👤',
+                color: '#f97316',
+                keywords: ['meet', 'meetDifferentPlayers', 'meetGruffo', 'meetHermit', 'meetSirRowan', 'meetTalvar', 'meetVelanna', 'showCloneToTalvar']
+            },
+            tokens: {
+                name: 'Jetons',
+                icon: '🎫',
+                color: '#eab308',
+                keywords: ['token', 'earnTokens', 'useTokens', 'buyTokensFromShop', 'spendTokensInOneDay', 'maxTokensReached']
+            }
+        };
+
+        // Get category for a mission
+        function getMissionCategory(missionId) {
+            const lowerMissionId = missionId.toLowerCase();
+            
+            for (const [categoryKey, category] of Object.entries(missionCategories)) {
+                for (const keyword of category.keywords) {
+                    if (lowerMissionId === keyword.toLowerCase() || 
+                        lowerMissionId.includes(keyword.toLowerCase())) {
+                        return { key: categoryKey, ...category };
+                    }
+                }
+            }
+            
+            return { 
+                key: 'other', 
+                name: 'Autre', 
+                icon: '📋', 
+                color: '#6b7280',
+                keywords: []
+            };
+        }
+
+        // GitHub API helper with rate limit tracking
+        async function fetchGithubJson(url, label) {
+            const resp = await fetch(url);
+            
+            // Track rate limits
+            rateLimitRemaining = resp.headers.get('X-RateLimit-Remaining');
+            const limit = resp.headers.get('X-RateLimit-Limit');
+            rateLimitReset = resp.headers.get('X-RateLimit-Reset');
+            
+            if (rateLimitRemaining && limit) {
+                const resetDate = rateLimitReset ? new Date(parseInt(rateLimitReset) * 1000).toLocaleTimeString() : 'N/A';
+                document.getElementById('rateLimitInfo').textContent = 
+                    `API: ${rateLimitRemaining}/${limit} requêtes restantes | Reset: ${resetDate}`;
+            }
+            
+            if (!resp.ok) {
+                if (resp.status === 403 && rateLimitRemaining === '0') {
+                    throw new Error(`Rate limit atteint. Reset à ${new Date(parseInt(rateLimitReset) * 1000).toLocaleTimeString()}`);
+                }
+                throw new Error(`${label}: ${resp.status} ${resp.statusText}`);
+            }
+            return resp.json();
+        }
+
+        // Load from raw.githubusercontent (no rate limit tracking for raw)
+        async function fetchRawGithub(owner, repo, branch, path) {
+            const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+            const resp = await fetch(url);
+            if (!resp.ok) {
+                throw new Error(`Fichier non trouvé: ${path} (${resp.status})`);
+            }
+            return resp.json();
+        }
+
+        // Update status display
+        function updateStatus(message, type) {
+            const statusEl = document.getElementById('githubStatus');
+            statusEl.textContent = message;
+            statusEl.className = 'github-status ' + type;
+        }
+
+        // Main GitHub loader
+        async function loadFromGithub() {
+            const owner = document.getElementById('repoOwner').value.trim();
+            const repo = document.getElementById('repoName').value.trim();
+            const branch = document.getElementById('branchName').value.trim();
+            
+            if (!owner || !repo || !branch) {
+                updateStatus('⚠️ Veuillez remplir tous les champs', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('loadFromGithub');
+            const spinner = document.getElementById('loadingSpinner');
+            const btnText = document.getElementById('loadBtnText');
+            
+            btn.disabled = true;
+            spinner.style.display = 'block';
+            btnText.textContent = 'Chargement...';
+            updateStatus('📡 Connexion à GitHub...', 'loading');
+
+            try {
+                // Load campaign.json using raw URL (faster, no rate limit)
+                updateStatus('📋 Chargement de campaign.json...', 'loading');
+                campaignData = await fetchRawGithub(owner, repo, branch, 'Core/resources/campaign.json');
+                
+                // Normalize mission data (fix property names)
+                if (campaignData.missions) {
+                    campaignData.missions = campaignData.missions.map(m => ({
+                        missionId: m.missionId,
+                        variant: m.missionVariant ?? m.variant,
+                        objective: m.missionObjective ?? m.objective,
+                        gems: m.gemsToWin ?? m.gems ?? 0,
+                        xp: m.xpToWin ?? m.xp ?? 0,
+                        money: m.moneyToWin ?? m.money ?? 0,
+                        expiration: m.expiration
+                    }));
+                }
+                
+                document.getElementById('campaignLabel').textContent = '✅ GitHub: campaign.json';
+                document.getElementById('campaignLabel').classList.add('loaded');
+
+                // Load translations (models.json)
+                updateStatus('🇫🇷 Chargement des traductions...', 'loading');
+                try {
+                    translationsData = await fetchRawGithub(owner, repo, branch, 'Lang/fr/models.json');
+                    document.getElementById('translationsLabel').textContent = '✅ GitHub: models.json';
+                    document.getElementById('translationsLabel').classList.add('loaded');
+                } catch (e) {
+                    console.warn('Translations not found:', e);
+                    translationsData = null;
+                }
+
+                updateStatus(`✅ Données chargées depuis ${owner}/${repo}@${branch}`, 'success');
+                displayCampaign();
+
+            } catch (error) {
+                console.error('GitHub load error:', error);
+                updateStatus(`❌ Erreur: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.textContent = '🚀 Charger depuis GitHub';
+            }
+        }
+
+        // Get mission translation from models.json
+        function getMissionTranslation(missionId) {
+            if (!translationsData || !translationsData.missions) {
+                return null;
+            }
+            
+            // Try exact match first
+            if (translationsData.missions[missionId]) {
+                return cleanTranslation(translationsData.missions[missionId]);
+            }
+            
+            // Try with _one or _other suffix (for plural forms)
+            if (translationsData.missions[missionId + '_one']) {
+                return cleanTranslation(translationsData.missions[missionId + '_one']);
+            }
+            if (translationsData.missions[missionId + '_other']) {
+                return cleanTranslation(translationsData.missions[missionId + '_other']);
+            }
+            
+            return null;
+        }
+
+        // Clean translation string from special markers
+        function cleanTranslation(text) {
+            if (!text) return text;
+            
+            // Remove {emote:...} patterns
+            text = text.replace(/\{emote:[^}]+\}/g, '');
+            
+            // Remove {command:...} patterns
+            text = text.replace(/\{command:[^}]+\}/g, '');
+            
+            // Replace {{count}} with placeholder
+            text = text.replace(/\{\{count\}\}/g, 'X');
+            
+            // Replace {{variantText}} with placeholder
+            text = text.replace(/\{\{variantText\}\}/g, '...');
+            
+            // Clean up extra spaces
+            text = text.replace(/\s+/g, ' ').trim();
+            
+            return text;
+        }
+
+        document.getElementById('campaignFile').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                campaignData = JSON.parse(text);
+                
+                // Normalize mission data (fix property names)
+                if (campaignData.missions) {
+                    campaignData.missions = campaignData.missions.map(m => ({
+                        missionId: m.missionId,
+                        variant: m.missionVariant ?? m.variant,
+                        objective: m.missionObjective ?? m.objective,
+                        gems: m.gemsToWin ?? m.gems ?? 0,
+                        xp: m.xpToWin ?? m.xp ?? 0,
+                        money: m.moneyToWin ?? m.money ?? 0,
+                        expiration: m.expiration
+                    }));
+                }
+                
+                document.getElementById('campaignLabel').textContent = '✅ ' + file.name;
+                document.getElementById('campaignLabel').classList.add('loaded');
+                displayCampaign();
+            } catch (error) {
+                alert('Erreur lors du chargement du fichier: ' + error.message);
+            }
+        });
+
+        document.getElementById('translationsFile').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                translationsData = JSON.parse(text);
+                document.getElementById('translationsLabel').textContent = '✅ ' + file.name;
+                document.getElementById('translationsLabel').classList.add('loaded');
+                // Re-render if campaign is already loaded
+                if (campaignData) {
+                    displayCampaign();
+                }
+            } catch (error) {
+                alert('Erreur lors du chargement des traductions: ' + error.message);
+            }
+        });
+
+        function displayCampaign() {
+            if (!campaignData) return;
+
+            const content = document.getElementById('content');
+            const missions = campaignData.missions || [];
+
+            // Calculate stats
+            const totalGems = missions.reduce((sum, m) => sum + (m.gems || 0), 0);
+            const totalXP = missions.reduce((sum, m) => sum + (m.xp || 0), 0);
+            const totalMoney = missions.reduce((sum, m) => sum + (m.money || 0), 0);
+            const missionCounts = {};
+            missions.forEach(m => {
+                missionCounts[m.missionId] = (missionCounts[m.missionId] || 0) + 1;
+            });
+
+            // Calculate category stats
+            const categoryStats = {};
+            missions.forEach(m => {
+                const cat = getMissionCategory(m.missionId);
+                if (!categoryStats[cat.key]) {
+                    categoryStats[cat.key] = { ...cat, count: 0, gems: 0, xp: 0, money: 0 };
+                }
+                categoryStats[cat.key].count++;
+                categoryStats[cat.key].gems += m.gems || 0;
+                categoryStats[cat.key].xp += m.xp || 0;
+                categoryStats[cat.key].money += m.money || 0;
+            });
+
+            // Sort missions by frequency for chart
+            const sortedMissions = Object.entries(missionCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 20);
+
+            const maxCount = Math.max(...sortedMissions.map(m => m[1]));
+
+            // Build category legend HTML
+            const categoryLegendHTML = Object.values(categoryStats)
+                .sort((a, b) => b.count - a.count)
+                .map(cat => `
+                    <div class="legend-item ${activeCategory === cat.key ? 'active' : ''}" 
+                         style="background: ${cat.color}20; color: ${cat.color};"
+                         onclick="filterByCategory('${cat.key}')"
+                         data-category="${cat.key}">
+                        <div class="legend-color" style="background: ${cat.color}"></div>
+                        <span>${cat.icon} ${cat.name}</span>
+                        <span class="legend-count">(${cat.count})</span>
+                    </div>
+                `).join('');
+
+            content.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${missions.length}</div>
+                        <div class="stat-label">Total Missions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Object.keys(missionCounts).length}</div>
+                        <div class="stat-label">Types de Missions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">💎 ${totalGems.toLocaleString()}</div>
+                        <div class="stat-label">Total Gemmes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">⭐ ${totalXP.toLocaleString()}</div>
+                        <div class="stat-label">Total XP</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">💰 ${totalMoney.toLocaleString()}</div>
+                        <div class="stat-label">Total Argent</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${translationsData ? '✅' : '❌'}</div>
+                        <div class="stat-label">Traductions FR</div>
+                    </div>
+                </div>
+
+                <div class="category-legend">
+                    <div class="legend-item ${!activeCategory ? 'active' : ''}" 
+                         style="background: rgba(255,255,255,0.1); color: var(--text-primary);"
+                         onclick="filterByCategory(null)">
+                        <span>🔄 Toutes</span>
+                        <span class="legend-count">(${missions.length})</span>
+                    </div>
+                    ${categoryLegendHTML}
+                </div>
+
+                <div class="chart-section">
+                    <h2 class="chart-title">📊 Fréquence des Missions par Catégorie (Top 20)</h2>
+                    <div class="chart-container">
+                        ${sortedMissions.map(([id, count]) => {
+                            const height = (count / maxCount) * 200;
+                            const translation = getMissionTranslation(id);
+                            const displayLabel = translation ? translation.substring(0, 30) : id;
+                            const category = getMissionCategory(id);
+                            return `
+                                <div class="chart-bar-wrapper tooltip" data-tooltip="${category.icon} ${category.name}: ${translation || id} (${count})">
+                                    <div class="chart-value">${count}</div>
+                                    <div class="chart-bar" style="height: ${height}px; background: linear-gradient(to top, ${category.color}, ${category.color}88);"></div>
+                                    <div class="chart-label">${displayLabel}</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="🔍 Rechercher une mission...">
+                    </div>
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid">📊 Grille</button>
+                        <button class="view-btn" data-view="list">📋 Liste</button>
+                    </div>
+                </div>
+
+                <div id="gridView" class="campaign-container active">
+                    <div class="grid-view" id="missionGrid"></div>
+                </div>
+
+                <div id="listView" class="campaign-container">
+                    <div class="list-view">
+                        <div class="list-header">
+                            <div>Mission ID</div>
+                            <div>Traduction</div>
+                            <div>Gemmes</div>
+                            <div>XP</div>
+                            <div>Argent</div>
+                            <div>Objectif</div>
+                            <div>Expiration</div>
+                        </div>
+                        <div id="missionList"></div>
+                    </div>
+                </div>
+            `;
+
+            renderMissions(missions);
+            setupEventListeners();
+        }
+
+        // Filter missions by category
+        function filterByCategory(categoryKey) {
+            activeCategory = categoryKey;
+            const missions = campaignData.missions || [];
+            
+            let filteredMissions = missions;
+            if (categoryKey) {
+                filteredMissions = missions.filter(m => {
+                    const cat = getMissionCategory(m.missionId);
+                    return cat.key === categoryKey;
+                });
+            }
+            
+            // Update legend active state
+            document.querySelectorAll('.legend-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.category === categoryKey || (!categoryKey && !item.dataset.category)) {
+                    item.classList.add('active');
+                }
+            });
+            
+            renderMissions(filteredMissions);
+        }
+
+        function renderMissions(missions) {
+            const gridContainer = document.getElementById('missionGrid');
+            const listContainer = document.getElementById('missionList');
+
+            if (!gridContainer || !listContainer) return;
+
+            // Grid view
+            gridContainer.innerHTML = missions.map(mission => {
+                const translation = getMissionTranslation(mission.missionId);
+                const category = getMissionCategory(mission.missionId);
+                return `
+                    <div class="mission-card categorized category-${category.key}">
+                        <div class="mission-header">
+                            <div>
+                                <div class="mission-id">${mission.missionId}</div>
+                                ${translation ? `<div class="mission-translation">${translation}</div>` : ''}
+                            </div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span class="category-badge" style="background: ${category.color}">${category.icon} ${category.name}</span>
+                                <div class="mission-gems">💎 ${mission.gems || 0}</div>
+                            </div>
+                        </div>
+                        <div class="mission-details">
+                            <div class="detail-item">
+                                <div class="detail-label">XP</div>
+                                <div class="detail-value">⭐ ${mission.xp || 0}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Argent</div>
+                                <div class="detail-value">💰 ${mission.money || 0}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Objectif</div>
+                                <div class="detail-value">${mission.objective || '-'}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Expiration (h)</div>
+                                <div class="detail-value">⏱️ ${mission.expiration || '-'}</div>
+                            </div>
+                            ${mission.variant !== undefined && mission.variant !== null ? `
+                                <div class="detail-item" style="grid-column: span 2">
+                                    <div class="detail-label">Variante</div>
+                                    <div class="detail-value">${mission.variant}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // List view
+            listContainer.innerHTML = missions.map(mission => {
+                const translation = getMissionTranslation(mission.missionId);
+                const category = getMissionCategory(mission.missionId);
+                return `
+                    <div class="list-row categorized category-${category.key}">
+                        <div><span style="color: ${category.color}">${category.icon}</span> ${mission.missionId}</div>
+                        <div style="color: var(--text-secondary); font-style: italic;">${translation || '-'}</div>
+                        <div>💎 ${mission.gems || 0}</div>
+                        <div>⭐ ${mission.xp || 0}</div>
+                        <div>💰 ${mission.money || 0}</div>
+                        <div>${mission.objective || '-'}</div>
+                        <div>⏱️ ${mission.expiration || '-'}h</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function setupEventListeners() {
+            // View toggle
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const view = btn.dataset.view;
+                    document.querySelectorAll('.campaign-container').forEach(c => c.classList.remove('active'));
+                    document.getElementById(view + 'View').classList.add('active');
+                });
+            });
+
+            // Search (respects category filter)
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                let filteredMissions = campaignData.missions;
+                
+                // Apply category filter first
+                if (activeCategory) {
+                    filteredMissions = filteredMissions.filter(m => {
+                        const cat = getMissionCategory(m.missionId);
+                        return cat.key === activeCategory;
+                    });
+                }
+                
+                // Then apply search filter
+                if (query) {
+                    filteredMissions = filteredMissions.filter(m => {
+                        const translation = getMissionTranslation(m.missionId) || '';
+                        const category = getMissionCategory(m.missionId);
+                        return m.missionId.toLowerCase().includes(query) ||
+                               translation.toLowerCase().includes(query) ||
+                               category.name.toLowerCase().includes(query) ||
+                               (m.variant !== undefined && m.variant.toString().toLowerCase().includes(query));
+                    });
+                }
+                
+                renderMissions(filteredMissions);
+            });
+        }
+    </script>
+</body>
+</html>

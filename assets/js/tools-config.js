@@ -50,6 +50,16 @@ const toolsConfig = [
         status: 'active'
     },
     {
+        id: 'campaign-visualizer',
+        title: 'Crownicles Campaign Visualizer',
+        description: 'Visualiseur et analyseur de Core/resources/campaign.json (avec traductions fr optionnelles). Charge depuis GitHub ou fichier local.',
+        path: 'generators/campaign-visualizer.html',
+        category: 'Visualisation',
+        tags: ['campaign', 'GitHub', 'visualisation', 'missions'],
+        icon: '🏰',
+        status: 'active'
+    },
+    {
         id: 'tournament-explorer',
         title: 'Résultats de tournois',
         description: 'Analyse des résultats CSV des tournois. Taux de victoire, matchups et top performers.',
