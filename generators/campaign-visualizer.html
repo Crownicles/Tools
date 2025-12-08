@@ -522,7 +522,7 @@
 
         .list-header {
             display: grid;
-            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
             padding: 15px 20px;
             background: var(--bg-tertiary);
             font-weight: bold;
@@ -535,7 +535,7 @@
 
         .list-row {
             display: grid;
-            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
             padding: 15px 20px;
             border-bottom: 1px solid var(--border-color);
             transition: background 0.3s ease;
@@ -882,9 +882,7 @@
                         variant: m.missionVariant ?? m.variant,
                         objective: m.missionObjective ?? m.objective,
                         gems: m.gemsToWin ?? m.gems ?? 0,
-                        xp: m.xpToWin ?? m.xp ?? 0,
-                        money: m.moneyToWin ?? m.money ?? 0,
-                        expiration: m.expiration
+                        xp: m.xpToWin ?? m.xp ?? 0
                     }));
                 }
                 
@@ -974,9 +972,7 @@
                         variant: m.missionVariant ?? m.variant,
                         objective: m.missionObjective ?? m.objective,
                         gems: m.gemsToWin ?? m.gems ?? 0,
-                        xp: m.xpToWin ?? m.xp ?? 0,
-                        money: m.moneyToWin ?? m.money ?? 0,
-                        expiration: m.expiration
+                        xp: m.xpToWin ?? m.xp ?? 0
                     }));
                 }
                 
@@ -1015,7 +1011,6 @@
             // Calculate stats
             const totalGems = missions.reduce((sum, m) => sum + (m.gems || 0), 0);
             const totalXP = missions.reduce((sum, m) => sum + (m.xp || 0), 0);
-            const totalMoney = missions.reduce((sum, m) => sum + (m.money || 0), 0);
             const missionCounts = {};
             missions.forEach(m => {
                 missionCounts[m.missionId] = (missionCounts[m.missionId] || 0) + 1;
@@ -1026,12 +1021,11 @@
             missions.forEach(m => {
                 const cat = getMissionCategory(m.missionId);
                 if (!categoryStats[cat.key]) {
-                    categoryStats[cat.key] = { ...cat, count: 0, gems: 0, xp: 0, money: 0 };
+                    categoryStats[cat.key] = { ...cat, count: 0, gems: 0, xp: 0 };
                 }
                 categoryStats[cat.key].count++;
                 categoryStats[cat.key].gems += m.gems || 0;
                 categoryStats[cat.key].xp += m.xp || 0;
-                categoryStats[cat.key].money += m.money || 0;
             });
 
             // Sort missions by frequency for chart
@@ -1072,10 +1066,6 @@
                     <div class="stat-card">
                         <div class="stat-value">⭐ ${totalXP.toLocaleString()}</div>
                         <div class="stat-label">Total XP</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">💰 ${totalMoney.toLocaleString()}</div>
-                        <div class="stat-label">Total Argent</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value">${translationsData ? '✅' : '❌'}</div>
@@ -1133,9 +1123,8 @@
                             <div>Traduction</div>
                             <div>Gemmes</div>
                             <div>XP</div>
-                            <div>Argent</div>
                             <div>Objectif</div>
-                            <div>Expiration</div>
+                            <div>Variante</div>
                         </div>
                         <div id="missionList"></div>
                     </div>
@@ -1198,16 +1187,8 @@
                                 <div class="detail-value">⭐ ${mission.xp || 0}</div>
                             </div>
                             <div class="detail-item">
-                                <div class="detail-label">Argent</div>
-                                <div class="detail-value">💰 ${mission.money || 0}</div>
-                            </div>
-                            <div class="detail-item">
                                 <div class="detail-label">Objectif</div>
                                 <div class="detail-value">${mission.objective || '-'}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Expiration (h)</div>
-                                <div class="detail-value">⏱️ ${mission.expiration || '-'}</div>
                             </div>
                             ${mission.variant !== undefined && mission.variant !== null ? `
                                 <div class="detail-item" style="grid-column: span 2">
@@ -1230,9 +1211,8 @@
                         <div style="color: var(--text-secondary); font-style: italic;">${translation || '-'}</div>
                         <div>💎 ${mission.gems || 0}</div>
                         <div>⭐ ${mission.xp || 0}</div>
-                        <div>💰 ${mission.money || 0}</div>
                         <div>${mission.objective || '-'}</div>
-                        <div>⏱️ ${mission.expiration || '-'}h</div>
+                        <div>${mission.variant !== undefined && mission.variant !== null ? mission.variant : '-'}</div>
                     </div>
                 `;
             }).join('');
