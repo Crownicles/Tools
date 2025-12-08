@@ -171,6 +171,21 @@
             letter-spacing: 0.5px;
         }
 
+        .position-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 24px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: #1e293b;
+            color: white;
+            font-family: 'Courier New', monospace;
+        }
+
         .list-row.categorized {
             border-left: 5px solid var(--cat-color);
             background: var(--cat-bg);
@@ -522,7 +537,7 @@
 
         .list-header {
             display: grid;
-            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 60px 2fr 2fr 1fr 1fr 1fr 1fr;
             padding: 15px 20px;
             background: var(--bg-tertiary);
             font-weight: bold;
@@ -535,7 +550,7 @@
 
         .list-row {
             display: grid;
-            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 60px 2fr 2fr 1fr 1fr 1fr 1fr;
             padding: 15px 20px;
             border-bottom: 1px solid var(--border-color);
             transition: background 0.3s ease;
@@ -875,9 +890,10 @@
                 updateStatus('📋 Chargement de campaign.json...', 'loading');
                 campaignData = await fetchRawGithub(owner, repo, branch, 'Core/resources/campaign.json');
                 
-                // Normalize mission data (fix property names)
+                // Normalize mission data (fix property names) and store original position
                 if (campaignData.missions) {
-                    campaignData.missions = campaignData.missions.map(m => ({
+                    campaignData.missions = campaignData.missions.map((m, index) => ({
+                        position: index + 1, // 1-based position in campaign.json
                         missionId: m.missionId,
                         variant: m.missionVariant ?? m.variant,
                         objective: m.missionObjective ?? m.objective,
@@ -965,9 +981,10 @@
                 const text = await file.text();
                 campaignData = JSON.parse(text);
                 
-                // Normalize mission data (fix property names)
+                // Normalize mission data (fix property names) and store original position
                 if (campaignData.missions) {
-                    campaignData.missions = campaignData.missions.map(m => ({
+                    campaignData.missions = campaignData.missions.map((m, index) => ({
+                        position: index + 1, // 1-based position in campaign.json
                         missionId: m.missionId,
                         variant: m.missionVariant ?? m.variant,
                         objective: m.missionObjective ?? m.objective,
@@ -1119,6 +1136,7 @@
                 <div id="listView" class="campaign-container">
                     <div class="list-view">
                         <div class="list-header">
+                            <div>#</div>
                             <div>Mission ID</div>
                             <div>Traduction</div>
                             <div>Gemmes</div>
@@ -1173,7 +1191,10 @@
                     <div class="mission-card categorized category-${category.key}">
                         <div class="mission-header">
                             <div>
-                                <div class="mission-id">${mission.missionId}</div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span class="position-badge" title="Position dans campaign.json">#${mission.position}</span>
+                                    <span class="mission-id">${mission.missionId}</span>
+                                </div>
                                 ${translation ? `<div class="mission-translation">${translation}</div>` : ''}
                             </div>
                             <div style="display: flex; gap: 8px; align-items: center;">
@@ -1207,6 +1228,7 @@
                 const category = getMissionCategory(mission.missionId);
                 return `
                     <div class="list-row categorized category-${category.key}">
+                        <div><span class="position-badge">#${mission.position}</span></div>
                         <div><span style="color: ${category.color}">${category.icon}</span> ${mission.missionId}</div>
                         <div style="color: var(--text-secondary); font-style: italic;">${translation || '-'}</div>
                         <div>💎 ${mission.gems || 0}</div>
