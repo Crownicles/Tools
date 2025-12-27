@@ -91,12 +91,15 @@ class StatAnalysis {
         } else {
             // For objects and potions, use power stat with rarity bonus
             const power = item.power || 0;
-            powerScore = power * rarityBonus;
+            const basePower = power * rarityBonus;
 
-            // Multiply by usages for combat potions
             if (type === 'potion' && [2, 3, 4].includes(item.nature)) {
                 const usages = item.usages || 1;
-                powerScore *= usages;
+                // Recommended formula: power * rarityBonus * sqrt(usages)
+                // This values multi-use without over-weighting them (4 uses = 2x value)
+                powerScore = basePower * Math.sqrt(usages);
+            } else {
+                powerScore = basePower;
             }
         }
         
@@ -213,7 +216,25 @@ class StatAnalysis {
 
         cell.textContent = data.grade;
         cell.className = `performance-score performance-score-${data.grade.toLowerCase()}`;
-        cell.title = `Performance: ${data.grade} (${data.percentile}th percentile, score: ${(data.score * 100).toFixed(1)}%)`;
+        
+        // Enhanced tooltip with detailed metrics for potions
+        let tooltip = `Performance: ${data.grade} (${data.percentile}th percentile)`;
+        
+        if (item.type === 'potion' && [2, 3, 4].includes(item.nature)) {
+            const power = item.power || 0;
+            const usages = item.usages || 1;
+            const totalValue = power * usages;
+            const efficiency = (totalValue / Math.max(item.rarity, 1)).toFixed(1);
+            
+            tooltip += `\n-------------------\n`;
+            tooltip += `• Par usage: ${power}\n`;
+            tooltip += `• Valeur totale (×${usages}): ${totalValue}\n`;
+            tooltip += `• Efficacité: ${efficiency}`;
+        } else {
+            tooltip += `\nScore: ${(data.score * 100).toFixed(1)}%`;
+        }
+
+        cell.title = tooltip;
 
         return cell;
     }

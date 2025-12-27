@@ -143,6 +143,11 @@ class TableRenderer {
             } else {
                 cell = document.createElement('td');
                 cell.textContent = cellContent;
+                
+                // Add tooltip for Total Value in Usages column
+                if (index === 12 && item.usages > 1) {
+                    cell.title = `Valeur totale: ${item.power * item.usages} (${item.power} × ${item.usages})`;
+                }
             }
             
             // Apply rarity color to rarity column
