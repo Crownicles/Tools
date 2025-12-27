@@ -25,11 +25,20 @@ class FilterManager {
             table.querySelector('th[data-column="rawDefense"]').classList.add('column-hidden');
             table.querySelector('th[data-column="power"]').classList.add('column-hidden');
             table.querySelector('th[data-column="nature"]').classList.add('column-hidden');
+            table.querySelector('th[data-column="usages"]').classList.add('column-hidden');
         } else if (currentType === 'armors') {
             table.querySelector('th[data-column="rawAttack"]').classList.add('column-hidden');
             table.querySelector('th[data-column="power"]').classList.add('column-hidden');
             table.querySelector('th[data-column="nature"]').classList.add('column-hidden');
-        } else if (currentType === 'objects' || currentType === 'potions') {
+            table.querySelector('th[data-column="usages"]').classList.add('column-hidden');
+        } else if (currentType === 'objects') {
+            table.querySelector('th[data-column="rawAttack"]').classList.add('column-hidden');
+            table.querySelector('th[data-column="rawDefense"]').classList.add('column-hidden');
+            table.querySelector('th[data-column="attack"]').classList.add('column-hidden');
+            table.querySelector('th[data-column="defense"]').classList.add('column-hidden');
+            table.querySelector('th[data-column="speed"]').classList.add('column-hidden');
+            table.querySelector('th[data-column="usages"]').classList.add('column-hidden');
+        } else if (currentType === 'potions') {
             table.querySelector('th[data-column="rawAttack"]').classList.add('column-hidden');
             table.querySelector('th[data-column="rawDefense"]').classList.add('column-hidden');
             table.querySelector('th[data-column="attack"]').classList.add('column-hidden');
@@ -46,11 +55,20 @@ class FilterManager {
                 if (cells[6]) cells[6].classList.add('column-hidden'); // rawDefense
                 if (cells[10]) cells[10].classList.add('column-hidden'); // nature
                 if (cells[11]) cells[11].classList.add('column-hidden'); // power
+                if (cells[12]) cells[12].classList.add('column-hidden'); // usages
             } else if (currentType === 'armors') {
                 if (cells[5]) cells[5].classList.add('column-hidden'); // rawAttack
                 if (cells[10]) cells[10].classList.add('column-hidden'); // nature
                 if (cells[11]) cells[11].classList.add('column-hidden'); // power
-            } else if (currentType === 'objects' || currentType === 'potions') {
+                if (cells[12]) cells[12].classList.add('column-hidden'); // usages
+            } else if (currentType === 'objects') {
+                if (cells[5]) cells[5].classList.add('column-hidden'); // rawAttack
+                if (cells[6]) cells[6].classList.add('column-hidden'); // rawDefense
+                if (cells[7]) cells[7].classList.add('column-hidden'); // attack
+                if (cells[8]) cells[8].classList.add('column-hidden'); // defense
+                if (cells[9]) cells[9].classList.add('column-hidden'); // speed
+                if (cells[12]) cells[12].classList.add('column-hidden'); // usages
+            } else if (currentType === 'potions') {
                 if (cells[5]) cells[5].classList.add('column-hidden'); // rawAttack
                 if (cells[6]) cells[6].classList.add('column-hidden'); // rawDefense
                 if (cells[7]) cells[7].classList.add('column-hidden'); // attack

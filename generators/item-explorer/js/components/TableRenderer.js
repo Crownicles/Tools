@@ -128,6 +128,7 @@ class TableRenderer {
             item.speed || item.finalSpeed || 0,
             `${natureEmoji} ${natureName} (${item.nature || 0})`,
             item.power || 0,
+            item.usages !== null ? item.usages : '-',
             null, // Performance cell will be handled separately
             item.tags ? item.tags.join(', ') : ''
         ];
@@ -136,7 +137,7 @@ class TableRenderer {
             let cell;
             
             // Handle performance column specially
-            if (index === 12) {
+            if (index === 13) {
                 cell = this.statAnalysis ? this.statAnalysis.createPerformanceCell(item, performanceData) : document.createElement('td');
                 if (!this.statAnalysis) cell.textContent = '-';
             } else {
@@ -148,9 +149,14 @@ class TableRenderer {
             if (index === 3) {
                 cell.className = `rarity-${item.rarity}`;
             }
+
+            // Add class for multi-usage potions
+            if (index === 12 && item.usages > 1) {
+                cell.classList.add('multi-usage');
+            }
             
             // Apply color coding if enabled (original system) - but not to performance column
-            if (colorRanges && index !== 12 && this.shouldApplyColorCoding(index, currentType)) {
+            if (colorRanges && index !== 13 && this.shouldApplyColorCoding(index, currentType)) {
                 const value = typeof cellContent === 'number' ? cellContent : parseFloat(cellContent) || 0;
                 const colorClass = this.getColorClass(value, colorRanges[index]);
                 if (colorClass) {

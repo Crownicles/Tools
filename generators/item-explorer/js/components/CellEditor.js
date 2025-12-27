@@ -58,20 +58,20 @@ class CellEditor {
         
         if (item.type === 'weapon') {
             // Weapons: rawAttack, defense, speed (+ common fields)
-            editableColumns = [2, 3, 4, 5, 8, 9, 13]; // name, rarity, type, rawAttack, defense, speed, tags
-            calculatedColumns = [7, 12]; // attack (calculé), performance
+            editableColumns = [2, 3, 4, 5, 8, 9, 14]; // name, rarity, type, rawAttack, defense, speed, tags
+            calculatedColumns = [7, 13]; // attack (calculé), performance
         } else if (item.type === 'armor') {
             // Armors: rawDefense, attack, speed (+ common fields)  
-            editableColumns = [2, 3, 4, 6, 7, 9, 13]; // name, rarity, type, rawDefense, attack, speed, tags
-            calculatedColumns = [8, 12]; // defense (calculé), performance
+            editableColumns = [2, 3, 4, 6, 7, 9, 14]; // name, rarity, type, rawDefense, attack, speed, tags
+            calculatedColumns = [8, 13]; // defense (calculé), performance
         } else if (item.type === 'object' || item.type === 'potion') {
             // Objects/Potions: power, nature, rarity (+ common fields)
-            editableColumns = [2, 3, 4, 10, 11, 13]; // name, rarity, type, nature, power, tags
-            calculatedColumns = [7, 8, 9, 12]; // attack, defense, speed (calculés), performance
+            editableColumns = [2, 3, 4, 10, 11, 12, 14]; // name, rarity, type, nature, power, usages, tags
+            calculatedColumns = [7, 8, 9, 13]; // attack, defense, speed (calculés), performance
         } else {
             // Fallback - tous les champs éditables par défaut
-            editableColumns = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13];
-            calculatedColumns = [12]; // performance
+            editableColumns = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14];
+            calculatedColumns = [13]; // performance
         }
         
         const nonEditableColumns = [0, 1]; // ID, emoji - toujours non éditables
@@ -133,7 +133,7 @@ class CellEditor {
             case 4: // type
                 cell.classList.add('type-input');
                 break;
-            case 5: case 6: case 7: case 8: case 9: case 11: // numeric fields (ajout de 7, 8, 9)
+            case 5: case 6: case 7: case 8: case 9: case 11: case 12: // numeric fields (ajout de 7, 8, 9, 12)
                 cell.classList.add('numeric-input');
                 break;
             case 10: // nature
@@ -297,7 +297,7 @@ class CellEditor {
         const value = cell.textContent.trim();
 
         // Numeric validation for numeric fields - allow negative numbers
-        if ([5, 6, 7, 8, 9, 11].includes(columnIndex)) { // rawAttack, rawDefense, attack, defense, speed, power
+        if ([5, 6, 7, 8, 9, 11, 12].includes(columnIndex)) { // rawAttack, rawDefense, attack, defense, speed, power, usages
             // Simple validation: allow digits, minus sign at the beginning only
             const isValidNumeric = /^-?\d*$/.test(value);
             
@@ -394,7 +394,10 @@ class CellEditor {
             case 11: // power
                 item.power = parseInt(value) || 0;
                 break;
-            case 13: // tags
+            case 12: // usages
+                item.usages = value === '-' ? null : (parseInt(value) || 0);
+                break;
+            case 14: // tags
                 item.tags = value.split(',').map(tag => tag.trim()).filter(tag => tag);
                 break;
         }
@@ -414,13 +417,13 @@ class CellEditor {
                     errorMessage = 'Name cannot be empty';
                 }
                 break;
-            case 5: case 6: case 7: case 8: case 9: case 11: // numeric fields - allow negative numbers
-                if (value && isNaN(parseInt(value))) {
+            case 5: case 6: case 7: case 8: case 9: case 11: case 12: // numeric fields - allow negative numbers
+                if (value && value !== '-' && isNaN(parseInt(value))) {
                     isValid = false;
                     errorMessage = 'Must be a valid number';
                 }
                 break;
-            case 13: // tags
+            case 14: // tags
                 // Tags are always valid
                 break;
         }

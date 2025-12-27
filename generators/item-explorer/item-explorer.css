@@ -300,6 +300,11 @@ tr:hover {
 .stat-good { background-color: #fff3cd !important; }
 .stat-poor { background-color: #f8d7da !important; }
 
+.multi-usage {
+    font-weight: bold;
+    color: #e67e22;
+}
+
 .color-legend {
     display: none;
     margin-top: 10px;

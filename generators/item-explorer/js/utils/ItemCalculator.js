@@ -85,6 +85,13 @@ class ItemCalculator {
         item.power = item.power || 0;
         item.nature = item.nature || 0;
         
+        // Gestion des usages pour les potions de combat (nature 2, 3, 4)
+        if ([2, 3, 4].includes(item.nature)) {
+            item.usages = item.usages || 1;
+        } else {
+            item.usages = null;
+        }
+        
         if (item.nature === 3) { // ATTACK
             item.finalAttack = item.power;
             item.finalDefense = 0;

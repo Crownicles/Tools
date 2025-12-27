@@ -141,6 +141,7 @@ class ComparisonManager {
             { key: 'speed', label: 'Speed', isNumeric: true, fallback: 'finalSpeed' },
             { key: 'nature', label: 'Nature', isNumeric: true },
             { key: 'power', label: 'Power', isNumeric: true },
+            { key: 'usages', label: 'Usages', isNumeric: true },
             { key: 'tags', label: 'Tags', isNumeric: false }
         ];
 
