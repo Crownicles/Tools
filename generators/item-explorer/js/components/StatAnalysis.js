@@ -92,6 +92,12 @@ class StatAnalysis {
             // For objects and potions, use power stat with rarity bonus
             const power = item.power || 0;
             powerScore = power * rarityBonus;
+
+            // Multiply by usages for combat potions
+            if (type === 'potion' && [2, 3, 4].includes(item.nature)) {
+                const usages = item.usages || 1;
+                powerScore *= usages;
+            }
         }
         
         return Math.max(0, powerScore); // Ensure non-negative score
@@ -121,8 +127,9 @@ class StatAnalysis {
             case 'armor':
                 return ['defense', 'attack', 'speed'];
             case 'object':
-            case 'potion':
                 return ['power'];
+            case 'potion':
+                return ['power', 'usages'];
             default:
                 return [];
         }
@@ -142,6 +149,8 @@ class StatAnalysis {
                 return item.speed || item.finalSpeed || 0;
             case 'power':
                 return item.power || 0;
+            case 'usages':
+                return item.usages || 1;
             default:
                 return 0;
         }

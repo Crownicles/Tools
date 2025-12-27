@@ -84,6 +84,7 @@ class ItemCalculator {
     calculatePotionStats(item) {
         item.power = item.power || 0;
         item.nature = item.nature || 0;
+        item.usages = item.usages || null;
         
         // Gestion des usages pour les potions de combat (nature 2, 3, 4)
         if ([2, 3, 4].includes(item.nature)) {
