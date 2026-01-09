@@ -145,15 +145,14 @@
 
         <div class="card">
             <div class="controls">
-                <span>Nombre de simulations par terrain :</span>
-                <input type="number" id="simCount" value="10000" min="1000" max="100000" step="1000">
-                <button class="btn" onclick="updateCharts()">Relancer la simulation</button>
+                <span>Visualisation basée sur les formules mathématiques exactes (Distribution de Puissance).</span>
+                <button class="btn" onclick="updateCharts()">Rafraîchir les graphiques</button>
             </div>
             <canvas id="riskChart"></canvas>
         </div>
 
         <div class="card">
-            <h2>Statistiques par Terrain</h2>
+            <h2>Statistiques Théoriques par Terrain</h2>
             <div id="statsContainer" class="terrain-stats"></div>
         </div>
     </div>
@@ -181,37 +180,40 @@
             cave: 'rgba(168, 85, 247, 0.7)'
         };
 
-        function generateTerrainBasedRisk(locationType, random) {
-            const config = TERRAIN_DIFFICULTY[locationType];
-            const transformedRandom = Math.pow(random, 1 / config.skewFactor);
-            return Math.round(transformedRandom * 100);
+        // Theoretical probability for a rounded risk value r
+        function getTheoreticalProb(r, skewFactor) {
+            const k = skewFactor;
+            if (r === 0) {
+                return Math.pow(0.5 / 100, k);
+            }
+            if (r === 100) {
+                return 1 - Math.pow(99.5 / 100, k);
+            }
+            // P(r-0.5 <= 100 * U^(1/k) < r+0.5)
+            // = P(( (r-0.5)/100 )^k <= U < ( (r+0.5)/100 )^k)
+            return Math.pow((r + 0.5) / 100, k) - Math.pow((r - 0.5) / 100, k);
+        }
+
+        // Expected value for continuous distribution: 100 * k / (k + 1)
+        function getExpectedValue(skewFactor) {
+            return (100 * skewFactor) / (skewFactor + 1);
         }
 
         let riskChart = null;
 
         function updateCharts() {
-            const simCount = parseInt(document.getElementById('simCount').value);
             const datasets = [];
             const statsHtml = [];
 
             const labels = Array.from({length: 101}, (_, i) => i);
 
             for (const [terrain, config] of Object.entries(TERRAIN_DIFFICULTY)) {
-                const results = new Array(101).fill(0);
-                let totalRisk = 0;
-                let actualMin = 101;
-                let actualMax = -1;
-
-                for (let i = 0; i < simCount; i++) {
-                    const r = generateTerrainBasedRisk(terrain, Math.random());
-                    results[r]++;
-                    totalRisk += r;
-                    if (r < actualMin) actualMin = r;
-                    if (r > actualMax) actualMax = r;
+                const k = config.skewFactor;
+                const density = [];
+                
+                for (let r = 0; r <= 100; r++) {
+                    density.push(getTheoreticalProb(r, k) * 100); // in %
                 }
-
-                // Normalize for density (%)
-                const density = results.map(v => (v / simCount) * 100);
 
                 datasets.push({
                     label: terrain,
@@ -221,29 +223,24 @@
                     borderWidth: 2,
                     tension: 0.4,
                     fill: true,
-                    hidden: ['plains', 'desert', 'cave'].indexOf(terrain) === -1 // Show a mix by default
+                    hidden: ['plains', 'desert', 'cave'].indexOf(terrain) === -1
                 });
 
-                const avg = (totalRisk / simCount).toFixed(2);
+                const expected = getExpectedValue(k).toFixed(2);
                 
-                // Calculate integrals for 20% slices
+                // Calculate integrals for 20% slices using CDF: F(x) = (x/100)^k
                 const slices = [
-                    { label: '0-20%', sum: 0 },
-                    { label: '20-40%', sum: 0 },
-                    { label: '40-60%', sum: 0 },
-                    { label: '60-80%', sum: 0 },
-                    { label: '80-100%', sum: 0 }
+                    { label: '0-20%', val: Math.pow(20/100, k) },
+                    { label: '20-40%', val: Math.pow(40/100, k) - Math.pow(20/100, k) },
+                    { label: '40-60%', val: Math.pow(60/100, k) - Math.pow(40/100, k) },
+                    { label: '60-80%', val: Math.pow(80/100, k) - Math.pow(60/100, k) },
+                    { label: '80-100%', val: 1 - Math.pow(80/100, k) }
                 ];
-
-                results.forEach((count, risk) => {
-                    const sliceIndex = Math.min(4, Math.floor(risk / 20));
-                    slices[sliceIndex].sum += count;
-                });
 
                 const slicesHtml = slices.map(s => `
                     <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-top: 2px;">
                         <span>${s.label}:</span>
-                        <span>${((s.sum / simCount) * 100).toFixed(1)}%</span>
+                        <span>${(s.val * 100).toFixed(1)}%</span>
                     </div>
                 `).join('');
 
@@ -251,9 +248,9 @@
                     <div class="stat-item" style="border-left-color: ${TERRAIN_COLORS[terrain]}">
                         <h3>${terrain}</h3>
                         <div class="stat-details">
-                            Skew Factor: <span>${config.skewFactor}</span><br>
-                            Moyenne Observée: <span>${avg}%</span><br>
-                            Range Observé: <span>${actualMin}% - ${actualMax}%</span>
+                            Skew Factor: <span>${k}</span><br>
+                            Moyenne Théorique: <span>${expected}%</span><br>
+                            Loi: <span>100 * random^(1/${k})</span>
                         </div>
                         <div style="margin-top: 10px; padding-top: 5px; border-top: 1px solid rgba(255,255,255,0.1);">
                             <strong>Distribution par tranches:</strong>
