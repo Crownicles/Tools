@@ -60,6 +60,16 @@ const toolsConfig = [
         status: 'active'
     },
     {
+        id: 'expedition-risk-visualizer',
+        title: 'Visualiseur de Risque d\'Expédition',
+        description: 'Visualise la distribution des risques générés pour les expéditions selon le terrain.',
+        path: 'generators/expedition-risk-visualizer.html',
+        category: 'Visualisation',
+        tags: ['Expéditions', 'Risques', 'Probabilité'],
+        icon: '🎲',
+        status: 'active'
+    },
+    {
         id: 'tournament-explorer',
         title: 'Résultats de tournois',
         description: 'Analyse des résultats CSV des tournois. Taux de victoire, matchups et top performers.',
