@@ -121,14 +121,28 @@
 
         .preference-section {
             margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #fdfdfd;
+            border: 1px solid #e2e8f0;
+        }
+
+        .preference-section.liked {
+            border: 2px solid var(--success);
+            background: #f0fdf4;
+        }
+
+        .preference-section.disliked {
+            border: 2px solid var(--danger);
+            background: #fef2f2;
         }
 
         .preference-title {
             font-size: 0.75rem;
             text-transform: uppercase;
             color: var(--text-secondary);
-            margin-bottom: 8px;
-            font-weight: 700;
+            margin-bottom: 10px;
+            font-weight: 800;
             letter-spacing: 0.05em;
         }
 
@@ -143,11 +157,12 @@
             border-radius: 6px;
             font-size: 0.85rem;
             font-weight: 600;
-            border: 2px solid transparent;
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
-        .tag.liked { border-color: var(--success); }
-        .tag.disliked { border-color: var(--danger); }
+        /* Removng individual borders from tags as the section now handles it */
+        .tag.liked { border-color: transparent; }
+        .tag.disliked { border-color: transparent; }
 
         .tag.plains { background-color: var(--color-plains); }
         .tag.forest { background-color: var(--color-forest); }
@@ -414,10 +429,9 @@
 
                 const card = document.createElement('div');
                 card.className = 'pet-card';
-                card.style.borderLeftColor = prefs.liked.length > 0 ? 'var(--success)' : (prefs.disliked.length > 0 ? 'var(--danger)' : 'var(--info)');
 
-                const likedTags = prefs.liked.map(t => `<span class="tag liked ${t}">${TERRAIN_NAMES[t]}</span>`).join('');
-                const dislikedTags = prefs.disliked.map(t => `<span class="tag disliked ${t}">${TERRAIN_NAMES[t]}</span>`).join('');
+                const likedTags = prefs.liked.map(t => `<span class="tag ${t}">${TERRAIN_NAMES[t]}</span>`).join('');
+                const dislikedTags = prefs.disliked.map(t => `<span class="tag ${t}">${TERRAIN_NAMES[t]}</span>`).join('');
 
                 card.innerHTML = `
                     <div class="pet-header">
@@ -425,13 +439,13 @@
                         <span class="pet-id">#${id}</span>
                     </div>
                     ${likedTags ? `
-                        <div class="preference-section">
+                        <div class="preference-section liked">
                             <div class="preference-title">Aime (${prefs.liked.length})</div>
                             <div class="tag-list">${likedTags}</div>
                         </div>
                     ` : ''}
                     ${dislikedTags ? `
-                        <div class="preference-section">
+                        <div class="preference-section disliked">
                             <div class="preference-title">Déteste (${prefs.disliked.length})</div>
                             <div class="tag-list">${dislikedTags}</div>
                         </div>
