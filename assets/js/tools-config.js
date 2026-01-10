@@ -70,6 +70,16 @@ const toolsConfig = [
         status: 'active'
     },
     {
+        id: 'pet-preferences-visualizer',
+        title: 'Préférences des Familiers',
+        description: 'Visualise les lieux aimés et détestés par chaque familier pour les expéditions.',
+        path: 'generators/pet-preferences-visualizer.html',
+        category: 'Visualisation',
+        tags: ['Familiers', 'Expéditions', 'Préférences'],
+        icon: '🐾',
+        status: 'active'
+    },
+    {
         id: 'tournament-explorer',
         title: 'Résultats de tournois',
         description: 'Analyse des résultats CSV des tournois. Taux de victoire, matchups et top performers.',
