@@ -337,14 +337,16 @@
             const loadIcon = document.getElementById('loadIcon');
             const loadBtn = document.getElementById('loadGitHubData');
             
-            loadingStatus.style.display = show ? 'block' : 'none';
-            statusText.textContent = message;
-            loadBtn.disabled = show;
+            if (loadingStatus) loadingStatus.style.display = show ? 'block' : 'none';
+            if (statusText) statusText.textContent = message;
+            if (loadBtn) loadBtn.disabled = show;
             
-            if (show) {
-                loadIcon.classList.add('fa-spin');
-            } else {
-                loadIcon.classList.remove('fa-spin');
+            if (loadIcon) {
+                if (show) {
+                    loadIcon.classList.add('fa-spin');
+                } else {
+                    loadIcon.classList.remove('fa-spin');
+                }
             }
         }
 
@@ -405,15 +407,24 @@
 
                 PREFERENCES = newPrefs;
                 showLoading(false);
-                document.getElementById('statusText').textContent = `✓ ${Object.keys(newPrefs).length} familiers chargés depuis "${branch}"`;
-                document.getElementById('loadingStatus').style.display = 'block';
-                document.getElementById('loadingStatus').innerHTML = `<i class="fas fa-check" style="color: var(--success);"></i> <span>${Object.keys(newPrefs).length} familiers chargés depuis "${branch}"</span>`;
+                showStatus('success', `${Object.keys(newPrefs).length} familiers chargés depuis "${branch}"`);
                 
                 renderPets();
             } catch (error) {
                 showLoading(false);
-                document.getElementById('loadingStatus').style.display = 'block';
-                document.getElementById('loadingStatus').innerHTML = `<i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i> <span>Erreur: ${error.message}</span>`;
+                showStatus('error', error.message);
+            }
+        }
+        
+        function showStatus(type, message) {
+            const loadingStatus = document.getElementById('loadingStatus');
+            if (!loadingStatus) return;
+            
+            loadingStatus.style.display = 'block';
+            if (type === 'success') {
+                loadingStatus.innerHTML = `<i class="fas fa-check" style="color: var(--success);"></i> <span>${message}</span>`;
+            } else {
+                loadingStatus.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i> <span>Erreur: ${message}</span>`;
             }
         }
 
