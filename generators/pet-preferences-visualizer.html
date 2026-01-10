@@ -222,6 +222,79 @@
         .btn-load:hover {
             opacity: 0.9;
         }
+
+        .stats-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+        }
+
+        .terrain-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .terrain-stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .terrain-stat-header {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .terrain-stat-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stat-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .stat-bar-label {
+            width: 60px;
+            flex-shrink: 0;
+        }
+
+        .stat-bar-container {
+            flex: 1;
+            background: #f1f5f9;
+            border-radius: 4px;
+            height: 16px;
+            overflow: hidden;
+        }
+
+        .stat-bar {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 6px;
+            font-size: 0.75rem;
+            color: white;
+            font-weight: 600;
+            min-width: 20px;
+        }
+
+        .stat-bar.liked {
+            background: var(--success);
+        }
+
+        .stat-bar.disliked {
+            background: var(--danger);
+        }
     </style>
 </head>
 <body>
@@ -260,6 +333,14 @@
             </div>
             
             <div id="terrainFilters" class="terrain-icons"></div>
+            
+            <!-- Stats section -->
+            <div id="statsSection" class="stats-section" style="display: none;">
+                <h3 style="margin: 0 0 15px 0; font-size: 1rem; color: var(--text-secondary);">
+                    <i class="fas fa-chart-bar"></i> Statistiques par terrain
+                </h3>
+                <div id="terrainStats" class="terrain-stats-grid"></div>
+            </div>
 
             <div id="petGrid" class="pet-grid"></div>
         </div>
@@ -459,6 +540,7 @@
                 showLoading(false);
                 showStatus('success', `${Object.keys(newPrefs).length} familiers chargés depuis "${branch}"`);
                 
+                renderStats();
                 renderPets();
             } catch (error) {
                 showLoading(false);
@@ -476,6 +558,63 @@
             } else {
                 loadingStatus.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i> <span>Erreur: ${message}</span>`;
             }
+        }
+
+        function renderStats() {
+            const statsSection = document.getElementById('statsSection');
+            const terrainStatsGrid = document.getElementById('terrainStats');
+            
+            if (!statsSection || !terrainStatsGrid) return;
+            
+            const totalPets = Object.keys(PREFERENCES).filter(id => id !== '0').length; // Exclude pet 0 (no pet)
+            if (totalPets === 0) {
+                statsSection.style.display = 'none';
+                return;
+            }
+            
+            // Calculate stats per terrain
+            const stats = {};
+            Object.keys(TERRAIN_NAMES).forEach(terrain => {
+                stats[terrain] = { liked: 0, disliked: 0 };
+            });
+            
+            Object.entries(PREFERENCES).forEach(([id, prefs]) => {
+                if (id === '0') return; // Skip no pet
+                prefs.liked.forEach(t => {
+                    if (stats[t]) stats[t].liked++;
+                });
+                prefs.disliked.forEach(t => {
+                    if (stats[t]) stats[t].disliked++;
+                });
+            });
+            
+            // Render stats cards
+            terrainStatsGrid.innerHTML = Object.entries(TERRAIN_NAMES).map(([terrain, name]) => {
+                const likedPct = Math.round((stats[terrain].liked / totalPets) * 100);
+                const dislikedPct = Math.round((stats[terrain].disliked / totalPets) * 100);
+                
+                return `
+                    <div class="terrain-stat-card">
+                        <div class="terrain-stat-header">${name}</div>
+                        <div class="terrain-stat-bars">
+                            <div class="stat-bar-row">
+                                <span class="stat-bar-label">❤️ Aime</span>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar liked" style="width: ${likedPct}%">${stats[terrain].liked}</div>
+                                </div>
+                            </div>
+                            <div class="stat-bar-row">
+                                <span class="stat-bar-label">💔 Déteste</span>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar disliked" style="width: ${dislikedPct}%">${stats[terrain].disliked}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            statsSection.style.display = 'block';
         }
 
         function renderPets() {
