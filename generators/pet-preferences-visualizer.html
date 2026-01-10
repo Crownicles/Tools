@@ -207,6 +207,21 @@
             color: white;
             border-color: #1e293b;
         }
+
+        .btn-load {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-load:hover {
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
@@ -231,6 +246,15 @@
                     <option value="likesCount">Trier par Nb. Aimes (Décroissant)</option>
                     <option value="dislikesCount">Trier par Nb. Détestes (Décroissant)</option>
                 </select>
+                <div style="display: flex; gap: 10px; align-items: center; width: 100%;">
+                    <input type="text" id="branchName" placeholder="Branche GitHub (ex: develop)" value="develop" style="flex: 2;">
+                    <button id="loadGitHubData" class="btn-load" style="flex: 1;">
+                        <i class="fas fa-sync" id="loadIcon"></i> Charger depuis GitHub
+                    </button>
+                </div>
+                <div id="loadingStatus" style="margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem; display: none;">
+                    <i class="fas fa-spinner fa-spin"></i> <span id="statusText">Chargement en cours...</span>
+                </div>
             </div>
             
             <div id="terrainFilters" class="terrain-icons">
@@ -245,12 +269,12 @@
         const PET_NAMES = {
             1: "🐶 Chien", 2: "🐩 Caniche", 20: "🦊 Renard", 28: "🐺 Loup",
             3: "🐱 Chat", 4: "🐈‍⬛ Chat Noir", 56: "🐯 Tigre", 57: "🦁 Lion", 60: "🐆 Léopard",
-            5: "🐭 Souris", 6: "🐹 Hamster", 7: "🐰 Lapin", 35: "🦝 Raton Laveur", 40: "🐿️ Tamias", 41: "🦔 Hérisson", 93: "🐀 Rat",
-            8: "🐄 Vache", 9: "🐖 Cochon", 17: "🐑 Mouton", 18: "🐐 Chèvre", 96: "🫏 Âne",
+            5: "🐭 Souris", 6: "🐹 Hamster", 7: "🐰 Lapin", 35: "�� Raton Laveur", 40: "🐿️ Tamias", 41: "🦔 Hérisson", 93: "🐀 Rat",
+            8: "🐄 Vache", 9: "�� Cochon", 17: "🐑 Mouton", 18: "🐐 Chèvre", 96: "🫏 Âne",
             10: "🐔 Poule", 12: "🦆 Canard", 19: "🦃 Dindon", 92: "🐤 Poussin", 97: "🪿 Oie",
             11: "🐦 Oiseau", 26: "🦉 Chouette", 27: "🦇 Chauve-souris", 33: "🦢 Cygne", 34: "🦩 Flamant Rose", 53: "🦚 Paon", 54: "🦜 Perroquet", 58: "🦅 Aigle", 62: "🕊️ Colombe", 94: "🐦‍⬛ Merle", 95: "🐦‍⬛ Corbeau", 59: "🦤 Dodo",
             13: "🐎 Cheval", 47: "🦓 Zèbre", 98: "🫎 Élan",
-            14: "🐢 Tortue", 15: "🐍 Serpent", 16: "🦎 Lézard", 44: "🦂 Scorpion", 45: "🐊 Crocodile",
+            14: "🐢 Tortue", 15: "🐍 Serpent", 16: "�� Lézard", 44: "🦂 Scorpion", 45: "🐊 Crocodile",
             21: "🐻 Ours", 42: "🐻‍❄️ Ours Polaire", 43: "🐼 Panda",
             23: "🐸 Grenouille",
             24: "🐒 Singe", 90: "🦧 Orang-outan", 91: "🦍 Gorille",
@@ -275,112 +299,94 @@
             cave: "🕳️ Caverne"
         };
 
-        const PREFERENCES = {
-            0: { liked: [], disliked: [] },
-            1: { liked: ["forest", "plains", "mountain"], disliked: ["swamp"] },
-            2: { liked: ["plains", "ruins"], disliked: ["swamp", "cave"] },
-            20: { liked: ["forest", "plains"], disliked: ["desert"] },
-            28: { liked: ["forest", "mountain", "plains"], disliked: ["desert"] },
-            3: { liked: ["ruins", "forest", "plains"], disliked: ["swamp"] },
-            4: { liked: ["ruins", "cave", "forest"], disliked: ["desert"] },
-            56: { liked: ["forest", "swamp"], disliked: ["desert", "coast"] },
-            57: { liked: ["plains", "desert"], disliked: ["swamp", "forest"] },
-            60: { liked: ["forest", "mountain"], disliked: ["coast"] },
-            5: { liked: ["plains", "cave", "ruins"], disliked: [] },
-            6: { liked: ["plains", "desert", "cave"], disliked: ["swamp"] },
-            7: { liked: ["plains", "forest"], disliked: ["desert", "swamp"] },
-            35: { liked: ["forest", "ruins"], disliked: ["desert"] },
-            40: { liked: ["forest", "mountain"], disliked: ["desert", "coast"] },
-            41: { liked: ["forest", "plains"], disliked: ["desert"] },
-            93: { liked: ["ruins", "cave", "swamp"], disliked: [] },
-            8: { liked: ["plains", "forest"], disliked: ["mountain", "desert"] },
-            9: { liked: ["plains", "forest", "swamp"], disliked: ["desert"] },
-            17: { liked: ["plains", "mountain"], disliked: ["swamp", "desert"] },
-            18: { liked: ["mountain", "ruins", "plains"], disliked: ["swamp"] },
-            96: { liked: ["plains", "mountain", "desert"], disliked: ["swamp"] },
-            10: { liked: ["plains", "forest"], disliked: ["mountain", "cave"] },
-            12: { liked: ["coast", "swamp", "plains"], disliked: ["desert", "cave"] },
-            19: { liked: ["forest", "plains"], disliked: ["desert", "coast"] },
-            92: { liked: ["plains", "forest"], disliked: ["mountain", "cave", "swamp"] },
-            97: { liked: ["plains", "coast", "swamp"], disliked: ["desert", "cave"] },
-            11: { liked: ["forest", "plains", "mountain"], disliked: ["cave"] },
-            26: { liked: ["forest", "ruins", "cave"], disliked: ["desert"] },
-            27: { liked: ["cave", "ruins", "forest"], disliked: ["desert", "plains"] },
-            33: { liked: ["coast", "swamp", "plains"], disliked: ["desert", "cave"] },
-            34: { liked: ["coast", "swamp"], disliked: ["cave", "mountain", "desert"] },
-            53: { liked: ["forest", "ruins", "plains"], disliked: ["desert"] },
-            54: { liked: ["forest", "coast", "ruins"], disliked: ["mountain", "desert"] },
-            58: { liked: ["mountain", "plains"], disliked: ["cave", "swamp"] },
-            62: { liked: ["plains", "forest", "ruins"], disliked: ["cave"] },
-            94: { liked: ["forest", "plains", "ruins"], disliked: ["desert"] },
-            95: { liked: ["ruins", "forest", "plains"], disliked: [] },
-            59: { liked: ["forest", "coast", "plains"], disliked: ["mountain", "cave"] },
-            13: { liked: ["plains", "mountain"], disliked: ["swamp", "cave"] },
-            47: { liked: ["plains", "desert"], disliked: ["swamp", "cave", "forest"] },
-            98: { liked: ["forest", "mountain"], disliked: ["desert", "coast"] },
-            14: { liked: ["coast", "swamp", "plains"], disliked: ["desert", "mountain"] },
-            15: { liked: ["desert", "swamp", "ruins"], disliked: ["mountain"] },
-            16: { liked: ["desert", "ruins", "cave"], disliked: ["swamp"] },
-            44: { liked: ["desert", "cave", "ruins"], disliked: ["coast", "swamp", "forest"] },
-            45: { liked: ["swamp", "coast"], disliked: ["desert", "mountain"] },
-            21: { liked: ["forest", "mountain", "cave"], disliked: ["desert"] },
-            42: { liked: ["coast", "mountain"], disliked: ["desert", "swamp", "forest"] },
-            43: { liked: ["forest", "mountain"], disliked: ["desert", "coast"] },
-            23: { liked: ["swamp", "coast", "forest"], disliked: ["desert", "mountain"] },
-            24: { liked: ["forest", "ruins"], disliked: ["desert", "coast"] },
-            90: { liked: ["forest", "swamp"], disliked: ["desert", "mountain"] },
-            91: { liked: ["forest", "mountain"], disliked: ["desert", "coast"] },
-            25: { liked: ["coast", "mountain"], disliked: ["desert", "forest", "swamp"] },
-            72: { liked: ["coast", "mountain"], disliked: ["desert", "forest", "swamp"] },
-            30: { liked: ["coast", "cave"], disliked: ["desert", "forest"] },
-            22: { liked: ["forest"], disliked: ["desert", "cave", "swamp"] },
-            52: { liked: ["plains", "desert"], disliked: ["cave", "swamp"] },
-            31: { liked: ["swamp", "coast"], disliked: ["desert", "mountain", "cave"] },
-            46: { liked: ["plains", "forest"], disliked: ["cave", "mountain"] },
-            48: { liked: ["plains", "swamp"], disliked: ["cave", "mountain"] },
-            51: { liked: ["plains", "forest"], disliked: ["cave", "mountain", "swamp"] },
-            29: { liked: ["forest", "swamp", "plains"], disliked: ["desert"] },
-            32: { liked: ["mountain", "desert", "plains"], disliked: ["swamp"] },
-            49: { liked: ["desert", "plains"], disliked: ["coast", "swamp", "forest"] },
-            50: { liked: ["desert", "plains"], disliked: ["coast", "swamp", "forest"] },
-            36: { liked: ["forest", "plains"], disliked: ["desert"] },
-            37: { liked: ["forest", "plains", "cave"], disliked: ["desert"] },
-            38: { liked: ["forest", "coast", "swamp"], disliked: ["desert", "mountain"] },
-            39: { liked: ["forest", "swamp"], disliked: ["desert", "mountain"] },
-            55: { liked: ["coast", "forest", "swamp"], disliked: ["desert"] },
-            87: { liked: ["forest", "plains"], disliked: ["desert", "swamp"] },
-            88: { liked: ["plains", "swamp", "forest"], disliked: ["desert"] },
-            89: { liked: ["plains", "mountain"], disliked: ["swamp", "cave"] },
-            71: { liked: ["coast", "cave"], disliked: ["desert", "mountain", "plains"] },
-            73: { liked: ["coast", "swamp"], disliked: ["desert", "mountain", "plains"] },
-            74: { liked: ["coast", "swamp"], disliked: ["desert", "mountain"] },
-            75: { liked: ["coast", "swamp"], disliked: ["desert", "mountain"] },
-            76: { liked: ["coast", "swamp"], disliked: ["desert", "mountain", "plains"] },
-            77: { liked: ["coast"], disliked: ["desert", "mountain", "forest", "plains"] },
-            78: { liked: ["coast"], disliked: ["desert", "mountain", "forest", "plains"] },
-            79: { liked: ["coast"], disliked: ["desert", "mountain", "forest", "plains"] },
-            80: { liked: ["coast", "swamp", "cave"], disliked: ["desert", "mountain"] },
-            81: { liked: ["coast", "cave"], disliked: ["desert", "mountain", "plains"] },
-            82: { liked: ["coast"], disliked: ["desert", "mountain", "cave"] },
-            86: { liked: ["coast", "swamp", "cave"], disliked: ["desert"] },
-            85: { liked: ["forest", "swamp", "ruins"], disliked: ["desert"] },
-            61: { liked: ["mountain", "plains"], disliked: ["desert", "swamp", "coast"] },
-            63: { liked: ["forest", "plains"], disliked: ["cave", "swamp"] },
-            64: { liked: ["mountain", "cave", "ruins"], disliked: ["swamp"] },
-            65: { liked: ["plains", "forest", "swamp"], disliked: ["coast", "cave"] },
-            83: { liked: ["mountain", "desert", "ruins"], disliked: ["coast", "swamp"] },
-            84: { liked: ["plains", "forest", "swamp"], disliked: ["cave", "mountain"] },
-            66: { liked: ["ruins", "coast", "cave"], disliked: [] },
-            67: { liked: ["mountain"], disliked: ["desert", "swamp"] },
-            68: { liked: ["coast", "swamp", "plains"], disliked: ["desert"] },
-            69: { liked: ["mountain"], disliked: ["desert", "swamp"] },
-            70: { liked: ["ruins", "desert", "cave"], disliked: [] },
-            99: { liked: ["ruins", "cave", "swamp"], disliked: ["coast", "desert"] },
-            100: { liked: ["ruins", "cave"], disliked: ["plains"] },
-            101: { liked: ["cave", "ruins", "forest"], disliked: ["plains", "desert"] }
-        };
-
+        let PREFERENCES = {};
         let currentTerrain = 'all';
+
+        function showLoading(show, message = 'Chargement en cours...') {
+            const loadingStatus = document.getElementById('loadingStatus');
+            const statusText = document.getElementById('statusText');
+            const loadIcon = document.getElementById('loadIcon');
+            const loadBtn = document.getElementById('loadGitHubData');
+            
+            loadingStatus.style.display = show ? 'block' : 'none';
+            statusText.textContent = message;
+            loadBtn.disabled = show;
+            
+            if (show) {
+                loadIcon.classList.add('fa-spin');
+            } else {
+                loadIcon.classList.remove('fa-spin');
+            }
+        }
+
+        function parseTerrainArray(content) {
+            // Extract all quoted strings from array content
+            const matches = content.match(/"([^"]+)"/g);
+            if (!matches) return [];
+            return matches.map(s => s.replace(/"/g, ''));
+        }
+
+        async function fetchPreferences(branch = 'develop') {
+            const url = `https://raw.githubusercontent.com/Crownicles/Crownicles/${branch}/Lib/src/constants/ExpeditionConstants.ts`;
+            showLoading(true, `Chargement depuis la branche "${branch}"...`);
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Branche "${branch}" introuvable (HTTP ${response.status})`);
+                const text = await response.text();
+                
+                // Extract the PET_EXPEDITION_PREFERENCES object
+                const startMarker = 'PET_EXPEDITION_PREFERENCES';
+                const startIndex = text.indexOf(startMarker);
+                if (startIndex === -1) throw new Error('PET_EXPEDITION_PREFERENCES non trouvé dans le fichier');
+                
+                // Find the opening brace after the marker
+                const assignIndex = text.indexOf('= {', startIndex);
+                if (assignIndex === -1) throw new Error('Format de fichier incompatible');
+                
+                let braceCount = 1;
+                let currentPos = assignIndex + 3; // After '= {'
+                let objectContent = '';
+                
+                while (braceCount > 0 && currentPos < text.length) {
+                    const char = text[currentPos];
+                    if (char === '{') braceCount++;
+                    if (char === '}') braceCount--;
+                    if (braceCount > 0) objectContent += char;
+                    currentPos++;
+                }
+
+                const newPrefs = {};
+                
+                // Split by top-level entries (number followed by colon)
+                // Match pattern: number: { liked: [...], disliked: [...] }
+                const entryRegex = /(\d+):\s*\{[^{}]*liked:\s*\[([\s\S]*?)\][^{}]*disliked:\s*\[([\s\S]*?)\][^{}]*\}/g;
+                let match;
+                
+                while ((match = entryRegex.exec(objectContent)) !== null) {
+                    const id = parseInt(match[1]);
+                    const liked = parseTerrainArray(match[2]);
+                    const disliked = parseTerrainArray(match[3]);
+                    newPrefs[id] = { liked, disliked };
+                }
+
+                if (Object.keys(newPrefs).length === 0) {
+                    throw new Error('Aucune préférence de familier trouvée dans le fichier');
+                }
+
+                PREFERENCES = newPrefs;
+                showLoading(false);
+                document.getElementById('statusText').textContent = `✓ ${Object.keys(newPrefs).length} familiers chargés depuis "${branch}"`;
+                document.getElementById('loadingStatus').style.display = 'block';
+                document.getElementById('loadingStatus').innerHTML = `<i class="fas fa-check" style="color: var(--success);"></i> <span>${Object.keys(newPrefs).length} familiers chargés depuis "${branch}"</span>`;
+                
+                renderPets();
+            } catch (error) {
+                showLoading(false);
+                document.getElementById('loadingStatus').style.display = 'block';
+                document.getElementById('loadingStatus').innerHTML = `<i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i> <span>Erreur: ${error.message}</span>`;
+            }
+        }
 
         function renderPets() {
             const grid = document.getElementById('petGrid');
@@ -426,8 +432,8 @@
                 const card = document.createElement('div');
                 card.className = 'pet-card';
 
-                const likedTags = prefs.liked.map(t => `<span class="tag ${t}">${TERRAIN_NAMES[t]}</span>`).join('');
-                const dislikedTags = prefs.disliked.map(t => `<span class="tag ${t}">${TERRAIN_NAMES[t]}</span>`).join('');
+                const likedTags = prefs.liked.map(t => `<span class="tag ${t}">${TERRAIN_NAMES[t] || t}</span>`).join('');
+                const dislikedTags = prefs.disliked.map(t => `<span class="tag ${t}">${TERRAIN_NAMES[t] || t}</span>`).join('');
 
                 card.innerHTML = `
                     <div class="pet-header">
@@ -471,6 +477,10 @@
         document.getElementById('searchInput').oninput = renderPets;
         document.getElementById('preferenceFilter').onchange = renderPets;
         document.getElementById('sortBy').onchange = renderPets;
+        document.getElementById('loadGitHubData').onclick = () => {
+            const branch = document.getElementById('branchName').value.trim();
+            fetchPreferences(branch);
+        };
 
         // Reset all filter
         document.querySelector('[data-terrain="all"]').onclick = (e) => {
@@ -480,7 +490,8 @@
             renderPets();
         };
 
-        window.onload = renderPets;
+        // Initial load
+        window.onload = () => fetchPreferences('balancingexpedition');
     </script>
 </body>
 </html>
