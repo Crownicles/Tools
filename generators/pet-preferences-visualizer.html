@@ -247,9 +247,11 @@
                     <option value="dislikesCount">Trier par Nb. Détestes (Décroissant)</option>
                 </select>
                 <div style="display: flex; gap: 10px; align-items: center; width: 100%;">
-                    <input type="text" id="branchName" placeholder="Branche GitHub (ex: develop)" value="develop" style="flex: 2;">
+                    <select id="branchSelect" style="flex: 2;">
+                        <option value="">Chargement des branches...</option>
+                    </select>
                     <button id="loadGitHubData" class="btn-load" style="flex: 1;">
-                        <i class="fas fa-sync" id="loadIcon"></i> Charger depuis GitHub
+                        <i class="fas fa-sync" id="loadIcon"></i> Charger
                     </button>
                 </div>
                 <div id="loadingStatus" style="margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem; display: none;">
@@ -257,9 +259,7 @@
                 </div>
             </div>
             
-            <div id="terrainFilters" class="terrain-icons">
-                <div class="terrain-filter active" data-terrain="all">Tous les terrains</div>
-            </div>
+            <div id="terrainFilters" class="terrain-icons"></div>
 
             <div id="petGrid" class="pet-grid"></div>
         </div>
@@ -301,6 +301,35 @@
 
         let PREFERENCES = {};
         let currentTerrain = 'all';
+        let availableBranches = [];
+
+        async function loadBranches() {
+            const branchSelect = document.getElementById('branchSelect');
+            try {
+                const response = await fetch('https://api.github.com/repos/Crownicles/Crownicles/branches?per_page=100');
+                if (!response.ok) throw new Error('Impossible de charger les branches');
+                
+                const branches = await response.json();
+                availableBranches = branches.map(b => b.name).sort((a, b) => {
+                    // Prioritize common branches
+                    const priority = ['develop', 'master', 'main'];
+                    const aIndex = priority.indexOf(a);
+                    const bIndex = priority.indexOf(b);
+                    if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+                    if (aIndex !== -1) return -1;
+                    if (bIndex !== -1) return 1;
+                    return a.localeCompare(b);
+                });
+                
+                branchSelect.innerHTML = availableBranches.map(branch => 
+                    `<option value="${branch}" ${branch === 'develop' ? 'selected' : ''}>${branch}</option>`
+                ).join('');
+                
+            } catch (error) {
+                branchSelect.innerHTML = '<option value="develop">develop (défaut)</option>';
+                console.error('Erreur chargement branches:', error);
+            }
+        }
 
         function showLoading(show, message = 'Chargement en cours...') {
             const loadingStatus = document.getElementById('loadingStatus');
@@ -460,6 +489,21 @@
 
         // Initialize terrain filters
         const terrainFilterContainer = document.getElementById('terrainFilters');
+        
+        // Add "All" filter first
+        const allFilter = document.createElement('div');
+        allFilter.className = 'terrain-filter active';
+        allFilter.dataset.terrain = 'all';
+        allFilter.textContent = 'Tous les terrains';
+        allFilter.onclick = () => {
+            document.querySelector('.terrain-filter.active').classList.remove('active');
+            allFilter.classList.add('active');
+            currentTerrain = 'all';
+            renderPets();
+        };
+        terrainFilterContainer.appendChild(allFilter);
+        
+        // Add terrain-specific filters
         for (const [key, name] of Object.entries(TERRAIN_NAMES)) {
             const el = document.createElement('div');
             el.className = 'terrain-filter';
@@ -478,20 +522,15 @@
         document.getElementById('preferenceFilter').onchange = renderPets;
         document.getElementById('sortBy').onchange = renderPets;
         document.getElementById('loadGitHubData').onclick = () => {
-            const branch = document.getElementById('branchName').value.trim();
+            const branch = document.getElementById('branchSelect').value || 'develop';
             fetchPreferences(branch);
         };
 
-        // Reset all filter
-        document.querySelector('[data-terrain="all"]').onclick = (e) => {
-            document.querySelector('.terrain-filter.active').classList.remove('active');
-            e.target.classList.add('active');
-            currentTerrain = 'all';
-            renderPets();
+        // Initial load - load branches first, then data
+        window.onload = async () => {
+            await loadBranches();
+            fetchPreferences('develop');
         };
-
-        // Initial load
-        window.onload = () => fetchPreferences('balancingexpedition');
     </script>
 </body>
 </html>
