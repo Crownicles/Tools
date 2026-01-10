@@ -6,21 +6,31 @@
     <title>Préférences d'Expédition des Familiers - Crownicles</title>
     <style>
         :root {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --bg-tertiary: #0f3460;
-            --accent: #e94560;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --success: #4ade80;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --accent: #b91c1c;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --success: #22c55e;
             --danger: #ef4444;
-            --warning: #fbbf24;
+            --warning: #f59e0b;
             --info: #3b82f6;
+
+            /* Terrain Colors */
+            --color-plains: #dcfce7;
+            --color-forest: #dcfce7;
+            --color-coast: #dbeafe;
+            --color-mountain: #ffffff;
+            --color-desert: #fef3c7;
+            --color-swamp: #ecfccb;
+            --color-ruins: #f1f5f9;
+            --color-cave: #f3f4f6;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            background-color: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             padding: 20px;
@@ -38,7 +48,8 @@
         }
 
         h1 {
-            color: var(--accent);
+            color: var(--text-primary);
+            font-weight: 800;
         }
 
         .card {
@@ -46,8 +57,8 @@
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
         }
 
         .controls {
@@ -58,9 +69,9 @@
         }
 
         input, select {
-            background: var(--bg-primary);
-            border: 2px solid var(--bg-tertiary);
-            color: white;
+            background: white;
+            border: 1px solid #cbd5e1;
+            color: var(--text-primary);
             padding: 10px 15px;
             border-radius: 8px;
             font-size: 1rem;
@@ -74,26 +85,28 @@
         }
 
         .pet-card {
-            background: var(--bg-tertiary);
+            background: var(--bg-secondary);
             border-radius: 12px;
             padding: 20px;
-            border-left: 5px solid transparent;
-            transition: transform 0.2s;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
         }
 
         .pet-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
         .pet-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             margin-bottom: 15px;
         }
 
         .pet-id {
-            background: var(--accent);
+            background: #f1f5f9;
+            color: #64748b;
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 0.8rem;
@@ -103,21 +116,20 @@
         .pet-name {
             font-size: 1.2rem;
             font-weight: bold;
-            color: var(--accent);
+            color: var(--text-primary);
         }
 
         .preference-section {
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .preference-title {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             color: var(--text-secondary);
             margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
         }
 
         .tag-list {
@@ -127,70 +139,78 @@
         }
 
         .tag {
-            padding: 4px 10px;
+            padding: 6px 12px;
             border-radius: 6px;
             font-size: 0.85rem;
-            font-weight: 500;
+            font-weight: 600;
+            border: 2px solid transparent;
         }
 
-        .tag.liked {
-            background: rgba(74, 222, 128, 0.2);
-            color: var(--success);
-            border: 1px solid var(--success);
-        }
+        .tag.liked { border-color: var(--success); }
+        .tag.disliked { border-color: var(--danger); }
 
-        .tag.disliked {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--danger);
-            border: 1px solid var(--danger);
-        }
+        .tag.plains { background-color: var(--color-plains); }
+        .tag.forest { background-color: var(--color-forest); }
+        .tag.coast { background-color: var(--color-coast); }
+        .tag.mountain { background-color: var(--color-mountain); border-color: #cbd5e1; }
+        .tag.mountain.liked { border-color: var(--success); }
+        .tag.mountain.disliked { border-color: var(--danger); }
+        .tag.desert { background-color: var(--color-desert); }
+        .tag.swamp { background-color: var(--color-swamp); }
+        .tag.ruins { background-color: var(--color-ruins); }
+        .tag.cave { background-color: var(--color-cave); color: #475569; }
 
         .back-link {
             display: inline-block;
             margin-bottom: 20px;
             color: var(--text-secondary);
             text-decoration: none;
+            font-weight: 500;
         }
 
         .back-link:hover {
-            color: var(--accent);
+            color: var(--text-primary);
         }
 
         .rule-card {
-            background: rgba(233, 69, 96, 0.1);
-            border: 1px dashed var(--accent);
+            background: #fff;
+            border: 1px solid #e2e8f0;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 25px;
             font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
         .rule-card h3 {
             margin-top: 0;
-            color: var(--accent);
+            color: var(--text-primary);
         }
 
         .terrain-icons {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 20px;
             overflow-x: auto;
             padding-bottom: 10px;
         }
 
         .terrain-filter {
-            background: var(--bg-tertiary);
-            padding: 8px 15px;
+            background: #f1f5f9;
+            padding: 8px 16px;
             border-radius: 20px;
             cursor: pointer;
             white-space: nowrap;
-            border: 2px solid transparent;
+            border: 1px solid #e2e8f0;
             transition: all 0.2s;
+            color: #475569;
+            font-weight: 500;
         }
 
         .terrain-filter.active {
-            border-color: var(--accent);
-            background: var(--bg-secondary);
+            background: #1e293b;
+            color: white;
+            border-color: #1e293b;
         }
     </style>
 </head>
@@ -232,30 +252,36 @@
 
     <script>
         const PET_NAMES = {
-            1: "Chien", 2: "Caniche", 20: "Renard", 28: "Loup",
-            3: "Chat", 4: "Chat Noir", 56: "Tigre", 57: "Lion", 60: "Léopard",
-            5: "Souris", 6: "Hamster", 7: "Lapin", 35: "Raton Laveur", 40: "Tamias", 41: "Hérisson", 93: "Rat",
-            8: "Vache", 9: "Cochon", 17: "Mouton", 18: "Chèvre", 96: "Âne",
-            10: "Poule", 12: "Canard", 19: "Dindon", 92: "Poussin", 97: "Oie",
-            11: "Oiseau", 26: "Chouette", 27: "Chauve-souris", 33: "Cygne", 34: "Flamant Rose", 53: "Paon", 54: "Perroquet", 58: "Aigle", 62: "Colombe", 94: "Merle", 95: "Corbeau", 59: "Dodo",
-            13: "Cheval", 47: "Zèbre", 98: "Élan",
-            14: "Tortue", 15: "Serpent", 16: "Lézard", 44: "Scorpion", 45: "Crocodile",
-            21: "Ours", 42: "Ours Polaire", 43: "Panda",
-            23: "Grenouille",
-            24: "Singe", 90: "Orang-outan", 91: "Gorille",
-            25: "Manchot", 72: "Manchot Empereur", 30: "Phoque",
-            22: "Koala", 52: "Kangourou",
-            31: "Hippopotame", 46: "Éléphant", 48: "Rhinocéros", 51: "Girafe",
-            29: "Sanglier", 32: "Lama", 49: "Dromadaire", 50: "Chameau",
-            36: "Moufette", 37: "Blaireau", 38: "Castor", 39: "Paresseux", 55: "Loutre", 87: "Cerf", 88: "Buffle d'eau", 89: "Bison",
-            71: "Poulpe", 73: "Poisson", 74: "Poisson Tropical", 75: "Poisson-globe", 76: "Méduse", 77: "Requin", 78: "Baleine", 79: "Baleine (2)", 80: "Crevette", 81: "Homard", 82: "Dauphin", 86: "Crabe", 85: "Escargot",
-            61: "Mammouth", 63: "Licorne", 64: "Dragon", 65: "T-Rex", 83: "Phénix", 84: "Diplodocus",
-            66: "Stitch", 67: "Bonhomme de Neige", 68: "Canard Écarlate", 69: "Personne de Neige", 70: "Alien", 99: "Citrouille", 100: "Fantôme", 101: "Vampire"
+            1: "🐶 Chien", 2: "🐩 Caniche", 20: "🦊 Renard", 28: "🐺 Loup",
+            3: "🐱 Chat", 4: "🐈‍⬛ Chat Noir", 56: "🐯 Tigre", 57: "🦁 Lion", 60: "🐆 Léopard",
+            5: "🐭 Souris", 6: "🐹 Hamster", 7: "🐰 Lapin", 35: "🦝 Raton Laveur", 40: "🐿️ Tamias", 41: "🦔 Hérisson", 93: "🐀 Rat",
+            8: "🐄 Vache", 9: "🐖 Cochon", 17: "🐑 Mouton", 18: "🐐 Chèvre", 96: "🫏 Âne",
+            10: "🐔 Poule", 12: "🦆 Canard", 19: "🦃 Dindon", 92: "🐤 Poussin", 97: "🪿 Oie",
+            11: "🐦 Oiseau", 26: "🦉 Chouette", 27: "🦇 Chauve-souris", 33: "🦢 Cygne", 34: "🦩 Flamant Rose", 53: "🦚 Paon", 54: "🦜 Perroquet", 58: "🦅 Aigle", 62: "🕊️ Colombe", 94: "🐦‍⬛ Merle", 95: "🐦‍⬛ Corbeau", 59: "🦤 Dodo",
+            13: "🐎 Cheval", 47: "🦓 Zèbre", 98: "🫎 Élan",
+            14: "🐢 Tortue", 15: "🐍 Serpent", 16: "🦎 Lézard", 44: "🦂 Scorpion", 45: "🐊 Crocodile",
+            21: "🐻 Ours", 42: "🐻‍❄️ Ours Polaire", 43: "🐼 Panda",
+            23: "🐸 Grenouille",
+            24: "🐒 Singe", 90: "🦧 Orang-outan", 91: "🦍 Gorille",
+            25: "🐧 Manchot", 72: "🐧 Manchot Empereur", 30: "🦭 Phoque",
+            22: "🐨 Koala", 52: "🦘 Kangourou",
+            31: "🦛 Hippopotame", 46: "🐘 Éléphant", 48: "🦏 Rhinocéros", 51: "🦒 Girafe",
+            29: "🐗 Sanglier", 32: "🦙 Lama", 49: "🐪 Dromadaire", 50: "🐫 Chameau",
+            36: "🦨 Moufette", 37: "🦡 Blaireau", 38: "🦫 Castor", 39: "🦥 Paresseux", 55: "🦦 Loutre", 87: "🦌 Cerf", 88: "🐃 Buffle d'eau", 89: "🦬 Bison",
+            71: "🐙 Poulpe", 73: "🐟 Poisson", 74: "🐠 Poisson Tropical", 75: "🐡 Poisson-globe", 76: "🪼 Méduse", 77: "🦈 Requin", 78: "🐋 Baleine", 79: "🐋 Baleine (2)", 80: "🦐 Crevette", 81: "🦞 Homard", 82: "🐬 Dauphin", 86: "🦀 Crabe", 85: "🐌 Escargot",
+            61: "🦣 Mammouth", 63: "🦄 Licorne", 64: "🐉 Dragon", 65: "🦖 T-Rex", 83: "🐦‍🔥 Phénix", 84: "🦕 Diplodocus",
+            66: "👽 Stitch", 67: "⛄ Bonhomme de Neige", 68: "🦆 Canard Écarlate", 69: "☃️ Personne de Neige", 70: "👽 Alien", 99: "🎃 Citrouille", 100: "👻 Fantôme", 101: "🧛 Vampire"
         };
 
         const TERRAIN_NAMES = {
-            plains: "🌿 Plaines", forest: "🌲 Forêt", coast: "🌊 Côte", mountain: "🏔️ Montagne",
-            desert: "🏜️ Désert", swamp: "🍄 Marais", ruins: "🏛️ Ruines", cave: "🦇 Grotte"
+            plains: "🌿 Plaines",
+            forest: "🌲 Forêt",
+            coast: "🌊 Côte",
+            mountain: "🏔️ Montagne",
+            desert: "🏜️ Désert",
+            swamp: "🐊 Marais",
+            ruins: "🏛️ Ruines",
+            cave: "🕳️ Caverne"
         };
 
         const PREFERENCES = {
@@ -390,8 +416,8 @@
                 card.className = 'pet-card';
                 card.style.borderLeftColor = prefs.liked.length > 0 ? 'var(--success)' : (prefs.disliked.length > 0 ? 'var(--danger)' : 'var(--info)');
 
-                const likedTags = prefs.liked.map(t => `<span class="tag liked">${TERRAIN_NAMES[t]}</span>`).join('');
-                const dislikedTags = prefs.disliked.map(t => `<span class="tag disliked">${TERRAIN_NAMES[t]}</span>`).join('');
+                const likedTags = prefs.liked.map(t => `<span class="tag liked ${t}">${TERRAIN_NAMES[t]}</span>`).join('');
+                const dislikedTags = prefs.disliked.map(t => `<span class="tag disliked ${t}">${TERRAIN_NAMES[t]}</span>`).join('');
 
                 card.innerHTML = `
                     <div class="pet-header">
@@ -400,17 +426,17 @@
                     </div>
                     ${likedTags ? `
                         <div class="preference-section">
-                            <div class="preference-title">👍 Aime (${prefs.liked.length})</div>
+                            <div class="preference-title">Aime (${prefs.liked.length})</div>
                             <div class="tag-list">${likedTags}</div>
                         </div>
                     ` : ''}
                     ${dislikedTags ? `
                         <div class="preference-section">
-                            <div class="preference-title">👎 Déteste (${prefs.disliked.length})</div>
+                            <div class="preference-title">Déteste (${prefs.disliked.length})</div>
                             <div class="tag-list">${dislikedTags}</div>
                         </div>
                     ` : ''}
-                    ${!likedTags && !dislikedTags ? '<div class="preference-section"><div class="preference-title">Neutral</div></div>' : ''}
+                    ${!likedTags && !dislikedTags ? '<div class="preference-section"><div class="preference-title">Neutre</div></div>' : ''}
                 `;
                 grid.appendChild(card);
             }
