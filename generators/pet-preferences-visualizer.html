@@ -357,6 +357,68 @@
             return matches.map(s => s.replace(/"/g, ''));
         }
 
+        function parsePreferencesObject(objectContent) {
+            const prefs = {};
+            
+            // Find each entry starting with a number and colon
+            // We need to handle nested braces properly
+            const lines = objectContent.split('\n');
+            let currentId = null;
+            let currentEntry = '';
+            let braceDepth = 0;
+            let inEntry = false;
+            
+            for (const line of lines) {
+                // Check if this line starts a new entry (number: {)
+                const startMatch = line.match(/^\s*(\d+):\s*\{/);
+                
+                if (startMatch && braceDepth === 0) {
+                    // Save previous entry if exists
+                    if (currentId !== null && currentEntry) {
+                        const likedMatch = currentEntry.match(/liked:\s*\[([\s\S]*?)\]/);
+                        const dislikedMatch = currentEntry.match(/disliked:\s*\[([\s\S]*?)\]/);
+                        prefs[currentId] = {
+                            liked: likedMatch ? parseTerrainArray(likedMatch[1]) : [],
+                            disliked: dislikedMatch ? parseTerrainArray(dislikedMatch[1]) : []
+                        };
+                    }
+                    
+                    currentId = parseInt(startMatch[1]);
+                    currentEntry = line;
+                    braceDepth = (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
+                    inEntry = braceDepth > 0;
+                } else if (inEntry) {
+                    currentEntry += '\n' + line;
+                    braceDepth += (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
+                    
+                    if (braceDepth <= 0) {
+                        // Entry complete
+                        const likedMatch = currentEntry.match(/liked:\s*\[([\s\S]*?)\]/);
+                        const dislikedMatch = currentEntry.match(/disliked:\s*\[([\s\S]*?)\]/);
+                        prefs[currentId] = {
+                            liked: likedMatch ? parseTerrainArray(likedMatch[1]) : [],
+                            disliked: dislikedMatch ? parseTerrainArray(dislikedMatch[1]) : []
+                        };
+                        currentId = null;
+                        currentEntry = '';
+                        inEntry = false;
+                    }
+                }
+            }
+            
+            // Handle last entry if not closed
+            if (currentId !== null && currentEntry) {
+                const likedMatch = currentEntry.match(/liked:\s*\[([\s\S]*?)\]/);
+                const dislikedMatch = currentEntry.match(/disliked:\s*\[([\s\S]*?)\]/);
+                prefs[currentId] = {
+                    liked: likedMatch ? parseTerrainArray(likedMatch[1]) : [],
+                    disliked: dislikedMatch ? parseTerrainArray(dislikedMatch[1]) : []
+                };
+            }
+            
+            return prefs;
+        }
+
         async function fetchPreferences(branch = 'develop') {
             const url = `https://raw.githubusercontent.com/Crownicles/Crownicles/${branch}/Lib/src/constants/ExpeditionConstants.ts`;
             showLoading(true, `Chargement depuis la branche "${branch}"...`);
@@ -387,19 +449,7 @@
                     currentPos++;
                 }
 
-                const newPrefs = {};
-                
-                // Split by top-level entries (number followed by colon)
-                // Match pattern: number: { liked: [...], disliked: [...] }
-                const entryRegex = /(\d+):\s*\{[^{}]*liked:\s*\[([\s\S]*?)\][^{}]*disliked:\s*\[([\s\S]*?)\][^{}]*\}/g;
-                let match;
-                
-                while ((match = entryRegex.exec(objectContent)) !== null) {
-                    const id = parseInt(match[1]);
-                    const liked = parseTerrainArray(match[2]);
-                    const disliked = parseTerrainArray(match[3]);
-                    newPrefs[id] = { liked, disliked };
-                }
+                const newPrefs = parsePreferencesObject(objectContent);
 
                 if (Object.keys(newPrefs).length === 0) {
                     throw new Error('Aucune préférence de familier trouvée dans le fichier');
