@@ -158,6 +158,11 @@
     </div>
 
     <script>
+        const TERRAIN_NAMES = {
+            plains: "🌿 plains", forest: "🌲 forest", coast: "🌊 coast", mountain: "🏔️ mountain",
+            desert: "🏜️ desert", swamp: "🍄 swamp", ruins: "🏛️ ruins", cave: "🦇 cave"
+        };
+
         const TERRAIN_DIFFICULTY = {
             plains: { skewFactor: 0.5 },
             coast: { skewFactor: 0.65 },
@@ -216,7 +221,7 @@
                 }
 
                 datasets.push({
-                    label: terrain,
+                    label: TERRAIN_NAMES[terrain],
                     data: density,
                     borderColor: TERRAIN_COLORS[terrain],
                     backgroundColor: TERRAIN_COLORS[terrain].replace('0.7', '0.1'),
@@ -246,7 +251,7 @@
 
                 statsHtml.push(`
                     <div class="stat-item" style="border-left-color: ${TERRAIN_COLORS[terrain]}">
-                        <h3>${terrain}</h3>
+                        <h3>${TERRAIN_NAMES[terrain]}</h3>
                         <div class="stat-details">
                             Skew Factor: <span>${k}</span><br>
                             Moyenne Théorique: <span>${expected}%</span><br>
