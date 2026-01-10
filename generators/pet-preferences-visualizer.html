@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Préférences d'Expédition des Familiers - Crownicles</title>
+    <title>Préférences d'Expédition des Familiers</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #f8fafc;
@@ -160,16 +161,10 @@
             border: 1px solid rgba(0,0,0,0.05);
         }
 
-        /* Removng individual borders from tags as the section now handles it */
-        .tag.liked { border-color: transparent; }
-        .tag.disliked { border-color: transparent; }
-
         .tag.plains { background-color: var(--color-plains); }
         .tag.forest { background-color: var(--color-forest); }
         .tag.coast { background-color: var(--color-coast); }
         .tag.mountain { background-color: var(--color-mountain); border-color: #cbd5e1; }
-        .tag.mountain.liked { border-color: var(--success); }
-        .tag.mountain.disliked { border-color: var(--danger); }
         .tag.desert { background-color: var(--color-desert); }
         .tag.swamp { background-color: var(--color-swamp); }
         .tag.ruins { background-color: var(--color-ruins); }
@@ -184,21 +179,6 @@
         }
 
         .back-link:hover {
-            color: var(--text-primary);
-        }
-
-        .rule-card {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .rule-card h3 {
-            margin-top: 0;
             color: var(--text-primary);
         }
 
@@ -245,6 +225,12 @@
                     <option value="liked">Aime seulement</option>
                     <option value="disliked">Déteste seulement</option>
                 </select>
+                <select id="sortBy">
+                    <option value="id">Trier par ID</option>
+                    <option value="name">Trier par Nom</option>
+                    <option value="likesCount">Trier par Nb. Aimes (Décroissant)</option>
+                    <option value="dislikesCount">Trier par Nb. Détestes (Décroissant)</option>
+                </select>
             </div>
             
             <div id="terrainFilters" class="terrain-icons">
@@ -290,107 +276,108 @@
         };
 
         const PREFERENCES = {
-            1: { liked: ["forest", "plains", "mountain"], disliked: ["desert"] },
-            2: { liked: ["plains", "forest", "ruins"], disliked: ["swamp", "cave"] },
-            20: { liked: ["forest"], disliked: ["desert"] },
-            28: { liked: ["forest", "mountain"], disliked: ["desert", "swamp", "coast"] },
-            3: { liked: ["ruins", "plains", "cave"], disliked: ["swamp"] },
-            4: { liked: ["ruins", "cave", "forest"], disliked: ["coast"] },
-            56: { liked: ["forest"], disliked: ["desert", "coast", "cave"] },
-            57: { liked: ["plains"], disliked: ["swamp", "cave", "coast"] },
-            60: { liked: ["forest"], disliked: ["swamp", "coast", "ruins"] },
-            5: { liked: ["plains", "cave", "ruins", "forest"], disliked: [] },
-            6: { liked: ["plains", "cave", "ruins"], disliked: [] },
-            7: { liked: ["plains", "forest", "mountain"], disliked: ["desert"] },
+            0: { liked: [], disliked: [] },
+            1: { liked: ["forest", "plains", "mountain"], disliked: ["swamp"] },
+            2: { liked: ["plains", "ruins"], disliked: ["swamp", "cave"] },
+            20: { liked: ["forest", "plains"], disliked: ["desert"] },
+            28: { liked: ["forest", "mountain", "plains"], disliked: ["desert"] },
+            3: { liked: ["ruins", "forest", "plains"], disliked: ["swamp"] },
+            4: { liked: ["ruins", "cave", "forest"], disliked: ["desert"] },
+            56: { liked: ["forest", "swamp"], disliked: ["desert", "coast"] },
+            57: { liked: ["plains", "desert"], disliked: ["swamp", "forest"] },
+            60: { liked: ["forest", "mountain"], disliked: ["coast"] },
+            5: { liked: ["plains", "cave", "ruins"], disliked: [] },
+            6: { liked: ["plains", "desert", "cave"], disliked: ["swamp"] },
+            7: { liked: ["plains", "forest"], disliked: ["desert", "swamp"] },
             35: { liked: ["forest", "ruins"], disliked: ["desert"] },
-            40: { liked: ["forest", "plains", "mountain"], disliked: [] },
-            41: { liked: ["forest", "plains", "ruins"], disliked: [] },
+            40: { liked: ["forest", "mountain"], disliked: ["desert", "coast"] },
+            41: { liked: ["forest", "plains"], disliked: ["desert"] },
             93: { liked: ["ruins", "cave", "swamp"], disliked: [] },
             8: { liked: ["plains", "forest"], disliked: ["mountain", "desert"] },
             9: { liked: ["plains", "forest", "swamp"], disliked: ["desert"] },
-            17: { liked: ["plains", "mountain"], disliked: ["swamp"] },
-            18: { liked: ["mountain", "plains", "ruins"], disliked: ["swamp"] },
-            96: { liked: ["plains", "desert", "mountain"], disliked: [] },
-            10: { liked: ["plains", "forest", "ruins"], disliked: [] },
-            12: { liked: ["coast", "plains", "swamp"], disliked: [] },
-            19: { liked: ["plains", "forest", "ruins"], disliked: [] },
-            92: { liked: ["plains", "forest", "ruins", "cave"], disliked: [] },
-            97: { liked: ["plains", "coast", "swamp"], disliked: [] },
-            11: { liked: ["mountain", "forest", "plains"], disliked: [] },
+            17: { liked: ["plains", "mountain"], disliked: ["swamp", "desert"] },
+            18: { liked: ["mountain", "ruins", "plains"], disliked: ["swamp"] },
+            96: { liked: ["plains", "mountain", "desert"], disliked: ["swamp"] },
+            10: { liked: ["plains", "forest"], disliked: ["mountain", "cave"] },
+            12: { liked: ["coast", "swamp", "plains"], disliked: ["desert", "cave"] },
+            19: { liked: ["forest", "plains"], disliked: ["desert", "coast"] },
+            92: { liked: ["plains", "forest"], disliked: ["mountain", "cave", "swamp"] },
+            97: { liked: ["plains", "coast", "swamp"], disliked: ["desert", "cave"] },
+            11: { liked: ["forest", "plains", "mountain"], disliked: ["cave"] },
             26: { liked: ["forest", "ruins", "cave"], disliked: ["desert"] },
-            27: { liked: ["cave", "ruins"], disliked: ["plains"] },
-            33: { liked: ["coast", "plains", "swamp"], disliked: [] },
-            34: { liked: ["coast", "swamp", "plains"], disliked: ["cave"] },
-            53: { liked: ["forest", "plains", "ruins"], disliked: [] },
-            54: { liked: ["forest", "coast", "ruins"], disliked: ["mountain"] },
-            58: { liked: ["mountain"], disliked: ["cave", "swamp"] },
-            62: { liked: ["plains", "forest", "ruins", "mountain"], disliked: [] },
-            94: { liked: ["forest", "plains", "ruins"], disliked: [] },
+            27: { liked: ["cave", "ruins", "forest"], disliked: ["desert", "plains"] },
+            33: { liked: ["coast", "swamp", "plains"], disliked: ["desert", "cave"] },
+            34: { liked: ["coast", "swamp"], disliked: ["cave", "mountain", "desert"] },
+            53: { liked: ["forest", "ruins", "plains"], disliked: ["desert"] },
+            54: { liked: ["forest", "coast", "ruins"], disliked: ["mountain", "desert"] },
+            58: { liked: ["mountain", "plains"], disliked: ["cave", "swamp"] },
+            62: { liked: ["plains", "forest", "ruins"], disliked: ["cave"] },
+            94: { liked: ["forest", "plains", "ruins"], disliked: ["desert"] },
             95: { liked: ["ruins", "forest", "plains"], disliked: [] },
-            59: { liked: ["forest", "plains", "coast", "ruins"], disliked: [] },
+            59: { liked: ["forest", "coast", "plains"], disliked: ["mountain", "cave"] },
             13: { liked: ["plains", "mountain"], disliked: ["swamp", "cave"] },
-            47: { liked: ["plains"], disliked: ["swamp", "cave", "forest"] },
+            47: { liked: ["plains", "desert"], disliked: ["swamp", "cave", "forest"] },
             98: { liked: ["forest", "mountain"], disliked: ["desert", "coast"] },
-            14: { liked: ["coast", "swamp", "plains", "forest"], disliked: [] },
+            14: { liked: ["coast", "swamp", "plains"], disliked: ["desert", "mountain"] },
             15: { liked: ["desert", "swamp", "ruins"], disliked: ["mountain"] },
-            16: { liked: ["desert", "ruins", "cave", "coast"], disliked: [] },
-            44: { liked: ["desert", "cave", "ruins"], disliked: ["coast", "swamp"] },
-            45: { liked: ["swamp", "coast"], disliked: ["desert", "mountain", "cave"] },
-            21: { liked: ["cave", "mountain"], disliked: ["desert", "coast"] },
-            42: { liked: ["mountain"], disliked: ["desert", "swamp", "forest"] },
-            43: { liked: ["forest", "mountain"], disliked: ["desert"] },
-            23: { liked: ["swamp", "coast", "forest", "plains"], disliked: [] },
-            24: { liked: ["forest", "ruins"], disliked: ["desert"] },
+            16: { liked: ["desert", "ruins", "cave"], disliked: ["swamp"] },
+            44: { liked: ["desert", "cave", "ruins"], disliked: ["coast", "swamp", "forest"] },
+            45: { liked: ["swamp", "coast"], disliked: ["desert", "mountain"] },
+            21: { liked: ["forest", "mountain", "cave"], disliked: ["desert"] },
+            42: { liked: ["coast", "mountain"], disliked: ["desert", "swamp", "forest"] },
+            43: { liked: ["forest", "mountain"], disliked: ["desert", "coast"] },
+            23: { liked: ["swamp", "coast", "forest"], disliked: ["desert", "mountain"] },
+            24: { liked: ["forest", "ruins"], disliked: ["desert", "coast"] },
             90: { liked: ["forest", "swamp"], disliked: ["desert", "mountain"] },
-            91: { liked: ["forest"], disliked: ["desert", "coast", "plains"] },
-            25: { liked: ["coast", "mountain"], disliked: ["desert", "forest"] },
-            72: { liked: ["coast", "mountain", "cave"], disliked: ["desert"] },
+            91: { liked: ["forest", "mountain"], disliked: ["desert", "coast"] },
+            25: { liked: ["coast", "mountain"], disliked: ["desert", "forest", "swamp"] },
+            72: { liked: ["coast", "mountain"], disliked: ["desert", "forest", "swamp"] },
             30: { liked: ["coast", "cave"], disliked: ["desert", "forest"] },
-            22: { liked: ["forest", "plains", "mountain", "coast"], disliked: [] },
-            52: { liked: ["plains"], disliked: ["cave", "swamp", "coast"] },
+            22: { liked: ["forest"], disliked: ["desert", "cave", "swamp"] },
+            52: { liked: ["plains", "desert"], disliked: ["cave", "swamp"] },
             31: { liked: ["swamp", "coast"], disliked: ["desert", "mountain", "cave"] },
-            46: { liked: ["plains"], disliked: ["cave", "mountain", "swamp"] },
-            48: { liked: ["plains"], disliked: ["cave", "swamp", "coast"] },
-            51: { liked: ["plains", "forest"], disliked: ["cave", "mountain"] },
-            29: { liked: ["forest", "plains"], disliked: ["desert"] },
+            46: { liked: ["plains", "forest"], disliked: ["cave", "mountain"] },
+            48: { liked: ["plains", "swamp"], disliked: ["cave", "mountain"] },
+            51: { liked: ["plains", "forest"], disliked: ["cave", "mountain", "swamp"] },
+            29: { liked: ["forest", "swamp", "plains"], disliked: ["desert"] },
             32: { liked: ["mountain", "desert", "plains"], disliked: ["swamp"] },
-            49: { liked: ["desert"], disliked: ["coast", "swamp", "forest"] },
-            50: { liked: ["desert"], disliked: ["coast", "swamp", "forest"] },
-            36: { liked: ["forest", "plains", "ruins"], disliked: [] },
-            37: { liked: ["forest", "plains", "cave"], disliked: [] },
-            38: { liked: ["forest", "coast", "swamp"], disliked: ["desert"] },
-            39: { liked: ["forest", "swamp", "plains", "coast"], disliked: [] },
+            49: { liked: ["desert", "plains"], disliked: ["coast", "swamp", "forest"] },
+            50: { liked: ["desert", "plains"], disliked: ["coast", "swamp", "forest"] },
+            36: { liked: ["forest", "plains"], disliked: ["desert"] },
+            37: { liked: ["forest", "plains", "cave"], disliked: ["desert"] },
+            38: { liked: ["forest", "coast", "swamp"], disliked: ["desert", "mountain"] },
+            39: { liked: ["forest", "swamp"], disliked: ["desert", "mountain"] },
             55: { liked: ["coast", "forest", "swamp"], disliked: ["desert"] },
-            87: { liked: ["forest", "plains"], disliked: ["desert", "cave"] },
-            88: { liked: ["plains", "swamp"], disliked: ["desert", "mountain"] },
-            89: { liked: ["plains"], disliked: ["swamp", "cave", "coast"] },
-            71: { liked: ["coast", "cave"], disliked: ["desert", "mountain"] },
-            73: { liked: ["coast", "swamp"], disliked: ["desert", "mountain"] },
-            74: { liked: ["coast", "swamp", "ruins"], disliked: ["mountain"] },
-            75: { liked: ["coast", "swamp", "cave"], disliked: [] },
-            76: { liked: ["coast", "swamp", "cave"], disliked: [] },
+            87: { liked: ["forest", "plains"], disliked: ["desert", "swamp"] },
+            88: { liked: ["plains", "swamp", "forest"], disliked: ["desert"] },
+            89: { liked: ["plains", "mountain"], disliked: ["swamp", "cave"] },
+            71: { liked: ["coast", "cave"], disliked: ["desert", "mountain", "plains"] },
+            73: { liked: ["coast", "swamp"], disliked: ["desert", "mountain", "plains"] },
+            74: { liked: ["coast", "swamp"], disliked: ["desert", "mountain"] },
+            75: { liked: ["coast", "swamp"], disliked: ["desert", "mountain"] },
+            76: { liked: ["coast", "swamp"], disliked: ["desert", "mountain", "plains"] },
             77: { liked: ["coast"], disliked: ["desert", "mountain", "forest", "plains"] },
-            78: { liked: ["coast"], disliked: ["desert", "mountain", "forest"] },
-            79: { liked: ["coast"], disliked: ["desert", "mountain", "forest"] },
-            80: { liked: ["coast", "swamp", "cave", "ruins"], disliked: [] },
-            81: { liked: ["coast", "cave"], disliked: ["desert"] },
+            78: { liked: ["coast"], disliked: ["desert", "mountain", "forest", "plains"] },
+            79: { liked: ["coast"], disliked: ["desert", "mountain", "forest", "plains"] },
+            80: { liked: ["coast", "swamp", "cave"], disliked: ["desert", "mountain"] },
+            81: { liked: ["coast", "cave"], disliked: ["desert", "mountain", "plains"] },
             82: { liked: ["coast"], disliked: ["desert", "mountain", "cave"] },
-            86: { liked: ["coast", "swamp", "cave"], disliked: [] },
-            85: { liked: ["forest", "swamp", "plains", "ruins"], disliked: [] },
-            61: { liked: ["mountain", "plains"], disliked: ["desert", "swamp"] },
-            63: { liked: ["forest"], disliked: ["cave", "swamp", "desert"] },
-            64: { liked: ["mountain", "cave"], disliked: ["coast", "swamp", "plains"] },
-            65: { liked: ["plains"], disliked: ["coast", "cave", "mountain"] },
-            83: { liked: ["mountain"], disliked: ["coast", "swamp", "cave", "forest"] },
-            84: { liked: ["plains", "forest"], disliked: ["cave", "mountain"] },
-            66: { liked: ["ruins", "coast"], disliked: ["cave", "mountain"] },
-            67: { liked: ["mountain", "plains", "coast"], disliked: ["desert"] },
-            68: { liked: ["coast"], disliked: ["desert", "mountain", "cave"] },
-            69: { liked: ["mountain", "plains", "coast"], disliked: ["desert"] },
-            70: { liked: ["ruins", "desert"], disliked: ["forest", "swamp"] },
-            99: { liked: ["ruins", "cave", "forest"], disliked: ["coast"] },
-            100: { liked: ["ruins", "cave"], disliked: ["plains", "coast"] },
-            101: { liked: ["cave", "ruins"], disliked: ["plains", "coast", "desert"] }
+            86: { liked: ["coast", "swamp", "cave"], disliked: ["desert"] },
+            85: { liked: ["forest", "swamp", "ruins"], disliked: ["desert"] },
+            61: { liked: ["mountain", "plains"], disliked: ["desert", "swamp", "coast"] },
+            63: { liked: ["forest", "plains"], disliked: ["cave", "swamp"] },
+            64: { liked: ["mountain", "cave", "ruins"], disliked: ["swamp"] },
+            65: { liked: ["plains", "forest", "swamp"], disliked: ["coast", "cave"] },
+            83: { liked: ["mountain", "desert", "ruins"], disliked: ["coast", "swamp"] },
+            84: { liked: ["plains", "forest", "swamp"], disliked: ["cave", "mountain"] },
+            66: { liked: ["ruins", "coast", "cave"], disliked: [] },
+            67: { liked: ["mountain"], disliked: ["desert", "swamp"] },
+            68: { liked: ["coast", "swamp", "plains"], disliked: ["desert"] },
+            69: { liked: ["mountain"], disliked: ["desert", "swamp"] },
+            70: { liked: ["ruins", "desert", "cave"], disliked: [] },
+            99: { liked: ["ruins", "cave", "swamp"], disliked: ["coast", "desert"] },
+            100: { liked: ["ruins", "cave"], disliked: ["plains"] },
+            101: { liked: ["cave", "ruins", "forest"], disliked: ["plains", "desert"] }
         };
 
         let currentTerrain = 'all';
@@ -399,24 +386,43 @@
             const grid = document.getElementById('petGrid');
             const search = document.getElementById('searchInput').value.toLowerCase();
             const prefFilter = document.getElementById('preferenceFilter').value;
+            const sortVal = document.getElementById('sortBy').value;
             
             grid.innerHTML = '';
 
-            for (const [id, prefs] of Object.entries(PREFERENCES)) {
-                const name = PET_NAMES[id] || `Familier ${id}`;
-                
-                // Filtering
-                if (search && !name.toLowerCase().includes(search) && !id.includes(search)) continue;
+            let petList = Object.entries(PREFERENCES).map(([id, prefs]) => ({
+                id,
+                name: PET_NAMES[id] || `Familier ${id}`,
+                prefs
+            }));
+
+            // Filtering
+            petList = petList.filter(pet => {
+                const name = pet.name.toLowerCase();
+                if (search && !name.includes(search) && !pet.id.includes(search)) return false;
                 
                 if (currentTerrain !== 'all') {
-                    if (prefFilter === 'liked' && !prefs.liked.includes(currentTerrain)) continue;
-                    if (prefFilter === 'disliked' && !prefs.disliked.includes(currentTerrain)) continue;
-                    if (prefFilter === 'all' && !prefs.liked.includes(currentTerrain) && !prefs.disliked.includes(currentTerrain)) continue;
+                    if (prefFilter === 'liked' && !pet.prefs.liked.includes(currentTerrain)) return false;
+                    if (prefFilter === 'disliked' && !pet.prefs.disliked.includes(currentTerrain)) return false;
+                    if (prefFilter === 'all' && !pet.prefs.liked.includes(currentTerrain) && !pet.prefs.disliked.includes(currentTerrain)) return false;
                 } else if (prefFilter !== 'all') {
-                    if (prefFilter === 'liked' && prefs.liked.length === 0) continue;
-                    if (prefFilter === 'disliked' && prefs.disliked.length === 0) continue;
+                    if (prefFilter === 'liked' && pet.prefs.liked.length === 0) return false;
+                    if (prefFilter === 'disliked' && pet.prefs.disliked.length === 0) return false;
                 }
+                return true;
+            });
 
+            // Sorting
+            petList.sort((a, b) => {
+                switch(sortVal) {
+                    case 'name': return a.name.localeCompare(b.name);
+                    case 'likesCount': return b.prefs.liked.length - a.prefs.liked.length;
+                    case 'dislikesCount': return b.prefs.disliked.length - a.prefs.disliked.length;
+                    default: return parseInt(a.id) - parseInt(b.id);
+                }
+            });
+
+            petList.forEach(({id, name, prefs}) => {
                 const card = document.createElement('div');
                 card.className = 'pet-card';
 
@@ -443,7 +449,7 @@
                     ${!likedTags && !dislikedTags ? '<div class="preference-section"><div class="preference-title">Neutre</div></div>' : ''}
                 `;
                 grid.appendChild(card);
-            }
+            });
         }
 
         // Initialize terrain filters
@@ -464,6 +470,7 @@
 
         document.getElementById('searchInput').oninput = renderPets;
         document.getElementById('preferenceFilter').onchange = renderPets;
+        document.getElementById('sortBy').onchange = renderPets;
 
         // Reset all filter
         document.querySelector('[data-terrain="all"]').onclick = (e) => {
