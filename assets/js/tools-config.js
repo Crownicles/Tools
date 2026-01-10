@@ -64,7 +64,7 @@ const toolsConfig = [
         title: 'Visualiseur de Risque d\'Expédition',
         description: 'Visualise la distribution des risques générés pour les expéditions selon le terrain.',
         path: 'generators/expedition-risk-visualizer.html',
-        category: 'Visualisation',
+        category: 'Simulation',
         tags: ['Expéditions', 'Risques', 'Probabilité'],
         icon: '🎲',
         status: 'active'
@@ -74,7 +74,7 @@ const toolsConfig = [
         title: 'Préférences des Familiers',
         description: 'Visualise les lieux aimés et détestés par chaque familier pour les expéditions.',
         path: 'generators/pet-preferences-visualizer.html',
-        category: 'Visualisation',
+        category: 'Simulation',
         tags: ['Familiers', 'Expéditions', 'Préférences'],
         icon: '🐾',
         status: 'active'
