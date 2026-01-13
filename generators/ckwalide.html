@@ -834,9 +834,9 @@
 
             async loadItems() {
                 const itemTypes = ['weapons', 'armors', 'objects', 'potions'];
-                let totalLoaded = 0;
                 for (const type of itemTypes) {
                     this.elements.loadingStatus.textContent = `Chargement des ${type}...`;
+                    let totalLoaded = 0;
                     try {
                         const dirResponse = await this.makeApiRequest(`https://api.github.com/repos/Crownicles/Crownicles/contents/Core/resources/${type}?ref=${this.currentBranch}`);
                         if (!dirResponse.ok) continue;
