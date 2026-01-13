@@ -311,6 +311,11 @@
             color: #ad1457;
         }
 
+        .type-mission {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
         .no-data {
             text-align: center;
             padding: 60px 20px;
@@ -449,6 +454,10 @@
                 <div class="stat-label">Petits Événements</div>
             </div>
             <div class="stat-item">
+                <div class="stat-number" id="missions-count">0</div>
+                <div class="stat-label">Missions</div>
+            </div>
+            <div class="stat-item">
                 <div class="stat-number" id="classes-count">0</div>
                 <div class="stat-label">Classes</div>
             </div>
@@ -509,6 +518,7 @@
                     petsCount: document.getElementById('pets-count'),
                     placesCount: document.getElementById('places-count'),
                     smallEventsCount: document.getElementById('small-events-count'),
+                    missionsCount: document.getElementById('missions-count'),
                     classesCount: document.getElementById('classes-count'),
                     totalCount: document.getElementById('total-count'),
                     apiStatus: document.getElementById('api-status'),
@@ -568,8 +578,9 @@
                 statItems[1].addEventListener('click', () => this.filterByCategory('pet'));
                 statItems[2].addEventListener('click', () => this.filterByCategory('place'));
                 statItems[3].addEventListener('click', () => this.filterByCategory('smallEvent'));
-                statItems[4].addEventListener('click', () => this.filterByCategory('class'));
-                statItems[5].addEventListener('click', () => this.filterByCategory(null));
+                statItems[4].addEventListener('click', () => this.filterByCategory('mission'));
+                statItems[5].addEventListener('click', () => this.filterByCategory('class'));
+                statItems[6].addEventListener('click', () => this.filterByCategory(null));
             }
 
             filterByCategory(category) {
@@ -585,8 +596,9 @@
                 else if (activeCategory === 'pet') statItems[1].classList.add('active');
                 else if (activeCategory === 'place') statItems[2].classList.add('active');
                 else if (activeCategory === 'smallEvent') statItems[3].classList.add('active');
-                else if (activeCategory === 'class') statItems[4].classList.add('active');
-                else if (activeCategory === null) statItems[5].classList.add('active');
+                else if (activeCategory === 'mission') statItems[4].classList.add('active');
+                else if (activeCategory === 'class') statItems[5].classList.add('active');
+                else if (activeCategory === null) statItems[6].classList.add('active');
             }
 
             applyCurrentFilters() {
@@ -737,7 +749,8 @@
                         this.loadItems(),
                         this.loadPets(),
                         this.loadPlaces(),
-                        this.loadSmallEvents()
+                        this.loadSmallEvents(),
+                        this.loadMissions()
                     ]);
                     await this.loadClasses();
                     this.saveToCache();
@@ -985,6 +998,29 @@
                 }
             }
 
+            async loadMissions() {
+                this.elements.loadingStatus.textContent = 'Chargement des missions...';
+                try {
+                    const dirResponse = await this.makeApiRequest(`https://api.github.com/repos/Crownicles/Crownicles/contents/Core/resources/missions?ref=${this.currentBranch}`);
+                    if (!dirResponse.ok) return;
+                    const files = await dirResponse.json();
+                    const jsonFiles = files.filter(file => file.name.endsWith('.json'));
+                    
+                    jsonFiles.forEach((file) => {
+                        const missionId = file.name.replace('.json', '');
+                        this.allData.push({
+                            id: missionId,
+                            name: missionId,
+                            type: 'mission',
+                            category: 'mission',
+                            emoji: '🎯'
+                        });
+                    });
+                } catch (error) {
+                    console.warn('Erreur lors du chargement des missions:', error);
+                }
+            }
+
             async loadClasses() {
                 this.elements.loadingStatus.textContent = 'Chargement des classes...';
                 try {
@@ -1024,6 +1060,7 @@
                 const petsCount = this.allData.filter(item => item.category === 'pet').length;
                 const placesCount = this.allData.filter(item => item.category === 'place').length;
                 const smallEventsCount = this.allData.filter(item => item.category === 'smallEvent').length;
+                const missionsCount = this.allData.filter(item => item.category === 'mission').length;
                 const classesCount = this.allData.filter(item => item.category === 'class').length;
                 const totalCount = this.allData.length;
 
@@ -1031,6 +1068,7 @@
                 this.elements.petsCount.textContent = petsCount;
                 this.elements.placesCount.textContent = placesCount;
                 this.elements.smallEventsCount.textContent = smallEventsCount;
+                this.elements.missionsCount.textContent = missionsCount;
                 this.elements.classesCount.textContent = classesCount;
                 this.elements.totalCount.textContent = totalCount;
                 this.elements.stats.style.display = 'flex';
