@@ -158,5 +158,25 @@ const toolsConfig = [
         tags: ['Missions', 'Carte'],
         icon: '📍',
         status: 'active'
+    },
+    {
+        id: 'small-events-balance',
+        title: 'Équilibrage Mini-Événements',
+        description: 'Analyse la distribution des raretés, probabilités théoriques et propriétés de chaque mini-événement depuis les JSONs de ressources.',
+        path: 'generators/small-events-balance.html',
+        category: 'Développement',
+        tags: ['Équilibrage', 'Probabilités', 'Mini-événements', 'Analyse'],
+        icon: '🎲',
+        status: 'active'
+    },
+    {
+        id: 'game-economy-dashboard',
+        title: 'Dashboard Économie du Jeu',
+        description: 'Vue globale de l\'économie : distribution des items par rareté/nature, récompenses des missions, progression de campagne, classes et ligues.',
+        path: 'generators/game-economy-dashboard.html',
+        category: 'Développement',
+        tags: ['Économie', 'Items', 'Missions', 'Campagne', 'Classes', 'Ligues'],
+        icon: '💰',
+        status: 'active'
     }
 ];

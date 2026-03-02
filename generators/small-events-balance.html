@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Équilibrage des Mini-Événements - Crownicles</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --accent: #8b5cf6;
+            --accent-light: #a78bfa;
+            --accent-glow: rgba(139, 92, 246, 0.15);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --border: rgba(255, 255, 255, 0.06);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(139, 92, 246, 0.08) 100%);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        header h1 {
+            color: var(--accent-light);
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 16px;
+            color: var(--accent-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .branch-select, .btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: var(--accent);
+            border: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.85; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .rate-limit {
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-secondary);
+        }
+        .spinner {
+            display: inline-block;
+            width: 32px; height: 32px;
+            border: 3px solid var(--bg-tertiary);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            color: var(--accent-light);
+            font-size: 1.25rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Stats bar */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-box {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-box .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-light);
+        }
+
+        .stat-box .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Chart containers */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .chart-wide { grid-column: 1 / -1; }
+
+        canvas { width: 100% !important; }
+
+        /* Event table */
+        .event-table-container {
+            overflow-x: auto;
+            margin-top: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            color: var(--accent-light);
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        th:hover { background: rgba(139, 92, 246, 0.15); }
+        th.sorted-asc::after { content: ' ▲'; font-size: 0.7rem; }
+        th.sorted-desc::after { content: ' ▼'; font-size: 0.7rem; }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        tr:hover td { background: rgba(139, 92, 246, 0.05); }
+
+        .rarity-bar {
+            display: inline-block;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--accent);
+            vertical-align: middle;
+        }
+
+        .probability-cell {
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: var(--success);
+        }
+
+        .has-properties { color: var(--warning); font-weight: 600; }
+        .no-properties { color: var(--text-muted); }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin: 1px 2px;
+        }
+
+        .tag-reward { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+        .tag-penalty { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .tag-neutral { background: rgba(59, 130, 246, 0.15); color: var(--info); }
+        .tag-interactive { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+
+        /* Properties detail panel */
+        .detail-panel {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 12px;
+            border: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+
+        .detail-panel h3 {
+            color: var(--accent-light);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .detail-panel pre {
+            background: var(--bg-primary);
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            max-height: 300px;
+        }
+
+        /* Search */
+        .search-box {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 8px;
+            width: 260px;
+            font-size: 0.9rem;
+        }
+
+        .search-box::placeholder { color: var(--text-muted); }
+
+        /* Tier groups */
+        .tier-section { margin-bottom: 20px; }
+        .tier-header {
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .tier-5 { background: rgba(239, 68, 68, 0.12); color: #fca5a5; }
+        .tier-4 { background: rgba(245, 158, 11, 0.12); color: #fcd34d; }
+        .tier-3 { background: rgba(59, 130, 246, 0.12); color: #93c5fd; }
+        .tier-2 { background: rgba(34, 197, 94, 0.12); color: #86efac; }
+        .tier-1 { background: rgba(139, 92, 246, 0.12); color: #c4b5fd; }
+
+        /* Category filter pills */
+        .filter-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .pill {
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            transition: all 0.15s;
+        }
+
+        .pill.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .pill:hover { border-color: var(--accent); }
+
+        .pill .count {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-left: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chart-grid { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .controls { flex-direction: column; align-items: stretch; }
+            .search-box { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" class="back-link">← Retour à l'accueil</a>
+
+    <header>
+        <h1>🎲 Équilibrage des Mini-Événements</h1>
+        <p class="subtitle">Analyse statique des fichiers JSON de configuration — distribution des raretés, probabilités théoriques et propriétés de chaque mini-événement.</p>
+    </header>
+
+    <div class="controls">
+        <select id="branch-select" class="branch-select">
+            <option value="develop">develop</option>
+        </select>
+        <button id="load-btn" class="btn" onclick="app.load()">🔄 Charger</button>
+        <input type="text" id="search" class="search-box" placeholder="Rechercher un événement...">
+        <span id="rate-limit" class="rate-limit"></span>
+    </div>
+
+    <div id="content">
+        <div class="loading">
+            <div class="spinner"></div>
+            <div>Cliquez sur "Charger" pour récupérer les données depuis GitHub...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+const OWNER = 'Crownicles';
+const REPO = 'Crownicles';
+const SE_PATH = 'Core/resources/smallEvents';
+const TRANSLATIONS_PATH = 'Lang/fr/smallEvents.json';
+
+// Event category classification
+const EVENT_CATEGORIES = {
+    'Récompense': ['advanceTime', 'farmer', 'findItem', 'findMission', 'findPet', 'findPotion', 'winEnergy', 'winEnergyOnIsland', 'winGuildXP', 'winHealth', 'winPersonalXP', 'petDropToken', 'leagueReward'],
+    'Pénalité': ['bigBad', 'smallBad', 'haunted'],
+    'Commerce': ['shop', 'epicItemShop', 'ultimateFoodMerchant', 'cart'],
+    'Interactif': ['lottery', 'gobletsGame', 'limoges', 'altar', 'witch', 'badPet', 'petFood'],
+    'Information': ['botFacts', 'boatAdvice', 'infoFight', 'space', 'staffMember', 'expeditionAdvice', 'doNothing'],
+    'Familier': ['pet', 'fightPet', 'dwarfPetFan'],
+    'Classe': ['class'],
+    'Voyage': ['goToPVEIsland', 'bonusGuildPVEIsland', 'interactOtherPlayers'],
+};
+
+function getCategoryFor(eventName) {
+    for (const [cat, list] of Object.entries(EVENT_CATEGORIES)) {
+        if (list.includes(eventName)) return cat;
+    }
+    return 'Autre';
+}
+
+const CATEGORY_COLORS = {
+    'Récompense': '#22c55e',
+    'Pénalité': '#ef4444',
+    'Commerce': '#f59e0b',
+    'Interactif': '#8b5cf6',
+    'Information': '#3b82f6',
+    'Familier': '#ec4899',
+    'Classe': '#06b6d4',
+    'Voyage': '#14b8a6',
+    'Autre': '#64748b',
+};
+
+const CATEGORY_ICONS = {
+    'Récompense': '🎁',
+    'Pénalité': '💀',
+    'Commerce': '🛒',
+    'Interactif': '🎮',
+    'Information': 'ℹ️',
+    'Familier': '🐾',
+    'Classe': '⚔️',
+    'Voyage': '🗺️',
+    'Autre': '❓',
+};
+
+class SmallEventsBalanceApp {
+    constructor() {
+        this.events = [];
+        this.translations = {};
+        this.charts = {};
+        this.sortCol = 'probability';
+        this.sortDir = 'desc';
+        this.selectedCategory = 'all';
+        this.searchText = '';
+        this.rateLimit = { remaining: '?', limit: '?' };
+
+        document.getElementById('search').addEventListener('input', (e) => {
+            this.searchText = e.target.value.toLowerCase();
+            this.renderTable();
+        });
+
+        this.loadBranches();
+    }
+
+    async loadBranches() {
+        try {
+            const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/branches`);
+            this.trackRateLimit(res);
+            const branches = await res.json();
+            const sel = document.getElementById('branch-select');
+            sel.innerHTML = branches.map(b =>
+                `<option value="${b.name}" ${b.name === 'develop' ? 'selected' : ''}>${b.name}</option>`
+            ).join('');
+        } catch (e) {
+            console.warn('Failed to load branches:', e);
+        }
+    }
+
+    trackRateLimit(res) {
+        const remaining = res.headers.get('X-RateLimit-Remaining');
+        const limit = res.headers.get('X-RateLimit-Limit');
+        if (remaining !== null) {
+            this.rateLimit = { remaining, limit };
+            document.getElementById('rate-limit').textContent = `API: ${remaining}/${limit}`;
+        }
+    }
+
+    async load() {
+        const branch = document.getElementById('branch-select').value;
+        const content = document.getElementById('content');
+        content.innerHTML = '<div class="loading"><div class="spinner"></div><div>Chargement des mini-événements...</div></div>';
+
+        try {
+            // Load file list
+            const listRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${SE_PATH}?ref=${branch}`);
+            this.trackRateLimit(listRes);
+            const files = await listRes.json();
+            const jsonFiles = files.filter(f => f.name.endsWith('.json'));
+
+            // Load all event files + translations in parallel
+            const rawBase = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}`;
+            const promises = jsonFiles.map(f =>
+                fetch(`${rawBase}/${SE_PATH}/${f.name}`).then(r => r.json()).then(data => ({
+                    name: f.name.replace('.json', ''),
+                    ...data
+                }))
+            );
+
+            const transPromise = fetch(`${rawBase}/${TRANSLATIONS_PATH}`).then(r => r.json()).catch(() => ({}));
+
+            const [eventsRaw, translations] = await Promise.all([
+                Promise.all(promises),
+                transPromise
+            ]);
+
+            this.translations = translations;
+            const totalRarity = eventsRaw.reduce((s, e) => s + (e.rarity || 0), 0);
+
+            this.events = eventsRaw.map(e => ({
+                ...e,
+                category: getCategoryFor(e.name),
+                probability: ((e.rarity || 0) / totalRarity * 100),
+                translationKeys: this.countTranslationKeys(e.name),
+            })).sort((a, b) => b.probability - a.probability);
+
+            this.render();
+        } catch (err) {
+            content.innerHTML = `<div class="card" style="color: var(--danger);">Erreur: ${err.message}</div>`;
+        }
+    }
+
+    countTranslationKeys(eventName) {
+        const section = this.translations[eventName];
+        if (!section) return 0;
+        return this.deepCountStrings(section);
+    }
+
+    deepCountStrings(obj) {
+        if (typeof obj === 'string') return 1;
+        if (Array.isArray(obj)) return obj.reduce((s, v) => s + this.deepCountStrings(v), 0);
+        if (typeof obj === 'object' && obj !== null) return Object.values(obj).reduce((s, v) => s + this.deepCountStrings(v), 0);
+        return 0;
+    }
+
+    render() {
+        const content = document.getElementById('content');
+
+        // Category stats
+        const catCounts = {};
+        const catRaritySum = {};
+        this.events.forEach(e => {
+            catCounts[e.category] = (catCounts[e.category] || 0) + 1;
+            catRaritySum[e.category] = (catRaritySum[e.category] || 0) + e.probability;
+        });
+
+        const totalRarity = this.events.reduce((s, e) => s + (e.rarity || 0), 0);
+        const withProps = this.events.filter(e => e.properties).length;
+        const maxRarity = Math.max(...this.events.map(e => e.rarity || 0));
+        const minRarity = Math.min(...this.events.map(e => e.rarity || 0));
+
+        content.innerHTML = `
+            <div class="stats-row">
+                <div class="stat-box"><div class="value">${this.events.length}</div><div class="label">Mini-événements</div></div>
+                <div class="stat-box"><div class="value">${totalRarity}</div><div class="label">Somme des raretés</div></div>
+                <div class="stat-box"><div class="value">${withProps}</div><div class="label">Avec propriétés</div></div>
+                <div class="stat-box"><div class="value">${maxRarity}</div><div class="label">Rareté max</div></div>
+                <div class="stat-box"><div class="value">${minRarity}</div><div class="label">Rareté min</div></div>
+                <div class="stat-box"><div class="value">${Object.keys(catCounts).length}</div><div class="label">Catégories</div></div>
+            </div>
+
+            <div class="chart-grid">
+                <div class="card">
+                    <h2>📊 Distribution des probabilités</h2>
+                    <canvas id="chart-distribution"></canvas>
+                </div>
+                <div class="card">
+                    <h2>🥧 Répartition par catégorie</h2>
+                    <canvas id="chart-categories"></canvas>
+                </div>
+                <div class="card chart-wide">
+                    <h2>📈 Probabilités individuelles (triées)</h2>
+                    <div style="position:relative; height:900px; overflow-y:auto;">
+                        <div style="position:relative; height:1200px;">
+                            <canvas id="chart-bar"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 Tableau détaillé des mini-événements</h2>
+                <div class="filter-pills" id="category-filters"></div>
+                <div class="event-table-container">
+                    <table id="events-table">
+                        <thead>
+                            <tr>
+                                <th data-col="name">Nom</th>
+                                <th data-col="category">Catégorie</th>
+                                <th data-col="rarity">Rareté</th>
+                                <th data-col="probability">Probabilité</th>
+                                <th data-col="properties">Propriétés</th>
+                                <th data-col="translationKeys">Traductions</th>
+                                <th>Tags</th>
+                            </tr>
+                        </thead>
+                        <tbody id="events-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="detail-section"></div>
+        `;
+
+        this.renderCategoryFilters(catCounts);
+        this.renderCharts();
+        this.renderTable();
+        this.setupTableSort();
+    }
+
+    renderCategoryFilters(catCounts) {
+        const container = document.getElementById('category-filters');
+        let html = `<span class="pill ${this.selectedCategory === 'all' ? 'active' : ''}" data-cat="all">Tous<span class="count">${this.events.length}</span></span>`;
+        for (const [cat, count] of Object.entries(catCounts).sort((a, b) => b[1] - a[1])) {
+            const isActive = this.selectedCategory === cat ? 'active' : '';
+            html += `<span class="pill ${isActive}" data-cat="${cat}" style="border-color: ${CATEGORY_COLORS[cat] || '#64748b'}">${CATEGORY_ICONS[cat] || ''} ${cat}<span class="count">${count}</span></span>`;
+        }
+        container.innerHTML = html;
+        container.querySelectorAll('.pill').forEach(p => {
+            p.addEventListener('click', () => {
+                this.selectedCategory = p.dataset.cat;
+                container.querySelectorAll('.pill').forEach(pp => pp.classList.remove('active'));
+                p.classList.add('active');
+                this.renderTable();
+            });
+        });
+    }
+
+    renderCharts() {
+        // Destroy old charts
+        Object.values(this.charts).forEach(c => c.destroy());
+        this.charts = {};
+
+        this.renderDistributionChart();
+        this.renderCategoryChart();
+        this.renderBarChart();
+    }
+
+    renderDistributionChart() {
+        const ctx = document.getElementById('chart-distribution').getContext('2d');
+        // Build histogram: group events by rarity ranges
+        const bins = {};
+        this.events.forEach(e => {
+            let label;
+            const r = e.rarity || 0;
+            if (r <= 1) label = '1 (très rare)';
+            else if (r <= 3) label = '2-3 (rare)';
+            else if (r <= 5) label = '4-5 (moyen)';
+            else if (r <= 8) label = '6-8 (fréquent)';
+            else if (r <= 20) label = '9-20 (commun)';
+            else label = '20+ (omniprésent)';
+            bins[label] = (bins[label] || 0) + 1;
+        });
+
+        const orderedLabels = ['1 (très rare)', '2-3 (rare)', '4-5 (moyen)', '6-8 (fréquent)', '9-20 (commun)', '20+ (omniprésent)'];
+        const colors = ['#ef4444', '#f59e0b', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6'];
+
+        this.charts.distribution = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: orderedLabels,
+                datasets: [{
+                    label: "Nombre d'événements",
+                    data: orderedLabels.map(l => bins[l] || 0),
+                    backgroundColor: colors.map(c => c + '80'),
+                    borderColor: colors,
+                    borderWidth: 2,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1, color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    renderCategoryChart() {
+        const ctx = document.getElementById('chart-categories').getContext('2d');
+        const catProb = {};
+        this.events.forEach(e => {
+            catProb[e.category] = (catProb[e.category] || 0) + e.probability;
+        });
+
+        const labels = Object.keys(catProb).sort((a, b) => catProb[b] - catProb[a]);
+        const data = labels.map(l => Math.round(catProb[l] * 100) / 100);
+        const colors = labels.map(l => CATEGORY_COLORS[l] || '#64748b');
+
+        this.charts.categories = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels.map((l, i) => `${CATEGORY_ICONS[l] || ''} ${l} (${data[i].toFixed(1)}%)`),
+                datasets: [{
+                    data,
+                    backgroundColor: colors.map(c => c + 'cc'),
+                    borderColor: colors,
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color: '#94a3b8', padding: 12, font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    }
+
+    renderBarChart() {
+        const ctx = document.getElementById('chart-bar').getContext('2d');
+        const sorted = [...this.events].sort((a, b) => b.probability - a.probability);
+        const colors = sorted.map(e => CATEGORY_COLORS[e.category] || '#64748b');
+
+        this.charts.bar = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: sorted.map(e => e.name),
+                datasets: [{
+                    label: 'Probabilité (%)',
+                    data: sorted.map(e => Math.round(e.probability * 100) / 100),
+                    backgroundColor: colors.map(c => c + '99'),
+                    borderColor: colors,
+                    borderWidth: 1,
+                    borderRadius: 3,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            afterLabel: (ctx) => {
+                                const e = sorted[ctx.dataIndex];
+                                return `Catégorie: ${e.category}\nRareté: ${e.rarity}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { beginAtZero: true, ticks: { color: '#94a3b8', callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    renderTable() {
+        const tbody = document.getElementById('events-tbody');
+        if (!tbody) return;
+
+        let filtered = this.events;
+        if (this.selectedCategory !== 'all') {
+            filtered = filtered.filter(e => e.category === this.selectedCategory);
+        }
+        if (this.searchText) {
+            filtered = filtered.filter(e =>
+                e.name.toLowerCase().includes(this.searchText) ||
+                e.category.toLowerCase().includes(this.searchText)
+            );
+        }
+
+        // Sort
+        filtered.sort((a, b) => {
+            let va = a[this.sortCol], vb = b[this.sortCol];
+            if (typeof va === 'string') va = va.toLowerCase();
+            if (typeof vb === 'string') vb = vb.toLowerCase();
+            if (va === undefined) va = 0;
+            if (vb === undefined) vb = 0;
+            const cmp = va < vb ? -1 : va > vb ? 1 : 0;
+            return this.sortDir === 'asc' ? cmp : -cmp;
+        });
+
+        const maxRarity = Math.max(...this.events.map(e => e.rarity || 0));
+
+        tbody.innerHTML = filtered.map(e => {
+            const barWidth = ((e.rarity || 0) / maxRarity * 100);
+            const tags = this.getEventTags(e);
+            const hasProps = e.properties ? 'has-properties' : 'no-properties';
+
+            return `<tr data-event="${e.name}" style="cursor: pointer;">
+                <td><strong>${e.name}</strong></td>
+                <td><span style="color: ${CATEGORY_COLORS[e.category]}">${CATEGORY_ICONS[e.category] || ''} ${e.category}</span></td>
+                <td>${e.rarity || 0} <span class="rarity-bar" style="width: ${barWidth}px;"></span></td>
+                <td class="probability-cell">${e.probability.toFixed(2)}%</td>
+                <td class="${hasProps}">${e.properties ? '✦ Oui' : '—'}</td>
+                <td>${e.translationKeys}</td>
+                <td>${tags.map(t => `<span class="tag tag-${t.type}">${t.label}</span>`).join('')}</td>
+            </tr>`;
+        }).join('');
+
+        tbody.querySelectorAll('tr').forEach(tr => {
+            tr.addEventListener('click', () => {
+                const eventName = tr.dataset.event;
+                this.showDetail(eventName);
+            });
+        });
+
+        // Update sort headers
+        document.querySelectorAll('#events-table th').forEach(th => {
+            th.classList.remove('sorted-asc', 'sorted-desc');
+            if (th.dataset.col === this.sortCol) {
+                th.classList.add(this.sortDir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+            }
+        });
+    }
+
+    getEventTags(event) {
+        const tags = [];
+        const name = event.name;
+
+        // Reward-type events
+        if (['findItem', 'findPotion', 'findPet', 'findMission', 'winEnergy', 'winEnergyOnIsland', 'winGuildXP',
+             'winHealth', 'winPersonalXP', 'farmer', 'leagueReward', 'petDropToken', 'advanceTime'].includes(name)) {
+            tags.push({ label: 'Gain', type: 'reward' });
+        }
+
+        // Penalty events
+        if (['bigBad', 'smallBad'].includes(name)) {
+            tags.push({ label: 'Perte', type: 'penalty' });
+        }
+
+        // Interactive (player choice)
+        if (['lottery', 'gobletsGame', 'limoges', 'altar', 'witch', 'badPet', 'petFood', 'cart', 'shop', 'epicItemShop'].includes(name)) {
+            tags.push({ label: 'Choix', type: 'interactive' });
+        }
+
+        // Has money involved
+        if (['shop', 'epicItemShop', 'cart', 'altar', 'ultimateFoodMerchant', 'lottery'].includes(name)) {
+            tags.push({ label: '💰', type: 'neutral' });
+        }
+
+        // Pet related
+        if (['pet', 'fightPet', 'findPet', 'dwarfPetFan', 'petFood', 'badPet', 'petDropToken'].includes(name)) {
+            tags.push({ label: '🐾', type: 'neutral' });
+        }
+
+        // Event has properties (configurable)
+        if (event.properties) {
+            tags.push({ label: '⚙️ Config', type: 'interactive' });
+        }
+
+        return tags;
+    }
+
+    setupTableSort() {
+        document.querySelectorAll('#events-table th[data-col]').forEach(th => {
+            th.addEventListener('click', () => {
+                const col = th.dataset.col;
+                if (this.sortCol === col) {
+                    this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+                } else {
+                    this.sortCol = col;
+                    this.sortDir = col === 'name' || col === 'category' ? 'asc' : 'desc';
+                }
+                this.renderTable();
+            });
+        });
+    }
+
+    showDetail(eventName) {
+        const event = this.events.find(e => e.name === eventName);
+        if (!event) return;
+
+        const section = document.getElementById('detail-section');
+        const trans = this.translations[eventName];
+
+        let propsHtml = '';
+        if (event.properties) {
+            propsHtml = `
+                <div class="detail-panel">
+                    <h3>⚙️ Propriétés de configuration</h3>
+                    <pre>${JSON.stringify(event.properties, null, 2)}</pre>
+                </div>`;
+        }
+
+        let transHtml = '';
+        if (trans) {
+            const keys = this.flattenKeys(trans);
+            transHtml = `
+                <div class="detail-panel">
+                    <h3>🌐 Clés de traduction (${keys.length})</h3>
+                    <div style="max-height: 300px; overflow-y: auto;">
+                        <pre>${keys.map(k => `${k.key}: ${typeof k.value === 'string' ? k.value.substring(0, 120) + (k.value.length > 120 ? '...' : '') : `[${Array.isArray(k.value) ? k.value.length + ' items' : typeof k.value}]`}`).join('\n')}</pre>
+                    </div>
+                </div>`;
+        }
+
+        // Find similar events (same category, close rarity)
+        const similar = this.events
+            .filter(e => e.name !== eventName && e.category === event.category)
+            .sort((a, b) => Math.abs(a.rarity - event.rarity) - Math.abs(b.rarity - event.rarity))
+            .slice(0, 5);
+
+        let similarHtml = '';
+        if (similar.length > 0) {
+            similarHtml = `
+                <div class="detail-panel">
+                    <h3>🔗 Événements similaires (${event.category})</h3>
+                    ${similar.map(s => `<span style="margin-right: 12px; color: ${CATEGORY_COLORS[s.category]}">${s.name} <span style="color: var(--text-muted)">(rareté: ${s.rarity}, ${s.probability.toFixed(2)}%)</span></span>`).join('<br>')}
+                </div>`;
+        }
+
+        section.innerHTML = `
+            <div class="card" id="event-detail">
+                <h2>${CATEGORY_ICONS[event.category] || ''} ${event.name} <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: normal;">— ${event.category}</span></h2>
+                <div class="stats-row" style="margin-bottom: 16px;">
+                    <div class="stat-box"><div class="value">${event.rarity}</div><div class="label">Rareté</div></div>
+                    <div class="stat-box"><div class="value">${event.probability.toFixed(2)}%</div><div class="label">Probabilité</div></div>
+                    <div class="stat-box"><div class="value">${event.translationKeys}</div><div class="label">Textes</div></div>
+                    <div class="stat-box"><div class="value">${event.properties ? 'Oui' : 'Non'}</div><div class="label">Configurable</div></div>
+                </div>
+                ${propsHtml}
+                ${transHtml}
+                ${similarHtml}
+            </div>`;
+
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    flattenKeys(obj, prefix = '') {
+        const result = [];
+        for (const [key, value] of Object.entries(obj)) {
+            const fullKey = prefix ? `${prefix}.${key}` : key;
+            if (typeof value === 'string' || typeof value === 'number') {
+                result.push({ key: fullKey, value: String(value) });
+            } else if (Array.isArray(value)) {
+                result.push({ key: fullKey, value });
+            } else if (typeof value === 'object' && value !== null) {
+                result.push(...this.flattenKeys(value, fullKey));
+            }
+        }
+        return result;
+    }
+}
+
+const app = new SmallEventsBalanceApp();
+</script>
+</body>
+</html>

@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Économie du Jeu - Crownicles</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0c1222;
+            --bg-secondary: #141e33;
+            --bg-tertiary: #1c2a47;
+            --accent: #f59e0b;
+            --accent-light: #fbbf24;
+            --accent-glow: rgba(245, 158, 11, 0.12);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+            --teal: #14b8a6;
+            --border: rgba(255, 255, 255, 0.06);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 1500px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(245, 158, 11, 0.07) 100%);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        header h1 { color: var(--accent-light); font-size: 2rem; margin-bottom: 8px; }
+        header .subtitle { color: var(--text-secondary); font-size: 1.05rem; }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 16px;
+            color: var(--accent-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .branch-select, .btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            font-weight: 700;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.85; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .rate-limit { margin-left: auto; font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Loading */
+        .loading { text-align: center; padding: 60px; color: var(--text-secondary); }
+        .loading-progress { margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); }
+        .spinner {
+            display: inline-block; width: 32px; height: 32px;
+            border: 3px solid var(--bg-tertiary); border-top-color: var(--accent);
+            border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+            border: none;
+            background: none;
+        }
+
+        .tab:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+        .tab.active { background: var(--accent); color: #000; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            color: var(--accent-light);
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+        }
+
+        .card-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-box {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-box .value { font-size: 1.6rem; font-weight: 700; color: var(--accent-light); }
+        .stat-box .label { font-size: 0.78rem; color: var(--text-secondary); margin-top: 4px; }
+
+        /* Rarity colors */
+        .rarity-0 { color: #9ca3af; }
+        .rarity-1 { color: #22c55e; }
+        .rarity-2 { color: #3b82f6; }
+        .rarity-3 { color: #a855f7; }
+        .rarity-4 { color: #f59e0b; }
+        .rarity-5 { color: #ef4444; }
+        .rarity-6 { color: #ec4899; }
+        .rarity-7 { color: #14b8a6; }
+        .rarity-8 { color: #f97316; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th {
+            background: var(--bg-tertiary); color: var(--accent-light);
+            padding: 8px 12px; text-align: left; font-weight: 600;
+            position: sticky; top: 0; cursor: pointer; white-space: nowrap;
+        }
+        td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+        tr:hover td { background: rgba(245, 158, 11, 0.04); }
+
+        .table-scroll { max-height: 500px; overflow-y: auto; }
+
+        /* Bar inline */
+        .inline-bar {
+            display: inline-block;
+            height: 8px;
+            border-radius: 4px;
+            min-width: 2px;
+            vertical-align: middle;
+            margin-left: 6px;
+        }
+
+        /* Nature colors */
+        .nature-health { color: #22c55e; }
+        .nature-speed { color: #3b82f6; }
+        .nature-attack { color: #ef4444; }
+        .nature-defense { color: #f59e0b; }
+        .nature-time { color: #a855f7; }
+        .nature-money { color: #fbbf24; }
+        .nature-energy { color: #14b8a6; }
+        .nature-none { color: #64748b; }
+
+        canvas { width: 100% !important; }
+
+        /* Campaign timeline */
+        .timeline-container { overflow-x: auto; padding-bottom: 12px; }
+        .timeline {
+            display: flex;
+            gap: 2px;
+            min-width: max-content;
+            align-items: flex-end;
+            height: 120px;
+        }
+        .timeline-bar {
+            width: 8px;
+            border-radius: 2px 2px 0 0;
+            position: relative;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        .timeline-bar:hover { opacity: 0.7; }
+        .timeline-bar .tooltip {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 10;
+            border: 1px solid var(--border);
+        }
+        .timeline-bar:hover .tooltip { display: block; }
+
+        /* League section */
+        .league-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .league-badge {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+        .league-name { font-weight: 600; min-width: 120px; }
+        .league-range { color: var(--text-secondary); font-size: 0.85rem; flex: 1; }
+        .league-bar-bg {
+            flex: 2;
+            height: 10px;
+            background: var(--bg-tertiary);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .league-bar-fill { height: 100%; border-radius: 5px; transition: width 0.3s; }
+
+        /* Mission reward comparison table */
+        .reward-cell { font-family: 'Consolas', monospace; font-size: 0.82rem; }
+        .reward-cell.highlight { color: var(--accent-light); font-weight: 700; }
+
+        @media (max-width: 768px) {
+            .card-grid, .card-grid-3 { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .tabs { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" class="back-link">← Retour à l'accueil</a>
+
+    <header>
+        <h1>💰 Dashboard Économie du Jeu</h1>
+        <p class="subtitle">Analyse statique des fichiers de ressources — distribution des items, récompenses des missions, progression de la campagne, ligues et équilibrage global.</p>
+    </header>
+
+    <div class="controls">
+        <select id="branch-select" class="branch-select">
+            <option value="develop">develop</option>
+        </select>
+        <button id="load-btn" class="btn" onclick="app.load()">🔄 Charger les données</button>
+        <span id="rate-limit" class="rate-limit"></span>
+    </div>
+
+    <div id="content">
+        <div class="loading">
+            <div class="spinner"></div>
+            <div>Cliquez sur "Charger les données" pour analyser les ressources depuis GitHub...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+const OWNER = 'Crownicles';
+const REPO = 'Crownicles';
+
+const RARITY_NAMES = ['Basique', 'Commun', 'Inhabituel', 'Exotique', 'Rare', 'Spécial', 'Épique', 'Légendaire', 'Mythique'];
+const RARITY_COLORS = ['#9ca3af', '#22c55e', '#3b82f6', '#a855f7', '#f59e0b', '#ef4444', '#ec4899', '#14b8a6', '#f97316'];
+
+const NATURE_NAMES = ['Aucune', 'Santé/jour', 'Vitesse', 'Attaque', 'Défense', 'Temps', 'Argent/jour', 'Énergie/jour'];
+const NATURE_COLORS = ['#64748b', '#22c55e', '#3b82f6', '#ef4444', '#f59e0b', '#a855f7', '#fbbf24', '#14b8a6'];
+
+class GameEconomyDashboard {
+    constructor() {
+        this.data = {};
+        this.charts = {};
+        this.rateLimit = { remaining: '?', limit: '?' };
+        this.loadBranches();
+    }
+
+    async loadBranches() {
+        try {
+            const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/branches`);
+            this.trackRateLimit(res);
+            const branches = await res.json();
+            const sel = document.getElementById('branch-select');
+            sel.innerHTML = branches.map(b =>
+                `<option value="${b.name}" ${b.name === 'develop' ? 'selected' : ''}>${b.name}</option>`
+            ).join('');
+        } catch (e) { console.warn('Branches load failed:', e); }
+    }
+
+    trackRateLimit(res) {
+        const remaining = res.headers.get('X-RateLimit-Remaining');
+        const limit = res.headers.get('X-RateLimit-Limit');
+        if (remaining !== null) {
+            this.rateLimit = { remaining, limit };
+            document.getElementById('rate-limit').textContent = `API: ${remaining}/${limit}`;
+        }
+    }
+
+    async load() {
+        const branch = document.getElementById('branch-select').value;
+        const content = document.getElementById('content');
+        const rawBase = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}`;
+
+        const setProgress = (msg) => {
+            const el = document.getElementById('load-progress');
+            if (el) el.textContent = msg;
+        };
+
+        content.innerHTML = `<div class="loading"><div class="spinner"></div><div>Chargement des ressources...</div><div id="load-progress" class="loading-progress"></div></div>`;
+
+        try {
+            // Step 1: Get file lists via API
+            setProgress('Récupération des listes de fichiers...');
+            const [weaponsRes, armorsRes, objectsRes, potionsRes, classesRes, leaguesRes, missionsRes] = await Promise.all([
+                fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/weapons?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
+                fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/armors?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
+                fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/objects?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
+                fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/potions?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
+                fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/classes?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
+                fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/leagues?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
+                fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/missions?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
+            ]);
+
+            // Step 2: Load all files via raw (no rate limit)
+            setProgress('Chargement des armes...');
+            const loadJsonFiles = async (fileList, folder) => {
+                const jsons = fileList.filter(f => f.name.endsWith('.json'));
+                const results = await Promise.all(jsons.map(f =>
+                    fetch(`${rawBase}/Core/resources/${folder}/${f.name}`)
+                        .then(r => r.json())
+                        .then(data => ({ id: f.name.replace('.json', ''), ...data }))
+                        .catch(() => null)
+                ));
+                return results.filter(Boolean);
+            };
+
+            const [weapons, armors, objects, potions, classes, leagues, missions] = await Promise.all([
+                loadJsonFiles(weaponsRes, 'weapons'),
+                loadJsonFiles(armorsRes, 'armors'),
+                loadJsonFiles(objectsRes, 'objects'),
+                loadJsonFiles(potionsRes, 'potions'),
+                loadJsonFiles(classesRes, 'classes'),
+                loadJsonFiles(leaguesRes, 'leagues'),
+                loadJsonFiles(missionsRes, 'missions'),
+            ]);
+
+            setProgress('Chargement de la campagne et des traductions...');
+            const [campaign, translations] = await Promise.all([
+                fetch(`${rawBase}/Core/resources/campaign.json`).then(r => r.json()).catch(() => ({ missions: [] })),
+                fetch(`${rawBase}/Lang/fr/models.json`).then(r => r.json()).catch(() => ({})),
+            ]);
+
+            this.data = { weapons, armors, objects, potions, classes, leagues, missions, campaign, translations };
+            this.render();
+        } catch (err) {
+            content.innerHTML = `<div class="card" style="color: var(--danger);">Erreur: ${err.message}</div>`;
+        }
+    }
+
+    render() {
+        Object.values(this.charts).forEach(c => c.destroy());
+        this.charts = {};
+
+        const { weapons, armors, objects, potions, classes, leagues, missions, campaign } = this.data;
+        const totalItems = weapons.length + armors.length + objects.length + potions.length;
+        const totalMissions = missions.length;
+        const campaignMissions = campaign.missions ? campaign.missions.length : 0;
+
+        const content = document.getElementById('content');
+        content.innerHTML = `
+            <div class="stats-row">
+                <div class="stat-box"><div class="value">${weapons.length}</div><div class="label">Armes</div></div>
+                <div class="stat-box"><div class="value">${armors.length}</div><div class="label">Armures</div></div>
+                <div class="stat-box"><div class="value">${objects.length}</div><div class="label">Objets</div></div>
+                <div class="stat-box"><div class="value">${potions.length}</div><div class="label">Potions</div></div>
+                <div class="stat-box"><div class="value">${classes.length}</div><div class="label">Classes</div></div>
+                <div class="stat-box"><div class="value">${totalMissions}</div><div class="label">Missions</div></div>
+                <div class="stat-box"><div class="value">${campaignMissions}</div><div class="label">Campagne</div></div>
+                <div class="stat-box"><div class="value">${leagues.length}</div><div class="label">Ligues</div></div>
+            </div>
+
+            <div class="tabs" id="tabs">
+                <button class="tab active" data-tab="items">⚔️ Items</button>
+                <button class="tab" data-tab="missions">🎯 Missions</button>
+                <button class="tab" data-tab="campaign">🏰 Campagne</button>
+                <button class="tab" data-tab="classes">🛡️ Classes</button>
+                <button class="tab" data-tab="leagues">🏆 Ligues</button>
+            </div>
+
+            <div id="tab-items" class="tab-content active"></div>
+            <div id="tab-missions" class="tab-content"></div>
+            <div id="tab-campaign" class="tab-content"></div>
+            <div id="tab-classes" class="tab-content"></div>
+            <div id="tab-leagues" class="tab-content"></div>
+        `;
+
+        this.setupTabs();
+        this.renderItemsTab();
+        this.renderMissionsTab();
+        this.renderCampaignTab();
+        this.renderClassesTab();
+        this.renderLeaguesTab();
+    }
+
+    setupTabs() {
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+            });
+        });
+    }
+
+    // ==================== ITEMS TAB ====================
+    renderItemsTab() {
+        const { weapons, armors, objects, potions, translations } = this.data;
+        const container = document.getElementById('tab-items');
+
+        // Rarity distribution for each category
+        const rarityDist = (items) => {
+            const dist = new Array(9).fill(0);
+            items.forEach(i => { if (i.rarity !== undefined) dist[i.rarity]++; });
+            return dist;
+        };
+
+        const wDist = rarityDist(weapons);
+        const aDist = rarityDist(armors);
+        const oDist = rarityDist(objects);
+        const pDist = rarityDist(potions);
+
+        // Object nature distribution
+        const natureDist = new Array(8).fill(0);
+        objects.forEach(o => { if (o.nature !== undefined) natureDist[o.nature]++; });
+
+        // Potion nature distribution
+        const potNatureDist = new Array(8).fill(0);
+        potions.forEach(p => { if (p.nature !== undefined) potNatureDist[p.nature]++; });
+
+        // Power analysis by rarity
+        const powerByRarity = (items, statKey) => {
+            const buckets = {};
+            items.forEach(i => {
+                const r = i.rarity ?? 0;
+                if (!buckets[r]) buckets[r] = [];
+                if (i[statKey] !== undefined) buckets[r].push(i[statKey]);
+            });
+            return Object.entries(buckets).sort((a, b) => a[0] - b[0]).map(([r, vals]) => ({
+                rarity: parseInt(r),
+                avg: vals.reduce((s, v) => s + v, 0) / vals.length,
+                min: Math.min(...vals),
+                max: Math.max(...vals),
+                count: vals.length,
+            }));
+        };
+
+        const weaponPower = powerByRarity(weapons, 'rawAttack');
+        const armorPower = powerByRarity(armors, 'rawDefense');
+        const objectPower = powerByRarity(objects, 'power');
+        const potionPower = powerByRarity(potions, 'power');
+
+        // Weapon tags distribution
+        const tagCounts = {};
+        weapons.forEach(w => {
+            if (w.tags) w.tags.forEach(t => tagCounts[t] = (tagCounts[t] || 0) + 1);
+        });
+
+        container.innerHTML = `
+            <div class="card-grid">
+                <div class="card">
+                    <h2>📊 Distribution par rareté</h2>
+                    <canvas id="chart-rarity-dist"></canvas>
+                </div>
+                <div class="card">
+                    <h2>🌿 Natures des objets passifs</h2>
+                    <canvas id="chart-object-nature"></canvas>
+                </div>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <h2>📈 Puissance moyenne par rareté</h2>
+                    <canvas id="chart-power-curve"></canvas>
+                </div>
+                <div class="card">
+                    <h2>🧪 Natures des potions</h2>
+                    <canvas id="chart-potion-nature"></canvas>
+                </div>
+            </div>
+            ${Object.keys(tagCounts).length > 0 ? `
+            <div class="card">
+                <h2>🏷️ Tags d'armes</h2>
+                <div class="stats-row">
+                    ${Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).map(([tag, count]) =>
+                        `<div class="stat-box"><div class="value">${count}</div><div class="label">${tag}</div></div>`
+                    ).join('')}
+                </div>
+            </div>` : ''}
+            <div class="card">
+                <h2>📋 Statistiques détaillées par rareté</h2>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rareté</th>
+                                <th>Armes</th>
+                                <th>Moy. Attaque</th>
+                                <th>Armures</th>
+                                <th>Moy. Défense</th>
+                                <th>Objets</th>
+                                <th>Moy. Puissance</th>
+                                <th>Potions</th>
+                                <th>Moy. Puissance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${RARITY_NAMES.map((name, i) => {
+                                const wp = weaponPower.find(p => p.rarity === i);
+                                const ap = armorPower.find(p => p.rarity === i);
+                                const op = objectPower.find(p => p.rarity === i);
+                                const pp = potionPower.find(p => p.rarity === i);
+                                return `<tr>
+                                    <td><span class="rarity-${i}" style="font-weight: 700;">${name}</span></td>
+                                    <td>${wDist[i]}</td>
+                                    <td>${wp ? wp.avg.toFixed(1) + ` (${wp.min}–${wp.max})` : '—'}</td>
+                                    <td>${aDist[i]}</td>
+                                    <td>${ap ? ap.avg.toFixed(1) + ` (${ap.min}–${ap.max})` : '—'}</td>
+                                    <td>${oDist[i]}</td>
+                                    <td>${op ? op.avg.toFixed(1) + ` (${op.min}–${op.max})` : '—'}</td>
+                                    <td>${pDist[i]}</td>
+                                    <td>${pp ? pp.avg.toFixed(1) + ` (${pp.min}–${pp.max})` : '—'}</td>
+                                </tr>`;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+
+        // Charts
+        this.charts.rarityDist = new Chart(document.getElementById('chart-rarity-dist').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: RARITY_NAMES,
+                datasets: [
+                    { label: 'Armes', data: wDist, backgroundColor: '#ef444480', borderColor: '#ef4444', borderWidth: 1 },
+                    { label: 'Armures', data: aDist, backgroundColor: '#f59e0b80', borderColor: '#f59e0b', borderWidth: 1 },
+                    { label: 'Objets', data: oDist, backgroundColor: '#3b82f680', borderColor: '#3b82f6', borderWidth: 1 },
+                    { label: 'Potions', data: pDist, backgroundColor: '#22c55e80', borderColor: '#22c55e', borderWidth: 1 },
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#94a3b8' } } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                }
+            }
+        });
+
+        this.charts.objectNature = new Chart(document.getElementById('chart-object-nature').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: NATURE_NAMES.map((n, i) => `${n} (${natureDist[i]})`),
+                datasets: [{ data: natureDist, backgroundColor: NATURE_COLORS.map(c => c + 'cc'), borderColor: NATURE_COLORS, borderWidth: 2 }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 11 } } } } }
+        });
+
+        this.charts.potionNature = new Chart(document.getElementById('chart-potion-nature').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: NATURE_NAMES.map((n, i) => `${n} (${potNatureDist[i]})`),
+                datasets: [{ data: potNatureDist, backgroundColor: NATURE_COLORS.map(c => c + 'cc'), borderColor: NATURE_COLORS, borderWidth: 2 }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 11 } } } } }
+        });
+
+        this.charts.powerCurve = new Chart(document.getElementById('chart-power-curve').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: RARITY_NAMES,
+                datasets: [
+                    { label: 'Attaque (armes)', data: RARITY_NAMES.map((_, i) => { const p = weaponPower.find(x => x.rarity === i); return p ? p.avg : null; }), borderColor: '#ef4444', backgroundColor: '#ef444420', tension: 0.3, fill: true },
+                    { label: 'Défense (armures)', data: RARITY_NAMES.map((_, i) => { const p = armorPower.find(x => x.rarity === i); return p ? p.avg : null; }), borderColor: '#f59e0b', backgroundColor: '#f59e0b20', tension: 0.3, fill: true },
+                    { label: 'Puissance (objets)', data: RARITY_NAMES.map((_, i) => { const p = objectPower.find(x => x.rarity === i); return p ? p.avg : null; }), borderColor: '#3b82f6', backgroundColor: '#3b82f620', tension: 0.3, fill: true },
+                    { label: 'Puissance (potions)', data: RARITY_NAMES.map((_, i) => { const p = potionPower.find(x => x.rarity === i); return p ? p.avg : null; }), borderColor: '#22c55e', backgroundColor: '#22c55e20', tension: 0.3, fill: true },
+                ]
+            },
+            options: {
+                responsive: true,
+                spanGaps: true,
+                plugins: { legend: { labels: { color: '#94a3b8' } } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: 'Stat moyenne', color: '#64748b' } },
+                    x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    // ==================== MISSIONS TAB ====================
+    renderMissionsTab() {
+        const { missions, translations } = this.data;
+        const container = document.getElementById('tab-missions');
+
+        // Analyze missions
+        const missionStats = missions.map(m => {
+            const variantCount = m.objectives ? m.objectives.length : 0;
+            const totalGems = m.gems ? m.gems.reduce((s, v) => s + v, 0) : 0;
+            const totalXp = m.xp ? m.xp.reduce((s, v) => s + v, 0) : 0;
+            const totalMoney = m.money ? m.money.reduce((s, v) => s + v, 0) : 0;
+            const totalPoints = m.points ? m.points.reduce((s, v) => s + v, 0) : 0;
+            const avgGems = variantCount ? totalGems / variantCount : 0;
+            const avgXp = variantCount ? totalXp / variantCount : 0;
+            const name = translations.missions ? translations.missions[m.id] : m.id;
+
+            return { ...m, variantCount, totalGems, totalXp, totalMoney, totalPoints, avgGems, avgXp, name };
+        });
+
+        const campaignOnly = missionStats.filter(m => m.campaignOnly);
+        const hasGems = missionStats.filter(m => m.totalGems > 0);
+        const totalGemsAll = missionStats.reduce((s, m) => s + m.totalGems, 0);
+        const totalXpAll = missionStats.reduce((s, m) => s + m.totalXp, 0);
+
+        // Difficulty distribution
+        const diffCounts = { easy: 0, medium: 0, hard: 0 };
+        missionStats.forEach(m => {
+            if (m.difficulties) {
+                Object.entries(m.difficulties).forEach(([diff, variants]) => {
+                    diffCounts[diff] += variants.length;
+                });
+            }
+        });
+
+        // Top gem missions
+        const topGems = [...missionStats].sort((a, b) => b.totalGems - a.totalGems).slice(0, 15);
+
+        // Rewards scatter data
+        const scatterData = missionStats.filter(m => m.totalXp > 0 || m.totalGems > 0).map(m => ({
+            x: m.avgXp,
+            y: m.avgGems,
+            label: m.name || m.id,
+        }));
+
+        container.innerHTML = `
+            <div class="stats-row">
+                <div class="stat-box"><div class="value">${missions.length}</div><div class="label">Missions totales</div></div>
+                <div class="stat-box"><div class="value">${campaignOnly.length}</div><div class="label">Campagne uniquement</div></div>
+                <div class="stat-box"><div class="value">${hasGems.length}</div><div class="label">Avec gemmes</div></div>
+                <div class="stat-box"><div class="value">${totalGemsAll}</div><div class="label">Total gemmes (toutes variantes)</div></div>
+                <div class="stat-box"><div class="value">${totalXpAll}</div><div class="label">Total XP (toutes variantes)</div></div>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h2>💎 Top 15 missions par gemmes</h2>
+                    <canvas id="chart-top-gems"></canvas>
+                </div>
+                <div class="card">
+                    <h2>📊 XP vs Gemmes (moyennes par variante)</h2>
+                    <canvas id="chart-xp-gems-scatter"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 Toutes les missions</h2>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Variantes</th>
+                                <th>Total 💎</th>
+                                <th>Total XP</th>
+                                <th>Total 💰</th>
+                                <th>Total Points</th>
+                                <th>Campagne only</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${[...missionStats].sort((a, b) => b.totalGems - a.totalGems).map(m => `
+                                <tr>
+                                    <td style="font-family: monospace; font-size: 0.8rem;">${m.id}</td>
+                                    <td>${m.name || m.id}</td>
+                                    <td>${m.variantCount}</td>
+                                    <td class="reward-cell ${m.totalGems > 0 ? 'highlight' : ''}">${m.totalGems}</td>
+                                    <td class="reward-cell">${m.totalXp}</td>
+                                    <td class="reward-cell">${m.totalMoney}</td>
+                                    <td class="reward-cell">${m.totalPoints}</td>
+                                    <td>${m.campaignOnly ? '✅' : '—'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+
+        // Top gems chart
+        this.charts.topGems = new Chart(document.getElementById('chart-top-gems').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: topGems.map(m => m.name || m.id),
+                datasets: [{
+                    label: 'Gemmes totales',
+                    data: topGems.map(m => m.totalGems),
+                    backgroundColor: '#8b5cf680',
+                    borderColor: '#8b5cf6',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } }
+                }
+            }
+        });
+
+        // Scatter: XP vs Gems
+        this.charts.scatter = new Chart(document.getElementById('chart-xp-gems-scatter').getContext('2d'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Missions',
+                    data: scatterData.map(d => ({ x: d.x, y: d.y })),
+                    backgroundColor: '#f59e0b99',
+                    borderColor: '#f59e0b',
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => {
+                                const d = scatterData[ctx.dataIndex];
+                                return `${d.label}: XP=${d.x.toFixed(1)}, 💎=${d.y.toFixed(1)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'XP moyen/variante', color: '#64748b' }, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y: { title: { display: true, text: 'Gemmes moy./variante', color: '#64748b' }, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+                }
+            }
+        });
+    }
+
+    // ==================== CAMPAIGN TAB ====================
+    renderCampaignTab() {
+        const { campaign, missions, translations } = this.data;
+        const container = document.getElementById('tab-campaign');
+        const cms = campaign.missions || [];
+
+        if (cms.length === 0) {
+            container.innerHTML = '<div class="card">Aucune donnée de campagne trouvée.</div>';
+            return;
+        }
+
+        // Cumulative rewards
+        let cumGems = 0, cumXp = 0, cumMoney = 0;
+        const progression = cms.map((m, i) => {
+            cumGems += m.gemsToWin || 0;
+            cumXp += m.xpToWin || 0;
+            cumMoney += m.moneyToWin || 0;
+            return { index: i + 1, ...m, cumGems, cumXp, cumMoney };
+        });
+
+        // Mission frequency in campaign
+        const missionFreq = {};
+        cms.forEach(m => {
+            missionFreq[m.missionId] = (missionFreq[m.missionId] || 0) + 1;
+        });
+        const topFreq = Object.entries(missionFreq).sort((a, b) => b[1] - a[1]).slice(0, 15);
+
+        // Reward type breakdown
+        const totalGems = cumGems;
+        const totalXp = cumXp;
+        const totalMoney = cumMoney;
+
+        // Gems per mission timeline
+        const gemsTimeline = cms.map(m => m.gemsToWin || 0);
+
+        container.innerHTML = `
+            <div class="stats-row">
+                <div class="stat-box"><div class="value">${cms.length}</div><div class="label">Missions campagne</div></div>
+                <div class="stat-box"><div class="value">${totalGems}</div><div class="label">💎 Total gemmes</div></div>
+                <div class="stat-box"><div class="value">${totalXp}</div><div class="label">⭐ Total XP</div></div>
+                <div class="stat-box"><div class="value">${totalMoney}</div><div class="label">💰 Total argent</div></div>
+                <div class="stat-box"><div class="value">${Object.keys(missionFreq).length}</div><div class="label">Missions uniques</div></div>
+                <div class="stat-box"><div class="value">${(totalGems / cms.length).toFixed(1)}</div><div class="label">💎 Moy. par mission</div></div>
+            </div>
+
+            <div class="card">
+                <h2>📈 Progression cumulative des récompenses</h2>
+                <canvas id="chart-campaign-cumulative"></canvas>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h2>💎 Gemmes par mission (timeline)</h2>
+                    <canvas id="chart-campaign-gems-timeline"></canvas>
+                </div>
+                <div class="card">
+                    <h2>🔄 Missions les plus fréquentes</h2>
+                    <canvas id="chart-campaign-freq"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🗺️ Timeline visuelle de la campagne</h2>
+                <div class="timeline-container">
+                    <div class="timeline" id="campaign-timeline"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 Détail de la campagne</h2>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr><th>#</th><th>Mission</th><th>Variante</th><th>Objectif</th><th>💎</th><th>⭐ XP</th><th>💰</th><th>💎 Cumulé</th></tr>
+                        </thead>
+                        <tbody>
+                            ${progression.map(p => {
+                                const name = translations.missions ? (translations.missions[p.missionId] || p.missionId) : p.missionId;
+                                return `<tr>
+                                    <td>${p.index}</td>
+                                    <td>${name}</td>
+                                    <td>${p.missionVariant ?? '—'}</td>
+                                    <td>${p.missionObjective ?? '—'}</td>
+                                    <td class="reward-cell ${p.gemsToWin > 0 ? 'highlight' : ''}">${p.gemsToWin || 0}</td>
+                                    <td class="reward-cell">${p.xpToWin || 0}</td>
+                                    <td class="reward-cell">${p.moneyToWin || 0}</td>
+                                    <td style="color: var(--purple);">${p.cumGems}</td>
+                                </tr>`;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+
+        // Cumulative chart
+        this.charts.campaignCum = new Chart(document.getElementById('chart-campaign-cumulative').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: progression.map(p => p.index),
+                datasets: [
+                    { label: '💎 Gemmes', data: progression.map(p => p.cumGems), borderColor: '#8b5cf6', backgroundColor: '#8b5cf610', tension: 0.2, fill: true, yAxisID: 'y' },
+                    { label: '⭐ XP', data: progression.map(p => p.cumXp), borderColor: '#22c55e', backgroundColor: '#22c55e10', tension: 0.2, fill: true, yAxisID: 'y1' },
+                    { label: '💰 Argent', data: progression.map(p => p.cumMoney), borderColor: '#f59e0b', backgroundColor: '#f59e0b10', tension: 0.2, fill: true, yAxisID: 'y1' },
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: { mode: 'index', intersect: false },
+                plugins: { legend: { labels: { color: '#94a3b8' } } },
+                scales: {
+                    y: { type: 'linear', position: 'left', title: { display: true, text: 'Gemmes', color: '#8b5cf6' }, ticks: { color: '#8b5cf6' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y1: { type: 'linear', position: 'right', title: { display: true, text: 'XP / Argent', color: '#22c55e' }, ticks: { color: '#22c55e' }, grid: { drawOnChartArea: false } },
+                    x: { title: { display: true, text: 'N° Mission', color: '#64748b' }, ticks: { color: '#94a3b8' }, grid: { display: false } }
+                }
+            }
+        });
+
+        // Gems timeline
+        this.charts.gemsTimeline = new Chart(document.getElementById('chart-campaign-gems-timeline').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: progression.map(p => p.index),
+                datasets: [{
+                    label: 'Gemmes',
+                    data: gemsTimeline,
+                    backgroundColor: gemsTimeline.map(g => g > 0 ? '#8b5cf680' : '#ef444440'),
+                    borderColor: gemsTimeline.map(g => g > 0 ? '#8b5cf6' : '#ef4444'),
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    x: { ticks: { color: '#94a3b8', maxTicksLimit: 30 }, grid: { display: false } }
+                }
+            }
+        });
+
+        // Frequency chart
+        this.charts.campaignFreq = new Chart(document.getElementById('chart-campaign-freq').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: topFreq.map(([id]) => translations.missions ? (translations.missions[id] || id) : id),
+                datasets: [{
+                    label: 'Apparitions',
+                    data: topFreq.map(([, c]) => c),
+                    backgroundColor: '#14b8a680',
+                    borderColor: '#14b8a6',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true, ticks: { color: '#94a3b8', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } }
+                }
+            }
+        });
+
+        // Visual timeline
+        const maxGem = Math.max(...gemsTimeline, 1);
+        const timelineEl = document.getElementById('campaign-timeline');
+        timelineEl.innerHTML = progression.map(p => {
+            const gems = p.gemsToWin || 0;
+            const height = Math.max(4, (gems / maxGem) * 100);
+            const color = gems > 3 ? '#8b5cf6' : gems > 0 ? '#3b82f6' : '#334155';
+            const name = translations.missions ? (translations.missions[p.missionId] || p.missionId) : p.missionId;
+            return `<div class="timeline-bar" style="height: ${height}px; background: ${color};">
+                <div class="tooltip">#${p.index} ${name}<br>💎 ${gems} | ⭐ ${p.xpToWin || 0} | 💰 ${p.moneyToWin || 0}</div>
+            </div>`;
+        }).join('');
+    }
+
+    // ==================== CLASSES TAB ====================
+    renderClassesTab() {
+        const { classes, translations } = this.data;
+        const container = document.getElementById('tab-classes');
+
+        const getClassName = (id) => translations.classes ? (translations.classes[id] || `Classe ${id}`) : `Classe ${id}`;
+
+        // Group by classGroup
+        const groups = {};
+        classes.forEach(c => {
+            const g = c.classGroup ?? 0;
+            if (!groups[g]) groups[g] = [];
+            groups[g].push(c);
+        });
+
+        // Stats comparison
+        const statKeys = ['attack', 'defense', 'speed', 'health', 'fightPoint', 'baseBreath', 'maxBreath', 'breathRegen'];
+        const statLabels = ['Attaque', 'Défense', 'Vitesse', 'Vie', 'Points combat', 'Souffle base', 'Souffle max', 'Regen souffle'];
+        const statColors = ['#ef4444', '#f59e0b', '#3b82f6', '#22c55e', '#8b5cf6', '#14b8a6', '#ec4899', '#06b6d4'];
+
+        // Radar data for a few interesting classes
+        const sortedClasses = [...classes]
+            .filter(c => c.classKind !== 'basic')
+            .sort((a, b) => parseInt(a.id) - parseInt(b.id));
+
+        container.innerHTML = `
+            <div class="card">
+                <h2>🕸️ Comparaison radar des classes</h2>
+                <canvas id="chart-class-radar" style="max-height: 500px;"></canvas>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h2>📊 Statistiques par classe</h2>
+                    <canvas id="chart-class-stats"></canvas>
+                </div>
+                <div class="card">
+                    <h2>💨 Économie de souffle</h2>
+                    <canvas id="chart-breath"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 Tableau complet des classes</h2>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th><th>Nom</th><th>Type</th><th>Groupe</th>
+                                ${statLabels.map(l => `<th>${l}</th>`).join('')}
+                                <th>Actions de combat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${[...classes].sort((a, b) => (a.classGroup ?? 0) - (b.classGroup ?? 0) || parseInt(a.id) - parseInt(b.id)).map(c => `
+                                <tr>
+                                    <td>${c.id}</td>
+                                    <td style="font-weight: 600;">${getClassName(c.id)}</td>
+                                    <td>${c.classKind || '—'}</td>
+                                    <td>${c.classGroup ?? '—'}</td>
+                                    ${statKeys.map((k, i) => `<td style="color: ${statColors[i]}">${c[k] ?? '—'}</td>`).join('')}
+                                    <td style="font-size: 0.75rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${(c.fightActionsIds || []).join(', ')}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+
+        // Radar chart
+        const radarClasses = sortedClasses.slice(0, 8);
+        const radarColors = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#06b6d4'];
+        const maxVals = statKeys.map(k => Math.max(...classes.map(c => c[k] || 0)));
+
+        this.charts.classRadar = new Chart(document.getElementById('chart-class-radar').getContext('2d'), {
+            type: 'radar',
+            data: {
+                labels: statLabels,
+                datasets: radarClasses.map((c, i) => ({
+                    label: getClassName(c.id),
+                    data: statKeys.map((k, j) => maxVals[j] ? ((c[k] || 0) / maxVals[j] * 100) : 0),
+                    borderColor: radarColors[i % radarColors.length],
+                    backgroundColor: radarColors[i % radarColors.length] + '15',
+                    pointBackgroundColor: radarColors[i % radarColors.length],
+                    borderWidth: 2,
+                }))
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#94a3b8' } } },
+                scales: {
+                    r: {
+                        ticks: { display: false },
+                        grid: { color: 'rgba(255,255,255,0.08)' },
+                        pointLabels: { color: '#94a3b8', font: { size: 11 } },
+                        suggestedMin: 0,
+                        suggestedMax: 100,
+                    }
+                }
+            }
+        });
+
+        // Stats bar chart
+        this.charts.classStats = new Chart(document.getElementById('chart-class-stats').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: sortedClasses.map(c => getClassName(c.id)),
+                datasets: ['attack', 'defense', 'speed', 'health'].map((k, i) => ({
+                    label: statLabels[i],
+                    data: sortedClasses.map(c => c[k] || 0),
+                    backgroundColor: statColors[i] + '70',
+                    borderColor: statColors[i],
+                    borderWidth: 1,
+                }))
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#94a3b8' } } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    x: { ticks: { color: '#94a3b8', maxRotation: 90, font: { size: 9 } }, grid: { display: false } }
+                }
+            }
+        });
+
+        // Breath economy
+        this.charts.breath = new Chart(document.getElementById('chart-breath').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: sortedClasses.map(c => getClassName(c.id)),
+                datasets: [
+                    { label: 'Souffle base', data: sortedClasses.map(c => c.baseBreath || 0), backgroundColor: '#14b8a670', borderColor: '#14b8a6', borderWidth: 1 },
+                    { label: 'Souffle max', data: sortedClasses.map(c => c.maxBreath || 0), backgroundColor: '#3b82f670', borderColor: '#3b82f6', borderWidth: 1 },
+                    { label: 'Regen', data: sortedClasses.map(c => c.breathRegen || 0), backgroundColor: '#22c55e70', borderColor: '#22c55e', borderWidth: 1 },
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#94a3b8' } } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    x: { ticks: { color: '#94a3b8', maxRotation: 90, font: { size: 9 } }, grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    // ==================== LEAGUES TAB ====================
+    renderLeaguesTab() {
+        const { leagues, translations } = this.data;
+        const container = document.getElementById('tab-leagues');
+
+        const sorted = [...leagues].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        const getLeagueName = (id) => translations.leagues ? (translations.leagues[id] || `Ligue ${id}`) : `Ligue ${id}`;
+
+        const maxGlory = Math.max(...sorted.map(l => l.maxGloryPoints === -1 ? (l.minGloryPoints + 500) : l.maxGloryPoints));
+
+        container.innerHTML = `
+            <div class="card">
+                <h2>🏆 Ligues de Gloire</h2>
+                <div style="margin-bottom: 20px;">
+                    ${sorted.map(l => {
+                        const name = getLeagueName(l.id);
+                        const min = l.minGloryPoints ?? 0;
+                        const max = l.maxGloryPoints === -1 ? '∞' : l.maxGloryPoints;
+                        const barMax = l.maxGloryPoints === -1 ? maxGlory : l.maxGloryPoints;
+                        const barWidth = (barMax / maxGlory * 100);
+                        const barStart = (Math.max(0, min) / maxGlory * 100);
+
+                        return `<div class="league-row">
+                            <div class="league-badge" style="background: ${l.color || '#64748b'}; color: #000;">${l.id}</div>
+                            <div class="league-name" style="color: ${l.color || '#94a3b8'}">${name}</div>
+                            <div class="league-range">${min} — ${max} pts</div>
+                            <div class="league-bar-bg">
+                                <div class="league-bar-fill" style="width: ${barWidth}%; background: ${l.color || '#64748b'};"></div>
+                            </div>
+                        </div>`;
+                    }).join('')}
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📊 Plages de points par ligue</h2>
+                <canvas id="chart-leagues"></canvas>
+            </div>
+        `;
+
+        // Leagues chart
+        this.charts.leagues = new Chart(document.getElementById('chart-leagues').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: sorted.map(l => getLeagueName(l.id)),
+                datasets: [{
+                    label: 'Points de gloire (plage)',
+                    data: sorted.map(l => {
+                        const min = Math.max(0, l.minGloryPoints ?? 0);
+                        const max = l.maxGloryPoints === -1 ? min + 500 : l.maxGloryPoints;
+                        return max - min;
+                    }),
+                    backgroundColor: sorted.map(l => (l.color || '#64748b') + '80'),
+                    borderColor: sorted.map(l => l.color || '#64748b'),
+                    borderWidth: 2,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => {
+                                const l = sorted[ctx.dataIndex];
+                                const max = l.maxGloryPoints === -1 ? '∞' : l.maxGloryPoints;
+                                return `${l.minGloryPoints} — ${max} points de gloire`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: 'Taille de la plage', color: '#64748b' } },
+                    x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    getName(category, id) {
+        const t = this.data.translations;
+        if (t && t[category] && t[category][id]) return t[category][id];
+        return id;
+    }
+}
+
+const app = new GameEconomyDashboard();
+</script>
+</body>
+</html>
