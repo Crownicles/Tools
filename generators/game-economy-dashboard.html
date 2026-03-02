@@ -1013,25 +1013,43 @@ class GameEconomyDashboard {
 
         const getClassName = (id) => translations.classes ? (translations.classes[id] || `Classe ${id}`) : `Classe ${id}`;
 
-        // Group by classGroup
-        const groups = {};
-        classes.forEach(c => {
-            const g = c.classGroup ?? 0;
-            if (!groups[g]) groups[g] = [];
-            groups[g].push(c);
-        });
+        const TIER_NAMES = {
+            0: 'Tier 0 — Débutant',
+            1: 'Tier 1 — Apprenti',
+            2: 'Tier 2 — Confirmé',
+            3: 'Tier 3 — Expert',
+            4: 'Tier 4 — Maître',
+        };
 
-        // Stats comparison
+        const KIND_LABELS = { basic: '⚔️ Basique', attack: '🗡️ Attaque', defense: '🛡️ Défense', other: '✨ Autre' };
+        const KIND_COLORS = { basic: '#94a3b8', attack: '#ef4444', defense: '#3b82f6', other: '#a855f7' };
+
+        // Stats config
         const statKeys = ['attack', 'defense', 'speed', 'health', 'fightPoint', 'baseBreath', 'maxBreath', 'breathRegen'];
         const statLabels = ['Attaque', 'Défense', 'Vitesse', 'Vie', 'Points combat', 'Souffle base', 'Souffle max', 'Regen souffle'];
         const statColors = ['#ef4444', '#f59e0b', '#3b82f6', '#22c55e', '#8b5cf6', '#14b8a6', '#ec4899', '#06b6d4'];
 
-        // Radar data for a few interesting classes
-        const sortedClasses = [...classes]
-            .filter(c => c.classKind !== 'basic')
-            .sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        // Find all tiers
+        const tiers = [...new Set(classes.map(c => c.classGroup ?? 0))].sort((a, b) => a - b);
+
+        // Build tier selector pills
+        const tierPillsHtml = `
+            <div class="filter-pills" style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="tier-pill active" data-tier="all" style="padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid var(--accent); background: var(--accent); color: #000; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    Tous (${classes.length})
+                </button>
+                ${tiers.map(t => {
+                    const count = classes.filter(c => (c.classGroup ?? 0) === t).length;
+                    return `<button class="tier-pill" data-tier="${t}" style="padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: #94a3b8; font-weight: 500; cursor: pointer; transition: all 0.2s;">
+                        ${TIER_NAMES[t] || 'Tier ' + t} (${count})
+                    </button>`;
+                }).join('')}
+            </div>
+        `;
 
         container.innerHTML = `
+            ${tierPillsHtml}
+
             <div class="card">
                 <h2>🕸️ Comparaison radar des classes</h2>
                 <canvas id="chart-class-radar" style="max-height: 500px;"></canvas>
@@ -1048,23 +1066,121 @@ class GameEconomyDashboard {
                 </div>
             </div>
 
-            <div class="card">
-                <h2>📋 Tableau complet des classes</h2>
+            <div class="card" id="classes-table-card">
+            </div>
+        `;
+
+        // Tier selection state
+        let selectedTier = 'all';
+
+        const getFilteredClasses = () => {
+            if (selectedTier === 'all') return [...classes];
+            return classes.filter(c => (c.classGroup ?? 0) === parseInt(selectedTier));
+        };
+
+        const radarColors = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#06b6d4', '#f97316', '#84cc16'];
+
+        const renderChartsForTier = () => {
+            const filtered = getFilteredClasses().sort((a, b) => parseInt(a.id) - parseInt(b.id));
+            const maxVals = statKeys.map(k => Math.max(...classes.map(c => c[k] || 0)));
+
+            // Destroy old charts
+            if (this.charts.classRadar) this.charts.classRadar.destroy();
+            if (this.charts.classStats) this.charts.classStats.destroy();
+            if (this.charts.breath) this.charts.breath.destroy();
+
+            // Radar chart - show all filtered classes
+            this.charts.classRadar = new Chart(document.getElementById('chart-class-radar').getContext('2d'), {
+                type: 'radar',
+                data: {
+                    labels: statLabels,
+                    datasets: filtered.map((c, i) => ({
+                        label: getClassName(c.id),
+                        data: statKeys.map((k, j) => maxVals[j] ? ((c[k] || 0) / maxVals[j] * 100) : 0),
+                        borderColor: radarColors[i % radarColors.length],
+                        backgroundColor: radarColors[i % radarColors.length] + '15',
+                        pointBackgroundColor: radarColors[i % radarColors.length],
+                        borderWidth: 2,
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#94a3b8' } } },
+                    scales: {
+                        r: {
+                            ticks: { display: false },
+                            grid: { color: 'rgba(255,255,255,0.08)' },
+                            pointLabels: { color: '#94a3b8', font: { size: 11 } },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                        }
+                    }
+                }
+            });
+
+            // Stats bar chart
+            this.charts.classStats = new Chart(document.getElementById('chart-class-stats').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: filtered.map(c => getClassName(c.id)),
+                    datasets: ['attack', 'defense', 'speed', 'health'].map((k, i) => ({
+                        label: statLabels[i],
+                        data: filtered.map(c => c[k] || 0),
+                        backgroundColor: statColors[i] + '70',
+                        borderColor: statColors[i],
+                        borderWidth: 1,
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#94a3b8' } } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { ticks: { color: '#94a3b8', maxRotation: 45, font: { size: 10 } }, grid: { display: false } }
+                    }
+                }
+            });
+
+            // Breath economy
+            this.charts.breath = new Chart(document.getElementById('chart-breath').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: filtered.map(c => getClassName(c.id)),
+                    datasets: [
+                        { label: 'Souffle base', data: filtered.map(c => c.baseBreath || 0), backgroundColor: '#14b8a670', borderColor: '#14b8a6', borderWidth: 1 },
+                        { label: 'Souffle max', data: filtered.map(c => c.maxBreath || 0), backgroundColor: '#3b82f670', borderColor: '#3b82f6', borderWidth: 1 },
+                        { label: 'Regen', data: filtered.map(c => c.breathRegen || 0), backgroundColor: '#22c55e70', borderColor: '#22c55e', borderWidth: 1 },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#94a3b8' } } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { ticks: { color: '#94a3b8', maxRotation: 45, font: { size: 10 } }, grid: { display: false } }
+                    }
+                }
+            });
+
+            // Table
+            const tableCard = document.getElementById('classes-table-card');
+            tableCard.innerHTML = `
+                <h2>📋 Classes ${selectedTier === 'all' ? '— Toutes' : '— ' + (TIER_NAMES[selectedTier] || 'Tier ' + selectedTier)}</h2>
                 <div class="table-scroll">
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th><th>Nom</th><th>Type</th><th>Groupe</th>
+                                <th>ID</th><th>Nom</th><th>Type</th><th>Tier</th>
                                 ${statLabels.map(l => `<th>${l}</th>`).join('')}
                                 <th>Actions de combat</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${[...classes].sort((a, b) => (a.classGroup ?? 0) - (b.classGroup ?? 0) || parseInt(a.id) - parseInt(b.id)).map(c => `
+                            ${filtered.sort((a, b) => (a.classGroup ?? 0) - (b.classGroup ?? 0) || parseInt(a.id) - parseInt(b.id)).map(c => `
                                 <tr>
                                     <td>${c.id}</td>
                                     <td style="font-weight: 600;">${getClassName(c.id)}</td>
-                                    <td>${c.classKind || '—'}</td>
+                                    <td><span style="color: ${KIND_COLORS[c.classKind] || '#94a3b8'}">${KIND_LABELS[c.classKind] || c.classKind || '—'}</span></td>
                                     <td>${c.classGroup ?? '—'}</td>
                                     ${statKeys.map((k, i) => `<td style="color: ${statColors[i]}">${c[k] ?? '—'}</td>`).join('')}
                                     <td style="font-size: 0.75rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${(c.fightActionsIds || []).join(', ')}</td>
@@ -1073,85 +1189,29 @@ class GameEconomyDashboard {
                         </tbody>
                     </table>
                 </div>
-            </div>
-        `;
+            `;
+        };
 
-        // Radar chart
-        const radarClasses = sortedClasses.slice(0, 8);
-        const radarColors = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#06b6d4'];
-        const maxVals = statKeys.map(k => Math.max(...classes.map(c => c[k] || 0)));
-
-        this.charts.classRadar = new Chart(document.getElementById('chart-class-radar').getContext('2d'), {
-            type: 'radar',
-            data: {
-                labels: statLabels,
-                datasets: radarClasses.map((c, i) => ({
-                    label: getClassName(c.id),
-                    data: statKeys.map((k, j) => maxVals[j] ? ((c[k] || 0) / maxVals[j] * 100) : 0),
-                    borderColor: radarColors[i % radarColors.length],
-                    backgroundColor: radarColors[i % radarColors.length] + '15',
-                    pointBackgroundColor: radarColors[i % radarColors.length],
-                    borderWidth: 2,
-                }))
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { labels: { color: '#94a3b8' } } },
-                scales: {
-                    r: {
-                        ticks: { display: false },
-                        grid: { color: 'rgba(255,255,255,0.08)' },
-                        pointLabels: { color: '#94a3b8', font: { size: 11 } },
-                        suggestedMin: 0,
-                        suggestedMax: 100,
-                    }
-                }
-            }
+        // Tier pill click handler
+        container.querySelectorAll('.tier-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                container.querySelectorAll('.tier-pill').forEach(p => {
+                    p.classList.remove('active');
+                    p.style.background = 'transparent';
+                    p.style.color = '#94a3b8';
+                    p.style.borderColor = 'rgba(255,255,255,0.2)';
+                });
+                pill.classList.add('active');
+                pill.style.background = 'var(--accent)';
+                pill.style.color = '#000';
+                pill.style.borderColor = 'var(--accent)';
+                selectedTier = pill.dataset.tier;
+                renderChartsForTier();
+            });
         });
 
-        // Stats bar chart
-        this.charts.classStats = new Chart(document.getElementById('chart-class-stats').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: sortedClasses.map(c => getClassName(c.id)),
-                datasets: ['attack', 'defense', 'speed', 'health'].map((k, i) => ({
-                    label: statLabels[i],
-                    data: sortedClasses.map(c => c[k] || 0),
-                    backgroundColor: statColors[i] + '70',
-                    borderColor: statColors[i],
-                    borderWidth: 1,
-                }))
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { labels: { color: '#94a3b8' } } },
-                scales: {
-                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    x: { ticks: { color: '#94a3b8', maxRotation: 90, font: { size: 9 } }, grid: { display: false } }
-                }
-            }
-        });
-
-        // Breath economy
-        this.charts.breath = new Chart(document.getElementById('chart-breath').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: sortedClasses.map(c => getClassName(c.id)),
-                datasets: [
-                    { label: 'Souffle base', data: sortedClasses.map(c => c.baseBreath || 0), backgroundColor: '#14b8a670', borderColor: '#14b8a6', borderWidth: 1 },
-                    { label: 'Souffle max', data: sortedClasses.map(c => c.maxBreath || 0), backgroundColor: '#3b82f670', borderColor: '#3b82f6', borderWidth: 1 },
-                    { label: 'Regen', data: sortedClasses.map(c => c.breathRegen || 0), backgroundColor: '#22c55e70', borderColor: '#22c55e', borderWidth: 1 },
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { labels: { color: '#94a3b8' } } },
-                scales: {
-                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    x: { ticks: { color: '#94a3b8', maxRotation: 90, font: { size: 9 } }, grid: { display: false } }
-                }
-            }
-        });
+        // Initial render
+        renderChartsForTier();
     }
 
     // ==================== LEAGUES TAB ====================
