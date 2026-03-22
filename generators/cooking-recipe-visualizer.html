@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crownicles — Visualiseur de Recettes de Cuisine</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍳</text></svg>">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-primary: #e94560;
+            --accent-secondary: #6366f1;
+            --border-color: #e2e8f0;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 1500px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        header h1 { color: var(--accent-primary); font-size: 2.2rem; margin-bottom: 6px; }
+        header .subtitle { color: var(--text-secondary); font-size: 1rem; }
+
+        /* GitHub loader */
+        .github-section {
+            display: flex; flex-wrap: wrap; gap: 15px;
+            justify-content: center; align-items: flex-end;
+            margin-bottom: 24px; padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        .github-input-group { display: flex; flex-direction: column; gap: 4px; }
+        .github-input-group label { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; }
+        .github-input-group input {
+            padding: 10px 14px; border: 1px solid var(--border-color);
+            border-radius: 8px; background: var(--bg-tertiary);
+            color: var(--text-primary); font-size: 0.95rem; min-width: 180px;
+        }
+        .github-input-group input:focus { outline: none; border-color: var(--accent-primary); }
+        .github-load-btn {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white; border: none; border-radius: 8px;
+            cursor: pointer; font-weight: 600; font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .github-load-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(99,102,241,0.4); }
+        .github-load-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .loading-spinner {
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white; border-radius: 50%;
+            animation: spin 0.8s linear infinite; display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .github-status {
+            width: 100%; text-align: center; padding: 10px;
+            border-radius: 8px; font-size: 0.9rem; display: none;
+        }
+        .github-status.error { background: rgba(239,68,68,0.15); color: #ef4444; display: block; }
+        .github-status.success { background: rgba(74,222,128,0.15); color: var(--success); display: block; }
+        .github-status.loading { background: rgba(96,165,250,0.15); color: var(--info); display: block; }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex; flex-wrap: wrap; gap: 14px;
+            justify-content: center; margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--bg-secondary); padding: 14px 22px;
+            border-radius: 12px; border: 1px solid var(--border-color);
+            text-align: center; box-shadow: 0 2px 8px var(--shadow);
+            min-width: 120px;
+        }
+        .stat-value { font-size: 1.6rem; font-weight: bold; color: var(--accent-primary); }
+        .stat-label { color: var(--text-secondary); font-size: 0.82rem; margin-top: 2px; }
+
+        /* Tabs */
+        .tabs {
+            display: flex; gap: 6px; margin-bottom: 24px;
+            padding: 6px; background: var(--bg-secondary);
+            border-radius: 12px; border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        .tab-btn {
+            flex: 1; padding: 12px 16px;
+            border: none; background: transparent;
+            color: var(--text-secondary); border-radius: 8px;
+            cursor: pointer; font-weight: 600; font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+        .tab-btn:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+        .tab-btn.active { background: var(--accent-primary); color: white; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Discovery source legend */
+        .discovery-legend {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            margin-bottom: 20px; padding: 14px;
+            background: var(--bg-secondary);
+            border-radius: 12px; border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        .discovery-legend-title {
+            width: 100%; font-weight: 600; font-size: 0.9rem;
+            color: var(--text-secondary); margin-bottom: 4px;
+        }
+        .legend-chip {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 6px 14px; border-radius: 20px;
+            font-size: 0.85rem; cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            font-weight: 500; background: var(--bg-tertiary);
+            user-select: none;
+        }
+        .legend-chip:hover { transform: scale(1.05); }
+        .legend-chip.active { border-color: currentColor; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .legend-chip .chip-count { font-weight: 700; opacity: 0.8; }
+
+        /* Output type badges */
+        .output-type-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 12px;
+            font-size: 0.75rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .output-potion { background: rgba(126,34,206,0.15); color: #7e22ce; }
+        .output-petFood { background: rgba(190,24,93,0.15); color: #be185d; }
+        .output-material { background: rgba(4,120,87,0.15); color: #047857; }
+
+        /* Recipe cards grid */
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px;
+        }
+        .recipe-card {
+            background: var(--bg-secondary);
+            border-radius: 12px; padding: 16px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        .recipe-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .recipe-card.highlight {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(233,69,96,0.2);
+        }
+        .recipe-card .recipe-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .recipe-card .recipe-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+        .recipe-card .recipe-id { font-size: 0.78rem; color: var(--text-secondary); font-family: monospace; }
+        .recipe-card .recipe-level {
+            display: inline-flex; align-items: center; gap: 3px;
+            padding: 3px 10px; border-radius: 8px;
+            font-size: 0.82rem; font-weight: 700;
+            background: var(--bg-tertiary); color: var(--text-primary);
+        }
+        .recipe-card .recipe-body { display: flex; flex-direction: column; gap: 8px; }
+        .recipe-card .ingredients {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            padding: 8px; background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+        .ingredient-chip {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 16px;
+            font-size: 0.8rem; font-weight: 500;
+        }
+        .ingredient-plant { background: rgba(34,197,94,0.15); color: #15803d; }
+        .ingredient-material { background: rgba(59,130,246,0.15); color: #1d4ed8; }
+        .recipe-card .output-section {
+            padding: 8px; background: var(--bg-tertiary);
+            border-radius: 8px; font-size: 0.85rem;
+        }
+        .recipe-card .output-section .output-label { font-weight: 600; margin-bottom: 4px; }
+        .recipe-card .discovery-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 10px; border-radius: 12px;
+            font-size: 0.78rem; font-weight: 600;
+        }
+
+        /* Slot visualization */
+        .slots-container {
+            display: flex; flex-direction: column; gap: 20px;
+        }
+        .slot-panel {
+            background: var(--bg-secondary);
+            border-radius: 12px; padding: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        .slot-panel .slot-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 14px; padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .slot-panel .slot-title { font-size: 1.2rem; font-weight: 700; }
+        .slot-panel .slot-meta { font-size: 0.85rem; color: var(--text-secondary); }
+        .slot-panel .slot-types {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;
+        }
+        .type-chip {
+            display: inline-flex; align-items: center; gap: 3px;
+            padding: 3px 10px; border-radius: 12px;
+            font-size: 0.78rem; font-weight: 600;
+            background: var(--bg-tertiary); color: var(--text-secondary);
+        }
+        .slot-recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 10px;
+        }
+        .slot-recipe-mini {
+            padding: 10px 14px; border-radius: 8px;
+            background: var(--bg-tertiary); border: 1px solid var(--border-color);
+            font-size: 0.85rem; cursor: default;
+            transition: all 0.2s ease;
+        }
+        .slot-recipe-mini:hover { border-color: var(--accent-secondary); }
+        .slot-recipe-mini .mini-name { font-weight: 600; }
+        .slot-recipe-mini .mini-meta { color: var(--text-secondary); font-size: 0.78rem; }
+
+        /* Discovery source detail view */
+        .discovery-detail {
+            background: var(--bg-secondary); border-radius: 12px;
+            padding: 20px; border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow); margin-bottom: 16px;
+        }
+        .discovery-detail .detail-title {
+            font-size: 1.1rem; font-weight: 700; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* Search */
+        .search-container {
+            margin-bottom: 16px;
+        }
+        .search-container input {
+            width: 100%; padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px; background: var(--bg-secondary);
+            color: var(--text-primary); font-size: 1rem;
+        }
+        .search-container input:focus {
+            outline: none; border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(233,69,96,0.1);
+        }
+
+        .no-data {
+            text-align: center; padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        .no-data-icon { font-size: 3rem; margin-bottom: 10px; }
+
+        .hidden { display: none !important; }
+
+        /* Rarity colors */
+        .rarity-common { color: #6b7280; }
+        .rarity-uncommon { color: #2563eb; }
+        .rarity-rare { color: #9333ea; }
+
+        /* Level stars */
+        .level-stars { letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍳 Visualiseur de Recettes de Cuisine</h1>
+            <p class="subtitle">Explorez toutes les recettes, les slots de cuisson et les sources de découverte</p>
+        </header>
+
+        <!-- GitHub Loader -->
+        <div class="github-section">
+            <div class="github-input-group">
+                <label for="repoOwner">👤 Propriétaire</label>
+                <input type="text" id="repoOwner" value="DraftBot-A-Discord-Adventure" placeholder="Owner">
+            </div>
+            <div class="github-input-group">
+                <label for="repoName">📁 Repository</label>
+                <input type="text" id="repoName" value="DraftBot" placeholder="Repo">
+            </div>
+            <div class="github-input-group">
+                <label for="branchName">🌿 Branche</label>
+                <input type="text" id="branchName" value="cooking" placeholder="Branche">
+            </div>
+            <button class="github-load-btn" id="loadBtn" onclick="loadFromGithub()">
+                <span class="loading-spinner" id="loadingSpinner"></span>
+                <span id="loadBtnText">🚀 Charger depuis GitHub</span>
+            </button>
+            <div class="github-status" id="githubStatus"></div>
+        </div>
+
+        <!-- Content (hidden until data loaded) -->
+        <div id="mainContent" class="hidden">
+            <!-- Stats -->
+            <div class="stats-bar" id="statsBar"></div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('recipes')">📋 Toutes les recettes</button>
+                <button class="tab-btn" onclick="switchTab('slots')">🔥 Slots de cuisson</button>
+                <button class="tab-btn" onclick="switchTab('discovery')">🔍 Sources de découverte</button>
+            </div>
+
+            <!-- Tab: All Recipes -->
+            <div class="tab-content active" id="tab-recipes">
+                <div class="search-container">
+                    <input type="text" id="recipeSearch" placeholder="🔎 Rechercher une recette par nom, type, ingrédient..." oninput="filterRecipes()">
+                </div>
+                <div class="discovery-legend" id="outputTypeLegend"></div>
+                <div class="recipes-grid" id="recipesGrid"></div>
+            </div>
+
+            <!-- Tab: Slots -->
+            <div class="tab-content" id="tab-slots">
+                <div class="slots-container" id="slotsContainer"></div>
+            </div>
+
+            <!-- Tab: Discovery -->
+            <div class="tab-content" id="tab-discovery">
+                <div class="discovery-legend" id="discoveryLegend"></div>
+                <div id="discoveryDetail"></div>
+                <div class="recipes-grid" id="discoveryRecipesGrid"></div>
+            </div>
+        </div>
+
+        <!-- No data placeholder -->
+        <div id="noData">
+            <div class="no-data">
+                <div class="no-data-icon">📂</div>
+                <p>Chargez les données depuis GitHub pour commencer l'exploration</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================
+        // STATE
+        // ========================
+        let recipes = [];
+        let materials = {};      // id -> { rarity, type }
+        let translations = {};   // full models.json
+        let activeDiscoverySource = null;
+        let activeOutputFilter = null;
+
+        // ========================
+        // CONSTANTS (mirrored from game)
+        // ========================
+        const PLANT_NAMES = {
+            1: 'Herbe commune', 2: 'Trèfle doré', 3: 'Mousse lunaire',
+            4: 'Racine de fer', 5: 'Champignon nocturne', 6: 'Feuille venimeuse',
+            7: 'Bulbe de feu', 8: 'Plante carnivore', 9: 'Fleur de cristal',
+            10: 'Arbre ancestral'
+        };
+
+        const PLANT_EMOJIS = {
+            1: '🌿', 2: '🍀', 3: '🌙', 4: '⛏️', 5: '🍄',
+            6: '🍃', 7: '🔥', 8: '🥩', 9: '💎', 10: '🌳'
+        };
+
+        const RECIPE_TYPE_INFO = {
+            'POTION_HEALTH':       { emoji: '❤️', label: 'Potion Santé', category: 'potion' },
+            'POTION_ENERGY':       { emoji: '⚡', label: 'Potion Énergie', category: 'potion' },
+            'POTION_TIME_SPEEDUP': { emoji: '⏩', label: 'Potion Célérité', category: 'potion' },
+            'POTION_DEFENSE':      { emoji: '🛡️', label: 'Potion Défense', category: 'potion' },
+            'POTION_ATTACK':       { emoji: '⚔️', label: 'Potion Force', category: 'potion' },
+            'POTION_SPEED':        { emoji: '💨', label: 'Potion Vélocité', category: 'potion' },
+            'PETFOOD_SALAD':       { emoji: '🥗', label: 'Salade', category: 'petFood' },
+            'PETFOOD_CANDY':       { emoji: '🍬', label: 'Friandise', category: 'petFood' },
+            'PETFOOD_MEAT':        { emoji: '🍖', label: 'Viande', category: 'petFood' },
+            'PETFOOD_ULTIMATE':    { emoji: '🍲', label: 'Soupe ultime', category: 'petFood' },
+            'MATERIAL_CRAFT':      { emoji: '⚒️', label: 'Craft matériau', category: 'material' }
+        };
+
+        const OUTPUT_TYPE_INFO = {
+            'potion':  { emoji: '🧪', label: 'Potion', cssClass: 'output-potion', color: '#7e22ce' },
+            'petFood': { emoji: '🍖', label: 'Nourriture', cssClass: 'output-petFood', color: '#be185d' },
+            'material':{ emoji: '⚒️', label: 'Matériau', cssClass: 'output-material', color: '#047857' }
+        };
+
+        const DISCOVERY_SOURCE_INFO = {
+            'DEFAULT':                  { emoji: '📖', label: 'Par défaut', color: '#6b7280' },
+            'ISLAND_BOSS':              { emoji: '🐉', label: 'Boss d\'île', color: '#b91c1c' },
+            'CAMPAIGN_MILESTONE':       { emoji: '🏰', label: 'Campagne', color: '#6d28d9' },
+            'PLAYER_LEVEL_MILESTONE':   { emoji: '📈', label: 'Niveau joueur', color: '#1d4ed8' },
+            'GASPARD_JO':               { emoji: '🧙', label: 'Gaspard & Jo', color: '#c2410c' },
+            'FARMER':                   { emoji: '🌾', label: 'Fermier', color: '#047857' },
+            'COOKING_LEVEL':            { emoji: '👨‍🍳', label: 'Niveau cuisine', color: '#b45309' },
+            'WITCH':                    { emoji: '🧹', label: 'Sorcière', color: '#7e22ce' }
+        };
+
+        const MATERIAL_TYPE_EMOJI = {
+            'metal': '⛓️', 'alloy': '🔩', 'nature': '🌱', 'spiritual': '👻',
+            'magic': '✨', 'leather': '🧶', 'rope': '🪢', 'poison': '☠️',
+            'explosive': '💣', 'wood': '🪵'
+        };
+
+        const MATERIAL_RARITY_NAMES = { 1: 'Commun', 2: 'Peu commun', 3: 'Rare' };
+        const MATERIAL_RARITY_CSS = { 1: 'rarity-common', 2: 'rarity-uncommon', 3: 'rarity-rare' };
+
+        const ITEM_NATURE_NAMES = {
+            0: 'Aucun', 1: 'Santé', 2: 'Vitesse', 3: 'Attaque',
+            4: 'Défense', 5: 'Célérité', 6: 'Argent', 7: 'Énergie'
+        };
+        const ITEM_RARITY_NAMES = {
+            0: 'Basique', 1: 'Commun', 2: 'Peu commun', 3: 'Exotique',
+            4: 'Rare', 5: 'Spécial', 6: 'Épique', 7: 'Légendaire', 8: 'Mythique'
+        };
+
+        const PET_FOOD_NAMES = {
+            'herbivorousFood': '🥗 Salade',
+            'carnivorousFood': '🍖 Viande',
+            'ultimateFood': '🍲 Soupe ultime',
+            'commonFood': '🍬 Friandise'
+        };
+
+        const SLOT_CONFIGS = [
+            { index: 0, minLevel: 1, maxLevel: 3, potionsOnly: false,
+              eligibleTypes: ['POTION_HEALTH','POTION_ENERGY','POTION_TIME_SPEEDUP','POTION_DEFENSE','POTION_ATTACK','POTION_SPEED','PETFOOD_SALAD','PETFOOD_CANDY','PETFOOD_MEAT'] },
+            { index: 1, minLevel: 1, maxLevel: 5, potionsOnly: false,
+              eligibleTypes: ['POTION_HEALTH','POTION_ENERGY','POTION_TIME_SPEEDUP','POTION_DEFENSE','POTION_ATTACK','POTION_SPEED','PETFOOD_SALAD','PETFOOD_CANDY','PETFOOD_MEAT','PETFOOD_ULTIMATE'] },
+            { index: 2, minLevel: 1, maxLevel: 8, potionsOnly: false,
+              eligibleTypes: ['POTION_HEALTH','POTION_ENERGY','POTION_TIME_SPEEDUP','POTION_DEFENSE','POTION_ATTACK','POTION_SPEED','PETFOOD_SALAD','PETFOOD_CANDY','PETFOOD_MEAT','PETFOOD_ULTIMATE','MATERIAL_CRAFT'] },
+            { index: 3, minLevel: 3, maxLevel: 8, potionsOnly: true,
+              eligibleTypes: ['POTION_HEALTH','POTION_ENERGY','POTION_TIME_SPEEDUP','POTION_DEFENSE','POTION_ATTACK','POTION_SPEED'] },
+            { index: 4, minLevel: 4, maxLevel: 8, potionsOnly: false,
+              eligibleTypes: ['POTION_HEALTH','POTION_ENERGY','POTION_TIME_SPEEDUP','POTION_DEFENSE','POTION_ATTACK','POTION_SPEED','PETFOOD_SALAD','PETFOOD_CANDY','PETFOOD_MEAT','PETFOOD_ULTIMATE','MATERIAL_CRAFT'] }
+        ];
+
+        // ========================
+        // DATA LOADING
+        // ========================
+        function updateStatus(msg, type) {
+            const el = document.getElementById('githubStatus');
+            el.textContent = msg;
+            el.className = 'github-status ' + type;
+        }
+
+        async function fetchRaw(owner, repo, branch, path) {
+            const url = `https://raw.githubusercontent.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${encodeURIComponent(branch)}/${path}`;
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`${path}: ${resp.status} ${resp.statusText}`);
+            return resp.json();
+        }
+
+        async function loadFromGithub() {
+            const owner = document.getElementById('repoOwner').value.trim();
+            const repo = document.getElementById('repoName').value.trim();
+            const branch = document.getElementById('branchName').value.trim();
+
+            if (!owner || !repo || !branch) {
+                updateStatus('⚠️ Remplissez tous les champs', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('loadBtn');
+            const spinner = document.getElementById('loadingSpinner');
+            const btnText = document.getElementById('loadBtnText');
+            btn.disabled = true;
+            spinner.style.display = 'block';
+            btnText.textContent = 'Chargement...';
+
+            try {
+                updateStatus('📡 Chargement des recettes...', 'loading');
+                recipes = await fetchRaw(owner, repo, branch, 'Core/resources/cooking/recipes.json');
+
+                updateStatus('📡 Chargement des traductions...', 'loading');
+                translations = await fetchRaw(owner, repo, branch, 'Lang/fr/models.json');
+
+                // Load materials (90 files)
+                updateStatus('📡 Chargement des matériaux (90 fichiers)...', 'loading');
+                const materialIds = Array.from({ length: 90 }, (_, i) => i + 1);
+                const batchSize = 15;
+                materials = {};
+                for (let i = 0; i < materialIds.length; i += batchSize) {
+                    const batch = materialIds.slice(i, i + batchSize);
+                    const results = await Promise.all(
+                        batch.map(id =>
+                            fetchRaw(owner, repo, branch, `Core/resources/materials/${id}.json`)
+                                .then(data => ({ id, ...data }))
+                                .catch(() => null)
+                        )
+                    );
+                    for (const r of results) {
+                        if (r) materials[r.id] = { rarity: r.rarity, type: r.type };
+                    }
+                    updateStatus(`📡 Matériaux: ${Math.min(i + batchSize, 90)}/90...`, 'loading');
+                }
+
+                // Resolve plant names from loaded translations
+                if (translations.plants) {
+                    for (const [id, name] of Object.entries(translations.plants)) {
+                        PLANT_NAMES[parseInt(id)] = name;
+                    }
+                }
+
+                updateStatus(`✅ Chargé: ${recipes.length} recettes, ${Object.keys(materials).length} matériaux`, 'success');
+                renderAll();
+            } catch (err) {
+                updateStatus(`❌ Erreur: ${err.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.textContent = '🚀 Charger depuis GitHub';
+            }
+        }
+
+        // ========================
+        // HELPERS
+        // ========================
+        function getRecipeName(recipe) {
+            if (translations.cooking?.recipes?.[recipe.id]) {
+                return translations.cooking.recipes[recipe.id];
+            }
+            return recipe.id;
+        }
+
+        function getMaterialName(materialId) {
+            if (translations.materials?.[String(materialId)]) {
+                return translations.materials[String(materialId)];
+            }
+            return `Matériau #${materialId}`;
+        }
+
+        function getMaterialInfo(materialId) {
+            const m = materials[materialId];
+            if (!m) return { emoji: '❓', name: getMaterialName(materialId), rarityClass: '', rarityName: '?' };
+            return {
+                emoji: MATERIAL_TYPE_EMOJI[m.type] || '❓',
+                name: getMaterialName(materialId),
+                rarityClass: MATERIAL_RARITY_CSS[m.rarity] || '',
+                rarityName: MATERIAL_RARITY_NAMES[m.rarity] || '?',
+                type: m.type,
+                rarity: m.rarity
+            };
+        }
+
+        function getDiscoveryKey(recipe) {
+            if (recipe.discoveredByDefault) return 'DEFAULT';
+            return recipe.discoverySource || 'DEFAULT';
+        }
+
+        function levelStars(level) {
+            return '⭐'.repeat(Math.min(level, 8));
+        }
+
+        // ========================
+        // RENDERING
+        // ========================
+        function renderAll() {
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('noData').classList.add('hidden');
+            renderStats();
+            renderOutputTypeLegend();
+            renderRecipesGrid();
+            renderSlots();
+            renderDiscoveryLegend();
+        }
+
+        function renderStats() {
+            const potionCount = recipes.filter(r => r.outputType === 'potion').length;
+            const petFoodCount = recipes.filter(r => r.outputType === 'petFood').length;
+            const materialCount = recipes.filter(r => r.outputType === 'material').length;
+            const defaultCount = recipes.filter(r => r.discoveredByDefault).length;
+            const secretCount = recipes.filter(r => !r.discoveredByDefault).length;
+
+            document.getElementById('statsBar').innerHTML = `
+                <div class="stat-card"><div class="stat-value">${recipes.length}</div><div class="stat-label">Recettes totales</div></div>
+                <div class="stat-card"><div class="stat-value" style="color:#7e22ce">🧪 ${potionCount}</div><div class="stat-label">Potions</div></div>
+                <div class="stat-card"><div class="stat-value" style="color:#be185d">🍖 ${petFoodCount}</div><div class="stat-label">Nourritures</div></div>
+                <div class="stat-card"><div class="stat-value" style="color:#047857">⚒️ ${materialCount}</div><div class="stat-label">Matériaux</div></div>
+                <div class="stat-card"><div class="stat-value" style="color:#22c55e">📖 ${defaultCount}</div><div class="stat-label">Par défaut</div></div>
+                <div class="stat-card"><div class="stat-value" style="color:#f59e0b">🔒 ${secretCount}</div><div class="stat-label">À découvrir</div></div>
+            `;
+        }
+
+        function renderOutputTypeLegend() {
+            const counts = {};
+            for (const r of recipes) {
+                counts[r.outputType] = (counts[r.outputType] || 0) + 1;
+            }
+            const container = document.getElementById('outputTypeLegend');
+            container.innerHTML = '<div class="discovery-legend-title">Filtrer par type de sortie</div>';
+            for (const [key, info] of Object.entries(OUTPUT_TYPE_INFO)) {
+                if (!counts[key]) continue;
+                const chip = document.createElement('span');
+                chip.className = 'legend-chip';
+                chip.style.color = info.color;
+                chip.innerHTML = `${info.emoji} ${info.label} <span class="chip-count">(${counts[key]})</span>`;
+                chip.onclick = () => {
+                    if (activeOutputFilter === key) {
+                        activeOutputFilter = null;
+                        chip.classList.remove('active');
+                    } else {
+                        activeOutputFilter = key;
+                        container.querySelectorAll('.legend-chip').forEach(c => c.classList.remove('active'));
+                        chip.classList.add('active');
+                    }
+                    filterRecipes();
+                };
+                container.appendChild(chip);
+            }
+        }
+
+        function buildRecipeCard(recipe) {
+            const name = getRecipeName(recipe);
+            const typeInfo = RECIPE_TYPE_INFO[recipe.recipeType] || { emoji: '❓', label: recipe.recipeType };
+            const outInfo = OUTPUT_TYPE_INFO[recipe.outputType] || { emoji: '❓', label: recipe.outputType, cssClass: '' };
+            const discoveryKey = getDiscoveryKey(recipe);
+            const discoveryInfo = DISCOVERY_SOURCE_INFO[discoveryKey] || { emoji: '❓', label: discoveryKey, color: '#6b7280' };
+
+            // Ingredients
+            const plantsHtml = recipe.plants.map(p =>
+                `<span class="ingredient-chip ingredient-plant">${PLANT_EMOJIS[p.plantId] || '🌱'} ${PLANT_NAMES[p.plantId] || '?'} ×${p.quantity}</span>`
+            ).join('');
+            const matsHtml = recipe.materials.map(m => {
+                const info = getMaterialInfo(m.materialId);
+                return `<span class="ingredient-chip ingredient-material">${info.emoji} <span class="${info.rarityClass}">${info.name}</span> ×${m.quantity}</span>`;
+            }).join('');
+
+            // Output details
+            let outputHtml = '';
+            if (recipe.outputType === 'potion') {
+                const nature = ITEM_NATURE_NAMES[recipe.potionNature] ?? '?';
+                const rarity = ITEM_RARITY_NAMES[recipe.potionRarity] ?? '?';
+                outputHtml = `<div class="output-label">${outInfo.emoji} Potion</div>Nature: ${nature} · Rareté: ${rarity}`;
+            } else if (recipe.outputType === 'petFood') {
+                const foodName = PET_FOOD_NAMES[recipe.petFoodType] || recipe.petFoodType;
+                outputHtml = `<div class="output-label">${outInfo.emoji} Nourriture familier</div>${foodName} ×${recipe.petFoodQuantity || 1} · 💕 ${recipe.petFoodLovePoints || 0} pts affection`;
+            } else if (recipe.outputType === 'material') {
+                const info = getMaterialInfo(recipe.outputMaterialId);
+                outputHtml = `<div class="output-label">${outInfo.emoji} Matériau crafté</div>${info.emoji} <span class="${info.rarityClass}">${info.name}</span> ×${recipe.outputMaterialQuantity || 1} <span style="font-size:0.75rem;color:var(--text-secondary)">(${info.rarityName})</span>`;
+            }
+
+            return `
+                <div class="recipe-card" data-id="${recipe.id}" data-output="${recipe.outputType}" data-discovery="${discoveryKey}" data-recipe-type="${recipe.recipeType}">
+                    <div class="recipe-header">
+                        <div>
+                            <div class="recipe-name">${typeInfo.emoji} ${name}</div>
+                            <div class="recipe-id">${recipe.id}</div>
+                        </div>
+                        <div style="display:flex;gap:6px;align-items:center">
+                            <span class="recipe-level">Nv. ${recipe.level}</span>
+                            <span class="output-type-badge ${outInfo.cssClass}">${outInfo.emoji} ${outInfo.label}</span>
+                        </div>
+                    </div>
+                    <div class="recipe-body">
+                        <div class="ingredients">${plantsHtml}${matsHtml}</div>
+                        <div class="output-section">${outputHtml}</div>
+                        <div>
+                            <span class="discovery-badge" style="background:${discoveryInfo.color}20;color:${discoveryInfo.color}">
+                                ${discoveryInfo.emoji} ${discoveryInfo.label}
+                            </span>
+                            <span class="level-stars" title="Niveau ${recipe.level}" style="margin-left:6px">${levelStars(recipe.level)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRecipesGrid(filteredRecipes) {
+            const grid = document.getElementById('recipesGrid');
+            const list = filteredRecipes || recipes;
+            grid.innerHTML = list.map(r => buildRecipeCard(r)).join('');
+        }
+
+        function filterRecipes() {
+            const search = document.getElementById('recipeSearch').value.toLowerCase();
+            let filtered = recipes;
+
+            if (activeOutputFilter) {
+                filtered = filtered.filter(r => r.outputType === activeOutputFilter);
+            }
+
+            if (search) {
+                filtered = filtered.filter(r => {
+                    const name = getRecipeName(r).toLowerCase();
+                    const id = r.id.toLowerCase();
+                    const recipeTypeLabel = (RECIPE_TYPE_INFO[r.recipeType]?.label || '').toLowerCase();
+                    const discoveryLabel = (DISCOVERY_SOURCE_INFO[getDiscoveryKey(r)]?.label || '').toLowerCase();
+                    const ingredientNames = [
+                        ...r.plants.map(p => (PLANT_NAMES[p.plantId] || '').toLowerCase()),
+                        ...r.materials.map(m => getMaterialName(m.materialId).toLowerCase())
+                    ].join(' ');
+                    return name.includes(search) || id.includes(search) ||
+                           recipeTypeLabel.includes(search) || discoveryLabel.includes(search) ||
+                           ingredientNames.includes(search);
+                });
+            }
+
+            renderRecipesGrid(filtered);
+        }
+
+        // ========================
+        // SLOTS TAB
+        // ========================
+        function renderSlots() {
+            const container = document.getElementById('slotsContainer');
+            container.innerHTML = '';
+
+            SLOT_CONFIGS.forEach(slot => {
+                const slotRecipes = recipes.filter(r =>
+                    slot.eligibleTypes.includes(r.recipeType) &&
+                    r.level >= slot.minLevel &&
+                    r.level <= slot.maxLevel
+                );
+
+                const typeChips = slot.eligibleTypes.map(t => {
+                    const info = RECIPE_TYPE_INFO[t] || { emoji: '❓', label: t };
+                    return `<span class="type-chip">${info.emoji} ${info.label}</span>`;
+                }).join('');
+
+                const recipeMinis = slotRecipes.map(r => {
+                    const name = getRecipeName(r);
+                    const typeInfo = RECIPE_TYPE_INFO[r.recipeType] || { emoji: '❓' };
+                    const outInfo = OUTPUT_TYPE_INFO[r.outputType] || {};
+                    const discoveryKey = getDiscoveryKey(r);
+                    const dInfo = DISCOVERY_SOURCE_INFO[discoveryKey] || { emoji: '❓', label: discoveryKey };
+                    return `<div class="slot-recipe-mini">
+                        <div class="mini-name">${typeInfo.emoji} ${name}</div>
+                        <div class="mini-meta">Nv.${r.level} · <span class="output-type-badge ${outInfo.cssClass || ''}" style="font-size:0.72rem">${outInfo.emoji || ''} ${outInfo.label || ''}</span> · ${dInfo.emoji} ${dInfo.label}</div>
+                    </div>`;
+                }).join('');
+
+                container.innerHTML += `
+                    <div class="slot-panel">
+                        <div class="slot-header">
+                            <div class="slot-title">🔥 Slot ${slot.index + 1} ${slot.potionsOnly ? '<span style="color:var(--accent-primary);font-size:0.85rem">(Potions uniquement)</span>' : ''}</div>
+                            <div class="slot-meta">Niveaux ${slot.minLevel}-${slot.maxLevel} · ${slotRecipes.length} recettes éligibles</div>
+                        </div>
+                        <div class="slot-types">${typeChips}</div>
+                        <div class="slot-recipes-grid">${recipeMinis}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // ========================
+        // DISCOVERY TAB
+        // ========================
+        function renderDiscoveryLegend() {
+            const counts = {};
+            for (const r of recipes) {
+                const key = getDiscoveryKey(r);
+                counts[key] = (counts[key] || 0) + 1;
+            }
+
+            const container = document.getElementById('discoveryLegend');
+            container.innerHTML = '<div class="discovery-legend-title">Cliquez sur une source de découverte pour voir les recettes associées</div>';
+
+            for (const [key, info] of Object.entries(DISCOVERY_SOURCE_INFO)) {
+                if (!counts[key]) continue;
+                const chip = document.createElement('span');
+                chip.className = 'legend-chip';
+                chip.style.color = info.color;
+                chip.innerHTML = `${info.emoji} ${info.label} <span class="chip-count">(${counts[key]})</span>`;
+                chip.onclick = () => selectDiscoverySource(key, chip);
+                container.appendChild(chip);
+            }
+        }
+
+        function selectDiscoverySource(source, chipEl) {
+            const container = document.getElementById('discoveryLegend');
+            container.querySelectorAll('.legend-chip').forEach(c => c.classList.remove('active'));
+
+            if (activeDiscoverySource === source) {
+                activeDiscoverySource = null;
+                renderDiscoveryDetail(null);
+                renderDiscoveryRecipes(recipes);
+                return;
+            }
+
+            activeDiscoverySource = source;
+            chipEl.classList.add('active');
+            renderDiscoveryDetail(source);
+            const filtered = recipes.filter(r => getDiscoveryKey(r) === source);
+            renderDiscoveryRecipes(filtered);
+        }
+
+        function renderDiscoveryDetail(source) {
+            const el = document.getElementById('discoveryDetail');
+            if (!source) {
+                el.innerHTML = '';
+                return;
+            }
+            const info = DISCOVERY_SOURCE_INFO[source];
+            const filtered = recipes.filter(r => getDiscoveryKey(r) === source);
+
+            const outputBreakdown = {};
+            for (const r of filtered) {
+                outputBreakdown[r.outputType] = (outputBreakdown[r.outputType] || 0) + 1;
+            }
+
+            const levelRange = filtered.length > 0
+                ? `Niveaux ${Math.min(...filtered.map(r => r.level))} - ${Math.max(...filtered.map(r => r.level))}`
+                : 'Aucune recette';
+
+            el.innerHTML = `
+                <div class="discovery-detail">
+                    <div class="detail-title" style="color:${info.color}">${info.emoji} ${info.label}</div>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:0.9rem">
+                        <span>📋 ${filtered.length} recette${filtered.length > 1 ? 's' : ''}</span>
+                        <span>📊 ${levelRange}</span>
+                        ${Object.entries(outputBreakdown).map(([type, count]) => {
+                            const oi = OUTPUT_TYPE_INFO[type] || {};
+                            return `<span>${oi.emoji || ''} ${count} ${oi.label || type}</span>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDiscoveryRecipes(list) {
+            const grid = document.getElementById('discoveryRecipesGrid');
+            grid.innerHTML = list.map(r => buildRecipeCard(r)).join('');
+        }
+
+        // ========================
+        // TABS
+        // ========================
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                if (b.textContent.toLowerCase().includes(
+                    tabName === 'recipes' ? 'recettes' :
+                    tabName === 'slots' ? 'slots' : 'sources'
+                )) b.classList.add('active');
+            });
+        }
+    </script>
+</body>
+</html>

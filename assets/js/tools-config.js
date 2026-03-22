@@ -178,5 +178,15 @@ const toolsConfig = [
         tags: ['Économie', 'Items', 'Missions', 'Campagne', 'Classes', 'Ligues'],
         icon: '💰',
         status: 'active'
+    },
+    {
+        id: 'cooking-recipe-visualizer',
+        title: 'Visualiseur de Recettes de Cuisine',
+        description: 'Explore les recettes de cuisine : potions, nourritures, matériaux. Visualise les slots, les sources de découverte et les ingrédients.',
+        path: 'generators/cooking-recipe-visualizer.html',
+        category: 'Visualisation',
+        tags: ['Cuisine', 'Recettes', 'Slots', 'Potions', 'Matériaux'],
+        icon: '🍳',
+        status: 'active'
     }
 ];
