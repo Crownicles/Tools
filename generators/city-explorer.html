@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crownicles — Explorateur de Villes</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏘️</text></svg>">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-primary: #e94560;
+            --accent-secondary: #6366f1;
+            --border-color: #e2e8f0;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 1600px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        header h1 { color: var(--accent-primary); font-size: 2.2rem; margin-bottom: 6px; }
+        header .subtitle { color: var(--text-secondary); font-size: 1rem; }
+
+        /* GitHub loader */
+        .github-section {
+            display: flex; flex-wrap: wrap; gap: 15px;
+            justify-content: center; align-items: flex-end;
+            margin-bottom: 24px; padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        .github-input-group { display: flex; flex-direction: column; gap: 4px; }
+        .github-input-group label { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; }
+        .github-input-group input {
+            padding: 10px 14px; border: 1px solid var(--border-color);
+            border-radius: 8px; background: var(--bg-tertiary);
+            color: var(--text-primary); font-size: 0.95rem; min-width: 180px;
+        }
+        .github-input-group input:focus { outline: none; border-color: var(--accent-primary); }
+        .github-load-btn {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white; border: none; border-radius: 8px;
+            cursor: pointer; font-weight: 600; font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .github-load-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(99,102,241,0.4); }
+        .github-load-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .loading-spinner {
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white; border-radius: 50%;
+            animation: spin 0.8s linear infinite; display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .github-status {
+            width: 100%; text-align: center; padding: 10px;
+            border-radius: 8px; font-size: 0.9rem; display: none;
+        }
+        .github-status.error { background: rgba(239,68,68,0.15); color: #ef4444; display: block; }
+        .github-status.success { background: rgba(74,222,128,0.15); color: var(--success); display: block; }
+        .github-status.loading { background: rgba(96,165,250,0.15); color: var(--info); display: block; }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex; flex-wrap: wrap; gap: 14px;
+            justify-content: center; margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--bg-secondary); padding: 14px 22px;
+            border-radius: 12px; border: 1px solid var(--border-color);
+            text-align: center; box-shadow: 0 2px 8px var(--shadow);
+            min-width: 120px;
+        }
+        .stat-card .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--accent-primary); }
+        .stat-card .stat-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; }
+
+        /* Tabs */
+        .tabs {
+            display: flex; gap: 4px; margin-bottom: 24px;
+            background: var(--bg-secondary); padding: 6px;
+            border-radius: 12px; border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow);
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 10px 20px; border: none; border-radius: 8px;
+            background: transparent; color: var(--text-secondary);
+            cursor: pointer; font-weight: 500; font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+        .tab-btn:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+        .tab-btn.active { background: var(--accent-primary); color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* City cards */
+        .city-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+            gap: 20px;
+        }
+        .city-card {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .city-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px var(--shadow); }
+        .city-card-header {
+            padding: 18px 20px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+        .city-card-header h2 { font-size: 1.4rem; margin-bottom: 4px; }
+        .city-card-header .city-desc {
+            font-size: 0.85rem; opacity: 0.9;
+            line-height: 1.4;
+        }
+        .city-card-body { padding: 18px 20px; }
+
+        .service-section { margin-bottom: 16px; }
+        .service-section:last-child { margin-bottom: 0; }
+        .service-title {
+            font-size: 0.9rem; font-weight: 700;
+            color: var(--accent-secondary);
+            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 600;
+        }
+        .badge-green { background: rgba(34,197,94,0.15); color: var(--success); }
+        .badge-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .badge-blue { background: rgba(99,102,241,0.15); color: var(--accent-secondary); }
+        .badge-amber { background: rgba(245,158,11,0.15); color: var(--warning); }
+
+        .shop-item {
+            display: flex; align-items: flex-start; gap: 8px;
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-bottom: 6px;
+        }
+        .shop-item .shop-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+        .shop-item .shop-label { font-weight: 600; font-size: 0.9rem; }
+        .shop-item .shop-desc { font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; }
+
+        .inn-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .inn-name { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); }
+        .inn-story {
+            font-size: 0.82rem; color: var(--text-secondary);
+            line-height: 1.5; margin-bottom: 12px;
+            font-style: italic;
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-secondary);
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+        }
+        .data-table th {
+            background: var(--bg-tertiary);
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .data-table td {
+            padding: 8px 12px;
+            border-top: 1px solid var(--border-color);
+        }
+        .data-table tbody tr:hover { background: var(--bg-tertiary); }
+
+        .energy-col { color: var(--warning); font-weight: 600; }
+        .health-col { color: var(--success); font-weight: 600; }
+        .price-col { color: var(--accent-primary); font-weight: 600; }
+        .ratio-col { color: var(--info); font-weight: 600; }
+
+        /* Comparison tab */
+        .compare-header {
+            display: flex; gap: 15px; flex-wrap: wrap;
+            justify-content: center; align-items: flex-end;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .compare-header select {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            min-width: 200px;
+        }
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Inn tab */
+        .inn-full-card {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .inn-full-header {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 10px;
+        }
+        .inn-full-header h3 { font-size: 1.2rem; }
+        .inn-full-header .city-tag {
+            font-size: 0.8rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            background: rgba(99,102,241,0.15);
+            color: var(--accent-secondary);
+            font-weight: 600;
+        }
+
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        /* Shop tab */
+        .shop-overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        .shop-overview-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow);
+            padding: 16px;
+        }
+        .shop-overview-card h3 {
+            font-size: 1.05rem; margin-bottom: 6px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .shop-overview-card p {
+            font-size: 0.85rem; color: var(--text-secondary);
+            line-height: 1.4; margin-bottom: 10px;
+        }
+        .shop-cities-list {
+            display: flex; flex-wrap: wrap; gap: 4px;
+        }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            .city-grid { grid-template-columns: 1fr; }
+            .compare-grid { grid-template-columns: 1fr; }
+            .two-col { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏘️ Explorateur de Villes</h1>
+            <p class="subtitle">Visualisez chaque ville et les services qu'elle propose</p>
+        </header>
+
+        <div class="github-section">
+            <div class="github-input-group">
+                <label>Organisation / Utilisateur</label>
+                <input type="text" id="ghOwner" value="Crownicles" />
+            </div>
+            <div class="github-input-group">
+                <label>Dépôt</label>
+                <input type="text" id="ghRepo" value="Crownicles" />
+            </div>
+            <div class="github-input-group">
+                <label>Branche</label>
+                <input type="text" id="ghBranch" value="develop" />
+            </div>
+            <button class="github-load-btn" id="loadBtn" onclick="loadFromGitHub()">
+                <span class="loading-spinner" id="spinner"></span>
+                Charger depuis GitHub
+            </button>
+            <div class="github-status" id="ghStatus"></div>
+        </div>
+
+        <div class="stats-bar hidden" id="statsBar"></div>
+
+        <div class="tabs hidden" id="tabsBar">
+            <button class="tab-btn active" onclick="switchTab('overview')">🏘️ Vue d'ensemble</button>
+            <button class="tab-btn" onclick="switchTab('compare')">⚖️ Comparaison</button>
+            <button class="tab-btn" onclick="switchTab('inns')">🍺 Auberges</button>
+            <button class="tab-btn" onclick="switchTab('shops')">🛒 Boutiques</button>
+        </div>
+
+        <div class="tab-content active" id="tab-overview"></div>
+        <div class="tab-content" id="tab-compare"></div>
+        <div class="tab-content" id="tab-inns"></div>
+        <div class="tab-content" id="tab-shops"></div>
+    </div>
+
+    <script>
+    // ===== DATA =====
+    const CITY_FILES = ['boug_coton', 'claire_de_ville', 'coco_village', 'royal_castle', 'seawynne', 'ville_forte'];
+
+    // Map: city file key → first map ID (used to get translated name/desc from mapLocations)
+    const CITY_MAP_IDS = {
+        boug_coton: 6,
+        claire_de_ville: 23,
+        coco_village: 17,
+        royal_castle: 41,
+        seawynne: 26,
+        ville_forte: 10
+    };
+
+    const SHOP_ICONS = {
+        royalMarket: '👑',
+        generalShop: '🛍️',
+        stockExchange: '📈',
+        tanner: '🧵',
+        herbalist: '🌿',
+        lumberjack: '🪓'
+    };
+
+    let cities = {};       // cityId → city JSON data
+    let shopTranslations = {};  // shopId → {label, description}
+    let innTranslations = {};   // {names, stories, meals, rooms, roomsStories}
+    let mapLocations = {};      // mapId → {name, description}
+
+    // ===== GITHUB LOADER =====
+    async function fetchGH(path) {
+        const owner = document.getElementById('ghOwner').value.trim();
+        const repo = document.getElementById('ghRepo').value.trim();
+        const branch = document.getElementById('ghBranch').value.trim();
+        const url = `https://raw.githubusercontent.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${encodeURIComponent(branch)}/${path}`;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status} pour ${path}`);
+        return resp.json();
+    }
+
+    function setStatus(type, msg) {
+        const el = document.getElementById('ghStatus');
+        el.className = 'github-status ' + type;
+        el.textContent = msg;
+    }
+
+    async function loadFromGitHub() {
+        const btn = document.getElementById('loadBtn');
+        const spinner = document.getElementById('spinner');
+        btn.disabled = true;
+        spinner.style.display = 'inline-block';
+        setStatus('loading', 'Chargement des données depuis GitHub...');
+
+        try {
+            // Load all city files + translations in parallel
+            const [commandsJson, modelsJson, ...cityJsons] = await Promise.all([
+                fetchGH('Lang/fr/commands.json'),
+                fetchGH('Lang/fr/models.json'),
+                ...CITY_FILES.map(c => fetchGH(`Core/resources/cities/${c}.json`))
+            ]);
+
+            // Parse city data
+            CITY_FILES.forEach((id, i) => { cities[id] = cityJsons[i]; });
+
+            // Parse translations
+            const citySection = commandsJson.report.city;
+            shopTranslations = citySection.shops;
+            innTranslations = citySection.inns;
+            mapLocations = modelsJson.map_locations;
+
+            setStatus('success', `✅ ${CITY_FILES.length} villes chargées avec succès !`);
+            renderAll();
+        } catch (err) {
+            setStatus('error', `❌ Erreur : ${err.message}`);
+        } finally {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+        }
+    }
+
+    // ===== HELPERS =====
+    function getCityName(cityId) {
+        const mapId = CITY_MAP_IDS[cityId];
+        const loc = mapLocations[String(mapId)];
+        return loc ? loc.name : cityId;
+    }
+
+    function getCityDescription(cityId) {
+        const mapId = CITY_MAP_IDS[cityId];
+        const loc = mapLocations[String(mapId)];
+        return loc ? loc.description : '';
+    }
+
+    function getShopLabel(shopId) {
+        return shopTranslations[shopId]?.label || shopId;
+    }
+
+    function getShopDescription(shopId) {
+        return shopTranslations[shopId]?.description || '';
+    }
+
+    function getInnName(innId) {
+        return innTranslations.names?.[innId] || innId;
+    }
+
+    function getInnStory(innId) {
+        const raw = innTranslations.stories?.[innId] || '';
+        // Remove {emote:...} patterns for display
+        return raw.replace(/\{emote:[^}]+\}/g, '').trim();
+    }
+
+    function getMealName(mealId) {
+        return innTranslations.meals?.[mealId] || mealId;
+    }
+
+    function getRoomName(roomId) {
+        return innTranslations.rooms?.[roomId] || roomId;
+    }
+
+    function getRoomStory(roomId) {
+        const raw = innTranslations.roomsStories?.[roomId] || '';
+        return raw.replace(/\{emote:[^}]+\}/g, '').trim();
+    }
+
+    function hasBlacksmith(cityData) {
+        return cityData.hasBlacksmith !== false;
+    }
+
+    function ratio(value, price) {
+        return price > 0 ? (value / price).toFixed(2) : '—';
+    }
+
+    // ===== RENDER =====
+    function renderAll() {
+        document.getElementById('statsBar').classList.remove('hidden');
+        document.getElementById('tabsBar').classList.remove('hidden');
+
+        renderStats();
+        renderOverview();
+        renderCompare();
+        renderInns();
+        renderShops();
+    }
+
+    function renderStats() {
+        const totalShops = new Set();
+        const totalInns = new Set();
+        let totalMeals = 0;
+        let totalRooms = 0;
+        let withBlacksmith = 0;
+
+        for (const [id, city] of Object.entries(cities)) {
+            (city.shops || []).forEach(s => totalShops.add(s));
+            city.inns.forEach(inn => {
+                totalInns.add(inn.id);
+                totalMeals += inn.meals.length;
+                totalRooms += inn.rooms.length;
+            });
+            if (hasBlacksmith(city)) withBlacksmith++;
+        }
+
+        document.getElementById('statsBar').innerHTML = [
+            { v: CITY_FILES.length, l: 'Villes' },
+            { v: totalShops.size, l: 'Types de boutiques' },
+            { v: totalInns.size, l: 'Auberges' },
+            { v: totalMeals, l: 'Repas total' },
+            { v: totalRooms, l: 'Chambres total' },
+            { v: withBlacksmith, l: 'Avec forgeron' }
+        ].map(s => `<div class="stat-card"><div class="stat-value">${s.v}</div><div class="stat-label">${s.l}</div></div>`).join('');
+    }
+
+    // ----- Overview tab -----
+    function renderOverview() {
+        let html = '<div class="city-grid">';
+        for (const id of CITY_FILES) {
+            html += renderCityCard(id, cities[id]);
+        }
+        html += '</div>';
+        document.getElementById('tab-overview').innerHTML = html;
+    }
+
+    function renderCityCard(cityId, city) {
+        const name = getCityName(cityId);
+        const desc = getCityDescription(cityId);
+        const blacksmith = hasBlacksmith(city);
+        const shops = city.shops || [];
+        const inn = city.inns[0]; // Each city has 1 inn
+
+        let html = `<div class="city-card">
+            <div class="city-card-header">
+                <h2>${name}</h2>
+                ${desc ? `<div class="city-desc">${desc}</div>` : ''}
+            </div>
+            <div class="city-card-body">`;
+
+        // Services summary badges
+        html += `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+            <span class="badge badge-blue">🛒 ${shops.length} boutique${shops.length > 1 ? 's' : ''}</span>
+            <span class="badge ${blacksmith ? 'badge-green' : 'badge-red'}">⚒️ Forgeron ${blacksmith ? '✓' : '✗'}</span>
+            <span class="badge badge-amber">🍽️ ${inn.meals.length} plat${inn.meals.length > 1 ? 's' : ''}</span>
+            <span class="badge badge-green">🛏️ ${inn.rooms.length} chambre${inn.rooms.length > 1 ? 's' : ''}</span>
+        </div>`;
+
+        // Shops
+        if (shops.length > 0) {
+            html += `<div class="service-section">
+                <div class="service-title">🛒 Boutiques</div>`;
+            for (const shopId of shops) {
+                html += `<div class="shop-item">
+                    <span class="shop-icon">${SHOP_ICONS[shopId] || '🏪'}</span>
+                    <div>
+                        <div class="shop-label">${getShopLabel(shopId)}</div>
+                        <div class="shop-desc">${getShopDescription(shopId)}</div>
+                    </div>
+                </div>`;
+            }
+            html += '</div>';
+        }
+
+        // Inn
+        html += `<div class="service-section">
+            <div class="service-title">🍺 Auberge — ${getInnName(inn.id)}</div>
+            <div class="inn-story">${getInnStory(inn.id)}</div>`;
+
+        // Meals table
+        html += `<table class="data-table"><thead><tr>
+            <th>Plat</th><th>Prix 💰</th><th>Énergie ⚡</th><th>Ratio ⚡/💰</th>
+        </tr></thead><tbody>`;
+        for (const m of inn.meals) {
+            html += `<tr>
+                <td>${getMealName(m.id)}</td>
+                <td class="price-col">${m.price.toLocaleString('fr-FR')}</td>
+                <td class="energy-col">+${m.energy.toLocaleString('fr-FR')}</td>
+                <td class="ratio-col">${ratio(m.energy, m.price)}</td>
+            </tr>`;
+        }
+        html += '</tbody></table>';
+
+        // Rooms table
+        html += `<table class="data-table"><thead><tr>
+            <th>Chambre</th><th>Prix 💰</th><th>Vie ❤️</th><th>Ratio ❤️/💰</th>
+        </tr></thead><tbody>`;
+        for (const r of inn.rooms) {
+            html += `<tr>
+                <td>${getRoomName(r.id)}</td>
+                <td class="price-col">${r.price.toLocaleString('fr-FR')}</td>
+                <td class="health-col">+${r.health}</td>
+                <td class="ratio-col">${ratio(r.health, r.price)}</td>
+            </tr>`;
+        }
+        html += '</tbody></table>';
+
+        html += '</div></div></div>';
+        return html;
+    }
+
+    // ----- Compare tab -----
+    function renderCompare() {
+        let html = `<div class="compare-header">
+            <div class="github-input-group">
+                <label>Ville 1</label>
+                <select id="compare1" onchange="updateCompare()">
+                    ${CITY_FILES.map((id, i) => `<option value="${id}" ${i === 0 ? 'selected' : ''}>${getCityName(id)}</option>`).join('')}
+                </select>
+            </div>
+            <div class="github-input-group">
+                <label>Ville 2</label>
+                <select id="compare2" onchange="updateCompare()">
+                    ${CITY_FILES.map((id, i) => `<option value="${id}" ${i === 1 ? 'selected' : ''}>${getCityName(id)}</option>`).join('')}
+                </select>
+            </div>
+        </div>
+        <div id="compareContent" class="compare-grid"></div>`;
+        document.getElementById('tab-compare').innerHTML = html;
+        updateCompare();
+    }
+
+    function updateCompare() {
+        const id1 = document.getElementById('compare1').value;
+        const id2 = document.getElementById('compare2').value;
+        document.getElementById('compareContent').innerHTML =
+            renderCityCard(id1, cities[id1]) + renderCityCard(id2, cities[id2]);
+    }
+
+    // ----- Inns tab -----
+    function renderInns() {
+        let html = '';
+
+        // Global meals comparison table
+        html += `<div class="inn-full-card">
+            <h3 style="margin-bottom:14px;">📊 Comparaison de tous les repas</h3>
+            <table class="data-table"><thead><tr>
+                <th>Plat</th><th>Ville</th><th>Auberge</th><th>Prix 💰</th><th>Énergie ⚡</th><th>Ratio ⚡/💰</th>
+            </tr></thead><tbody>`;
+
+        // Collect all meals across all cities
+        const allMeals = [];
+        for (const id of CITY_FILES) {
+            const inn = cities[id].inns[0];
+            for (const m of inn.meals) {
+                allMeals.push({ cityId: id, innId: inn.id, ...m });
+            }
+        }
+        // Sort by ratio desc
+        allMeals.sort((a, b) => (b.energy / b.price) - (a.energy / a.price));
+
+        for (const m of allMeals) {
+            html += `<tr>
+                <td>${getMealName(m.id)}</td>
+                <td>${getCityName(m.cityId)}</td>
+                <td>${getInnName(m.innId)}</td>
+                <td class="price-col">${m.price.toLocaleString('fr-FR')}</td>
+                <td class="energy-col">+${m.energy.toLocaleString('fr-FR')}</td>
+                <td class="ratio-col">${ratio(m.energy, m.price)}</td>
+            </tr>`;
+        }
+        html += '</tbody></table></div>';
+
+        // Global rooms comparison table
+        html += `<div class="inn-full-card">
+            <h3 style="margin-bottom:14px;">🛏️ Comparaison de toutes les chambres</h3>
+            <table class="data-table"><thead><tr>
+                <th>Chambre</th><th>Ville</th><th>Auberge</th><th>Prix 💰</th><th>Vie ❤️</th><th>Ratio ❤️/💰</th>
+            </tr></thead><tbody>`;
+
+        const allRooms = [];
+        for (const id of CITY_FILES) {
+            const inn = cities[id].inns[0];
+            for (const r of inn.rooms) {
+                allRooms.push({ cityId: id, innId: inn.id, ...r });
+            }
+        }
+        allRooms.sort((a, b) => (b.health / b.price) - (a.health / a.price));
+
+        for (const r of allRooms) {
+            html += `<tr>
+                <td>${getRoomName(r.id)}</td>
+                <td>${getCityName(r.cityId)}</td>
+                <td>${getInnName(r.innId)}</td>
+                <td class="price-col">${r.price.toLocaleString('fr-FR')}</td>
+                <td class="health-col">+${r.health}</td>
+                <td class="ratio-col">${ratio(r.health, r.price)}</td>
+            </tr>`;
+        }
+        html += '</tbody></table></div>';
+
+        // Individual inn cards with stories
+        for (const id of CITY_FILES) {
+            const city = cities[id];
+            const inn = city.inns[0];
+            html += `<div class="inn-full-card">
+                <div class="inn-full-header">
+                    <h3>🍺 ${getInnName(inn.id)}</h3>
+                    <span class="city-tag">${getCityName(id)}</span>
+                </div>
+                <div class="inn-story">${getInnStory(inn.id)}</div>
+                <div class="two-col">
+                    <div>
+                        <h4 style="margin-bottom:8px;">🍽️ Menu</h4>
+                        <table class="data-table"><thead><tr>
+                            <th>Plat</th><th>Prix</th><th>Énergie</th>
+                        </tr></thead><tbody>`;
+            for (const m of inn.meals) {
+                html += `<tr>
+                    <td>${getMealName(m.id)}</td>
+                    <td class="price-col">${m.price.toLocaleString('fr-FR')}</td>
+                    <td class="energy-col">+${m.energy.toLocaleString('fr-FR')}</td>
+                </tr>`;
+            }
+            html += `</tbody></table></div><div>
+                        <h4 style="margin-bottom:8px;">🛏️ Chambres</h4>
+                        <table class="data-table"><thead><tr>
+                            <th>Chambre</th><th>Prix</th><th>Vie</th>
+                        </tr></thead><tbody>`;
+            for (const r of inn.rooms) {
+                html += `<tr>
+                    <td>${getRoomName(r.id)}</td>
+                    <td class="price-col">${r.price.toLocaleString('fr-FR')}</td>
+                    <td class="health-col">+${r.health}</td>
+                </tr>`;
+            }
+            html += '</tbody></table></div></div>';
+
+            // Room stories
+            html += '<div style="margin-top:12px;">';
+            for (const r of inn.rooms) {
+                const story = getRoomStory(r.id);
+                if (story) {
+                    html += `<details style="margin-bottom:6px;">
+                        <summary style="cursor:pointer;font-size:0.85rem;font-weight:600;">${getRoomName(r.id)} — histoire</summary>
+                        <div class="inn-story" style="margin-top:6px;">${story}</div>
+                    </details>`;
+                }
+            }
+            html += '</div></div>';
+        }
+
+        document.getElementById('tab-inns').innerHTML = html;
+    }
+
+    // ----- Shops tab -----
+    function renderShops() {
+        // Group cities by shop type
+        const shopCities = {};
+        for (const id of CITY_FILES) {
+            for (const shopId of (cities[id].shops || [])) {
+                if (!shopCities[shopId]) shopCities[shopId] = [];
+                shopCities[shopId].push(id);
+            }
+        }
+
+        let html = '<div class="shop-overview-grid">';
+        for (const [shopId, cityIds] of Object.entries(shopCities)) {
+            html += `<div class="shop-overview-card">
+                <h3>${SHOP_ICONS[shopId] || '🏪'} ${getShopLabel(shopId)}</h3>
+                <p>${getShopDescription(shopId)}</p>
+                <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:6px;">
+                    Disponible dans ${cityIds.length} ville${cityIds.length > 1 ? 's' : ''} :
+                </div>
+                <div class="shop-cities-list">
+                    ${cityIds.map(c => `<span class="badge badge-blue">${getCityName(c)}</span>`).join('')}
+                </div>
+            </div>`;
+        }
+        html += '</div>';
+
+        // Blacksmith section
+        html += `<div style="margin-top:20px;">
+            <div class="inn-full-card">
+                <h3 style="margin-bottom:10px;">⚒️ Forgeron</h3>
+                <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:12px;">
+                    Le forgeron permet d'améliorer vos équipements. Toutes les villes en ont un sauf indication contraire.
+                </p>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                    ${CITY_FILES.map(id => {
+                        const has = hasBlacksmith(cities[id]);
+                        return `<span class="badge ${has ? 'badge-green' : 'badge-red'}">${getCityName(id)} ${has ? '✓' : '✗'}</span>`;
+                    }).join('')}
+                </div>
+            </div>
+        </div>`;
+
+        document.getElementById('tab-shops').innerHTML = html;
+    }
+
+    // ===== TAB SWITCHING =====
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+            btn.classList.toggle('active', btn.textContent.includes(
+                tabId === 'overview' ? 'Vue' :
+                tabId === 'compare' ? 'Comparaison' :
+                tabId === 'inns' ? 'Auberges' : 'Boutiques'
+            ));
+        });
+        document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        document.getElementById(`tab-${tabId}`).classList.add('active');
+    }
+    </script>
+</body>
+</html>

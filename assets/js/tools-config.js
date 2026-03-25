@@ -198,5 +198,15 @@ const toolsConfig = [
         tags: ['Matériaux', 'Upgrades', 'Recettes', 'Comparaison', 'Analyse'],
         icon: '⚒️',
         status: 'active'
+    },
+    {
+        id: 'city-explorer',
+        title: 'Explorateur de Villes',
+        description: 'Visualise chaque ville, ses boutiques, son auberge (plats, chambres, prix) et la disponibilité du forgeron. Comparaison côte à côte.',
+        path: 'generators/city-explorer.html',
+        category: 'Visualisation',
+        tags: ['Villes', 'Auberges', 'Boutiques', 'Comparaison', 'Services'],
+        icon: '🏘️',
+        status: 'active'
     }
 ];
