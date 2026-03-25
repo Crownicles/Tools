@@ -481,6 +481,14 @@
             return resp.json();
         }
 
+        async function fetchDirListing(owner, repo, branch, dirPath) {
+            const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${dirPath}?ref=${encodeURIComponent(branch)}`;
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`Listing ${dirPath}: ${resp.status} ${resp.statusText}`);
+            const entries = await resp.json();
+            return entries.filter(e => e.type === 'file' && e.name.endsWith('.json')).map(e => e.name);
+        }
+
         async function loadFromGithub() {
             const owner = document.getElementById('repoOwner').value.trim();
             const repo = document.getElementById('repoName').value.trim();
@@ -499,8 +507,28 @@
             btnText.textContent = 'Chargement...';
 
             try {
-                updateStatus('📡 Chargement des recettes...', 'loading');
-                recipes = await fetchRaw(owner, repo, branch, 'Core/resources/cooking/recipes.json');
+                // Load recipes from individual files
+                updateStatus('📡 Listing des recettes...', 'loading');
+                const recipeFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/cooking/recipes');
+                const totalRecipes = recipeFiles.length;
+
+                updateStatus(`📡 Chargement des recettes (${totalRecipes} fichiers)...`, 'loading');
+                recipes = [];
+                const recipeBatchSize = 15;
+                for (let i = 0; i < recipeFiles.length; i += recipeBatchSize) {
+                    const batch = recipeFiles.slice(i, i + recipeBatchSize);
+                    const results = await Promise.all(
+                        batch.map(fileName =>
+                            fetchRaw(owner, repo, branch, `Core/resources/cooking/recipes/${fileName}`)
+                                .then(data => ({ id: fileName.replace('.json', ''), ...data }))
+                                .catch(() => null)
+                        )
+                    );
+                    for (const r of results) {
+                        if (r) recipes.push(r);
+                    }
+                    updateStatus(`📡 Recettes: ${Math.min(i + recipeBatchSize, totalRecipes)}/${totalRecipes}...`, 'loading');
+                }
 
                 updateStatus('📡 Chargement des traductions...', 'loading');
                 translations = await fetchRaw(owner, repo, branch, 'Lang/fr/models.json');
