@@ -188,5 +188,15 @@ const toolsConfig = [
         tags: ['Cuisine', 'Recettes', 'Slots', 'Potions', 'Matériaux'],
         icon: '🍳',
         status: 'active'
+    },
+    {
+        id: 'material-explorer',
+        title: 'Explorateur de Matériaux',
+        description: 'Visualise, compare et analyse les matériaux : utilisation en recettes, sources (compost/craft), et détail des upgrades d\'items.',
+        path: 'generators/material-explorer.html',
+        category: 'Visualisation',
+        tags: ['Matériaux', 'Upgrades', 'Recettes', 'Comparaison', 'Analyse'],
+        icon: '⚒️',
+        status: 'active'
     }
 ];
