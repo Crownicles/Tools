@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crownicles — Explorateur de Matériaux</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚒️</text></svg>">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-primary: #e94560;
+            --accent-secondary: #6366f1;
+            --border-color: #e2e8f0;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 1600px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        header h1 { color: var(--accent-primary); font-size: 2.2rem; margin-bottom: 6px; }
+        header .subtitle { color: var(--text-secondary); font-size: 1rem; }
+
+        /* GitHub loader */
+        .github-section {
+            display: flex; flex-wrap: wrap; gap: 15px;
+            justify-content: center; align-items: flex-end;
+            margin-bottom: 24px; padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        .github-input-group { display: flex; flex-direction: column; gap: 4px; }
+        .github-input-group label { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; }
+        .github-input-group input {
+            padding: 10px 14px; border: 1px solid var(--border-color);
+            border-radius: 8px; background: var(--bg-tertiary);
+            color: var(--text-primary); font-size: 0.95rem; min-width: 180px;
+        }
+        .github-input-group input:focus { outline: none; border-color: var(--accent-primary); }
+        .github-load-btn {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white; border: none; border-radius: 8px;
+            cursor: pointer; font-weight: 600; font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .github-load-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(99,102,241,0.4); }
+        .github-load-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .loading-spinner {
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white; border-radius: 50%;
+            animation: spin 0.8s linear infinite; display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .github-status {
+            width: 100%; text-align: center; padding: 10px;
+            border-radius: 8px; font-size: 0.9rem; display: none;
+        }
+        .github-status.error { background: rgba(239,68,68,0.15); color: #ef4444; display: block; }
+        .github-status.success { background: rgba(74,222,128,0.15); color: var(--success); display: block; }
+        .github-status.loading { background: rgba(96,165,250,0.15); color: var(--info); display: block; }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex; flex-wrap: wrap; gap: 14px;
+            justify-content: center; margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--bg-secondary); padding: 14px 22px;
+            border-radius: 12px; border: 1px solid var(--border-color);
+            text-align: center; box-shadow: 0 2px 8px var(--shadow);
+        }
+        .stat-value { font-size: 1.6rem; font-weight: 700; }
+        .stat-label { font-size: 0.82rem; color: var(--text-secondary); margin-top: 2px; }
+
+        /* Tabs */
+        .tabs {
+            display: flex; gap: 8px; margin-bottom: 20px;
+            flex-wrap: wrap; justify-content: center;
+        }
+        .tab-btn {
+            padding: 10px 22px; border: 1px solid var(--border-color);
+            border-radius: 10px; background: var(--bg-secondary);
+            cursor: pointer; font-weight: 600; font-size: 0.95rem;
+            transition: all 0.2s; color: var(--text-secondary);
+        }
+        .tab-btn:hover { border-color: var(--accent-secondary); color: var(--accent-secondary); }
+        .tab-btn.active {
+            background: var(--accent-secondary); color: white;
+            border-color: var(--accent-secondary);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Filters */
+        .filters {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            margin-bottom: 20px; align-items: center;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .filters input[type="text"] {
+            padding: 8px 14px; border: 1px solid var(--border-color);
+            border-radius: 8px; font-size: 0.9rem; min-width: 250px;
+            background: var(--bg-tertiary);
+        }
+        .filter-chip {
+            padding: 6px 14px; border-radius: 20px;
+            border: 1px solid var(--border-color);
+            cursor: pointer; font-size: 0.85rem;
+            background: var(--bg-secondary);
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .filter-chip:hover { border-color: var(--accent-secondary); }
+        .filter-chip.active { background: var(--accent-secondary); color: white; border-color: var(--accent-secondary); }
+
+        /* Material cards */
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 16px;
+        }
+        .material-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .material-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--shadow); }
+        .material-card-header {
+            padding: 14px 18px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .material-name { font-weight: 700; font-size: 1.1rem; }
+        .material-id { color: var(--text-secondary); font-size: 0.8rem; }
+        .material-card-body { padding: 14px 18px; }
+        .material-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+        .badge {
+            padding: 3px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600;
+        }
+        .badge-rarity-1 { background: #d1d5db; color: #374151; }
+        .badge-rarity-2 { background: #a3e635; color: #365314; }
+        .badge-rarity-3 { background: #fb923c; color: #7c2d12; }
+
+        .usage-section { margin-top: 8px; }
+        .usage-title { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+        .usage-list { list-style: none; padding: 0; }
+        .usage-list li {
+            padding: 4px 0; font-size: 0.88rem;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+        .usage-list li:last-child { border-bottom: none; }
+        .usage-empty { font-style: italic; color: var(--text-secondary); font-size: 0.85rem; }
+
+        /* Compare panel */
+        .compare-panel {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
+            padding: 20px;
+        }
+        .compare-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px;
+        }
+        .compare-header h3 { color: var(--accent-secondary); }
+        .compare-select {
+            padding: 8px 14px; border: 1px solid var(--border-color);
+            border-radius: 8px; font-size: 0.9rem;
+            background: var(--bg-tertiary); min-width: 250px;
+        }
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        .compare-card {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 16px;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        .compare-card.highlighted { border-color: var(--accent-primary); }
+        .compare-card-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; }
+        .compare-stat { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.88rem; }
+        .compare-stat-label { color: var(--text-secondary); }
+        .compare-stat-bar {
+            height: 6px; border-radius: 3px; background: var(--bg-primary);
+            margin-top: 4px; overflow: hidden;
+        }
+        .compare-stat-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+
+        /* Source table */
+        .source-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            border-radius: 12px; overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .source-table th {
+            background: var(--accent-secondary); color: white;
+            padding: 12px 16px; text-align: left; font-size: 0.9rem;
+        }
+        .source-table td {
+            padding: 10px 16px; border-bottom: 1px solid var(--border-color);
+            font-size: 0.88rem;
+        }
+        .source-table tr:nth-child(even) td { background: var(--bg-tertiary); }
+        .source-table tr:hover td { background: #e0e7ff; }
+
+        .hidden { display: none; }
+        #noData { text-align: center; padding: 60px; color: var(--text-secondary); }
+
+        .type-emoji {
+            display: inline-block; min-width: 24px; text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚒️ Explorateur de Matériaux</h1>
+            <p class="subtitle">Visualisez, comparez et analysez les matériaux de Crownicles</p>
+        </header>
+
+        <div class="github-section">
+            <div class="github-input-group">
+                <label>Owner</label>
+                <input type="text" id="repoOwner" value="Crownicles" placeholder="Owner">
+            </div>
+            <div class="github-input-group">
+                <label>Repository</label>
+                <input type="text" id="repoName" value="Crownicles" placeholder="Repo">
+            </div>
+            <div class="github-input-group">
+                <label>Branche</label>
+                <input type="text" id="branchName" value="master" placeholder="Branche">
+            </div>
+            <button class="github-load-btn" id="loadBtn" onclick="loadFromGithub()">
+                <span class="loading-spinner" id="loadingSpinner"></span>
+                <span id="loadBtnText">🚀 Charger depuis GitHub</span>
+            </button>
+            <div class="github-status" id="githubStatus"></div>
+        </div>
+
+        <div id="noData">
+            <h2>Aucune donnée chargée</h2>
+            <p>Cliquez sur "Charger depuis GitHub" pour commencer.</p>
+        </div>
+
+        <div id="mainContent" class="hidden">
+            <div id="statsBar" class="stats-bar"></div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('catalog')">📋 Catalogue</button>
+                <button class="tab-btn" onclick="switchTab('compare')">⚖️ Comparer</button>
+                <button class="tab-btn" onclick="switchTab('sources')">🌿 Sources</button>
+                <button class="tab-btn" onclick="switchTab('upgrades')">🔨 Upgrades</button>
+            </div>
+
+            <!-- Catalog tab -->
+            <div class="tab-content active" id="tab-catalog">
+                <div class="filters">
+                    <input type="text" id="materialSearch" placeholder="🔍 Rechercher un matériau..." oninput="filterMaterials()">
+                    <div id="typeFilters"></div>
+                    <div id="rarityFilters"></div>
+                </div>
+                <div class="materials-grid" id="materialsGrid"></div>
+            </div>
+
+            <!-- Compare tab -->
+            <div class="tab-content" id="tab-compare">
+                <div class="compare-panel">
+                    <div class="compare-header">
+                        <h3>⚖️ Comparer des matériaux</h3>
+                        <div>
+                            <select class="compare-select" id="compareSelect" multiple size="6"></select>
+                            <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:4px;">Ctrl+Click pour sélectionner plusieurs matériaux</p>
+                        </div>
+                    </div>
+                    <button class="github-load-btn" style="margin-bottom:16px" onclick="renderCompare()">Comparer la sélection</button>
+                    <div class="compare-grid" id="compareGrid"></div>
+                </div>
+            </div>
+
+            <!-- Sources tab -->
+            <div class="tab-content" id="tab-sources">
+                <h3 style="margin-bottom:16px;color:var(--accent-secondary);">🌿 Sources d'obtention des matériaux</h3>
+                <table class="source-table" id="sourceTable">
+                    <thead>
+                        <tr>
+                            <th>Matériau</th>
+                            <th>Type</th>
+                            <th>Rareté</th>
+                            <th>Compost (plante)</th>
+                            <th>Craft (recette)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sourceTableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Upgrades tab -->
+            <div class="tab-content" id="tab-upgrades">
+                <h3 style="margin-bottom:16px;color:var(--accent-secondary);">🔨 Utilisation dans les upgrades d'items</h3>
+                <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque item utilise des matériaux du même type pour ses upgrades (niveaux 1-5). La sélection est pseudo-aléatoire par item+niveau. Cliquez sur "▶" pour voir les détails par matériau.</p>
+                <div id="upgradesContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================
+        // CONSTANTS
+        // ========================
+        const MATERIAL_TYPE_EMOJI = {
+            metal: '⚙️', alloy: '🔩', nature: '🌿', spiritual: '✨',
+            magic: '🔮', leather: '🧶', rope: '🪢', poison: '☠️',
+            explosive: '💥', wood: '🪵'
+        };
+
+        const MATERIAL_TYPE_LABEL = {
+            metal: 'Métal', alloy: 'Alliage', nature: 'Nature', spiritual: 'Spirituel',
+            magic: 'Magie', leather: 'Cuir', rope: 'Corde', poison: 'Poison',
+            explosive: 'Explosif', wood: 'Bois'
+        };
+
+        const MATERIAL_RARITY_NAMES = { 1: 'Commun', 2: 'Peu commun', 3: 'Rare' };
+        const MATERIAL_RARITY_CSS = { 1: 'badge-rarity-1', 2: 'badge-rarity-2', 3: 'badge-rarity-3' };
+        const MATERIAL_RARITY_COLORS = { 1: '#6b7280', 2: '#84cc16', 3: '#f97316' };
+
+        // ========================
+        // ITEM RARITY ENUM (mirrors ItemRarity)
+        // ========================
+        const ITEM_RARITY = {
+            BASIC: 0, COMMON: 1, UNCOMMON: 2, EXOTIC: 3,
+            RARE: 4, SPECIAL: 5, EPIC: 6, LEGENDARY: 7, MYTHICAL: 8
+        };
+
+        const ITEM_RARITY_NAMES = {
+            0: 'Basique', 1: 'Commun', 2: 'Peu commun', 3: 'Exotique',
+            4: 'Rare', 5: 'Spécial', 6: 'Épique', 7: 'Légendaire', 8: 'Mythique'
+        };
+
+        // UPGRADE_MATERIALS_PER_ITEM_RARITY_AND_LEVEL[itemRarity][level][materialRarity] = count
+        // materialRarity: 1=Common, 2=Uncommon, 3=Rare
+        const UPGRADE_TABLE = {
+            0: { 1: {1:0,2:0,3:0}, 2: {1:0,2:0,3:0}, 3: {1:0,2:0,3:0}, 4: {1:0,2:0,3:0}, 5: {1:0,2:0,3:0} },
+            1: { 1: {1:2,2:0,3:0}, 2: {1:3,2:0,3:0}, 3: {1:4,2:0,3:0}, 4: {1:5,2:0,3:0}, 5: {1:6,2:0,3:0} },
+            2: { 1: {1:2,2:0,3:0}, 2: {1:4,2:0,3:0}, 3: {1:5,2:1,3:0}, 4: {1:6,2:2,3:0}, 5: {1:6,2:4,3:0} },
+            3: { 1: {1:3,2:0,3:0}, 2: {1:4,2:1,3:0}, 3: {1:5,2:3,3:0}, 4: {1:6,2:5,3:0}, 5: {1:8,2:5,3:1} },
+            4: { 1: {1:5,2:0,3:0}, 2: {1:6,2:2,3:0}, 3: {1:7,2:3,3:1}, 4: {1:8,2:4,3:2}, 5: {1:9,2:5,3:3} },
+            5: { 1: {1:8,2:2,3:0}, 2: {1:9,2:4,3:1}, 3: {1:10,2:5,3:2}, 4: {1:11,2:6,3:3}, 5: {1:12,2:7,3:5} },
+            6: { 1: {1:8,2:2,3:3}, 2: {1:9,2:4,3:5}, 3: {1:10,2:5,3:7}, 4: {1:11,2:6,3:9}, 5: {1:12,2:7,3:12} },
+            7: { 1: {1:10,2:5,3:5}, 2: {1:15,2:10,3:8}, 3: {1:20,2:15,3:12}, 4: {1:25,2:20,3:15}, 5: {1:30,2:25,3:20} },
+            8: { 1: {1:15,2:10,3:10}, 2: {1:20,2:15,3:15}, 3: {1:25,2:20,3:20}, 4: {1:30,2:25,3:25}, 5: {1:40,2:30,3:30} }
+        };
+
+        // ========================
+        // STATE
+        // ========================
+        let materials = {};
+        let translations = {};
+        let recipes = [];
+        let weapons = []; // Full weapon data: [{id, rarity, type}, ...]
+        let armors = [];  // Full armor data: [{id, rarity, type}, ...]
+        let plantData = null;
+        let activeTypeFilter = null;
+        let activeRarityFilter = null;
+        let showUnusedOnly = false;
+
+        // Plant compost data (hardcoded from PlantConstants.ts since it's TypeScript)
+        const PLANT_COMPOST = {
+            1: { name: 'Herbe commune', materials: [52, 54, 37] },
+            2: { name: 'Trèfle doré', materials: [43, 59, 25] },
+            3: { name: 'Mousse lunaire', materials: [53, 30, 89] },
+            4: { name: 'Racine de fer', materials: [70, 41, 81] },
+            5: { name: 'Champignon nocturne', materials: [55, 66, 36] },
+            6: { name: 'Feuille venimeuse', materials: [10, 17, 38] },
+            7: { name: 'Bulbe de feu', materials: [35, 82, 44] },
+            8: { name: 'Plante carnée', materials: [42, 48, 26] },
+            9: { name: 'Fleur de cristal', materials: [34, 67, 69] },
+            10: { name: 'Arbre ancien', materials: [84, 31, 18] }
+        };
+
+        // ========================
+        // DATA LOADING
+        // ========================
+        function updateStatus(msg, type) {
+            const el = document.getElementById('githubStatus');
+            el.textContent = msg;
+            el.className = 'github-status ' + type;
+        }
+
+        async function fetchRaw(owner, repo, branch, path) {
+            const url = `https://raw.githubusercontent.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${encodeURIComponent(branch)}/${path}`;
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`${path}: ${resp.status} ${resp.statusText}`);
+            return resp.json();
+        }
+
+        async function fetchDirListing(owner, repo, branch, dirPath) {
+            const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${dirPath}?ref=${encodeURIComponent(branch)}`;
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`Listing ${dirPath}: ${resp.status} ${resp.statusText}`);
+            const entries = await resp.json();
+            return entries.filter(e => e.type === 'file' && e.name.endsWith('.json')).map(e => e.name);
+        }
+
+        async function loadFromGithub() {
+            const owner = document.getElementById('repoOwner').value.trim();
+            const repo = document.getElementById('repoName').value.trim();
+            const branch = document.getElementById('branchName').value.trim();
+
+            if (!owner || !repo || !branch) {
+                updateStatus('⚠️ Remplissez tous les champs', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('loadBtn');
+            const spinner = document.getElementById('loadingSpinner');
+            const btnText = document.getElementById('loadBtnText');
+            btn.disabled = true;
+            spinner.style.display = 'block';
+            btnText.textContent = 'Chargement...';
+
+            try {
+                // Load materials (90 files)
+                updateStatus('📡 Chargement des matériaux...', 'loading');
+                const materialFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/materials');
+                materials = {};
+                const batchSize = 15;
+                for (let i = 0; i < materialFiles.length; i += batchSize) {
+                    const batch = materialFiles.slice(i, i + batchSize);
+                    const results = await Promise.all(
+                        batch.map(fileName => {
+                            const id = parseInt(fileName.replace('.json', ''));
+                            return fetchRaw(owner, repo, branch, `Core/resources/materials/${fileName}`)
+                                .then(data => ({ id, ...data }))
+                                .catch(() => null);
+                        })
+                    );
+                    for (const r of results) {
+                        if (r) materials[r.id] = { rarity: r.rarity, type: r.type };
+                    }
+                    updateStatus(`📡 Matériaux: ${Math.min(i + batchSize, materialFiles.length)}/${materialFiles.length}...`, 'loading');
+                }
+
+                // Load translations
+                updateStatus('📡 Chargement des traductions...', 'loading');
+                translations = await fetchRaw(owner, repo, branch, 'Lang/fr/models.json');
+
+                // Load recipes
+                updateStatus('📡 Chargement des recettes...', 'loading');
+                const recipeFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/cooking/recipes');
+                recipes = [];
+                for (let i = 0; i < recipeFiles.length; i += batchSize) {
+                    const batch = recipeFiles.slice(i, i + batchSize);
+                    const results = await Promise.all(
+                        batch.map(fileName =>
+                            fetchRaw(owner, repo, branch, `Core/resources/cooking/recipes/${fileName}`)
+                                .then(data => ({ id: fileName.replace('.json', ''), ...data }))
+                                .catch(() => null)
+                        )
+                    );
+                    for (const r of results) {
+                        if (r) recipes.push(r);
+                    }
+                    updateStatus(`📡 Recettes: ${Math.min(i + batchSize, recipeFiles.length)}/${recipeFiles.length}...`, 'loading');
+                }
+
+                // Load weapons and armors (full data for upgrade computation)
+                updateStatus('📡 Chargement des armes...', 'loading');
+                const weaponFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/weapons');
+                weapons = [];
+                for (let i = 0; i < weaponFiles.length; i += batchSize) {
+                    const batch = weaponFiles.slice(i, i + batchSize);
+                    const results = await Promise.all(
+                        batch.map(fileName =>
+                            fetchRaw(owner, repo, branch, `Core/resources/weapons/${fileName}`)
+                                .then(data => ({ id: parseInt(fileName.replace('.json', '')), rarity: data.rarity, type: data.type }))
+                                .catch(() => null)
+                        )
+                    );
+                    for (const r of results) {
+                        if (r) weapons.push(r);
+                    }
+                }
+
+                updateStatus('📡 Chargement des armures...', 'loading');
+                const armorFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/armors');
+                armors = [];
+                for (let i = 0; i < armorFiles.length; i += batchSize) {
+                    const batch = armorFiles.slice(i, i + batchSize);
+                    const results = await Promise.all(
+                        batch.map(fileName =>
+                            fetchRaw(owner, repo, branch, `Core/resources/armors/${fileName}`)
+                                .then(data => ({ id: parseInt(fileName.replace('.json', '')), rarity: data.rarity, type: data.type }))
+                                .catch(() => null)
+                        )
+                    );
+                    for (const r of results) {
+                        if (r) armors.push(r);
+                    }
+                }
+
+                // Build itemTypeStats for backward compat
+                const weaponTypes = {};
+                for (const w of weapons) { if (w.type) weaponTypes[w.type] = (weaponTypes[w.type] || 0) + 1; }
+                const armorTypes = {};
+                for (const a of armors) { if (a.type) armorTypes[a.type] = (armorTypes[a.type] || 0) + 1; }
+
+                // Store item type mappings for upgrades tab
+                window.itemTypeStats = { weapons: weaponTypes, armors: armorTypes };
+
+                // Update plant names from translations
+                if (translations.plants) {
+                    for (const [id, name] of Object.entries(translations.plants)) {
+                        if (PLANT_COMPOST[parseInt(id)]) {
+                            PLANT_COMPOST[parseInt(id)].name = name;
+                        }
+                    }
+                }
+
+                const totalMats = Object.keys(materials).length;
+                updateStatus(`✅ Chargé: ${totalMats} matériaux, ${recipes.length} recettes, ${weapons.length} armes, ${armors.length} armures`, 'success');
+                buildUsageIndex();
+                buildUpgradeIndex();
+                renderAll();
+            } catch (err) {
+                updateStatus(`❌ Erreur: ${err.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.textContent = '🚀 Charger depuis GitHub';
+            }
+        }
+
+        // ========================
+        // USAGE INDEX
+        // ========================
+        let usageIndex = {}; // materialId -> { usedInRecipes: [], producedByRecipes: [], compostFrom: [] }
+
+        function buildUsageIndex() {
+            usageIndex = {};
+            for (const id of Object.keys(materials)) {
+                usageIndex[id] = { usedInRecipes: [], producedByRecipes: [], compostFrom: [] };
+            }
+
+            // Recipes: consumed as ingredient
+            for (const recipe of recipes) {
+                if (recipe.materials) {
+                    for (const mat of recipe.materials) {
+                        if (usageIndex[mat.materialId]) {
+                            usageIndex[mat.materialId].usedInRecipes.push({
+                                recipeId: recipe.id,
+                                quantity: mat.quantity,
+                                outputType: recipe.outputType
+                            });
+                        }
+                    }
+                }
+                // Recipes: produced as output
+                if (recipe.outputType === 'material' && recipe.outputMaterialId) {
+                    if (usageIndex[recipe.outputMaterialId]) {
+                        usageIndex[recipe.outputMaterialId].producedByRecipes.push({
+                            recipeId: recipe.id,
+                            quantity: recipe.outputMaterialQuantity || 1
+                        });
+                    }
+                }
+            }
+
+            // Compost
+            for (const [plantId, plantInfo] of Object.entries(PLANT_COMPOST)) {
+                for (const matId of plantInfo.materials) {
+                    if (usageIndex[matId]) {
+                        usageIndex[matId].compostFrom.push({
+                            plantId: parseInt(plantId),
+                            plantName: plantInfo.name
+                        });
+                    }
+                }
+            }
+        }
+
+        // ========================
+        // UPGRADE INDEX (reproduces Core/src/data/MainItem.ts getUpgradeMaterials)
+        // ========================
+        let upgradeIndex = {}; // materialId -> [ { itemId, category, level } ]
+
+        function buildUpgradeIndex() {
+            upgradeIndex = {};
+            for (const id of Object.keys(materials)) {
+                upgradeIndex[id] = [];
+            }
+
+            // Group materials by type, then filter by rarity
+            const materialsByType = {};
+            for (const [id, mat] of Object.entries(materials)) {
+                if (!materialsByType[mat.type]) materialsByType[mat.type] = [];
+                materialsByType[mat.type].push({ id: parseInt(id), rarity: mat.rarity });
+            }
+            // Sort each group by id for deterministic order (matches server DataController ordering)
+            for (const type in materialsByType) {
+                materialsByType[type].sort((a, b) => a.id - b.id);
+            }
+
+            // Process all items (weapons + armors)
+            const allItems = [
+                ...weapons.map(w => ({ ...w, category: 'weapon' })),
+                ...armors.map(a => ({ ...a, category: 'armor' }))
+            ];
+
+            for (const item of allItems) {
+                const upgradeTableForRarity = UPGRADE_TABLE[item.rarity];
+                if (!upgradeTableForRarity) continue;
+
+                const typeMaterials = materialsByType[item.type];
+                if (!typeMaterials || typeMaterials.length === 0) continue;
+
+                for (let level = 1; level <= 5; level++) {
+                    const counts = upgradeTableForRarity[level];
+                    if (!counts) continue;
+
+                    const seed = (item.id << 4) | level;
+
+                    // For each material rarity (1, 2, 3)
+                    for (const matRarityStr of Object.keys(counts)) {
+                        const matRarity = parseInt(matRarityStr);
+                        const count = counts[matRarity];
+                        if (count <= 0) continue;
+
+                        const filtered = typeMaterials.filter(m => m.rarity === matRarity);
+                        if (filtered.length === 0) continue;
+
+                        for (let i = 0; i < count; i++) {
+                            // Reproduce the pseudo-random: ((seed + i + materialRarity << 6) * 2654435761) % length
+                            // JS precedence: << is lower than +, so it's ((seed + i + matRarity) << 6)
+                            const index = Math.abs(((seed + i + matRarity << 6) * 2654435761) % filtered.length);
+                            const selectedMat = filtered[index];
+
+                            if (upgradeIndex[selectedMat.id]) {
+                                // Check if this item+level combo already recorded (can have duplicates = multiple units needed)
+                                const existing = upgradeIndex[selectedMat.id].find(
+                                    e => e.itemId === item.id && e.category === item.category && e.level === level
+                                );
+                                if (existing) {
+                                    existing.quantity++;
+                                } else {
+                                    upgradeIndex[selectedMat.id].push({
+                                        itemId: item.id,
+                                        category: item.category,
+                                        level,
+                                        quantity: 1
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // ========================
+        // HELPERS
+        // ========================
+        function getMaterialName(id) {
+            return translations.materials?.[String(id)] || `Matériau #${id}`;
+        }
+
+        function getRecipeName(recipeId) {
+            return translations.cooking?.recipes?.[recipeId] || recipeId;
+        }
+
+        function getItemName(itemId, category) {
+            const key = category === 'weapon' ? 'weapons' : 'armors';
+            return translations[key]?.[String(itemId)] || `${category === 'weapon' ? 'Arme' : 'Armure'} #${itemId}`;
+        }
+
+        function isUnused(id) {
+            const usage = usageIndex[id] || { usedInRecipes: [], producedByRecipes: [], compostFrom: [] };
+            const upgrades = upgradeIndex[id] || [];
+            return usage.usedInRecipes.length === 0
+                && usage.producedByRecipes.length === 0
+                && usage.compostFrom.length === 0
+                && upgrades.length === 0;
+        }
+
+        function getMaterialInfo(id) {
+            const m = materials[id];
+            if (!m) return null;
+            return {
+                id,
+                name: getMaterialName(id),
+                type: m.type,
+                rarity: m.rarity,
+                typeEmoji: MATERIAL_TYPE_EMOJI[m.type] || '❓',
+                typeLabel: MATERIAL_TYPE_LABEL[m.type] || m.type,
+                rarityName: MATERIAL_RARITY_NAMES[m.rarity] || '?',
+                rarityCss: MATERIAL_RARITY_CSS[m.rarity] || '',
+                usage: usageIndex[id] || { usedInRecipes: [], producedByRecipes: [], compostFrom: [] },
+                upgrades: upgradeIndex[id] || []
+            };
+        }
+
+        // ========================
+        // RENDERING
+        // ========================
+        function renderAll() {
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('noData').classList.add('hidden');
+            renderStats();
+            renderFilters();
+            renderMaterialsGrid();
+            renderCompareSelect();
+            renderSourcesTable();
+            renderUpgradesTab();
+        }
+
+        function renderStats() {
+            const matCount = Object.keys(materials).length;
+            const types = new Set(Object.values(materials).map(m => m.type));
+            const recipeCount = recipes.length;
+            const craftRecipes = recipes.filter(r => r.outputType === 'material').length;
+            const usedInRecipeCount = Object.values(usageIndex).filter(u => u.usedInRecipes.length > 0).length;
+            const usedInUpgradeCount = Object.keys(upgradeIndex).filter(id => upgradeIndex[id].length > 0).length;
+            const unusedCount = Object.keys(materials).filter(id => isUnused(id)).length;
+
+            document.getElementById('statsBar').innerHTML = `
+                <div class="stat-card"><div class="stat-value">${matCount}</div><div class="stat-label">Matériaux</div></div>
+                <div class="stat-card"><div class="stat-value">${types.size}</div><div class="stat-label">Types</div></div>
+                <div class="stat-card"><div class="stat-value">${recipeCount}</div><div class="stat-label">Recettes</div></div>
+                <div class="stat-card"><div class="stat-value" style="color:#047857">⚒️ ${craftRecipes}</div><div class="stat-label">Crafts matériaux</div></div>
+                <div class="stat-card"><div class="stat-value" style="color:var(--info)">${usedInRecipeCount}</div><div class="stat-label">Utilisés en recette</div></div>
+                <div class="stat-card"><div class="stat-value" style="color:var(--accent-secondary)">${usedInUpgradeCount}</div><div class="stat-label">Utilisés en upgrade</div></div>
+                <div class="stat-card"><div class="stat-value" style="color:var(--accent-primary)">${unusedCount}</div><div class="stat-label">Sans utilisation</div></div>
+            `;
+        }
+
+        function renderFilters() {
+            // Type filters
+            const typeContainer = document.getElementById('typeFilters');
+            typeContainer.innerHTML = '';
+            const types = [...new Set(Object.values(materials).map(m => m.type))].sort();
+            for (const type of types) {
+                const chip = document.createElement('span');
+                chip.className = 'filter-chip';
+                chip.textContent = `${MATERIAL_TYPE_EMOJI[type] || ''} ${MATERIAL_TYPE_LABEL[type] || type}`;
+                chip.onclick = () => {
+                    if (activeTypeFilter === type) {
+                        activeTypeFilter = null;
+                        chip.classList.remove('active');
+                    } else {
+                        activeTypeFilter = type;
+                        typeContainer.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                        chip.classList.add('active');
+                    }
+                    filterMaterials();
+                };
+                typeContainer.appendChild(chip);
+            }
+
+            // Rarity filters
+            const rarityContainer = document.getElementById('rarityFilters');
+            rarityContainer.innerHTML = '';
+            for (const [rarity, name] of Object.entries(MATERIAL_RARITY_NAMES)) {
+                const chip = document.createElement('span');
+                chip.className = 'filter-chip';
+                chip.textContent = name;
+                chip.style.borderColor = MATERIAL_RARITY_COLORS[rarity];
+                chip.onclick = () => {
+                    const r = parseInt(rarity);
+                    if (activeRarityFilter === r) {
+                        activeRarityFilter = null;
+                        chip.classList.remove('active');
+                    } else {
+                        activeRarityFilter = r;
+                        rarityContainer.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                        chip.classList.add('active');
+                    }
+                    filterMaterials();
+                };
+                rarityContainer.appendChild(chip);
+            }
+
+            // Unused filter
+            const unusedChip = document.createElement('span');
+            unusedChip.className = 'filter-chip';
+            unusedChip.id = 'unusedFilterChip';
+            unusedChip.textContent = '⚠️ Sans utilisation';
+            unusedChip.style.borderColor = '#ef4444';
+            unusedChip.onclick = () => {
+                showUnusedOnly = !showUnusedOnly;
+                unusedChip.classList.toggle('active');
+                filterMaterials();
+            };
+            rarityContainer.appendChild(unusedChip);
+        }
+
+        function filterMaterials() {
+            const search = document.getElementById('materialSearch').value.toLowerCase();
+            const grid = document.getElementById('materialsGrid');
+            grid.innerHTML = '';
+
+            const sortedIds = Object.keys(materials).map(Number).sort((a, b) => a - b);
+
+            for (const id of sortedIds) {
+                const info = getMaterialInfo(id);
+                if (!info) continue;
+
+                if (activeTypeFilter && info.type !== activeTypeFilter) continue;
+                if (activeRarityFilter && info.rarity !== activeRarityFilter) continue;
+                if (showUnusedOnly && !isUnused(id)) continue;
+                if (search && !info.name.toLowerCase().includes(search) && !String(id).includes(search)) continue;
+
+                grid.innerHTML += buildMaterialCard(info);
+            }
+        }
+
+        function renderMaterialsGrid() {
+            filterMaterials();
+        }
+
+        function buildMaterialCard(info) {
+            const usage = info.usage;
+            const upgrades = info.upgrades;
+            const unused = isUnused(info.id);
+            let usageHtml = '';
+
+            // Compost sources
+            if (usage.compostFrom.length > 0) {
+                usageHtml += `<div class="usage-section">
+                    <div class="usage-title">🌿 Obtenu par compostage :</div>
+                    <ul class="usage-list">${usage.compostFrom.map(c =>
+                        `<li>🪴 ${c.plantName}</li>`
+                    ).join('')}</ul></div>`;
+            }
+
+            // Produced by recipes
+            if (usage.producedByRecipes.length > 0) {
+                usageHtml += `<div class="usage-section">
+                    <div class="usage-title">🍳 Produit par recette :</div>
+                    <ul class="usage-list">${usage.producedByRecipes.map(r =>
+                        `<li>📖 ${getRecipeName(r.recipeId)} (×${r.quantity})</li>`
+                    ).join('')}</ul></div>`;
+            }
+
+            // Used in recipes
+            if (usage.usedInRecipes.length > 0) {
+                usageHtml += `<div class="usage-section">
+                    <div class="usage-title">📋 Utilisé dans ${usage.usedInRecipes.length} recette(s) :</div>
+                    <ul class="usage-list">${usage.usedInRecipes.map(r =>
+                        `<li>${r.outputType === 'potion' ? '🧪' : r.outputType === 'petFood' ? '🍖' : '⚒️'} ${getRecipeName(r.recipeId)} (×${r.quantity})</li>`
+                    ).join('')}</ul></div>`;
+            }
+
+            // Used in upgrades
+            if (upgrades.length > 0) {
+                // Group by category then show top items (limit to avoid huge cards)
+                const weaponUpgrades = upgrades.filter(u => u.category === 'weapon');
+                const armorUpgrades = upgrades.filter(u => u.category === 'armor');
+
+                const formatUpgradeList = (list, emoji, maxShow) => {
+                    const sorted = [...list].sort((a, b) => a.level - b.level || a.itemId - b.itemId);
+                    const shown = sorted.slice(0, maxShow);
+                    const remaining = sorted.length - maxShow;
+                    let html = shown.map(u =>
+                        `<li>${emoji} ${getItemName(u.itemId, u.category)} <span style="color:var(--text-secondary)">(niv.${u.level}, ×${u.quantity})</span></li>`
+                    ).join('');
+                    if (remaining > 0) {
+                        html += `<li style="color:var(--text-secondary);font-style:italic">... et ${remaining} autre(s)</li>`;
+                    }
+                    return html;
+                };
+
+                usageHtml += `<div class="usage-section">
+                    <div class="usage-title">🔨 Upgrade de ${upgrades.length} item(s) :</div>
+                    <ul class="usage-list">`;
+
+                if (weaponUpgrades.length > 0) {
+                    usageHtml += formatUpgradeList(weaponUpgrades, '🗡️', 5);
+                }
+                if (armorUpgrades.length > 0) {
+                    usageHtml += formatUpgradeList(armorUpgrades, '🛡️', 5);
+                }
+
+                usageHtml += `</ul></div>`;
+            }
+
+            // No usage at all
+            if (!usageHtml) {
+                usageHtml = `<p class="usage-empty" style="color:#ef4444;font-weight:600">⚠️ Aucune utilisation connue</p>`;
+            }
+
+            const unusedBorder = unused ? 'border-color: #ef4444; border-width: 2px;' : '';
+            const unusedBadge = unused ? '<span class="badge" style="background:#fef2f2;color:#ef4444;border:1px solid #fecaca">⚠️ Inutilisé</span>' : '';
+
+            return `
+                <div class="material-card" style="${unusedBorder}">
+                    <div class="material-card-header">
+                        <div>
+                            <span class="type-emoji">${info.typeEmoji}</span>
+                            <span class="material-name">${info.name}</span>
+                            <span class="material-id">#${info.id}</span>
+                        </div>
+                    </div>
+                    <div class="material-card-body">
+                        <div class="material-badges">
+                            <span class="badge ${info.rarityCss}">${info.rarityName}</span>
+                            <span class="badge" style="background:#e0e7ff;color:#4338ca">${info.typeLabel}</span>
+                            ${unusedBadge}
+                        </div>
+                        ${usageHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ========================
+        // COMPARE TAB
+        // ========================
+        function renderCompareSelect() {
+            const select = document.getElementById('compareSelect');
+            select.innerHTML = '';
+            const sortedIds = Object.keys(materials).map(Number).sort((a, b) => a - b);
+            for (const id of sortedIds) {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = `#${id} - ${getMaterialName(id)}`;
+                select.appendChild(option);
+            }
+        }
+
+        function renderCompare() {
+            const select = document.getElementById('compareSelect');
+            const selectedIds = [...select.selectedOptions].map(o => parseInt(o.value));
+            const grid = document.getElementById('compareGrid');
+
+            if (selectedIds.length === 0) {
+                grid.innerHTML = '<p style="color:var(--text-secondary)">Sélectionnez des matériaux à comparer.</p>';
+                return;
+            }
+
+            // Find max values for bar normalization
+            const infos = selectedIds.map(id => getMaterialInfo(id)).filter(Boolean);
+            const maxUsed = Math.max(1, ...infos.map(i => i.usage.usedInRecipes.length));
+            const maxProduced = Math.max(1, ...infos.map(i => i.usage.producedByRecipes.length));
+            const maxCompost = Math.max(1, ...infos.map(i => i.usage.compostFrom.length));
+
+            grid.innerHTML = infos.map(info => {
+                const usedPct = (info.usage.usedInRecipes.length / maxUsed * 100).toFixed(0);
+                const producedPct = (info.usage.producedByRecipes.length / maxProduced * 100).toFixed(0);
+                const compostPct = (info.usage.compostFrom.length / maxCompost * 100).toFixed(0);
+
+                // Recipe details
+                const recipeDetails = info.usage.usedInRecipes.map(r =>
+                    `<li style="font-size:0.8rem">${r.outputType === 'potion' ? '🧪' : r.outputType === 'petFood' ? '🍖' : '⚒️'} ${getRecipeName(r.recipeId)} (×${r.quantity})</li>`
+                ).join('');
+                const producedDetails = info.usage.producedByRecipes.map(r =>
+                    `<li style="font-size:0.8rem">📖 ${getRecipeName(r.recipeId)} (×${r.quantity})</li>`
+                ).join('');
+                const compostDetails = info.usage.compostFrom.map(c =>
+                    `<li style="font-size:0.8rem">🪴 ${c.plantName}</li>`
+                ).join('');
+
+                return `
+                    <div class="compare-card">
+                        <div class="compare-card-title">
+                            ${info.typeEmoji} ${info.name}
+                            <span class="badge ${info.rarityCss}" style="margin-left:8px">${info.rarityName}</span>
+                        </div>
+
+                        <div class="compare-stat">
+                            <span class="compare-stat-label">📋 Utilisé dans recettes</span>
+                            <span>${info.usage.usedInRecipes.length}</span>
+                        </div>
+                        <div class="compare-stat-bar"><div class="compare-stat-fill" style="width:${usedPct}%;background:var(--info)"></div></div>
+                        ${recipeDetails ? `<ul class="usage-list" style="margin:4px 0 8px 8px">${recipeDetails}</ul>` : ''}
+
+                        <div class="compare-stat">
+                            <span class="compare-stat-label">🍳 Produit par recette</span>
+                            <span>${info.usage.producedByRecipes.length}</span>
+                        </div>
+                        <div class="compare-stat-bar"><div class="compare-stat-fill" style="width:${producedPct}%;background:var(--success)"></div></div>
+                        ${producedDetails ? `<ul class="usage-list" style="margin:4px 0 8px 8px">${producedDetails}</ul>` : ''}
+
+                        <div class="compare-stat">
+                            <span class="compare-stat-label">🌿 Obtenu par compostage</span>
+                            <span>${info.usage.compostFrom.length}</span>
+                        </div>
+                        <div class="compare-stat-bar"><div class="compare-stat-fill" style="width:${compostPct}%;background:var(--warning)"></div></div>
+                        ${compostDetails ? `<ul class="usage-list" style="margin:4px 0 8px 8px">${compostDetails}</ul>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ========================
+        // SOURCES TAB
+        // ========================
+        function renderSourcesTable() {
+            const tbody = document.getElementById('sourceTableBody');
+            const sortedIds = Object.keys(materials).map(Number).sort((a, b) => a - b);
+
+            tbody.innerHTML = sortedIds.map(id => {
+                const info = getMaterialInfo(id);
+                if (!info) return '';
+                const usage = info.usage;
+
+                const compostHtml = usage.compostFrom.length > 0
+                    ? usage.compostFrom.map(c => `🪴 ${c.plantName}`).join('<br>')
+                    : '<span style="color:var(--text-secondary)">—</span>';
+
+                const craftHtml = usage.producedByRecipes.length > 0
+                    ? usage.producedByRecipes.map(r => `📖 ${getRecipeName(r.recipeId)}`).join('<br>')
+                    : '<span style="color:var(--text-secondary)">—</span>';
+
+                return `<tr>
+                    <td><span class="type-emoji">${info.typeEmoji}</span> <strong>${info.name}</strong> <span style="color:var(--text-secondary)">#${id}</span></td>
+                    <td>${info.typeLabel}</td>
+                    <td><span class="badge ${info.rarityCss}">${info.rarityName}</span></td>
+                    <td>${compostHtml}</td>
+                    <td>${craftHtml}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        // ========================
+        // UPGRADES TAB
+        // ========================
+        function renderUpgradesTab() {
+            const container = document.getElementById('upgradesContent');
+            const stats = window.itemTypeStats || { weapons: {}, armors: {} };
+
+            // Group materials by type
+            const materialsByType = {};
+            for (const [id, mat] of Object.entries(materials)) {
+                if (!materialsByType[mat.type]) materialsByType[mat.type] = [];
+                materialsByType[mat.type].push({ id: parseInt(id), ...mat, name: getMaterialName(id) });
+            }
+
+            // Sort each group by rarity then id
+            for (const type in materialsByType) {
+                materialsByType[type].sort((a, b) => a.rarity - b.rarity || a.id - b.id);
+            }
+
+            let html = '';
+            const typeOrder = Object.keys(MATERIAL_TYPE_LABEL).sort();
+
+            for (const type of typeOrder) {
+                const mats = materialsByType[type];
+                if (!mats || mats.length === 0) continue;
+
+                const weaponCount = stats.weapons[type] || 0;
+                const armorCount = stats.armors[type] || 0;
+                const totalItems = weaponCount + armorCount;
+
+                html += `
+                <div style="background:var(--bg-secondary);border-radius:12px;border:1px solid var(--border-color);padding:18px;margin-bottom:16px;box-shadow:0 2px 8px var(--shadow)">
+                    <h4 style="margin-bottom:12px">
+                        ${MATERIAL_TYPE_EMOJI[type] || ''} ${MATERIAL_TYPE_LABEL[type] || type}
+                        <span style="font-weight:400;color:var(--text-secondary);font-size:0.9rem">
+                            — ${mats.length} matériaux | Utilisé par : 🗡️ ${weaponCount} armes, 🛡️ ${armorCount} armures (${totalItems} items)
+                        </span>
+                    </h4>
+                    <table class="source-table" style="margin-top:8px">
+                        <thead><tr>
+                            <th>#</th>
+                            <th>Nom</th>
+                            <th>Rareté</th>
+                            <th>Recettes</th>
+                            <th>Sources</th>
+                            <th>Items upgradés</th>
+                        </tr></thead>
+                        <tbody>
+                        ${mats.map(mat => {
+                            const usage = usageIndex[mat.id] || { usedInRecipes: [], producedByRecipes: [], compostFrom: [] };
+                            const upgrades = upgradeIndex[mat.id] || [];
+                            const recipeCount = usage.usedInRecipes.length;
+                            const unused = isUnused(mat.id);
+                            const sources = [
+                                ...usage.compostFrom.map(c => `🪴 ${c.plantName}`),
+                                ...usage.producedByRecipes.map(r => `📖 ${getRecipeName(r.recipeId)}`)
+                            ];
+
+                            // Upgrade summary
+                            let upgradeHtml = '';
+                            if (upgrades.length > 0) {
+                                const wCount = upgrades.filter(u => u.category === 'weapon').length;
+                                const aCount = upgrades.filter(u => u.category === 'armor').length;
+                                const parts = [];
+                                if (wCount > 0) parts.push(`🗡️ ${wCount} arme(s)`);
+                                if (aCount > 0) parts.push(`🛡️ ${aCount} armure(s)`);
+                                upgradeHtml = `<details><summary style="cursor:pointer">${parts.join(', ')}</summary>
+                                    <ul style="margin:4px 0 0 8px;list-style:none;padding:0;font-size:0.82rem">
+                                    ${upgrades.slice(0, 20).map(u =>
+                                        `<li>${u.category === 'weapon' ? '🗡️' : '🛡️'} ${getItemName(u.itemId, u.category)} <span style="color:var(--text-secondary)">(niv.${u.level}, ×${u.quantity})</span></li>`
+                                    ).join('')}
+                                    ${upgrades.length > 20 ? `<li style="color:var(--text-secondary);font-style:italic">... et ${upgrades.length - 20} autre(s)</li>` : ''}
+                                    </ul></details>`;
+                            } else {
+                                upgradeHtml = '<span style="color:var(--text-secondary)">—</span>';
+                            }
+
+                            const rowStyle = unused ? 'background: #fef2f2 !important;' : '';
+
+                            return `<tr style="${rowStyle}">
+                                <td>${mat.id} ${unused ? '<span title="Aucune utilisation" style="color:#ef4444">⚠️</span>' : ''}</td>
+                                <td><strong>${mat.name}</strong></td>
+                                <td><span class="badge ${MATERIAL_RARITY_CSS[mat.rarity]}">${MATERIAL_RARITY_NAMES[mat.rarity]}</span></td>
+                                <td>${recipeCount > 0 ? `${recipeCount} recette(s)` : '<span style="color:var(--text-secondary)">—</span>'}</td>
+                                <td>${sources.length > 0 ? sources.join(', ') : '<span style="color:var(--text-secondary)">—</span>'}</td>
+                                <td>${upgradeHtml}</td>
+                            </tr>`;
+                        }).join('')}
+                        </tbody>
+                    </table>
+                </div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // ========================
+        // TABS
+        // ========================
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            const labels = { catalog: 'Catalogue', compare: 'Comparer', sources: 'Sources', upgrades: 'Upgrades' };
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                if (b.textContent.toLowerCase().includes(labels[tabName]?.toLowerCase() || tabName)) {
+                    b.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
