@@ -316,6 +316,11 @@
             color: #388e3c;
         }
 
+        .type-material {
+            background: #efebe9;
+            color: #4e342e;
+        }
+
         .no-data {
             text-align: center;
             padding: 60px 20px;
@@ -462,6 +467,10 @@
                 <div class="stat-label">Classes</div>
             </div>
             <div class="stat-item">
+                <div class="stat-number" id="materials-count">0</div>
+                <div class="stat-label">Matériaux</div>
+            </div>
+            <div class="stat-item">
                 <div class="stat-number" id="total-count">0</div>
                 <div class="stat-label">Total</div>
             </div>
@@ -502,7 +511,7 @@
                 this.cacheExpiry = 30 * 60 * 1000; // 30 minutes
                 this.currentSort = { column: null, direction: 'asc' };
                 this.currentDisplayData = [];
-                this.currentFilter = null; // 'item', 'pet', 'place', 'smallEvent', ou null pour tout
+                this.currentFilter = null; // 'item', 'pet', 'place', 'smallEvent', 'material' ou null pour tout
 
                 this.elements = {
                     branchSelect: document.getElementById('branch-select'),
@@ -520,6 +529,7 @@
                     smallEventsCount: document.getElementById('small-events-count'),
                     missionsCount: document.getElementById('missions-count'),
                     classesCount: document.getElementById('classes-count'),
+                    materialsCount: document.getElementById('materials-count'),
                     totalCount: document.getElementById('total-count'),
                     apiStatus: document.getElementById('api-status'),
                     apiLimitText: document.getElementById('api-limit-text'),
@@ -580,7 +590,8 @@
                 statItems[3].addEventListener('click', () => this.filterByCategory('smallEvent'));
                 statItems[4].addEventListener('click', () => this.filterByCategory('mission'));
                 statItems[5].addEventListener('click', () => this.filterByCategory('class'));
-                statItems[6].addEventListener('click', () => this.filterByCategory(null));
+                statItems[6].addEventListener('click', () => this.filterByCategory('material'));
+                statItems[7].addEventListener('click', () => this.filterByCategory(null));
             }
 
             filterByCategory(category) {
@@ -598,7 +609,8 @@
                 else if (activeCategory === 'smallEvent') statItems[3].classList.add('active');
                 else if (activeCategory === 'mission') statItems[4].classList.add('active');
                 else if (activeCategory === 'class') statItems[5].classList.add('active');
-                else if (activeCategory === null) statItems[6].classList.add('active');
+                else if (activeCategory === 'material') statItems[6].classList.add('active');
+                else if (activeCategory === null) statItems[7].classList.add('active');
             }
 
             applyCurrentFilters() {
@@ -750,7 +762,8 @@
                         this.loadPets(),
                         this.loadPlaces(),
                         this.loadSmallEvents(),
-                        this.loadMissions()
+                        this.loadMissions(),
+                        this.loadMaterials()
                     ]);
                     await this.loadClasses();
                     this.saveToCache();
@@ -812,6 +825,7 @@
                 this.petNames = {};
                 this.placeNames = {};
                 this.classNames = {};
+                this.materialNames = {};
                 try {
                     const response = await this.makeApiRequest(`https://raw.githubusercontent.com/Crownicles/Crownicles/${this.currentBranch}/Lang/fr/models.json`);
                     if (response.ok) {
@@ -825,6 +839,7 @@
                         this.petNames = i18nData.pets || {};
                         this.placeNames = i18nData.map_locations || {};
                         this.classNames = i18nData.classes || {};
+                        this.materialNames = i18nData.materials || {};
                         // nothing needed for smallEvents here, loaded separately
                     }
                 } catch (error) {
@@ -1021,6 +1036,32 @@
                 }
             }
 
+            async loadMaterials() {
+                this.elements.loadingStatus.textContent = 'Chargement des matériaux...';
+                try {
+                    const dirResponse = await this.makeApiRequest(`https://api.github.com/repos/Crownicles/Crownicles/contents/Core/resources/materials?ref=${this.currentBranch}`);
+                    if (!dirResponse.ok) return;
+                    const files = await dirResponse.json();
+                    const jsonFiles = files.filter(file => file.name.endsWith('.json'));
+                    
+                    jsonFiles.forEach((file) => {
+                        const id = parseInt(file.name.split('.')[0]);
+                        const materialName = this.materialNames && this.materialNames[id.toString()]
+                            ? this.materialNames[id.toString()]
+                            : `Matériau ${id}`;
+                        this.allData.push({
+                            id: id,
+                            name: materialName,
+                            type: 'material',
+                            category: 'material',
+                            emoji: '🧱'
+                        });
+                    });
+                } catch (error) {
+                    console.warn('Erreur lors du chargement des matériaux:', error);
+                }
+            }
+
             async loadClasses() {
                 this.elements.loadingStatus.textContent = 'Chargement des classes...';
                 try {
@@ -1062,6 +1103,7 @@
                 const smallEventsCount = this.allData.filter(item => item.category === 'smallEvent').length;
                 const missionsCount = this.allData.filter(item => item.category === 'mission').length;
                 const classesCount = this.allData.filter(item => item.category === 'class').length;
+                const materialsCount = this.allData.filter(item => item.category === 'material').length;
                 const totalCount = this.allData.length;
 
                 this.elements.itemsCount.textContent = itemsCount;
@@ -1070,6 +1112,7 @@
                 this.elements.smallEventsCount.textContent = smallEventsCount;
                 this.elements.missionsCount.textContent = missionsCount;
                 this.elements.classesCount.textContent = classesCount;
+                this.elements.materialsCount.textContent = materialsCount;
                 this.elements.totalCount.textContent = totalCount;
                 this.elements.stats.style.display = 'flex';
             }
