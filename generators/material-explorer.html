@@ -292,6 +292,8 @@
                 <button class="tab-btn" onclick="switchTab('compare')">⚖️ Comparer</button>
                 <button class="tab-btn" onclick="switchTab('sources')">🌿 Sources</button>
                 <button class="tab-btn" onclick="switchTab('upgrades')">🔨 Upgrades</button>
+                <button class="tab-btn" onclick="switchTab('bossloot')">🐉 Boss Loot</button>
+                <button class="tab-btn" onclick="switchTab('expedloot')">🗺️ Expedition Loot</button>
             </div>
 
             <!-- Catalog tab -->
@@ -330,6 +332,8 @@
                             <th>Rareté</th>
                             <th>Compost (plante)</th>
                             <th>Craft (recette)</th>
+                            <th>Boss PVE</th>
+                            <th>Expédition</th>
                         </tr>
                     </thead>
                     <tbody id="sourceTableBody"></tbody>
@@ -341,6 +345,20 @@
                 <h3 style="margin-bottom:16px;color:var(--accent-secondary);">🔨 Utilisation dans les upgrades d'items</h3>
                 <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque item utilise des matériaux du même type pour ses upgrades (niveaux 1-5). La sélection est pseudo-aléatoire par item+niveau. Cliquez sur "▶" pour voir les détails par matériau.</p>
                 <div id="upgradesContent"></div>
+            </div>
+
+            <!-- Boss Loot tab -->
+            <div class="tab-content" id="tab-bossloot">
+                <h3 style="margin-bottom:16px;color:var(--accent-secondary);">🐉 Loot des boss PVE</h3>
+                <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque boss des îles PVE possède une table de loot de matériaux. Lors d'une victoire, 5-10 unités sont droppées aléatoirement, pondérées par rareté (commun 60%, peu commun 30%, rare 10%).</p>
+                <div id="bossLootContent"></div>
+            </div>
+
+            <!-- Expedition Loot tab -->
+            <div class="tab-content" id="tab-expedloot">
+                <h3 style="margin-bottom:16px;color:var(--accent-secondary);">🗺️ Loot d'expédition</h3>
+                <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque type de terrain d'expédition possède une table de loot de matériaux. Le nombre de drops dépend de l'indice de récompense (1-5 drops), pondérés par rareté (commun 60%, peu commun 30%, rare 10%). Minimum reward index de 1 requis.</p>
+                <div id="expedLootContent"></div>
             </div>
         </div>
     </div>
@@ -404,6 +422,34 @@
         let activeTypeFilter = null;
         let activeRarityFilter = null;
         let showUnusedOnly = false;
+
+        // Boss loot tables (hardcoded from PVEConstants.ts since it's TypeScript)
+        const BOSS_LOOT_TABLES = {
+            1001: { name: 'Forêt de la pénombre', bosses: 'Troll de la forêt, Mutant Vaseux', island: 1, materials: [8, 12, 73, 87, 69, 43] },
+            1002: { name: 'Village en ruines', bosses: 'Squelette', island: 1, materials: [4, 13, 26, 22, 57, 59] },
+            1003: { name: 'Mine brumeuse', bosses: 'Araignée', island: 1, materials: [16, 24, 38, 1, 23, 21] },
+            1004: { name: 'Chemin escarpé', bosses: 'Golem de pierre', island: 1, materials: [48, 36, 27, 30, 12, 73] },
+            1005: { name: 'Volcan grondant', bosses: 'Titan de magma', island: 1, materials: [28, 33, 1, 23, 56, 41] },
+            1101: { name: 'Toundra', bosses: 'Loup blanc', island: 2, materials: [9, 68, 30, 12, 43, 25] },
+            1102: { name: 'Caverne de cristal', bosses: 'Élémentaire brillant', island: 2, materials: [5, 56, 19, 39, 62, 41] },
+            1103: { name: 'Portes sacrées', bosses: 'Gardien céleste', island: 2, materials: [37, 51, 62, 19, 56, 39] },
+            1104: { name: 'Pic enneigé', bosses: 'Seigneur des glaces', island: 2, materials: [48, 38, 46, 9, 25, 68] },
+            1105: { name: 'Lac souterrain', bosses: 'Crocodile', island: 2, materials: [15, 68, 10, 17, 43, 87] },
+            1106: { name: 'Village dévasté', bosses: 'Yuki-Onna', island: 2, materials: [7, 22, 57, 18, 30, 59] },
+            1107: { name: 'Nid glacé', bosses: 'Reine des glaces', island: 2, materials: [41, 56, 33, 1, 3, 62] }
+        };
+
+        // Expedition loot tables (hardcoded from ExpeditionConstants.ts)
+        const EXPEDITION_LOOT_TABLES = {
+            forest: { name: 'Forêt', emoji: '🌲', materials: [14, 20, 29, 45, 6, 40] },
+            mountain: { name: 'Montagne', emoji: '⛰️', materials: [32, 34, 44, 47, 11, 31] },
+            desert: { name: 'Désert', emoji: '🏜️', materials: [54, 55, 49, 50, 61, 65] },
+            swamp: { name: 'Marais', emoji: '🐊', materials: [63, 64, 53, 60, 67, 72] },
+            ruins: { name: 'Ruines', emoji: '🏚️', materials: [77, 79, 66, 71, 75, 76] },
+            cave: { name: 'Grotte', emoji: '🦇', materials: [82, 89, 74, 78, 83, 84] },
+            plains: { name: 'Plaines', emoji: '🌾', materials: [35, 42, 80, 81, 85, 86] },
+            coast: { name: 'Côte', emoji: '🏖️', materials: [52, 58, 70, 2, 88, 90] }
+        };
 
         // Plant compost data (hardcoded from PlantConstants.ts since it's TypeScript)
         const PLANT_COMPOST = {
@@ -575,12 +621,12 @@
         // ========================
         // USAGE INDEX
         // ========================
-        let usageIndex = {}; // materialId -> { usedInRecipes: [], producedByRecipes: [], compostFrom: [] }
+        let usageIndex = {}; // materialId -> { usedInRecipes: [], producedByRecipes: [], compostFrom: [], bossLootFrom: [], expeditionLootFrom: [] }
 
         function buildUsageIndex() {
             usageIndex = {};
             for (const id of Object.keys(materials)) {
-                usageIndex[id] = { usedInRecipes: [], producedByRecipes: [], compostFrom: [] };
+                usageIndex[id] = { usedInRecipes: [], producedByRecipes: [], compostFrom: [], bossLootFrom: [], expeditionLootFrom: [] };
             }
 
             // Recipes: consumed as ingredient
@@ -614,6 +660,32 @@
                         usageIndex[matId].compostFrom.push({
                             plantId: parseInt(plantId),
                             plantName: plantInfo.name
+                        });
+                    }
+                }
+            }
+
+            // Boss loot
+            for (const [mapId, entry] of Object.entries(BOSS_LOOT_TABLES)) {
+                for (const matId of entry.materials) {
+                    if (usageIndex[matId]) {
+                        usageIndex[matId].bossLootFrom.push({
+                            mapId: parseInt(mapId),
+                            mapName: entry.name,
+                            bosses: entry.bosses
+                        });
+                    }
+                }
+            }
+
+            // Expedition loot
+            for (const [locationType, entry] of Object.entries(EXPEDITION_LOOT_TABLES)) {
+                for (const matId of entry.materials) {
+                    if (usageIndex[matId]) {
+                        usageIndex[matId].expeditionLootFrom.push({
+                            locationType,
+                            locationName: entry.name,
+                            locationEmoji: entry.emoji
                         });
                     }
                 }
@@ -714,12 +786,20 @@
             return translations[key]?.[String(itemId)] || `${category === 'weapon' ? 'Arme' : 'Armure'} #${itemId}`;
         }
 
+        function getMapName(mapId) {
+            const entry = BOSS_LOOT_TABLES[mapId];
+            if (entry) return entry.name;
+            return translations.mapLocations?.[String(mapId)] || `Map #${mapId}`;
+        }
+
         function isUnused(id) {
-            const usage = usageIndex[id] || { usedInRecipes: [], producedByRecipes: [], compostFrom: [] };
+            const usage = usageIndex[id] || { usedInRecipes: [], producedByRecipes: [], compostFrom: [], bossLootFrom: [], expeditionLootFrom: [] };
             const upgrades = upgradeIndex[id] || [];
             return usage.usedInRecipes.length === 0
                 && usage.producedByRecipes.length === 0
                 && usage.compostFrom.length === 0
+                && usage.bossLootFrom.length === 0
+                && usage.expeditionLootFrom.length === 0
                 && upgrades.length === 0;
         }
 
@@ -735,7 +815,7 @@
                 typeLabel: MATERIAL_TYPE_LABEL[m.type] || m.type,
                 rarityName: MATERIAL_RARITY_NAMES[m.rarity] || '?',
                 rarityCss: MATERIAL_RARITY_CSS[m.rarity] || '',
-                usage: usageIndex[id] || { usedInRecipes: [], producedByRecipes: [], compostFrom: [] },
+                usage: usageIndex[id] || { usedInRecipes: [], producedByRecipes: [], compostFrom: [], bossLootFrom: [], expeditionLootFrom: [] },
                 upgrades: upgradeIndex[id] || []
             };
         }
@@ -752,6 +832,8 @@
             renderCompareSelect();
             renderSourcesTable();
             renderUpgradesTab();
+            renderBossLootTab();
+            renderExpedLootTab();
         }
 
         function renderStats() {
@@ -870,6 +952,24 @@
                     <div class="usage-title">🌿 Obtenu par compostage :</div>
                     <ul class="usage-list">${usage.compostFrom.map(c =>
                         `<li>🪴 ${c.plantName}</li>`
+                    ).join('')}</ul></div>`;
+            }
+
+            // Boss loot sources
+            if (usage.bossLootFrom.length > 0) {
+                usageHtml += `<div class="usage-section">
+                    <div class="usage-title">🐉 Droppé par boss PVE :</div>
+                    <ul class="usage-list">${usage.bossLootFrom.map(b =>
+                        `<li>⚔️ ${b.bosses} <span style="color:var(--text-secondary);font-size:0.85rem">(${b.mapName})</span></li>`
+                    ).join('')}</ul></div>`;
+            }
+
+            // Expedition loot sources
+            if (usage.expeditionLootFrom.length > 0) {
+                usageHtml += `<div class="usage-section">
+                    <div class="usage-title">🗺️ Trouvé en expédition :</div>
+                    <ul class="usage-list">${usage.expeditionLootFrom.map(e =>
+                        `<li>${e.locationEmoji} ${e.locationName}</li>`
                     ).join('')}</ul></div>`;
             }
 
@@ -1052,12 +1152,22 @@
                     ? usage.producedByRecipes.map(r => `📖 ${getRecipeName(r.recipeId)}`).join('<br>')
                     : '<span style="color:var(--text-secondary)">—</span>';
 
+                const bossHtml = usage.bossLootFrom.length > 0
+                    ? usage.bossLootFrom.map(b => `⚔️ ${b.bosses}`).join('<br>')
+                    : '<span style="color:var(--text-secondary)">—</span>';
+
+                const expedHtml = usage.expeditionLootFrom.length > 0
+                    ? usage.expeditionLootFrom.map(e => `${e.locationEmoji} ${e.locationName}`).join('<br>')
+                    : '<span style="color:var(--text-secondary)">—</span>';
+
                 return `<tr>
                     <td><span class="type-emoji">${info.typeEmoji}</span> <strong>${info.name}</strong> <span style="color:var(--text-secondary)">#${id}</span></td>
                     <td>${info.typeLabel}</td>
                     <td><span class="badge ${info.rarityCss}">${info.rarityName}</span></td>
                     <td>${compostHtml}</td>
                     <td>${craftHtml}</td>
+                    <td>${bossHtml}</td>
+                    <td>${expedHtml}</td>
                 </tr>`;
             }).join('');
         }
@@ -1111,12 +1221,14 @@
                         </tr></thead>
                         <tbody>
                         ${mats.map(mat => {
-                            const usage = usageIndex[mat.id] || { usedInRecipes: [], producedByRecipes: [], compostFrom: [] };
+                            const usage = usageIndex[mat.id] || { usedInRecipes: [], producedByRecipes: [], compostFrom: [], bossLootFrom: [], expeditionLootFrom: [] };
                             const upgrades = upgradeIndex[mat.id] || [];
                             const recipeCount = usage.usedInRecipes.length;
                             const unused = isUnused(mat.id);
                             const sources = [
                                 ...usage.compostFrom.map(c => `🪴 ${c.plantName}`),
+                                ...usage.bossLootFrom.map(b => `⚔️ ${b.bosses} (${b.mapName})`),
+                                ...usage.expeditionLootFrom.map(e => `${e.locationEmoji} ${e.locationName}`),
                                 ...usage.producedByRecipes.map(r => `📖 ${getRecipeName(r.recipeId)}`)
                             ];
 
@@ -1159,13 +1271,119 @@
         }
 
         // ========================
+        // BOSS LOOT TAB
+        // ========================
+        function renderBossLootTab() {
+            const container = document.getElementById('bossLootContent');
+            let html = '';
+
+            const RARITY_WEIGHTS = { 1: 60, 2: 30, 3: 10 };
+
+            for (const [mapId, entry] of Object.entries(BOSS_LOOT_TABLES)) {
+                const islandEmoji = entry.island === 2 ? '❄️' : '🌴';
+                const islandName = entry.island === 2 ? 'Île 2 (Glacée)' : 'Île 1 (Tropicale)';
+
+                let materialsHtml = '';
+                let totalWeight = 0;
+                const matEntries = [];
+
+                for (const matId of entry.materials) {
+                    const info = getMaterialInfo(matId);
+                    if (!info) continue;
+                    const weight = RARITY_WEIGHTS[info.rarity] || 0;
+                    totalWeight += weight;
+                    matEntries.push({ info, weight });
+                }
+
+                for (const entry of matEntries) {
+                    const pct = totalWeight > 0 ? ((entry.weight / totalWeight) * 100).toFixed(1) : '?';
+                    materialsHtml += `
+                        <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg-tertiary);border-radius:8px;">
+                            <span class="type-emoji">${entry.info.typeEmoji}</span>
+                            <strong>${entry.info.name}</strong>
+                            <span class="badge ${entry.info.rarityCss}" style="font-size:0.75rem">${entry.info.rarityName}</span>
+                            <span style="color:var(--text-secondary);font-size:0.85rem;margin-left:auto">${pct}%</span>
+                        </div>`;
+                }
+
+                html += `
+                    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px var(--shadow);">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                            <span style="font-size:1.3rem">${islandEmoji}</span>
+                            <div>
+                                <strong style="font-size:1.1rem;">⚔️ ${entry.bosses}</strong>
+                                <span style="color:var(--text-secondary);font-size:0.85rem;margin-left:8px;">${entry.name} — ${islandName}</span>
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:8px;">
+                            ${materialsHtml}
+                        </div>
+                    </div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // ========================
+        // EXPEDITION LOOT TAB
+        // ========================
+        function renderExpedLootTab() {
+            const container = document.getElementById('expedLootContent');
+            let html = '';
+
+            const RARITY_WEIGHTS = { 1: 60, 2: 30, 3: 10 };
+            const DROPS_BY_REWARD_INDEX = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5];
+
+            for (const [locationType, entry] of Object.entries(EXPEDITION_LOOT_TABLES)) {
+                let materialsHtml = '';
+                let totalWeight = 0;
+                const matEntries = [];
+
+                for (const matId of entry.materials) {
+                    const info = getMaterialInfo(matId);
+                    if (!info) continue;
+                    const weight = RARITY_WEIGHTS[info.rarity] || 0;
+                    totalWeight += weight;
+                    matEntries.push({ info, weight });
+                }
+
+                for (const matEntry of matEntries) {
+                    const pct = totalWeight > 0 ? ((matEntry.weight / totalWeight) * 100).toFixed(1) : '?';
+                    materialsHtml += `
+                        <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg-tertiary);border-radius:8px;">
+                            <span class="type-emoji">${matEntry.info.typeEmoji}</span>
+                            <strong>${matEntry.info.name}</strong>
+                            <span class="badge ${matEntry.info.rarityCss}" style="font-size:0.75rem">${matEntry.info.rarityName}</span>
+                            <span style="color:var(--text-secondary);font-size:0.85rem;margin-left:auto">${pct}%</span>
+                        </div>`;
+                }
+
+                html += `
+                    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px var(--shadow);">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                            <span style="font-size:1.3rem">${entry.emoji}</span>
+                            <div>
+                                <strong style="font-size:1.1rem;">${entry.name}</strong>
+                                <span style="color:var(--text-secondary);font-size:0.85rem;margin-left:8px;">Drops : ${DROPS_BY_REWARD_INDEX[1]}–${DROPS_BY_REWARD_INDEX[9]} (selon indice de récompense)</span>
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:8px;">
+                            ${materialsHtml}
+                        </div>
+                    </div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // ========================
         // TABS
         // ========================
         function switchTab(tabName) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-' + tabName).classList.add('active');
-            const labels = { catalog: 'Catalogue', compare: 'Comparer', sources: 'Sources', upgrades: 'Upgrades' };
+            const labels = { catalog: 'Catalogue', compare: 'Comparer', sources: 'Sources', upgrades: 'Upgrades', bossloot: 'Boss Loot', expedloot: 'Expedition Loot' };
             document.querySelectorAll('.tab-btn').forEach(b => {
                 if (b.textContent.toLowerCase().includes(labels[tabName]?.toLowerCase() || tabName)) {
                     b.classList.add('active');
