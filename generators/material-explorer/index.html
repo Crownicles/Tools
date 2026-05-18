@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crownicles — Explorateur de Matériaux</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚒️</text></svg>">
+    <link rel="stylesheet" href="material-explorer.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚒️ Explorateur de Matériaux</h1>
+            <p class="subtitle">Visualisez, comparez et analysez les matériaux de Crownicles</p>
+        </header>
+
+        <div class="github-section">
+            <div class="github-input-group">
+                <label>Owner</label>
+                <input type="text" id="repoOwner" value="Crownicles" placeholder="Owner">
+            </div>
+            <div class="github-input-group">
+                <label>Repository</label>
+                <input type="text" id="repoName" value="Crownicles" placeholder="Repo">
+            </div>
+            <div class="github-input-group">
+                <label>Branche</label>
+                <input type="text" id="branchName" value="cities2" placeholder="Branche">
+            </div>
+            <button class="github-load-btn" id="loadBtn" onclick="loadFromGithub()">
+                <span class="loading-spinner" id="loadingSpinner"></span>
+                <span id="loadBtnText">🚀 Charger depuis GitHub</span>
+            </button>
+            <div class="github-status" id="githubStatus"></div>
+        </div>
+
+        <div id="noData">
+            <h2>Aucune donnée chargée</h2>
+            <p>Cliquez sur "Charger depuis GitHub" pour commencer.</p>
+        </div>
+
+        <div id="mainContent" class="hidden">
+            <div id="statsBar" class="stats-bar"></div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('catalog')">📋 Catalogue</button>
+                <button class="tab-btn" onclick="switchTab('compare')">⚖️ Comparer</button>
+                <button class="tab-btn" onclick="switchTab('sources')">🌿 Sources</button>
+                <button class="tab-btn" onclick="switchTab('upgrades')">🔨 Upgrades</button>
+                <button class="tab-btn" onclick="switchTab('bossloot')">🐉 Boss Loot</button>
+                <button class="tab-btn" onclick="switchTab('expedloot')">🗺️ Expedition Loot</button>
+            </div>
+
+            <!-- Catalog tab -->
+            <div class="tab-content active" id="tab-catalog">
+                <div class="filters">
+                    <input type="text" id="materialSearch" placeholder="🔍 Rechercher un matériau..." oninput="filterMaterials()">
+                    <div id="typeFilters"></div>
+                    <div id="rarityFilters"></div>
+                </div>
+                <div class="materials-grid" id="materialsGrid"></div>
+            </div>
+
+            <!-- Compare tab -->
+            <div class="tab-content" id="tab-compare">
+                <div class="compare-panel">
+                    <div class="compare-header">
+                        <h3>⚖️ Comparer des matériaux</h3>
+                        <div>
+                            <select class="compare-select" id="compareSelect" multiple size="6"></select>
+                            <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:4px;">Ctrl+Click pour sélectionner plusieurs matériaux</p>
+                        </div>
+                    </div>
+                    <button class="github-load-btn" style="margin-bottom:16px" onclick="renderCompare()">Comparer la sélection</button>
+                    <div class="compare-grid" id="compareGrid"></div>
+                </div>
+            </div>
+
+            <!-- Sources tab -->
+            <div class="tab-content" id="tab-sources">
+                <h3 style="margin-bottom:16px;color:var(--accent-secondary);">🌿 Sources d'obtention des matériaux</h3>
+                <table class="source-table" id="sourceTable">
+                    <thead>
+                        <tr>
+                            <th>Matériau</th>
+                            <th>Type</th>
+                            <th>Rareté</th>
+                            <th>Compost (plante)</th>
+                            <th>Craft (recette)</th>
+                            <th>Boss PVE</th>
+                            <th>Expédition</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sourceTableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Upgrades tab -->
+            <div class="tab-content" id="tab-upgrades">
+                <h3 style="margin-bottom:16px;color:var(--accent-secondary);">🔨 Utilisation dans les upgrades d'items</h3>
+                <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque item utilise des matériaux du même type pour ses upgrades (niveaux 1-5). La sélection est pseudo-aléatoire par item+niveau. Cliquez sur "▶" pour voir les détails par matériau.</p>
+                <div id="upgradesContent"></div>
+            </div>
+
+            <!-- Boss Loot tab -->
+            <div class="tab-content" id="tab-bossloot">
+                <h3 style="margin-bottom:16px;color:var(--accent-secondary);">🐉 Loot des boss PVE</h3>
+                <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque boss des îles PVE possède une table de loot de matériaux. Lors d'une victoire, 5-10 unités sont droppées aléatoirement, pondérées par rareté (commun 60%, peu commun 30%, rare 10%).</p>
+                <div id="bossLootContent"></div>
+            </div>
+
+            <!-- Expedition Loot tab -->
+            <div class="tab-content" id="tab-expedloot">
+                <h3 style="margin-bottom:16px;color:var(--accent-secondary);">🗺️ Loot d'expédition</h3>
+                <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque type de terrain d'expédition possède une table de loot de matériaux. Le nombre de drops dépend de l'indice de récompense (1-5 drops), pondérés par rareté (commun 60%, peu commun 30%, rare 10%). Minimum reward index de 1 requis.</p>
+                <div id="expedLootContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuration & state -->
+    <script src="js/config/constants.js"></script>
+    <script src="js/state.js"></script>
+
+    <!-- Services -->
+    <script src="js/services/GithubFetcher.js"></script>
+    <script src="js/services/BossLootLoader.js"></script>
+    <script src="js/services/DataLoader.js"></script>
+
+    <!-- Indexes -->
+    <script src="js/indexes/UsageIndex.js"></script>
+    <script src="js/indexes/UpgradeIndex.js"></script>
+
+    <!-- Helpers -->
+    <script src="js/utils/lookups.js"></script>
+
+    <!-- Tabs -->
+    <script src="js/tabs/CatalogTab.js"></script>
+    <script src="js/tabs/CompareTab.js"></script>
+    <script src="js/tabs/SourcesTab.js"></script>
+    <script src="js/tabs/UpgradesTab.js"></script>
+    <script src="js/tabs/BossLootTab.js"></script>
+    <script src="js/tabs/ExpeditionLootTab.js"></script>
+
+    <!-- Orchestration -->
+    <script src="js/Renderer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

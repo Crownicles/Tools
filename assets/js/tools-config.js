@@ -193,7 +193,7 @@ const toolsConfig = [
         id: 'material-explorer',
         title: 'Explorateur de Matériaux',
         description: 'Visualise, compare et analyse les matériaux : utilisation en recettes, sources (compost/craft), et détail des upgrades d\'items.',
-        path: 'generators/material-explorer.html',
+        path: 'generators/material-explorer/index.html',
         category: 'Visualisation',
         tags: ['Matériaux', 'Upgrades', 'Recettes', 'Comparaison', 'Analyse'],
         icon: '⚒️',
