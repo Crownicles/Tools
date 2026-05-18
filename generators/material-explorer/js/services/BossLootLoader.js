@@ -50,7 +50,7 @@ function parseBossLootTablesFromSource(source) {
 
 /**
  * Loads BOSS_LOOT_TABLES from the repo, then enriches each map entry with
- * the list of bosses that live on that map (derived from Core/resources/monsters/*.json).
+ * the list of bosses that live on that map (derived from translations.pveMapsStory).
  *
  * @returns {Promise<Record<number, {name, bosses, island, materials}>>}
  */
@@ -59,35 +59,15 @@ async function loadBossLootTables(owner, repo, branch, statusUpdater) {
     const pveSource = await fetchText(owner, repo, branch, 'Lib/src/constants/PVEConstants.ts');
     const rawTables = parseBossLootTablesFromSource(pveSource);
 
-    statusUpdater?.('Chargement de la liste des monstres...');
-    const monsterFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/monsters');
-    const monsterJsonFiles = monsterFiles.filter(f => f.name.endsWith('.json'));
-
-    // Map: mapId -> Set of bossIds
-    const mapToBossIds = {};
-    await Promise.all(monsterJsonFiles.map(async (file) => {
-        try {
-            const id = parseInt(file.name.replace('.json', ''), 10);
-            if (Number.isNaN(id)) return;
-            const data = await fetchRaw(owner, repo, branch, `Core/resources/monsters/${file.name}`);
-            const mapIds = data.mapIds || [];
-            for (const mapId of mapIds) {
-                if (!mapToBossIds[mapId]) mapToBossIds[mapId] = new Set();
-                mapToBossIds[mapId].add(id);
-            }
-        }
-        catch {
-            // ignore individual file errors
-        }
-    }));
-
     const result = {};
     for (const [mapIdStr, materials] of Object.entries(rawTables)) {
         const mapId = parseInt(mapIdStr, 10);
         const mapName = translations?.map_locations?.[mapId]?.name || `Map #${mapId}`;
-        const bossIds = mapToBossIds[mapId] ? [...mapToBossIds[mapId]] : [];
-        const bossNames = bossIds
-            .map(id => translations?.monsters?.[id]?.name || `#${id}`)
+        const monsterKeys = translations?.pveMapsStory?.[mapId]
+            ? Object.keys(translations.pveMapsStory[mapId])
+            : [];
+        const bossNames = monsterKeys
+            .map(key => translations?.monsters?.[key]?.name || key)
             .join(', ') || '???';
         const island = Math.floor((mapId - 1000) / 100) + 1;
         result[mapId] = {
