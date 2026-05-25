@@ -94,7 +94,7 @@ function renderItemUpgradeList() {
                 <span><strong>${icon} ${c.name}</strong></span>
                 <span style="font-size:0.75rem;color:${subColor}">#${c.id}</span>
             </div>
-            <div style="font-size:0.78rem;color:${subColor}">${MATERIAL_RARITY_NAMES[c.rarity] || '?'} · type ${c.type}</div>
+            <div style="font-size:0.78rem;color:${subColor}">${ITEM_RARITY_NAMES[c.rarity] || '?'} · type ${c.type}</div>
         </div>`;
     }).join('');
 
@@ -148,10 +148,12 @@ function renderItemUpgradeDetail() {
         const matName = getMaterialName(m.materialId);
         const rarityName = MATERIAL_RARITY_NAMES[meta.rarity] || '?';
         const rarityCss = MATERIAL_RARITY_CSS[meta.rarity] || '';
+        const typeEmoji = MATERIAL_TYPE_EMOJI[meta.type] || '❓';
+        const typeLabel = MATERIAL_TYPE_LABEL[meta.type] || meta.type;
         return `<li style="margin:2px 0">
-            <strong>×${m.quantity}</strong> ${matName}
+            <strong>×${m.quantity}</strong> ${typeEmoji} ${matName}
             <span class="badge ${rarityCss}" style="font-size:0.7rem;margin-left:4px">${rarityName}</span>
-            <span style="color:var(--text-secondary);font-size:0.78rem"> · type ${meta.type}</span>
+            <span style="color:var(--text-secondary);font-size:0.78rem"> · ${typeLabel}</span>
         </li>`;
     };
 
@@ -186,7 +188,7 @@ function renderItemUpgradeDetail() {
             <span style="font-weight:400;color:var(--text-secondary);font-size:0.85rem">#${id}</span>
         </h3>
         <div style="color:var(--text-secondary);margin-bottom:12px">
-            <span class="badge ${MATERIAL_RARITY_CSS[item.rarity] || ''}">${MATERIAL_RARITY_NAMES[item.rarity] || '?'}</span>
+            <strong>${ITEM_RARITY_NAMES[item.rarity] || '?'}</strong>
             · type ${item.type}
         </div>
         <h4 style="margin:8px 0 4px 0;color:var(--accent-secondary)">Coût par niveau</h4>

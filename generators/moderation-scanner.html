@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modération Scanner - Crownicles</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-card: #1c2128;
+            --accent: #f78166;
+            --accent-green: #3fb950;
+            --accent-blue: #58a6ff;
+            --accent-yellow: #d29922;
+            --accent-red: #f85149;
+            --accent-purple: #bc8cff;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --border: #30363d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a0a2e, #0d1b3e);
+            border-bottom: 2px solid var(--accent);
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header h1 { font-size: 1.8em; color: var(--accent); }
+        .header p { color: var(--text-secondary); font-size: 0.9em; margin-top: 4px; }
+
+        .badge {
+            background: var(--accent);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 20px 0;
+        }
+
+        .sidebar-section { margin-bottom: 30px; }
+        .sidebar-title {
+            color: var(--text-secondary);
+            font-size: 0.75em;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 0 20px 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 8px;
+        }
+
+        .sidebar-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.9em;
+            text-align: left;
+            transition: background 0.2s;
+        }
+
+        .sidebar-btn:hover { background: var(--bg-tertiary); }
+        .sidebar-btn.active { background: var(--bg-card); border-left: 3px solid var(--accent); color: var(--accent); }
+        .sidebar-btn .icon { font-size: 1.1em; width: 20px; }
+        .sidebar-btn .cnt {
+            margin-left: auto;
+            background: var(--accent-red);
+            color: white;
+            border-radius: 10px;
+            padding: 1px 7px;
+            font-size: 0.75em;
+            font-weight: 700;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 20px;
+            font-size: 0.85em;
+        }
+        .stat-label { color: var(--text-secondary); }
+        .stat-value { font-weight: 700; color: var(--text-primary); }
+        .stat-value.danger { color: var(--accent-red); }
+        .stat-value.warn { color: var(--accent-yellow); }
+        .stat-value.ok { color: var(--accent-green); }
+
+        /* ── Main ── */
+        .main { padding: 25px; overflow-y: auto; }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sql-block {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            color: var(--accent-green);
+            overflow-x: auto;
+            white-space: pre;
+            margin: 8px 0;
+        }
+
+        .copy-sql-btn {
+            font-size: 0.75em;
+            padding: 4px 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+        .copy-sql-btn:hover { color: var(--text-primary); border-color: var(--accent-blue); }
+
+        textarea {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.82em;
+            padding: 10px;
+            resize: vertical;
+            min-height: 120px;
+        }
+        textarea:focus { outline: none; border-color: var(--accent-blue); }
+
+        .btn {
+            padding: 9px 18px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--accent-blue); color: #000; }
+        .btn-primary:hover { filter: brightness(1.15); }
+        .btn-danger { background: var(--accent-red); color: #fff; }
+        .btn-danger:hover { filter: brightness(1.15); }
+        .btn-success { background: var(--accent-green); color: #000; }
+        .btn-success:hover { filter: brightness(1.15); }
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .btn-ghost:hover { border-color: var(--text-primary); color: var(--text-primary); }
+        .btn-sm { padding: 5px 10px; font-size: 0.78em; }
+
+        .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+
+        /* ── Results table ── */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+        .results-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.75em;
+            letter-spacing: 1px;
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        .results-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        .results-table tr:hover td { background: var(--bg-tertiary); }
+
+        .offending-text { color: var(--accent-red); font-weight: 600; }
+        .highlight-word {
+            background: rgba(248, 81, 73, 0.25);
+            border-radius: 3px;
+            padding: 0 2px;
+        }
+        .suggested-text { color: var(--accent-green); font-style: italic; }
+        .editable-suggestion {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--accent-green);
+            font-style: italic;
+            padding: 3px 7px;
+            font-size: 0.9em;
+            width: 160px;
+        }
+        .editable-suggestion:focus { outline: none; border-color: var(--accent-green); }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: 700;
+        }
+        .sev-high { background: rgba(248,81,73,0.2); color: var(--accent-red); }
+        .sev-medium { background: rgba(210,153,34,0.2); color: var(--accent-yellow); }
+        .sev-low { background: rgba(139,148,158,0.15); color: var(--text-secondary); }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: 700;
+        }
+        .status-pending { background: rgba(210,153,34,0.2); color: var(--accent-yellow); }
+        .status-confirmed { background: rgba(248,81,73,0.2); color: var(--accent-red); }
+        .status-cleared { background: rgba(63,185,80,0.2); color: var(--accent-green); }
+
+        /* ── Dict editor ── */
+        .dict-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .dict-entry {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+        }
+        .dict-bad { color: var(--accent-red); font-weight: 700; flex: 1; font-family: monospace; font-size: 0.9em; }
+        .dict-arrow { color: var(--text-secondary); }
+        .dict-good { color: var(--accent-green); flex: 1; font-family: monospace; font-size: 0.9em; }
+        .dict-del { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1em; }
+        .dict-del:hover { color: var(--accent-red); }
+        .dict-severity { font-size: 0.7em; }
+
+        /* ── Offender tracker ── */
+        .offender-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .offender-id { font-family: monospace; font-size: 0.85em; color: var(--accent-blue); }
+        .offender-strikes {
+            display: inline-block;
+            background: var(--accent-red);
+            color: white;
+            border-radius: 12px;
+            padding: 2px 9px;
+            font-size: 0.75em;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        .offender-violations { margin-top: 8px; }
+        .violation-item {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            padding: 3px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ── Output ── */
+        .output-block {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent-green);
+            border-radius: 6px;
+            padding: 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82em;
+            white-space: pre-wrap;
+            color: var(--accent-green);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* ── Misc ── */
+        .empty-state {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 40px 20px;
+            font-size: 0.9em;
+        }
+        .empty-state .icon { font-size: 2.5em; margin-bottom: 10px; }
+
+        .info-box {
+            background: rgba(88,166,255,0.1);
+            border: 1px solid rgba(88,166,255,0.3);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.85em;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent-green);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            z-index: 9999;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        select {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 0.85em;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .filter-bar input {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            flex: 1;
+            min-width: 150px;
+        }
+        .filter-bar input:focus { outline: none; border-color: var(--accent-blue); }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div>
+        <h1>🛡️ Modération Scanner</h1>
+        <p>Détection de contenu offensant dans les noms de familiers, guildes et descriptions</p>
+    </div>
+    <span class="badge">Crownicles Admin</span>
+</div>
+
+<div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">Navigation</div>
+            <button class="sidebar-btn active" onclick="showTab('scan')" id="btn-scan">
+                <span class="icon">🔍</span> Scanner
+                <span class="cnt" id="cnt-scan" style="display:none">0</span>
+            </button>
+            <button class="sidebar-btn" onclick="showTab('offenders')" id="btn-offenders">
+                <span class="icon">🚫</span> Récidivistes
+                <span class="cnt" id="cnt-offenders" style="display:none">0</span>
+            </button>
+            <button class="sidebar-btn" onclick="showTab('dict')" id="btn-dict">
+                <span class="icon">📖</span> Dictionnaire
+            </button>
+            <button class="sidebar-btn" onclick="showTab('output')" id="btn-output">
+                <span class="icon">📋</span> Commande Admin
+            </button>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Statistiques</div>
+            <div class="stat-row"><span class="stat-label">Familiers scannés</span><span class="stat-value" id="stat-pets">0</span></div>
+            <div class="stat-row"><span class="stat-label">Guildes scannées</span><span class="stat-value" id="stat-guilds">0</span></div>
+            <div class="stat-row"><span class="stat-label">Infractions détectées</span><span class="stat-value danger" id="stat-detected">0</span></div>
+            <div class="stat-row"><span class="stat-label">Confirmées</span><span class="stat-value danger" id="stat-confirmed">0</span></div>
+            <div class="stat-row"><span class="stat-label">Ignorées</span><span class="stat-value ok" id="stat-cleared">0</span></div>
+            <div class="stat-row"><span class="stat-label">Récidivistes</span><span class="stat-value warn" id="stat-offenders">0</span></div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Actions</div>
+            <button class="sidebar-btn" onclick="exportData()">
+                <span class="icon">💾</span> Exporter JSON
+            </button>
+            <button class="sidebar-btn" onclick="importData()">
+                <span class="icon">📂</span> Importer JSON
+            </button>
+            <button class="sidebar-btn" onclick="clearAll()" style="color: var(--accent-red)">
+                <span class="icon">🗑️</span> Tout effacer
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- ══════════════════════════════════════════ SCAN TAB ══ -->
+        <div class="tab-panel active" id="tab-scan">
+
+            <!-- Pet Names -->
+            <div class="card">
+                <div class="card-title">🐾 Noms de Familiers</div>
+                <div class="info-box">
+                    Colle le résultat de la requête SQL ci-dessous. Le JSON doit être un tableau d'objets avec les champs <code>petEntityId</code>, <code>nickname</code>, <code>ownerKeycloakId</code>.
+                </div>
+                <div class="sql-block">SELECT pe.id AS petEntityId, pe.nickname, p.keycloakId AS ownerKeycloakId
+FROM game_PetEntities pe
+JOIN game_Players p ON p.petId = pe.id
+WHERE pe.nickname IS NOT NULL AND pe.nickname != ''
+ORDER BY pe.id;</div>
+                <button class="copy-sql-btn" onclick="copySql(this)">📋 Copier la requête</button>
+                <br><br>
+                <textarea id="input-pets" placeholder='Cole le résultat ici (JSON array)...'></textarea>
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="scanSection('pets')">🔍 Scanner les familiers</button>
+                    <button class="btn btn-ghost btn-sm" onclick="loadExamplePets()">Charger exemple</button>
+                </div>
+            </div>
+
+            <!-- Guild Names -->
+            <div class="card">
+                <div class="card-title">⚔️ Noms de Guildes</div>
+                <div class="info-box">
+                    Champs attendus : <code>guildId</code>, <code>name</code>, <code>chiefKeycloakId</code>, <code>elderKeycloakId</code> (nullable).
+                </div>
+                <div class="sql-block">SELECT g.id AS guildId, g.name, pc.keycloakId AS chiefKeycloakId,
+       pe.keycloakId AS elderKeycloakId
+FROM game_Guilds g
+JOIN game_Players pc ON pc.id = g.chiefId
+LEFT JOIN game_Players pe ON pe.id = g.elderId
+WHERE g.name IS NOT NULL
+ORDER BY g.id;</div>
+                <button class="copy-sql-btn" onclick="copySql(this)">📋 Copier la requête</button>
+                <br><br>
+                <textarea id="input-guild-names" placeholder='Cole le résultat ici (JSON array)...'></textarea>
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="scanSection('guildNames')">🔍 Scanner les noms</button>
+                    <button class="btn btn-ghost btn-sm" onclick="loadExampleGuildNames()">Charger exemple</button>
+                </div>
+            </div>
+
+            <!-- Guild Descriptions -->
+            <div class="card">
+                <div class="card-title">📜 Descriptions de Guildes</div>
+                <div class="info-box">
+                    Champs attendus : <code>guildId</code>, <code>guildName</code>, <code>guildDescription</code>, <code>chiefKeycloakId</code>.
+                </div>
+                <div class="sql-block">SELECT g.id AS guildId, g.name AS guildName, g.guildDescription,
+       p.keycloakId AS chiefKeycloakId
+FROM game_Guilds g
+JOIN game_Players p ON p.id = g.chiefId
+WHERE g.guildDescription IS NOT NULL AND g.guildDescription != ''
+ORDER BY g.id;</div>
+                <button class="copy-sql-btn" onclick="copySql(this)">📋 Copier la requête</button>
+                <br><br>
+                <textarea id="input-guild-desc" placeholder='Cole le résultat ici (JSON array)...'></textarea>
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="scanSection('guildDesc')">🔍 Scanner les descriptions</button>
+                    <button class="btn btn-ghost btn-sm" onclick="loadExampleGuildDesc()">Charger exemple</button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="card" id="results-card" style="display:none">
+                <div class="card-title">⚠️ Infractions détectées
+                    <span style="margin-left:auto; font-size:0.8em; color: var(--text-secondary)" id="results-count"></span>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" id="filter-search" placeholder="Rechercher..." oninput="renderResults()">
+                    <select id="filter-type" onchange="renderResults()">
+                        <option value="">Tous les types</option>
+                        <option value="pet">Familiers</option>
+                        <option value="guild_name">Noms de guildes</option>
+                        <option value="guild_desc">Descriptions</option>
+                    </select>
+                    <select id="filter-status" onchange="renderResults()">
+                        <option value="">Tous statuts</option>
+                        <option value="pending">En attente</option>
+                        <option value="confirmed">Confirmé</option>
+                        <option value="cleared">Ignoré</option>
+                    </select>
+                    <select id="filter-sev" onchange="renderResults()">
+                        <option value="">Toute sévérité</option>
+                        <option value="high">Élevée</option>
+                        <option value="medium">Moyenne</option>
+                        <option value="low">Faible</option>
+                    </select>
+                    <button class="btn btn-success btn-sm" onclick="confirmAll()">✅ Confirmer tout</button>
+                    <button class="btn btn-ghost btn-sm" onclick="clearAll_pending()">Ignorer tout</button>
+                </div>
+                <div style="overflow-x:auto">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Contenu original</th>
+                                <th>Suggestion</th>
+                                <th>Sévérité</th>
+                                <th>Propriétaire(s)</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════ OFFENDERS TAB ══ -->
+        <div class="tab-panel" id="tab-offenders">
+            <div class="card">
+                <div class="card-title">🚫 Récidivistes connus</div>
+                <p style="font-size:0.85em; color:var(--text-secondary); margin-bottom:15px">
+                    Les joueurs avec plusieurs infractions confirmées. Le bouton "Bannir" génère l'ID à intégrer dans la future commande admin.
+                </p>
+                <div id="offenders-list">
+                    <div class="empty-state"><div class="icon">😇</div>Aucun récidiviste pour l'instant</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════ DICT TAB ══ -->
+        <div class="tab-panel" id="tab-dict">
+            <div class="card">
+                <div class="card-title">📖 Dictionnaire de modération</div>
+                <p style="font-size:0.85em; color:var(--text-secondary); margin-bottom:15px">
+                    Mots interdits et leurs alternatives humoristiques. La détection est insensible à la casse et aux variantes simples (espaces, répétitions).
+                </p>
+                <div class="btn-row" style="margin-bottom:15px">
+                    <button class="btn btn-primary btn-sm" onclick="showAddWord()">➕ Ajouter un mot</button>
+                    <button class="btn btn-ghost btn-sm" onclick="resetDict()">↩️ Réinitialiser</button>
+                </div>
+                <div id="add-word-form" style="display:none; margin-bottom:15px">
+                    <div class="card" style="border-color: var(--accent-blue)">
+                        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+                            <input type="text" id="new-bad" placeholder="Mot offensant" style="background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-primary);padding:7px 12px;border-radius:5px;font-size:0.9em;width:180px">
+                            <span style="color:var(--text-secondary)">→</span>
+                            <input type="text" id="new-good" placeholder="Alternative drôle" style="background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-primary);padding:7px 12px;border-radius:5px;font-size:0.9em;width:180px">
+                            <select id="new-sev" style="padding:7px 12px">
+                                <option value="high">Élevée</option>
+                                <option value="medium" selected>Moyenne</option>
+                                <option value="low">Faible</option>
+                            </select>
+                            <button class="btn btn-success btn-sm" onclick="addWord()">Ajouter</button>
+                            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('add-word-form').style.display='none'">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="dict-grid" id="dict-grid"></div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════ OUTPUT TAB ══ -->
+        <div class="tab-panel" id="tab-output">
+            <div class="card">
+                <div class="card-title">📋 Génération de la commande admin</div>
+                <p style="font-size:0.85em; color:var(--text-secondary); margin-bottom:15px">
+                    Ce JSON liste toutes les infractions <strong>confirmées</strong> avec les modifications à appliquer. À utiliser avec la future commande admin de modération en masse.
+                </p>
+                <div class="btn-row" style="margin-bottom:15px">
+                    <button class="btn btn-primary" onclick="generateOutput()">⚡ Générer</button>
+                    <button class="btn btn-success" onclick="copyOutput()">📋 Copier</button>
+                </div>
+                <div class="output-block" id="output-block">// Clique sur "Générer" pour afficher le résultat</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📤 Export récidivistes (ban list)</div>
+                <p style="font-size:0.85em; color:var(--text-secondary); margin-bottom:15px">
+                    Liste des keycloakId des joueurs avec ≥2 infractions confirmées.
+                </p>
+                <div class="btn-row" style="margin-bottom:15px">
+                    <button class="btn btn-danger" onclick="generateBanList()">🚫 Générer ban list</button>
+                    <button class="btn btn-success" onclick="copyBanList()">📋 Copier</button>
+                </div>
+                <div class="output-block" id="ban-list-block">// Clique sur "Générer ban list" pour afficher</div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<div class="toast" id="toast"></div>
+<input type="file" id="import-file" style="display:none" accept=".json" onchange="handleImport(event)">
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+//  DEFAULT DICTIONARY
+// ════════════════════════════════════════════════════════════════════════════
+const DEFAULT_DICT = [
+    // High severity (gross insults / sexual)
+    { bad: "connard",     good: "canard",      severity: "high" },
+    { bad: "connasse",    good: "canevas",      severity: "high" },
+    { bad: "enculé",      good: "écolé",        severity: "high" },
+    { bad: "encule",      good: "écule",        severity: "high" },
+    { bad: "salope",      good: "salopette",    severity: "high" },
+    { bad: "pédé",        good: "pédalo",       severity: "high" },
+    { bad: "pede",        good: "pédalo",       severity: "high" },
+    { bad: "fdp",         good: "fdp (fils de papa)", severity: "high" },
+    { bad: "fils de pute",good: "fils de papa", severity: "high" },
+    { bad: "nique ta mère", good: "nique ta grand-mère (de tarte aux pommes)", severity: "high" },
+    { bad: "ntm",         good: "noté, très mimis", severity: "high" },
+    { bad: "grosse pute", good: "grosse flûte", severity: "high" },
+
+    // Medium severity
+    { bad: "putain",      good: "poutine",      severity: "medium" },
+    { bad: "merde",       good: "merle",        severity: "medium" },
+    { bad: "con",         good: "cône",         severity: "medium" },
+    { bad: "cul",         good: "culbuto",      severity: "medium" },
+    { bad: "pute",        good: "flûte",        severity: "medium" },
+    { bad: "bâtard",      good: "bâton",        severity: "medium" },
+    { bad: "batard",      good: "bâton",        severity: "medium" },
+    { bad: "pd",          good: "panda",        severity: "medium" },
+    { bad: "gogol",       good: "gorgonzola",   severity: "medium" },
+    { bad: "attardé",     good: "retardataire", severity: "medium" },
+    { bad: "retardé",     good: "retardataire", severity: "medium" },
+    { bad: "débile",      good: "débile (gentiment)",severity: "medium" },
+    { bad: "branleur",    good: "branloire",    severity: "medium" },
+    { bad: "chier",       good: "chœur",        severity: "medium" },
+    { bad: "chiote",      good: "chiot",        severity: "medium" },
+    { bad: "niquer",      good: "nager",        severity: "medium" },
+
+    // Low severity (mildly rude, depending on context)
+    { bad: "nul",         good: "nul (aux échecs)", severity: "low" },
+    { bad: "idiot",       good: "idiot (du village)", severity: "low" },
+    { bad: "imbécile",    good: "imbécile heureux", severity: "low" },
+    { bad: "crétin",      good: "crêperie",     severity: "low" },
+];
+
+// ════════════════════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════════════════════
+let state = {
+    dict: [],
+    violations: [],      // { id, type, entityId, originalText, field, detectedWords, suggestion, keycloakIds, severity, status }
+    offenders: {},       // keycloakId → { strikes: number, violations: [] }
+    stats: { pets: 0, guilds: 0 }
+};
+
+function loadState() {
+    const raw = localStorage.getItem('moderation_state');
+    if (raw) {
+        try { state = { ...state, ...JSON.parse(raw) }; } catch(e) {}
+    }
+    if (!state.dict || state.dict.length === 0) {
+        state.dict = DEFAULT_DICT.map(d => ({...d}));
+    }
+}
+
+function saveState() {
+    localStorage.setItem('moderation_state', JSON.stringify(state));
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  TAB NAVIGATION
+// ════════════════════════════════════════════════════════════════════════════
+function showTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.getElementById('btn-' + name).classList.add('active');
+    if (name === 'dict') renderDict();
+    if (name === 'offenders') renderOffenders();
+    if (name === 'output') generateOutput();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  SCANNING
+// ════════════════════════════════════════════════════════════════════════════
+function normalize(str) {
+    return str.toLowerCase()
+        .replace(/[éèêë]/g, 'e').replace(/[àâ]/g, 'a').replace(/[ùû]/g, 'u')
+        .replace(/[îï]/g, 'i').replace(/[ôö]/g, 'o').replace(/[ç]/g, 'c')
+        .replace(/[\s\-_*\.]+/g, '')
+        .replace(/(.)\1+/g, '$1'); // collapse repeated chars: "connnn" → "con"
+}
+
+function scanText(text) {
+    const normText = normalize(text);
+    const hits = [];
+    for (const entry of state.dict) {
+        const normBad = normalize(entry.bad);
+        if (normText.includes(normBad)) {
+            hits.push(entry);
+        }
+    }
+    return hits;
+}
+
+function buildSuggestion(text, hits) {
+    let result = text;
+    for (const hit of hits) {
+        // case-insensitive replace (best-effort)
+        const re = new RegExp(hit.bad.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        result = result.replace(re, hit.good);
+    }
+    return result;
+}
+
+function maxSeverity(hits) {
+    if (hits.some(h => h.severity === 'high')) return 'high';
+    if (hits.some(h => h.severity === 'medium')) return 'medium';
+    return 'low';
+}
+
+function highlightBad(text, hits) {
+    let result = text;
+    for (const hit of hits) {
+        const re = new RegExp('(' + hit.bad.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        result = result.replace(re, '<span class="highlight-word">$1</span>');
+    }
+    return result;
+}
+
+function parseJson(raw) {
+    try {
+        const parsed = JSON.parse(raw.trim());
+        if (Array.isArray(parsed)) return parsed;
+    } catch(e) {}
+    return null;
+}
+
+function scanSection(section) {
+    let inputId, type, textField, idField, ownerFields;
+    if (section === 'pets') {
+        inputId = 'input-pets'; type = 'pet'; textField = 'nickname'; idField = 'petEntityId'; ownerFields = ['ownerKeycloakId'];
+    } else if (section === 'guildNames') {
+        inputId = 'input-guild-names'; type = 'guild_name'; textField = 'name'; idField = 'guildId'; ownerFields = ['chiefKeycloakId', 'elderKeycloakId'];
+    } else {
+        inputId = 'input-guild-desc'; type = 'guild_desc'; textField = 'guildDescription'; idField = 'guildId'; ownerFields = ['chiefKeycloakId'];
+    }
+
+    const raw = document.getElementById(inputId).value.trim();
+    if (!raw) { toast('⚠️ Champ vide !', 'warn'); return; }
+    const data = parseJson(raw);
+    if (!data) { toast('❌ JSON invalide', 'err'); return; }
+
+    // Remove previous violations of same type
+    state.violations = state.violations.filter(v => v.type !== type);
+
+    let count = 0;
+    for (const row of data) {
+        const text = row[textField];
+        if (!text) continue;
+        const hits = scanText(text);
+        if (hits.length === 0) continue;
+        const sev = maxSeverity(hits);
+        const keycloakIds = ownerFields.map(f => row[f]).filter(Boolean);
+        state.violations.push({
+            id: `${type}_${row[idField]}_${Date.now()}_${Math.random()}`,
+            type,
+            entityId: row[idField],
+            originalText: text,
+            field: textField,
+            detectedWords: hits.map(h => h.bad),
+            suggestion: buildSuggestion(text, hits),
+            keycloakIds,
+            severity: sev,
+            status: 'pending',
+            highlightedText: highlightBad(text, hits)
+        });
+        count++;
+    }
+
+    if (section === 'pets') state.stats.pets = data.length;
+    else state.stats.guilds = data.length;
+
+    saveState();
+    updateStats();
+    renderResults();
+    document.getElementById('results-card').style.display = 'block';
+    document.getElementById('results-card').scrollIntoView({ behavior: 'smooth' });
+    toast(`✅ ${count} infraction(s) détectée(s) sur ${data.length} entrées`);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  RENDER RESULTS
+// ════════════════════════════════════════════════════════════════════════════
+function renderResults() {
+    const search = document.getElementById('filter-search').value.toLowerCase();
+    const typeF = document.getElementById('filter-type').value;
+    const statusF = document.getElementById('filter-status').value;
+    const sevF = document.getElementById('filter-sev').value;
+
+    const filtered = state.violations.filter(v => {
+        if (typeF && v.type !== typeF) return false;
+        if (statusF && v.status !== statusF) return false;
+        if (sevF && v.severity !== sevF) return false;
+        if (search && !v.originalText.toLowerCase().includes(search)
+            && !v.keycloakIds.some(k => k.toLowerCase().includes(search))) return false;
+        return true;
+    });
+
+    document.getElementById('results-count').textContent = `${filtered.length} résultat(s)`;
+
+    const tbody = document.getElementById('results-tbody');
+    if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-secondary);padding:30px">Aucun résultat</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(v => `
+        <tr>
+            <td><span class="severity-badge sev-${v.severity}">${typeLabel(v.type)}</span></td>
+            <td class="offending-text">${v.highlightedText || v.originalText}</td>
+            <td><input class="editable-suggestion" value="${escHtml(v.suggestion)}" onchange="updateSuggestion('${v.id}', this.value)"></td>
+            <td><span class="severity-badge sev-${v.severity}">${sevLabel(v.severity)}</span></td>
+            <td style="font-family:monospace;font-size:0.78em;color:var(--accent-blue)">
+                ${v.keycloakIds.map(k => `<div title="${k}">${k.slice(0,8)}…</div>`).join('')}
+            </td>
+            <td><span class="status-badge status-${v.status}">${statusLabel(v.status)}</span></td>
+            <td>
+                <div style="display:flex;gap:5px;flex-wrap:wrap">
+                    ${v.status !== 'confirmed' ? `<button class="btn btn-danger btn-sm" onclick="setStatus('${v.id}','confirmed')">✅ Confirmer</button>` : ''}
+                    ${v.status !== 'cleared' ? `<button class="btn btn-ghost btn-sm" onclick="setStatus('${v.id}','cleared')">❌ Ignorer</button>` : ''}
+                    ${v.status !== 'pending' ? `<button class="btn btn-ghost btn-sm" onclick="setStatus('${v.id}','pending')">↩️</button>` : ''}
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function typeLabel(t) {
+    return { pet: '🐾 Familier', guild_name: '⚔️ Guilde', guild_desc: '📜 Description' }[t] || t;
+}
+function sevLabel(s) {
+    return { high: 'Élevée', medium: 'Moyenne', low: 'Faible' }[s] || s;
+}
+function statusLabel(s) {
+    return { pending: '⏳ En attente', confirmed: '🚫 Confirmé', cleared: '✅ Ignoré' }[s] || s;
+}
+function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function setStatus(id, status) {
+    const v = state.violations.find(x => x.id === id);
+    if (!v) return;
+    v.status = status;
+
+    // Update offender tracker
+    if (status === 'confirmed') {
+        for (const k of v.keycloakIds) {
+            if (!state.offenders[k]) state.offenders[k] = { strikes: 0, violations: [] };
+            // avoid double-counting
+            if (!state.offenders[k].violations.includes(id)) {
+                state.offenders[k].strikes++;
+                state.offenders[k].violations.push(id);
+            }
+        }
+    } else if (status !== 'confirmed') {
+        // un-count if it was confirmed before
+        for (const k of v.keycloakIds) {
+            if (state.offenders[k] && state.offenders[k].violations.includes(id)) {
+                state.offenders[k].strikes = Math.max(0, state.offenders[k].strikes - 1);
+                state.offenders[k].violations = state.offenders[k].violations.filter(x => x !== id);
+            }
+        }
+    }
+
+    saveState();
+    updateStats();
+    renderResults();
+}
+
+function updateSuggestion(id, value) {
+    const v = state.violations.find(x => x.id === id);
+    if (v) { v.suggestion = value; saveState(); }
+}
+
+function confirmAll() {
+    const pending = state.violations.filter(v => v.status === 'pending');
+    pending.forEach(v => setStatus(v.id, 'confirmed'));
+    toast(`✅ ${pending.length} infraction(s) confirmée(s)`);
+}
+
+function clearAll_pending() {
+    const pending = state.violations.filter(v => v.status === 'pending');
+    pending.forEach(v => setStatus(v.id, 'cleared'));
+    toast(`✅ ${pending.length} infraction(s) ignorées`);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  STATS
+// ════════════════════════════════════════════════════════════════════════════
+function updateStats() {
+    const det = state.violations.length;
+    const conf = state.violations.filter(v => v.status === 'confirmed').length;
+    const cl = state.violations.filter(v => v.status === 'cleared').length;
+    const off = Object.values(state.offenders).filter(o => o.strikes >= 2).length;
+
+    document.getElementById('stat-pets').textContent = state.stats.pets;
+    document.getElementById('stat-guilds').textContent = state.stats.guilds;
+    document.getElementById('stat-detected').textContent = det;
+    document.getElementById('stat-confirmed').textContent = conf;
+    document.getElementById('stat-cleared').textContent = cl;
+    document.getElementById('stat-offenders').textContent = off;
+
+    const cntScan = document.getElementById('cnt-scan');
+    if (det > 0) { cntScan.textContent = det; cntScan.style.display = 'inline'; }
+    else cntScan.style.display = 'none';
+
+    const cntOff = document.getElementById('cnt-offenders');
+    if (off > 0) { cntOff.textContent = off; cntOff.style.display = 'inline'; }
+    else cntOff.style.display = 'none';
+
+    if (det > 0) document.getElementById('results-card').style.display = 'block';
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  OFFENDERS
+// ════════════════════════════════════════════════════════════════════════════
+function renderOffenders() {
+    const container = document.getElementById('offenders-list');
+    const entries = Object.entries(state.offenders)
+        .filter(([, v]) => v.strikes > 0)
+        .sort((a, b) => b[1].strikes - a[1].strikes);
+
+    if (entries.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="icon">😇</div>Aucun récidiviste pour l\'instant</div>';
+        return;
+    }
+
+    container.innerHTML = entries.map(([k, o]) => {
+        const violations = o.violations.map(id => {
+            const v = state.violations.find(x => x.id === id);
+            if (!v) return '';
+            return `<div class="violation-item">${typeLabel(v.type)} — <span class="offending-text">${escHtml(v.originalText.slice(0, 60))}</span></div>`;
+        }).join('');
+
+        const isRepeat = o.strikes >= 2;
+        return `<div class="offender-card" style="${isRepeat ? 'border-color: var(--accent-red)' : ''}">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+                <span>
+                    <span class="offender-id">${k}</span>
+                    <span class="offender-strikes">${o.strikes} infraction${o.strikes > 1 ? 's' : ''}</span>
+                    ${isRepeat ? '<span class="severity-badge sev-high" style="margin-left:8px">⚠️ Récidiviste</span>' : ''}
+                </span>
+                <button class="btn btn-ghost btn-sm" onclick="copyId('${k}')">📋 Copier ID</button>
+            </div>
+            <div class="offender-violations">${violations}</div>
+        </div>`;
+    }).join('');
+}
+
+function copyId(id) {
+    navigator.clipboard.writeText(id);
+    toast('📋 ID copié !');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  DICTIONARY
+// ════════════════════════════════════════════════════════════════════════════
+function renderDict() {
+    const grid = document.getElementById('dict-grid');
+    grid.innerHTML = state.dict.map((d, i) => `
+        <div class="dict-entry">
+            <span class="dict-bad">${escHtml(d.bad)}</span>
+            <span class="dict-arrow">→</span>
+            <span class="dict-good">${escHtml(d.good)}</span>
+            <span class="dict-severity">
+                <span class="severity-badge sev-${d.severity}">${sevLabel(d.severity).charAt(0)}</span>
+            </span>
+            <button class="dict-del" onclick="deleteWord(${i})" title="Supprimer">✕</button>
+        </div>
+    `).join('');
+}
+
+function showAddWord() {
+    document.getElementById('add-word-form').style.display = 'block';
+    document.getElementById('new-bad').focus();
+}
+
+function addWord() {
+    const bad = document.getElementById('new-bad').value.trim();
+    const good = document.getElementById('new-good').value.trim();
+    const sev = document.getElementById('new-sev').value;
+    if (!bad || !good) { toast('⚠️ Remplis les deux champs', 'warn'); return; }
+    state.dict.push({ bad, good, severity: sev });
+    saveState();
+    renderDict();
+    document.getElementById('new-bad').value = '';
+    document.getElementById('new-good').value = '';
+    document.getElementById('add-word-form').style.display = 'none';
+    toast('✅ Mot ajouté');
+}
+
+function deleteWord(i) {
+    state.dict.splice(i, 1);
+    saveState();
+    renderDict();
+}
+
+function resetDict() {
+    if (!confirm('Réinitialiser le dictionnaire par défaut ?')) return;
+    state.dict = DEFAULT_DICT.map(d => ({...d}));
+    saveState();
+    renderDict();
+    toast('↩️ Dictionnaire réinitialisé');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  OUTPUT GENERATION
+// ════════════════════════════════════════════════════════════════════════════
+function generateOutput() {
+    const confirmed = state.violations.filter(v => v.status === 'confirmed');
+    if (confirmed.length === 0) {
+        document.getElementById('output-block').textContent = '// Aucune infraction confirmée pour l\'instant';
+        return;
+    }
+
+    const payload = confirmed.map(v => {
+        const base = {
+            type: v.type,
+            entityId: v.entityId,
+            field: v.field,
+            originalValue: v.originalText,
+            newValue: v.suggestion,
+            severity: v.severity,
+            responsibleKeycloakIds: v.keycloakIds
+        };
+        return base;
+    });
+
+    document.getElementById('output-block').textContent = JSON.stringify(payload, null, 2);
+}
+
+function copyOutput() {
+    const text = document.getElementById('output-block').textContent;
+    navigator.clipboard.writeText(text);
+    toast('📋 Copié !');
+}
+
+function generateBanList() {
+    const repeat = Object.entries(state.offenders)
+        .filter(([, o]) => o.strikes >= 2)
+        .map(([k, o]) => ({ keycloakId: k, strikes: o.strikes }))
+        .sort((a, b) => b.strikes - a.strikes);
+
+    if (repeat.length === 0) {
+        document.getElementById('ban-list-block').textContent = '// Aucun récidiviste (< 2 infractions)';
+        return;
+    }
+    document.getElementById('ban-list-block').textContent = JSON.stringify(repeat, null, 2);
+}
+
+function copyBanList() {
+    const text = document.getElementById('ban-list-block').textContent;
+    navigator.clipboard.writeText(text);
+    toast('📋 Ban list copiée !');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  IMPORT / EXPORT
+// ════════════════════════════════════════════════════════════════════════════
+function exportData() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `moderation-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('💾 Exporté !');
+}
+
+function importData() {
+    document.getElementById('import-file').click();
+}
+
+function handleImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            const imported = JSON.parse(e.target.result);
+            state = { ...state, ...imported };
+            saveState();
+            updateStats();
+            renderResults();
+            if (state.violations.length > 0) {
+                document.getElementById('results-card').style.display = 'block';
+            }
+            toast('📂 Importé !');
+        } catch {
+            toast('❌ Fichier invalide', 'err');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+function clearAll() {
+    if (!confirm('Tout effacer (violations + récidivistes) ?')) return;
+    state.violations = [];
+    state.offenders = {};
+    state.stats = { pets: 0, guilds: 0 };
+    saveState();
+    updateStats();
+    renderResults();
+    document.getElementById('results-card').style.display = 'none';
+    toast('🗑️ Effacé');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  UTILITIES
+// ════════════════════════════════════════════════════════════════════════════
+function toast(msg, type = 'ok') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.style.background = type === 'err' ? 'var(--accent-red)' : type === 'warn' ? 'var(--accent-yellow)' : 'var(--accent-green)';
+    el.style.color = type === 'warn' ? '#000' : type === 'ok' ? '#000' : '#fff';
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+function copySql(btn) {
+    const block = btn.previousElementSibling;
+    navigator.clipboard.writeText(block.textContent);
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copié !';
+    setTimeout(() => btn.textContent = orig, 1500);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  EXAMPLES
+// ════════════════════════════════════════════════════════════════════════════
+function loadExamplePets() {
+    document.getElementById('input-pets').value = JSON.stringify([
+        { petEntityId: 1, nickname: "Ptite Merde", ownerKeycloakId: "aaaa-1111-bbbb-2222" },
+        { petEntityId: 2, nickname: "Fluffy", ownerKeycloakId: "cccc-3333-dddd-4444" },
+        { petEntityId: 3, nickname: "Connard Poilu", ownerKeycloakId: "eeee-5555-ffff-6666" },
+        { petEntityId: 4, nickname: "Caramel", ownerKeycloakId: "gggg-7777-hhhh-8888" }
+    ], null, 2);
+}
+
+function loadExampleGuildNames() {
+    document.getElementById('input-guild-names').value = JSON.stringify([
+        { guildId: 10, name: "Les Canards Royaux", chiefKeycloakId: "aaaa-1111-bbbb-2222", elderKeycloakId: null },
+        { guildId: 11, name: "Putain de Guilde", chiefKeycloakId: "cccc-3333-dddd-4444", elderKeycloakId: "eeee-5555-ffff-6666" },
+        { guildId: 12, name: "Les Preux Chevaliers", chiefKeycloakId: "iiii-9999-jjjj-0000", elderKeycloakId: null }
+    ], null, 2);
+}
+
+function loadExampleGuildDesc() {
+    document.getElementById('input-guild-desc').value = JSON.stringify([
+        { guildId: 10, guildName: "Les Canards Royaux", guildDescription: "Une guilde de canards très respectueux.", chiefKeycloakId: "aaaa-1111-bbbb-2222" },
+        { guildId: 11, guildName: "Putain de Guilde", guildDescription: "Rejoins-nous si t'es pas un con!", chiefKeycloakId: "cccc-3333-dddd-4444" }
+    ], null, 2);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════════════════
+loadState();
+updateStats();
+if (state.violations.length > 0) {
+    document.getElementById('results-card').style.display = 'block';
+    renderResults();
+}
+</script>
+</body>
+</html>
