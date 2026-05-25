@@ -131,6 +131,7 @@ async function loadFromGithub() {
         );
         buildUsageIndex();
         buildUpgradeIndex();
+        buildItemUpgradeIndex();
         renderAll();
     }
     catch (err) {

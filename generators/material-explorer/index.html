@@ -49,6 +49,7 @@
                 <button class="tab-btn" onclick="switchTab('upgrades')">🔨 Upgrades</button>
                 <button class="tab-btn" onclick="switchTab('bossloot')">🐉 Boss Loot</button>
                 <button class="tab-btn" onclick="switchTab('expedloot')">🗺️ Expedition Loot</button>
+                <button class="tab-btn" onclick="switchTab('itemupgrade')">⚒️ Coût Item</button>
             </div>
 
             <!-- Catalog tab -->
@@ -115,6 +116,13 @@
                 <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque type de terrain d'expédition possède une table de loot de matériaux. Le nombre de drops dépend de l'indice de récompense (1-5 drops), pondérés par rareté (commun 60%, peu commun 30%, rare 10%). Minimum reward index de 1 requis.</p>
                 <div id="expedLootContent"></div>
             </div>
+
+            <!-- Item Upgrade Cost tab -->
+            <div class="tab-content" id="tab-itemupgrade">
+                <h3 style="margin-bottom:8px;color:var(--accent-secondary);">⚒️ Coût en matériaux des upgrades d'un item</h3>
+                <p style="margin-bottom:16px;color:var(--text-secondary);">Recherchez une arme ou une armure et visualisez les matériaux nécessaires pour chaque niveau d'upgrade (1 → 5), ainsi que le coût total cumulé.</p>
+                <div id="itemUpgradeContent"></div>
+            </div>
         </div>
     </div>
 
@@ -130,6 +138,7 @@
     <!-- Indexes -->
     <script src="js/indexes/UsageIndex.js"></script>
     <script src="js/indexes/UpgradeIndex.js"></script>
+    <script src="js/indexes/ItemUpgradeIndex.js"></script>
 
     <!-- Helpers -->
     <script src="js/utils/lookups.js"></script>
@@ -141,6 +150,7 @@
     <script src="js/tabs/UpgradesTab.js"></script>
     <script src="js/tabs/BossLootTab.js"></script>
     <script src="js/tabs/ExpeditionLootTab.js"></script>
+    <script src="js/tabs/ItemUpgradeTab.js"></script>
 
     <!-- Orchestration -->
     <script src="js/Renderer.js"></script>

@@ -13,6 +13,7 @@ function renderAll() {
     renderUpgradesTab();
     renderBossLootTab();
     renderExpedLootTab();
+    renderItemUpgradeTab();
 }
 
 function renderStats() {
@@ -98,7 +99,7 @@ function switchTab(tabName) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
-    const labels = { catalog: 'Catalogue', compare: 'Comparer', sources: 'Sources', upgrades: 'Upgrades', bossloot: 'Boss Loot', expedloot: 'Expedition Loot' };
+    const labels = { catalog: 'Catalogue', compare: 'Comparer', sources: 'Sources', upgrades: 'Upgrades', bossloot: 'Boss Loot', expedloot: 'Expedition Loot', itemupgrade: 'Coût Item' };
     document.querySelectorAll('.tab-btn').forEach(b => {
         if (b.textContent.toLowerCase().includes(labels[tabName]?.toLowerCase() || tabName)) {
             b.classList.add('active');

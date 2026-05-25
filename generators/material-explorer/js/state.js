@@ -14,6 +14,7 @@ let itemTypeStats = { weapons: {}, armors: {} };
 
 let usageIndex = {};
 let upgradeIndex = {};
+let itemUpgradeIndex = { weapon: {}, armor: {} };
 
 let activeTypeFilter = null;
 let activeRarityFilter = null;
