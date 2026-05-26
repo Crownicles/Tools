@@ -379,7 +379,7 @@ class GameEconomyDashboard {
         try {
             // Step 1: Get file lists via API
             setProgress('Récupération des listes de fichiers...');
-            const [weaponsRes, armorsRes, objectsRes, potionsRes, classesRes, leaguesRes, missionsRes] = await Promise.all([
+            const [weaponsRes, armorsRes, objectsRes, potionsRes, classesRes, leaguesRes, missionsRes, citiesRes] = await Promise.all([
                 fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/weapons?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
                 fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/armors?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
                 fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/objects?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
@@ -387,6 +387,7 @@ class GameEconomyDashboard {
                 fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/classes?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
                 fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/leagues?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
                 fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/missions?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
+                fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/Core/resources/cities?ref=${branch}`).then(r => { this.trackRateLimit(r); return r.json(); }),
             ]);
 
             // Step 2: Load all files via raw (no rate limit)
@@ -402,7 +403,7 @@ class GameEconomyDashboard {
                 return results.filter(Boolean);
             };
 
-            const [weapons, armors, objects, potions, classes, leagues, missions] = await Promise.all([
+            const [weapons, armors, objects, potions, classes, leagues, missions, cities] = await Promise.all([
                 loadJsonFiles(weaponsRes, 'weapons'),
                 loadJsonFiles(armorsRes, 'armors'),
                 loadJsonFiles(objectsRes, 'objects'),
@@ -410,15 +411,17 @@ class GameEconomyDashboard {
                 loadJsonFiles(classesRes, 'classes'),
                 loadJsonFiles(leaguesRes, 'leagues'),
                 loadJsonFiles(missionsRes, 'missions'),
+                loadJsonFiles(citiesRes, 'cities'),
             ]);
 
             setProgress('Chargement de la campagne et des traductions...');
-            const [campaign, translations] = await Promise.all([
+            const [campaign, translations, commandsTranslations] = await Promise.all([
                 fetch(`${rawBase}/Core/resources/campaign.json`).then(r => r.json()).catch(() => ({ missions: [] })),
                 fetch(`${rawBase}/Lang/fr/models.json`).then(r => r.json()).catch(() => ({})),
+                fetch(`${rawBase}/Lang/fr/commands.json`).then(r => r.json()).catch(() => ({})),
             ]);
 
-            this.data = { weapons, armors, objects, potions, classes, leagues, missions, campaign, translations };
+            this.data = { weapons, armors, objects, potions, classes, leagues, missions, campaign, translations, commandsTranslations, cities };
             this.render();
         } catch (err) {
             content.innerHTML = `<div class="card" style="color: var(--danger);">Erreur: ${err.message}</div>`;
@@ -429,10 +432,11 @@ class GameEconomyDashboard {
         Object.values(this.charts).forEach(c => c.destroy());
         this.charts = {};
 
-        const { weapons, armors, objects, potions, classes, leagues, missions, campaign } = this.data;
+        const { weapons, armors, objects, potions, classes, leagues, missions, campaign, cities } = this.data;
         const totalItems = weapons.length + armors.length + objects.length + potions.length;
         const totalMissions = missions.length;
         const campaignMissions = campaign.missions ? campaign.missions.length : 0;
+        const totalCities = cities ? cities.length : 0;
 
         const content = document.getElementById('content');
         content.innerHTML = `
@@ -445,6 +449,7 @@ class GameEconomyDashboard {
                 <div class="stat-box"><div class="value">${totalMissions}</div><div class="label">Missions</div></div>
                 <div class="stat-box"><div class="value">${campaignMissions}</div><div class="label">Campagne</div></div>
                 <div class="stat-box"><div class="value">${leagues.length}</div><div class="label">Ligues</div></div>
+                <div class="stat-box"><div class="value">${totalCities}</div><div class="label">Villes</div></div>
             </div>
 
             <div class="tabs" id="tabs">
@@ -453,6 +458,7 @@ class GameEconomyDashboard {
                 <button class="tab" data-tab="campaign">🏰 Campagne</button>
                 <button class="tab" data-tab="classes">🛡️ Classes</button>
                 <button class="tab" data-tab="leagues">🏆 Ligues</button>
+                <button class="tab" data-tab="cities">🏙️ Villes</button>
             </div>
 
             <div id="tab-items" class="tab-content active"></div>
@@ -460,6 +466,7 @@ class GameEconomyDashboard {
             <div id="tab-campaign" class="tab-content"></div>
             <div id="tab-classes" class="tab-content"></div>
             <div id="tab-leagues" class="tab-content"></div>
+            <div id="tab-cities" class="tab-content"></div>
         `;
 
         this.setupTabs();
@@ -468,6 +475,7 @@ class GameEconomyDashboard {
         this.renderCampaignTab();
         this.renderClassesTab();
         this.renderLeaguesTab();
+        this.renderCitiesTab();
     }
 
     setupTabs() {
@@ -1298,6 +1306,274 @@ class GameEconomyDashboard {
         const t = this.data.translations;
         if (t && t[category] && t[category][id]) return t[category][id];
         return id;
+    }
+
+    // ==================== CITIES TAB ====================
+    renderCitiesTab() {
+        const { cities, translations, commandsTranslations } = this.data;
+        const container = document.getElementById('tab-cities');
+        if (!cities || cities.length === 0) {
+            container.innerHTML = `<div class="card"><p>Aucune donnée de ville disponible.</p></div>`;
+            return;
+        }
+
+        const cityT = (commandsTranslations && commandsTranslations.report && commandsTranslations.report.city) || {};
+        const shopLabels = (cityT.shops) || {};
+        const innNames = (cityT.inns && cityT.inns.names) || {};
+        const mealLabels = (cityT.inns && cityT.inns.meals) || {};
+        const roomLabels = (cityT.inns && cityT.inns.rooms) || {};
+        const mapLocations = (translations && translations.map_locations) || {};
+
+        const shopLabel = (id) => (shopLabels[id] && shopLabels[id].label) || id;
+        const innLabel = (id) => innNames[id] || id;
+        const mealLabel = (id) => mealLabels[id] || id;
+        const roomLabel = (id) => roomLabels[id] || id;
+        const cityDisplayName = (city) => {
+            if (city.maps && city.maps.length > 0) {
+                const m = mapLocations[String(city.maps[0])];
+                if (m && m.name) return m.name;
+            }
+            return city.id.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        };
+
+        // Decorate cities with derived stats
+        const enriched = cities.map(c => {
+            const meals = (c.inns || []).flatMap(i => i.meals || []);
+            const rooms = (c.inns || []).flatMap(i => i.rooms || []);
+            const avgMealPrice = meals.length ? meals.reduce((s, m) => s + m.price, 0) / meals.length : 0;
+            const avgMealEnergy = meals.length ? meals.reduce((s, m) => s + m.energy, 0) / meals.length : 0;
+            const avgRoomPrice = rooms.length ? rooms.reduce((s, r) => s + r.price, 0) / rooms.length : 0;
+            const avgRoomHealth = rooms.length ? rooms.reduce((s, r) => s + r.health, 0) / rooms.length : 0;
+            const cheapestMealRatio = meals.length ? Math.min(...meals.map(m => m.price / m.energy)) : 0;
+            const cheapestRoomRatio = rooms.length ? Math.min(...rooms.map(r => r.price / r.health)) : 0;
+            return {
+                ...c,
+                displayName: cityDisplayName(c),
+                shopCount: (c.shops || []).length,
+                innCount: (c.inns || []).length,
+                mealCount: meals.length,
+                roomCount: rooms.length,
+                avgMealPrice,
+                avgMealEnergy,
+                avgRoomPrice,
+                avgRoomHealth,
+                cheapestMealRatio,
+                cheapestRoomRatio,
+                hasBlacksmith: c.hasBlacksmith !== false,
+            };
+        }).sort((a, b) => a.apartmentPrice - b.apartmentPrice);
+
+        // Global shop type distribution
+        const shopDist = {};
+        cities.forEach(c => (c.shops || []).forEach(s => { shopDist[s] = (shopDist[s] || 0) + 1; }));
+        const shopDistEntries = Object.entries(shopDist).sort((a, b) => b[1] - a[1]);
+
+        const totalMeals = enriched.reduce((s, c) => s + c.mealCount, 0);
+        const totalRooms = enriched.reduce((s, c) => s + c.roomCount, 0);
+        const totalShops = enriched.reduce((s, c) => s + c.shopCount, 0);
+        const avgApartment = enriched.reduce((s, c) => s + c.apartmentPrice, 0) / enriched.length;
+        const blacksmithCount = enriched.filter(c => c.hasBlacksmith).length;
+
+        container.innerHTML = `
+            <div class="stats-row">
+                <div class="stat-box"><div class="value">${enriched.length}</div><div class="label">Villes</div></div>
+                <div class="stat-box"><div class="value">${totalShops}</div><div class="label">Boutiques</div></div>
+                <div class="stat-box"><div class="value">${totalMeals}</div><div class="label">Plats</div></div>
+                <div class="stat-box"><div class="value">${totalRooms}</div><div class="label">Chambres</div></div>
+                <div class="stat-box"><div class="value">${blacksmithCount}/${enriched.length}</div><div class="label">Avec forgeron</div></div>
+                <div class="stat-box"><div class="value">${Math.round(avgApartment).toLocaleString('fr-FR')}</div><div class="label">Prix moyen appart.</div></div>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h2>🏠 Prix des appartements</h2>
+                    <canvas id="chart-city-apartment"></canvas>
+                </div>
+                <div class="card">
+                    <h2>📈 Multiplicateur du prix des maisons</h2>
+                    <canvas id="chart-city-home-mult"></canvas>
+                </div>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h2>🛒 Répartition des types de boutiques</h2>
+                    <canvas id="chart-city-shops"></canvas>
+                </div>
+                <div class="card">
+                    <h2>🍽️ Ratio prix/énergie des auberges (plus bas = meilleur)</h2>
+                    <canvas id="chart-city-meal-ratio"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 Vue d'ensemble des villes</h2>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ville</th>
+                                <th>Appart.</th>
+                                <th>Mult. maison</th>
+                                <th>Forgeron</th>
+                                <th>Boutiques</th>
+                                <th>Auberge</th>
+                                <th>Plats</th>
+                                <th>Chambres</th>
+                                <th>Maps</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${enriched.map(c => `<tr>
+                                <td><strong>${c.displayName}</strong><br><span style="color: var(--text-muted); font-size: 0.75rem;">${c.id}</span></td>
+                                <td class="reward-cell">${c.apartmentPrice.toLocaleString('fr-FR')}</td>
+                                <td class="reward-cell ${c.homePriceMultiplier > 1 ? 'highlight' : ''}">×${c.homePriceMultiplier.toFixed(2)}</td>
+                                <td>${c.hasBlacksmith ? '<span style="color: var(--success);">✓</span>' : '<span style="color: var(--danger);">✗</span>'}</td>
+                                <td>${(c.shops || []).map(s => `<span title="${s}" style="display:inline-block;background:var(--bg-tertiary);padding:2px 8px;border-radius:6px;margin:1px;font-size:0.78rem;">${shopLabel(s)}</span>`).join(' ')}</td>
+                                <td>${(c.inns || []).map(i => innLabel(i.id)).join(', ') || '—'}</td>
+                                <td class="reward-cell">${c.mealCount}</td>
+                                <td class="reward-cell">${c.roomCount}</td>
+                                <td class="reward-cell" style="color: var(--text-muted);">${(c.maps || []).join(', ')}</td>
+                            </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            ${enriched.map(c => `
+                <div class="card">
+                    <h2>🏙️ ${c.displayName}</h2>
+                    <div class="card-grid-3">
+                        <div>
+                            <h3 style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 8px;">🍽️ Plats</h3>
+                            <table>
+                                <thead><tr><th>Plat</th><th>Prix</th><th>Énergie</th><th>Ratio</th></tr></thead>
+                                <tbody>
+                                    ${(c.inns || []).flatMap(i => (i.meals || []).map(m => ({ ...m, innId: i.id })))
+                                        .sort((a, b) => a.price / a.energy - b.price / b.energy)
+                                        .map(m => `<tr>
+                                            <td>${mealLabel(m.id)}</td>
+                                            <td class="reward-cell">${m.price}</td>
+                                            <td class="reward-cell">${m.energy}</td>
+                                            <td class="reward-cell">${(m.price / m.energy).toFixed(2)}</td>
+                                        </tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <h3 style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 8px;">🛏️ Chambres</h3>
+                            <table>
+                                <thead><tr><th>Chambre</th><th>Prix</th><th>Soin</th><th>Ratio</th></tr></thead>
+                                <tbody>
+                                    ${(c.inns || []).flatMap(i => (i.rooms || []).map(r => ({ ...r, innId: i.id })))
+                                        .sort((a, b) => a.price / a.health - b.price / b.health)
+                                        .map(r => `<tr>
+                                            <td>${roomLabel(r.id)}</td>
+                                            <td class="reward-cell">${r.price}</td>
+                                            <td class="reward-cell">${r.health}</td>
+                                            <td class="reward-cell">${(r.price / r.health).toFixed(1)}</td>
+                                        </tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `).join('')}
+        `;
+
+        const cityColors = ['#f59e0b', '#3b82f6', '#22c55e', '#a855f7', '#ec4899', '#14b8a6', '#ef4444', '#8b5cf6'];
+        const cityLabels = enriched.map(c => c.displayName);
+
+        this.charts.cityApartment = new Chart(document.getElementById('chart-city-apartment').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: cityLabels,
+                datasets: [{
+                    label: 'Prix appartement (pièces)',
+                    data: enriched.map(c => c.apartmentPrice),
+                    backgroundColor: enriched.map((_, i) => cityColors[i % cityColors.length] + '80'),
+                    borderColor: enriched.map((_, i) => cityColors[i % cityColors.length]),
+                    borderWidth: 2,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                }
+            }
+        });
+
+        this.charts.cityHomeMult = new Chart(document.getElementById('chart-city-home-mult').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: cityLabels,
+                datasets: [{
+                    label: 'Multiplicateur prix maison',
+                    data: enriched.map(c => c.homePriceMultiplier),
+                    backgroundColor: enriched.map(c => (c.homePriceMultiplier > 1 ? '#ef4444' : '#22c55e') + '80'),
+                    borderColor: enriched.map(c => c.homePriceMultiplier > 1 ? '#ef4444' : '#22c55e'),
+                    borderWidth: 2,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, suggestedMin: 0.9, suggestedMax: 1.1 },
+                    x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                }
+            }
+        });
+
+        this.charts.cityShops = new Chart(document.getElementById('chart-city-shops').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: shopDistEntries.map(([id, n]) => `${shopLabel(id)} (${n})`),
+                datasets: [{
+                    data: shopDistEntries.map(([, n]) => n),
+                    backgroundColor: shopDistEntries.map((_, i) => cityColors[i % cityColors.length] + 'cc'),
+                    borderColor: shopDistEntries.map((_, i) => cityColors[i % cityColors.length]),
+                    borderWidth: 2,
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 11 } } } } }
+        });
+
+        this.charts.cityMealRatio = new Chart(document.getElementById('chart-city-meal-ratio').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: cityLabels,
+                datasets: [
+                    {
+                        label: 'Ratio moyen prix/énergie (plats)',
+                        data: enriched.map(c => c.mealCount ? c.avgMealPrice / c.avgMealEnergy : 0),
+                        backgroundColor: '#3b82f680',
+                        borderColor: '#3b82f6',
+                        borderWidth: 2,
+                    },
+                    {
+                        label: 'Meilleur ratio plat',
+                        data: enriched.map(c => c.cheapestMealRatio),
+                        backgroundColor: '#22c55e80',
+                        borderColor: '#22c55e',
+                        borderWidth: 2,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#94a3b8' } } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: 'Pièces par point d\\'énergie', color: '#64748b' } },
+                    x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                }
+            }
+        });
     }
 }
 
