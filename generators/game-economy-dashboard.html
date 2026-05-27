@@ -393,6 +393,7 @@ class GameEconomyDashboard {
             // Step 2: Load all files via raw (no rate limit)
             setProgress('Chargement des armes...');
             const loadJsonFiles = async (fileList, folder) => {
+                if (!Array.isArray(fileList)) return [];
                 const jsons = fileList.filter(f => f.name.endsWith('.json'));
                 const results = await Promise.all(jsons.map(f =>
                     fetch(`${rawBase}/Core/resources/${folder}/${f.name}`)
@@ -1569,7 +1570,7 @@ class GameEconomyDashboard {
                 responsive: true,
                 plugins: { legend: { labels: { color: '#94a3b8' } } },
                 scales: {
-                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: 'Pièces par point d\\'énergie', color: '#64748b' } },
+                    y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: "Pièces par point d'énergie", color: '#64748b' } },
                     x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
                 }
             }
