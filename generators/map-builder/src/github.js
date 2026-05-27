@@ -32,8 +32,14 @@ function updateRateLimitFromHeaders(response) {
 	}
 }
 
-function authHeaders() {
+function authHeaders(url) {
 	if (!state.pat) {
+		return {};
+	}
+	// raw.githubusercontent.com rejects the CORS preflight when the
+	// Authorization header is present. Public raw downloads don't need auth
+	// anyway — only api.github.com calls do.
+	if (typeof url === "string" && url.startsWith("https://raw.githubusercontent.com/")) {
 		return {};
 	}
 	return {Authorization: `Bearer ${state.pat}`};
@@ -42,7 +48,7 @@ function authHeaders() {
 export async function makeApiRequest(url, opts = {}) {
 	const response = await fetch(url, {
 		...opts,
-		headers: {Accept: "application/vnd.github+json", ...authHeaders(), ...(opts.headers || {})}
+		headers: {Accept: "application/vnd.github+json", ...authHeaders(url), ...(opts.headers || {})}
 	});
 	updateRateLimitFromHeaders(response);
 	return response;
