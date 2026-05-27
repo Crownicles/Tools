@@ -555,3 +555,15 @@ li.draggable .drag-hint {
   font-family: monospace;
   width: 130px;
 }
+
+a.btn-link {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #1e40af;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+a.btn-link:hover { background: #2563eb; }

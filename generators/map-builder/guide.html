@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crownicles Map Builder — Mode d'emploi</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='14' font-size='14'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body.guide { background: #0f172a; color: #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; }
+      .guide-wrap { max-width: 920px; margin: 0 auto; padding: 32px 24px 80px; line-height: 1.55; }
+      .guide-wrap h1 { font-size: 2rem; margin: 0 0 8px; }
+      .guide-wrap h2 { margin-top: 40px; padding-bottom: 6px; border-bottom: 1px solid #334155; color: #93c5fd; }
+      .guide-wrap h3 { margin-top: 24px; color: #fbbf24; }
+      .guide-wrap a { color: #60a5fa; }
+      .guide-wrap code, .guide-wrap kbd {
+        background: #1e293b; color: #f1f5f9; padding: 1px 6px; border-radius: 4px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92em;
+      }
+      .guide-wrap kbd { border: 1px solid #475569; box-shadow: 0 1px 0 #334155; }
+      .guide-wrap pre {
+        background: #1e293b; padding: 12px 14px; border-radius: 6px;
+        overflow-x: auto; border-left: 3px solid #60a5fa;
+      }
+      .guide-wrap blockquote {
+        border-left: 3px solid #fbbf24; padding: 4px 14px; margin: 16px 0;
+        background: rgba(251, 191, 36, 0.08); color: #fde68a;
+      }
+      .guide-wrap ol, .guide-wrap ul { padding-left: 24px; }
+      .guide-wrap li { margin: 4px 0; }
+      .guide-wrap .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 24px; }
+      .guide-wrap .topbar a.back {
+        background: #1e40af; color: white; padding: 8px 14px; border-radius: 6px;
+        text-decoration: none; font-weight: 600;
+      }
+      .guide-wrap .topbar a.back:hover { background: #2563eb; }
+      .guide-wrap .toc { background: #1e293b; padding: 14px 20px; border-radius: 8px; }
+      .guide-wrap .toc ul { padding-left: 18px; margin: 6px 0 0; }
+      .guide-wrap table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+      .guide-wrap th, .guide-wrap td { border: 1px solid #334155; padding: 6px 10px; text-align: left; }
+      .guide-wrap th { background: #1e293b; }
+    </style>
+  </head>
+  <body class="guide">
+    <div class="guide-wrap">
+      <div class="topbar">
+        <h1>🗺️ Map Builder — Mode d'emploi</h1>
+        <a class="back" href="index.html">← Retour à l'outil</a>
+      </div>
+
+      <p>
+        Le <strong>Map Builder</strong> est un éditeur visuel pour positionner les marqueurs (POIs et arêtes) des cartes
+        de <a href="https://github.com/Crownicles/Crownicles" target="_blank">Crownicles</a> sur leurs fonds respectifs,
+        puis pousser le résultat sous forme de Pull Request sur les dépôts du projet.
+      </p>
+
+      <div class="toc">
+        <strong>Sommaire</strong>
+        <ul>
+          <li><a href="#concepts">1. Concepts</a></li>
+          <li><a href="#pat">2. Créer un PAT GitHub (obligatoire pour les PRs)</a></li>
+          <li><a href="#workflow">3. Workflow type</a></li>
+          <li><a href="#interface">4. Interface — qui fait quoi</a></li>
+          <li><a href="#newisland">5. Ajouter une nouvelle île / carte</a></li>
+          <li><a href="#bg">6. Ajouter / changer un fond de carte</a></li>
+          <li><a href="#shortcuts">7. Raccourcis clavier</a></li>
+          <li><a href="#troubleshoot">8. Dépannage</a></li>
+        </ul>
+      </div>
+
+      <h2 id="concepts">1. Concepts</h2>
+      <p>
+        Crownicles découpe son univers en <strong>mapLocations</strong> (POIs, ex: ville, caverne) et
+        <strong>mapLinks</strong> (les chemins entre POIs). Ces données vivent dans
+        <code>Crownicles/Crownicles/Core/resources/{mapLocations,mapLinks}/</code>.
+      </p>
+      <p>
+        Chaque POI possède un <strong>attribut</strong> (<code>continent1</code>, <code>haunted</code>,
+        <code>pve_island_entry</code>, etc.) qui détermine sur quel fond de carte il s'affiche. Une <strong>mapPage</strong>
+        regroupe un fond + ses POIs/arêtes via un fichier JSON dans <code>Crownicles/Tools/generators/map-builder/mapCoords/</code> :
+      </p>
+      <pre>{
+  "mapPage": "oceanic_exterior",
+  "displayName": "Île océanique - Extérieur",
+  "includeAttributes": ["pve_island_entry", "pve_island"],
+  "idRange": {"min": 1200, "max": 1299},
+  "backgrounds": { "fr": {"filename": "oceanic_exterior_fr.jpg", "width": 2048, "height": 1555}, ... },
+  "marker": { "image": "cross.png", "size": {...} },
+  "nodes": { "1200": {"x": 950, "y": 740}, ... },
+  "edges": { "1200_1201": {"startMap": 1200, "endMap": 1201, "x": 1100, "y": 800}, ... }
+}</pre>
+      <p>L'outil = un éditeur visuel pour le bloc <code>nodes</code> + <code>edges</code>, plus un workflow PR.</p>
+
+      <h2 id="pat">2. Créer un PAT GitHub</h2>
+      <p>
+        Le PAT (Personal Access Token) est <strong>obligatoire</strong> pour pousser des PRs.
+        Sans PAT, l'outil reste en lecture seule (Viewer) — tu peux quand même charger et regarder.
+      </p>
+
+      <h3>Option A : token classique (le plus simple)</h3>
+      <ol>
+        <li>Va sur <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a>.</li>
+        <li><strong>Note</strong> : <code>Crownicles Map Builder</code>.</li>
+        <li><strong>Expiration</strong> : 90 jours (ou plus selon tes préférences).</li>
+        <li><strong>Scopes</strong> à cocher :
+          <ul>
+            <li><code>repo</code> (tout le bloc) — pour créer branche, pousser fichiers, ouvrir PRs.</li>
+            <li><code>workflow</code> — optionnel mais utile si tu touches un .github/workflows.</li>
+          </ul>
+        </li>
+        <li>Clique <strong>Generate token</strong>, copie le <code>ghp_...</code> immédiatement (visible une seule fois).</li>
+        <li>Reviens dans le Map Builder, colle-le dans le champ <strong>PAT GitHub</strong>, clique <strong>Sauver token</strong>.
+            Le token est stocké en <code>localStorage</code> de ton navigateur uniquement.</li>
+      </ol>
+
+      <h3>Option B : token fine-grained (recommandé si tu veux limiter)</h3>
+      <ol>
+        <li>Va sur <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">github.com/settings/personal-access-tokens/new</a>.</li>
+        <li><strong>Resource owner</strong> : Crownicles (ou ton compte si fork).</li>
+        <li><strong>Repository access</strong> : <em>Only select repositories</em> → coche <code>Crownicles/Tools</code> et <code>Crownicles/Website</code>.</li>
+        <li><strong>Repository permissions</strong> :
+          <ul>
+            <li>Contents : <strong>Read and write</strong></li>
+            <li>Pull requests : <strong>Read and write</strong></li>
+            <li>Metadata : Read (auto)</li>
+          </ul>
+        </li>
+        <li>Generate, copie, colle dans l'outil, Sauver.</li>
+      </ol>
+
+      <h3>Option C : via la CLI <code>gh</code> (devs)</h3>
+      <pre>gh auth login           # si pas déjà fait
+gh auth token           # affiche le token actuel
+# Copie la valeur gho_... → champ PAT GitHub → Sauver</pre>
+      <p>Le token <code>gho_</code> du CLI possède déjà <code>repo, workflow, read:org, gist</code> par défaut.</p>
+
+      <blockquote>
+        ⚠️ Le PAT est secret. Ne le commit jamais, ne le partage pas. Pour le révoquer :
+        <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a> → Delete.
+      </blockquote>
+
+      <h2 id="workflow">3. Workflow type</h2>
+      <ol>
+        <li>Ouvre l'outil, clique <strong>Charger</strong> (récupère mapPages depuis Crownicles/Tools + mapLocations/Links depuis Crownicles/Crownicles).</li>
+        <li>Sélectionne l'onglet de la carte à éditer (Continent, Île gelée, etc.).</li>
+        <li>Passe en mode <strong>Editor</strong> (radio en haut à gauche).</li>
+        <li>Déplie <strong>Coords manquantes</strong> à droite → <strong>glisse-dépose</strong> chaque ligne sur l'image.
+            Les nœuds (N) deviennent des croix, les arêtes (E) deviennent un point sur la ligne entre 2 nœuds.</li>
+        <li>Ajuste les positions en cliquant + draggant les croix sur la carte.</li>
+        <li>Quand tu es content, clique <strong>PR Tools (coords)</strong> → l'outil crée une branche <code>map-update-*</code>
+            sur <code>Crownicles/Tools</code> et ouvre la PR.</li>
+        <li>Optionnel : clique <strong>Rendu images…</strong> pour générer les .webp avec croix superposées,
+            puis <strong>PR Website (images)</strong> pour les pousser sur <code>Crownicles/Website</code>.</li>
+      </ol>
+
+      <h2 id="interface">4. Interface — qui fait quoi</h2>
+      <table>
+        <tr><th>Bouton</th><th>Effet</th></tr>
+        <tr><td><strong>Charger</strong></td><td>Re-fetch tout depuis GitHub (mapCoords + mapLocations + mapLinks + place names).</td></tr>
+        <tr><td><strong>Sync ← Crownicles</strong></td><td>Détecte les POIs/attributs qui ne sont pas couverts par les mapPages existantes et propose : nouvelle mapPage, nouvelle île (bloc d'ID distinct), ou extension d'idRange.</td></tr>
+        <tr><td><strong>PR Tools (coords)</strong></td><td>Push les <code>mapCoords/*.json</code> modifiés sur <code>Crownicles/Tools</code> via une nouvelle branche + PR.</td></tr>
+        <tr><td><strong>Rendu images…</strong></td><td>Génère des .webp avec les croix dessinées sur chaque fond, pour chaque langue.</td></tr>
+        <tr><td><strong>PR Website (images)</strong></td><td>Push les images générées sur <code>Crownicles/Website</code> dans <code>public/ressources/maps/cursed/</code>.</td></tr>
+        <tr><td><strong>Export coords ZIP</strong></td><td>Télécharge un ZIP de tous les mapCoords/*.json (utile pour offline ou backup).</td></tr>
+        <tr><td>Mode <strong>Viewer/Editor</strong></td><td>Viewer = lecture seule. Editor = drag-drop activé.</td></tr>
+        <tr><td>FR / EN</td><td>Bascule le fond de carte selon la langue (si une image EN existe).</td></tr>
+        <tr><td><strong>Dépôts avancés</strong></td><td>Permet de pointer vers un fork (ex: <code>monuser/Crownicles</code>) au lieu du repo officiel.</td></tr>
+      </table>
+
+      <p>Panneau de droite :</p>
+      <ul>
+        <li><strong>Synchronisés</strong> : POIs dont la position est déjà enregistrée.</li>
+        <li><strong>Coords manquantes</strong> : POIs reconnus par Crownicles mais non placés (à drag-drop).</li>
+        <li><strong>Orphelins</strong> : POIs présents dans le JSON local mais qui n'existent plus côté Crownicles (à nettoyer).</li>
+      </ul>
+
+      <h2 id="newisland">5. Ajouter une nouvelle île / carte</h2>
+      <ol>
+        <li>Demande au team game de t'envoyer l'image (idéalement déjà nommée selon la convention <code>nom_FR.jpg</code> + <code>nom_EN.jpg</code>).</li>
+        <li>Place-la dans <code>Crownicles/Tools/generators/Ressources/</code> ET <code>Crownicles/Website/public/ressources/maps/</code>.</li>
+        <li>Ajoute un fichier <code>mapCoords/&lt;nom&gt;.json</code> sur <code>Crownicles/Tools</code> (voir exemple en <a href="#concepts">section 1</a>).
+            Le moyen le plus simple : copie <code>oceanic_exterior.json</code>, change les valeurs.</li>
+        <li>Ou utilise le bouton <strong>+ Nouvelle page</strong> dans l'outil pour créer une mapPage à la volée
+            (mais tu devras quand même pousser l'image manuellement).</li>
+        <li>Le bouton <strong>Sync ← Crownicles</strong> détecte automatiquement les POIs avec un nouvel attribut
+            ou un bloc d'ID non couvert et propose de créer la mapPage stub pour toi.</li>
+      </ol>
+
+      <h2 id="bg">6. Ajouter / changer un fond de carte</h2>
+      <p>L'outil cherche les fonds dans cet ordre :</p>
+      <ol>
+        <li><code>https://raw.githubusercontent.com/Crownicles/Tools/master/generators/Ressources/&lt;filename&gt;</code></li>
+        <li><code>https://raw.githubusercontent.com/Crownicles/Website/&lt;branch&gt;/public/ressources/maps/&lt;filename&gt;</code></li>
+      </ol>
+      <p>Le <code>filename</code> et les dimensions <strong>doivent matcher</strong> ce que tu déclares dans <code>backgrounds</code>
+      du JSON. Si tu remplaces une image par une plus grande, n'oublie pas de mettre à jour <code>width</code>/<code>height</code>
+      sinon les nœuds existants se retrouvent décalés.</p>
+
+      <h2 id="shortcuts">7. Raccourcis clavier</h2>
+      <table>
+        <tr><th>Touche</th><th>Action</th></tr>
+        <tr><td><kbd>Cmd/Ctrl</kbd> + <kbd>Z</kbd></td><td>Undo</td></tr>
+        <tr><td><kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd></td><td>Redo</td></tr>
+        <tr><td><kbd>Space</kbd> + drag</td><td>Pan de la vue</td></tr>
+        <tr><td>Molette</td><td>Zoom in/out</td></tr>
+        <tr><td><kbd>Shift</kbd> en draggant un marker</td><td>Désactive le snap</td></tr>
+        <tr><td>Clic-droit sur un marker</td><td>Menu contextuel (delete, recenter)</td></tr>
+      </table>
+
+      <h2 id="troubleshoot">8. Dépannage</h2>
+      <h3>« Coords manquantes (0) » alors qu'on attend des POIs</h3>
+      <ul>
+        <li>As-tu cliqué <strong>Charger</strong> au moins une fois ?</li>
+        <li>L'onglet sélectionné est-il bien la bonne mapPage (chaque île a son propre onglet) ?</li>
+        <li>Vérifie dans la console DevTools : <code>state.locations</code> contient-il les IDs attendus ?</li>
+        <li>Le panneau peut être <strong>replié</strong> — clique dessus pour déplier.</li>
+      </ul>
+
+      <h3>« Erreur 401 / 403 » lors d'une PR</h3>
+      <ul>
+        <li>PAT manquant, expiré, ou sans le scope <code>repo</code>. Régénère-le.</li>
+        <li>En fine-grained, vérifie que tu as bien sélectionné les repos cibles.</li>
+      </ul>
+
+      <h3>« Limite GitHub atteinte » (rate limit)</h3>
+      <ul>
+        <li>Sans PAT : 60 req/h. Avec PAT : 5000 req/h.</li>
+        <li>Sauve un PAT même temporaire pour débloquer.</li>
+      </ul>
+
+      <h3>Les croix ne sont pas drag-droppables</h3>
+      <ul>
+        <li>Tu es en mode <strong>Viewer</strong>. Passe en <strong>Editor</strong>.</li>
+      </ul>
+
+      <h3>Le fond de carte ne s'affiche pas (rectangle vide)</h3>
+      <ul>
+        <li>Le fichier image n'existe pas aux URLs attendues. Vérifie les 2 candidats (Tools/Ressources puis Website/public/ressources/maps).</li>
+        <li>Le <code>filename</code> dans le JSON ne matche pas le nom réel (case-sensitive).</li>
+      </ul>
+
+      <h3>Une PR a été créée mais je veux annuler</h3>
+      <ul>
+        <li>Ferme la PR sur GitHub et supprime la branche <code>map-update-*</code>. Aucun side-effect sur les autres branches.</li>
+      </ul>
+
+      <hr style="margin-top: 48px; border-color: #334155;" />
+      <p style="text-align: center; color: #64748b;">
+        Source : <a href="https://github.com/Crownicles/Tools/tree/master/generators/map-builder" target="_blank">Crownicles/Tools/generators/map-builder</a>
+      </p>
+    </div>
+  </body>
+</html>
