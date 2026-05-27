@@ -26,7 +26,7 @@ const PATHS = {
   mapLocations: "Core/resources/mapLocations",
   mapLinks: "Core/resources/mapLinks",
   models: "Lang/fr/models.json",
-  websiteRessources: "public/ressources/Ressources",
+  websiteRessources: "public/ressources/maps",
   websiteMapsCursed: "public/ressources/mapsCursed",
   toolsRessources: "generators/Ressources"
 };
@@ -448,6 +448,178 @@ function categorize(mapPage) {
     if (!regEdgeKeys.has(key)) orphan.edges.push(key);
   });
   return { synced, missing, orphan };
+}
+
+// ============================================================================
+// === Crownicles sync (auto-detect new attributes / out-of-range POIs) ===
+// ============================================================================
+
+function humanizeAttr(attr) {
+  return attr.replace(/[_-]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function computeSyncDiff() {
+  const coveredAttrs = new Set();
+  Object.values(state.mapPages).forEach((p) => {
+    (p.includeAttributes || []).forEach((a) => coveredAttrs.add(a));
+  });
+  const newAttrs = new Map(); // attr -> { ids: string[], types: Set }
+  const outOfRange = new Map(); // pageKey -> { attr, ids: string[] }
+
+  Object.entries(state.locations).forEach(([id, info]) => {
+    if (!info || NON_RENDERABLE_LOCATION_TYPES.has(info.type)) return;
+    const attr = info.attribute;
+    if (!attr) return;
+    if (!coveredAttrs.has(attr)) {
+      if (!newAttrs.has(attr)) newAttrs.set(attr, { ids: [], types: new Set() });
+      const slot = newAttrs.get(attr);
+      slot.ids.push(String(id));
+      slot.types.add(info.type);
+      return;
+    }
+    // Attribute is covered, but does some page accept this specific id?
+    const accepted = Object.values(state.mapPages).some((p) => locationMatchesPage(id, info, p));
+    if (accepted) return;
+    // Find first page declaring this attribute → propose to extend its idRange.
+    const targetKey = Object.keys(state.mapPages).find((k) =>
+      (state.mapPages[k].includeAttributes || []).includes(attr)
+    );
+    if (!targetKey) return;
+    if (!outOfRange.has(targetKey)) outOfRange.set(targetKey, { attr, ids: [] });
+    outOfRange.get(targetKey).ids.push(String(id));
+  });
+  return { newAttrs, outOfRange };
+}
+
+function buildStubPage(attr, ids) {
+  const numericIds = ids.map((i) => parseInt(i, 10)).filter((n) => !Number.isNaN(n));
+  const stub = {
+    mapPage: attr,
+    displayName: humanizeAttr(attr),
+    includeAttributes: [attr],
+    backgrounds: {
+      fr: { filename: `${attr}_fr.jpg`, width: 4096, height: 2744 },
+      en: { filename: `${attr}_en.jpg`, width: 4096, height: 2744 }
+    },
+    marker: {
+      image: "cross.png",
+      anchor: "center",
+      size: { width: 150, height: 150 },
+      anchorOffset: { x: 75, y: 75 }
+    },
+    coordSpace: "fr",
+    scaling: { fr: 1, en: 1 },
+    nodes: {},
+    edges: {}
+  };
+  // Heuristic: if all IDs are >= 1000 (island/extension range), include a 100-wide idRange.
+  if (numericIds.length && numericIds.every((n) => n >= 1000)) {
+    const min = Math.min(...numericIds);
+    const max = Math.max(...numericIds);
+    const rangeStart = Math.floor(min / 100) * 100;
+    const rangeEnd = Math.max(rangeStart + 99, max);
+    stub.idRange = { min: rangeStart, max: rangeEnd };
+  }
+  return stub;
+}
+
+function openSyncModal() {
+  if (!Object.keys(state.locations).length) {
+    toast("Charge d'abord les données Crownicles (bouton Charger)", "error", 6000);
+    return;
+  }
+  const diff = computeSyncDiff();
+  if (diff.newAttrs.size === 0 && diff.outOfRange.size === 0) {
+    toast("Rien à synchroniser, tout est déjà couvert.", "info", 6000);
+    return;
+  }
+  state._syncDiff = diff;
+  $("syncBranchLabel").textContent = state.cwBranch;
+  $("syncRepoLabel").textContent = state.cwRepo;
+  $("syncTargetLabel").textContent = `${state.mapCoordsRepo}@${state.mapCoordsBranch}`;
+  const body = $("syncModalBody");
+  body.innerHTML = "";
+
+  if (diff.newAttrs.size) {
+    const h = document.createElement("h3");
+    h.textContent = `Nouvelles mapPages à créer (${diff.newAttrs.size})`;
+    body.appendChild(h);
+    const ul = document.createElement("ul");
+    ul.className = "sync-list";
+    Array.from(diff.newAttrs.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .forEach(([attr, info]) => {
+        const preview = info.ids.slice(0, 6).join(", ") + (info.ids.length > 6 ? "…" : "");
+        const li = document.createElement("li");
+        li.innerHTML = `<label><input type="checkbox" data-sync="newAttr" data-attr="${attr}" checked /> <strong>${attr}</strong> <span class="hint">→ ${attr}.json (${info.ids.length} POIs : ${preview})</span></label>`;
+        ul.appendChild(li);
+      });
+    body.appendChild(ul);
+  }
+
+  if (diff.outOfRange.size) {
+    const h = document.createElement("h3");
+    h.textContent = `idRange à étendre (${diff.outOfRange.size})`;
+    body.appendChild(h);
+    const ul = document.createElement("ul");
+    ul.className = "sync-list";
+    Array.from(diff.outOfRange.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .forEach(([pageKey, info]) => {
+        const preview = info.ids.slice(0, 6).join(", ") + (info.ids.length > 6 ? "…" : "");
+        const li = document.createElement("li");
+        li.innerHTML = `<label><input type="checkbox" data-sync="extendRange" data-page="${pageKey}" checked /> <strong>${pageKey}</strong> <span class="hint">+ ${info.ids.length} POIs (${preview})</span></label>`;
+        ul.appendChild(li);
+      });
+    body.appendChild(ul);
+  }
+
+  $("syncModal").classList.remove("hidden");
+}
+
+function applySyncSelections() {
+  const diff = state._syncDiff;
+  if (!diff) return { applied: 0, addedKeys: [] };
+  const addedKeys = [];
+  const newAttrs = Array.from(document.querySelectorAll('[data-sync="newAttr"]:checked'))
+    .map((cb) => cb.dataset.attr);
+  const extend = Array.from(document.querySelectorAll('[data-sync="extendRange"]:checked'))
+    .map((cb) => cb.dataset.page);
+
+  newAttrs.forEach((attr) => {
+    const info = diff.newAttrs.get(attr);
+    if (!info) return;
+    const stub = buildStubPage(attr, info.ids);
+    state.mapPages[attr] = stub;
+    addedKeys.push(attr);
+  });
+  extend.forEach((pageKey) => {
+    const info = diff.outOfRange.get(pageKey);
+    const page = state.mapPages[pageKey];
+    if (!info || !page) return;
+    const nums = info.ids.map((i) => parseInt(i, 10)).filter((n) => !Number.isNaN(n));
+    if (!nums.length) return;
+    const curMin = page.idRange?.min ?? Math.min(...nums);
+    const curMax = page.idRange?.max ?? Math.max(...nums);
+    page.idRange = { min: Math.min(curMin, ...nums), max: Math.max(curMax, ...nums) };
+    addedKeys.push(pageKey);
+  });
+  return { applied: newAttrs.length + extend.length, addedKeys };
+}
+
+async function confirmSync(pushPr) {
+  const res = applySyncSelections();
+  $("syncModal").classList.add("hidden");
+  if (res.applied === 0) {
+    toast("Rien de coché.", "info");
+    return;
+  }
+  buildTabs();
+  refreshSyncPanel();
+  toast(`${res.applied} changement(s) appliqué(s) en mémoire.`, "success", 5000);
+  if (pushPr) {
+    await openCrowniclesPr();
+  }
 }
 
 // ============================================================================
@@ -1587,6 +1759,10 @@ function wireUI() {
   $("exportBtn").addEventListener("click", exportCoordsZip);
   $("prCwBtn").addEventListener("click", openCrowniclesPr);
   $("prWsBtn").addEventListener("click", openWebsitePr);
+  $("syncBtn").addEventListener("click", openSyncModal);
+  $("syncCancel").addEventListener("click", () => $("syncModal").classList.add("hidden"));
+  $("syncApply").addEventListener("click", () => confirmSync(false));
+  $("syncApplyPr").addEventListener("click", () => confirmSync(true));
 
   // Help
   $("helpBtn").addEventListener("click", () => $("helpModal").classList.remove("hidden"));

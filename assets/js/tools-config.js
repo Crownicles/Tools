@@ -208,5 +208,15 @@ const toolsConfig = [
         tags: ['Villes', 'Auberges', 'Boutiques', 'Comparaison', 'Services'],
         icon: '🏘️',
         status: 'active'
+    },
+    {
+        id: 'map-builder',
+        title: 'Map Builder',
+        description: "Éditeur visuel des coordonnées de carte (continent principal + îles). Synchronise automatiquement avec Crownicles et ouvre des PRs (mapCoords, rendus images, fonds).",
+        path: 'generators/map-builder/index.html',
+        category: 'Développement',
+        tags: ['Carte', 'Éditeur', 'PR', 'GitHub', 'Coords'],
+        icon: '🗺️',
+        status: 'active'
     }
 ];

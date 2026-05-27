@@ -3,8 +3,8 @@
   "displayName": "Maison hantée (Halloween)",
   "includeAttributes": ["haunted"],
   "backgrounds": {
-    "fr": {"filename": "haunted_fr.jpg", "width": 4096, "height": 2744},
-    "en": {"filename": "haunted_en.jpg", "width": 4096, "height": 2744}
+    "fr": {"filename": "halloween_map_fr.jpg", "width": 4096, "height": 2744},
+    "en": {"filename": "halloween_map_fr.jpg", "width": 4096, "height": 2744}
   },
   "marker": {
     "image": "cross.png",

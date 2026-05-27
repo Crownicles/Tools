@@ -21,7 +21,7 @@
 
       <div class="toolbar-center">
         <label>Branche Crownicles
-          <input id="cwBranch" type="text" value="develop" autocomplete="off" />
+          <input id="cwBranch" type="text" value="master" autocomplete="off" />
         </label>
         <label>Branche Website
           <input id="wsBranch" type="text" value="master" autocomplete="off" />
@@ -87,6 +87,7 @@
             <button id="redoBtn" type="button" title="Cmd/Ctrl+Shift+Z">↷ Redo</button>
             <button id="renderBtn" type="button">Rendu images…</button>
             <button id="exportBtn" type="button">Export coords ZIP</button>
+            <button id="syncBtn" type="button" title="Scan la branche Crownicles et crée une PR Tools avec les pages manquantes">Sync ← Crownicles</button>
             <button id="prCwBtn" type="button">PR Crownicles</button>
             <button id="prWsBtn" type="button">PR Website</button>
           </div>
@@ -147,6 +148,19 @@
         <div class="modal-actions">
           <button id="npCancel" type="button">Annuler</button>
           <button id="npCreate" type="button">Créer</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="syncModal" class="modal hidden">
+      <div class="modal-content modal-wide">
+        <h2>Synchroniser depuis Crownicles</h2>
+        <p class="hint">Scan de la branche <code id="syncBranchLabel">?</code> du dépôt <code id="syncRepoLabel">?</code>. Coche les éléments à intégrer puis pousse la PR sur <code id="syncTargetLabel">?</code>.</p>
+        <div id="syncModalBody" class="sync-diff"></div>
+        <div class="modal-actions">
+          <button id="syncCancel" type="button">Annuler</button>
+          <button id="syncApply" type="button">Appliquer (en mémoire)</button>
+          <button id="syncApplyPr" type="button">Appliquer + Pousser PR</button>
         </div>
       </div>
     </div>

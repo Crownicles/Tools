@@ -513,3 +513,36 @@ li.draggable .drag-hint {
   outline: 3px dashed #f59e0b;
   outline-offset: -3px;
 }
+
+/* Sync-from-Crownicles modal */
+.modal-content.modal-wide {
+  min-width: 560px;
+  max-width: 80vw;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.sync-diff h3 {
+  margin: 14px 0 6px;
+  font-size: 0.95rem;
+  color: #1e40af;
+}
+.sync-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sync-list li {
+  padding: 4px 6px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.sync-list li:last-child { border-bottom: none; }
+.sync-list label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  cursor: pointer;
+}
+.sync-list .hint {
+  color: #64748b;
+  font-size: 0.82rem;
+}
