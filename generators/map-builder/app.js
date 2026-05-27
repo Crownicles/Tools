@@ -101,6 +101,15 @@ function toast(message, kind = "info", durationMs = 3500) {
   setTimeout(() => el.remove(), durationMs);
 }
 
+function focusPatInput() {
+  const el = $("pat");
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+  el.focus();
+  el.classList.add("flash-error");
+  setTimeout(() => el.classList.remove("flash-error"), 1500);
+}
+
 function setStatus(message) {
   const el = $("status");
   if (el) el.textContent = message;
@@ -436,10 +445,10 @@ async function fetchBackground(mapPage, lang) {
   const bg = page.backgrounds && page.backgrounds[lang];
   if (!bg || !bg.filename) return null;
 
-  // Try Website repo first.
+  // Try Tools repo first (canonical source for backgrounds), fall back to Website.
   const candidates = [
-    `https://raw.githubusercontent.com/${state.wsRepo}/${state.wsBranch}/${PATHS.websiteRessources}/${bg.filename}`,
-    `https://raw.githubusercontent.com/${DEFAULTS.toolsOwnerRepo}/master/${PATHS.toolsRessources}/${bg.filename}`
+    `https://raw.githubusercontent.com/${DEFAULTS.toolsOwnerRepo}/master/${PATHS.toolsRessources}/${bg.filename}`,
+    `https://raw.githubusercontent.com/${state.wsRepo}/${state.wsBranch}/${PATHS.websiteRessources}/${bg.filename}`
   ];
   for (const url of candidates) {
     try {
@@ -458,8 +467,8 @@ function loadMarkerImage(page) {
   const key = page.marker.image;
   if (state.markerImagesCache[key]) return Promise.resolve(state.markerImagesCache[key]);
   const candidates = [
-    `https://raw.githubusercontent.com/${state.wsRepo}/${state.wsBranch}/${PATHS.websiteRessources}/${key}`,
-    `https://raw.githubusercontent.com/${DEFAULTS.toolsOwnerRepo}/master/${PATHS.toolsRessources}/${key}`
+    `https://raw.githubusercontent.com/${DEFAULTS.toolsOwnerRepo}/master/${PATHS.toolsRessources}/${key}`,
+    `https://raw.githubusercontent.com/${state.wsRepo}/${state.wsBranch}/${PATHS.websiteRessources}/${key}`
   ];
   return (async () => {
     for (const url of candidates) {
@@ -1166,7 +1175,7 @@ async function downloadOutputsZip(outputs) {
   a.href = URL.createObjectURL(blob);
   a.download = `mapsCursed-${Date.now()}.zip`;
   a.click();
-  toast(`ZIP généré (${outputs.length} fichiers)`, "success");
+  toast(`ZIP généré (${outputs.length} fichiers)`, "success", 8000);
 }
 
 // ============================================================================
@@ -1263,7 +1272,7 @@ function getChangedMapPages() {
 }
 
 async function openCrowniclesPr() {
-  if (!state.pat && !state.dryRun) { toast("Définis un PAT d'abord", "error"); return; }
+  if (!state.pat && !state.dryRun) { focusPatInput(); toast("Définis un PAT d'abord (ou coche Dry-run)", "error", 8000); return; }
   const changed = getChangedMapPages();
   if (!changed.length) { toast("Aucun changement à pousser", "info"); return; }
   const client = new GitHubClient(state.mapCoordsRepo, state.mapCoordsBranch);
@@ -1288,7 +1297,7 @@ async function openCrowniclesPr() {
 }
 
 async function pushOutputsToWebsite(outputs) {
-  if (!state.pat && !state.dryRun) { toast("Définis un PAT d'abord", "error"); return; }
+  if (!state.pat && !state.dryRun) { focusPatInput(); toast("Définis un PAT d'abord (ou coche Dry-run)", "error", 8000); return; }
   if (!outputs.length) { toast("Aucune image à pousser", "info"); return; }
   const client = new GitHubClient(state.wsRepo, state.wsBranch);
   try {
@@ -1325,7 +1334,7 @@ async function openWebsitePr() {
     });
   });
   if (!pending.length) { toast("Aucun fond en attente. Utilise « Rendu images… » pour pousser des rendus.", "info"); return; }
-  if (!state.pat && !state.dryRun) { toast("Définis un PAT d'abord", "error"); return; }
+  if (!state.pat && !state.dryRun) { focusPatInput(); toast("Définis un PAT d'abord (ou coche Dry-run)", "error", 8000); return; }
   const client = new GitHubClient(state.wsRepo, state.wsBranch);
   try {
     await client.verifyAuth();
@@ -1392,6 +1401,8 @@ function wireUI() {
   const patInput = $("pat");
   patInput.value = localStorage.getItem(LS_KEYS.pat) || "";
   state.pat = patInput.value;
+  // Reactive: keep state.pat in sync without forcing localStorage persistence.
+  patInput.addEventListener("input", () => { state.pat = patInput.value; });
   $("savePat").addEventListener("click", () => {
     state.pat = patInput.value;
     localStorage.setItem(LS_KEYS.pat, state.pat);
@@ -1402,6 +1413,9 @@ function wireUI() {
     localStorage.removeItem(LS_KEYS.pat);
     toast("Token effacé", "info");
   });
+
+  // Reactive: keep state.dryRun in sync so the checkbox is honored without reload.
+  $("dryRun").addEventListener("change", (e) => { state.dryRun = e.target.checked; });
 
   // Branches & repos restore
   $("cwBranch").value = localStorage.getItem(LS_KEYS.cwBranch) || DEFAULTS.cwBranch;

@@ -471,3 +471,14 @@ kbd {
 /* Read-only state */
 body.viewer .editor-only { display: none !important; }
 body.viewer #mapCanvas { cursor: grab; }
+
+/* Flash highlight to draw attention to PAT input on missing-token errors */
+.flash-error {
+  animation: pat-flash 1.5s ease-out;
+  outline: 2px solid #e74c3c;
+}
+@keyframes pat-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+  70%  { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+}
