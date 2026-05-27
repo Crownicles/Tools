@@ -25,6 +25,10 @@ Aucune dépendance Node, aucun build. Seul JSZip est chargé depuis un CDN (jsDe
    cliquer « Sauver token ». Il est stocké en `localStorage` sous la clé `mapBuilderPat`
    (n'est jamais loggué ni envoyé ailleurs que sur api.github.com).
 2. **Branches** : par défaut `develop` côté Crownicles, `master` côté Website.
+   Le panneau « Dépôts avancés » permet aussi de changer le **repo + branche `mapCoords`**
+   (par défaut `Crownicles/Tools@master`) et de sélectionner une **saison**
+   (`normal` / `halloween` / `christmas`) qui influe sur le nom de fond chargé
+   (variant `…_halloween.jpg` essayé en premier avant fallback sur le fond de base).
 3. Cliquer **Charger** pour récupérer tous les fichiers `mapCoords`, `mapLocations`,
    `mapLinks` ainsi que `models.json` (noms de lieux).
 
@@ -50,6 +54,23 @@ une nouvelle `mapPage` avec des valeurs par défaut raisonnables (marker `cross.
 
 Les arêtes inter-pages (ex. `1101_1102`) apparaissent sur **les deux pages** ; les coords
 sont stockées indépendamment sur chaque page.
+
+## Saisons (Halloween, Noël, …)
+
+Trois leviers indépendants permettent de gérer un event saisonnier :
+
+1. **Fond saisonnier (zéro modif de schéma)** : si le panneau « Saison » est sur
+   `halloween`, le tool charge `<basename>_halloween.<ext>` en priorité, puis retombe sur
+   le fond classique. Il suffit donc de pousser un PNG suffixé `_halloween` dans
+   `Crownicles/Tools/generators/Ressources/` (ou côté Website) pour que l'outil l'affiche.
+2. **Topologie saisonnière par branche** : pour une carte avec des nœuds différents,
+   le plus simple est de créer une branche `halloween-2026` sur le repo `Tools`, d'y
+   modifier les JSON `mapCoords/*.json` puis de pointer le tool dessus via le champ
+   « Branche mapCoords ». La branche `master` reste intacte.
+3. **Tag `seasons` par nœud / arête** : l'inspecteur expose un champ « Saisons » (liste
+   séparée par virgules). Un marqueur tagué `halloween` n'est rendu (et exporté pour
+   image) qu'en saison `halloween`. Un champ vide = toujours visible (comportement par
+   défaut, rétro-compatible).
 
 ## Rendu d'images
 

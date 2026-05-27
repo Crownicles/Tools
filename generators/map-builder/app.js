@@ -35,6 +35,9 @@ const LS_KEYS = {
   wsBranch: "mapBuilderWsBranch",
   cwRepo: "mapBuilderCwRepo",
   wsRepo: "mapBuilderWsRepo",
+  mapCoordsRepo: "mapBuilderMapCoordsRepo",
+  mapCoordsBranch: "mapBuilderMapCoordsBranch",
+  season: "mapBuilderSeason",
   currentTab: "mapBuilderCurrentTab",
   zoom: "mapBuilderZoom"
 };
@@ -59,6 +62,7 @@ const state = {
   wsBranch: DEFAULTS.wsBranch,
   mapCoordsRepo: DEFAULTS.mapCoordsOwnerRepo,
   mapCoordsBranch: DEFAULTS.mapCoordsBranch,
+  season: "normal",
   dryRun: false,
   // Data
   locations: {},          // { id: { type, attribute, ... } }
@@ -308,12 +312,18 @@ async function loadAll() {
   state.wsBranch = $("wsBranch").value.trim() || DEFAULTS.wsBranch;
   state.cwRepo = $("cwRepo").value.trim() || DEFAULTS.cwOwnerRepo;
   state.wsRepo = $("wsRepo").value.trim() || DEFAULTS.wsOwnerRepo;
+  state.mapCoordsRepo = $("mapCoordsRepo").value.trim() || DEFAULTS.mapCoordsOwnerRepo;
+  state.mapCoordsBranch = $("mapCoordsBranch").value.trim() || DEFAULTS.mapCoordsBranch;
+  state.season = $("season").value || "normal";
   state.dryRun = $("dryRun").checked;
 
   localStorage.setItem(LS_KEYS.cwBranch, state.cwBranch);
   localStorage.setItem(LS_KEYS.wsBranch, state.wsBranch);
   localStorage.setItem(LS_KEYS.cwRepo, state.cwRepo);
   localStorage.setItem(LS_KEYS.wsRepo, state.wsRepo);
+  localStorage.setItem(LS_KEYS.mapCoordsRepo, state.mapCoordsRepo);
+  localStorage.setItem(LS_KEYS.mapCoordsBranch, state.mapCoordsBranch);
+  localStorage.setItem(LS_KEYS.season, state.season);
 
   setStatus("Chargement…");
   try {
@@ -445,11 +455,20 @@ async function fetchBackground(mapPage, lang) {
   const bg = page.backgrounds && page.backgrounds[lang];
   if (!bg || !bg.filename) return null;
 
+  // Build the list of filenames to try, season variant first if a season is selected.
+  const baseName = bg.filename;
+  const filenames = [];
+  if (state.season && state.season !== "normal") {
+    filenames.push(withSeasonSuffix(baseName, state.season));
+  }
+  filenames.push(baseName);
+
   // Try Tools repo first (canonical source for backgrounds), fall back to Website.
-  const candidates = [
-    `https://raw.githubusercontent.com/${DEFAULTS.toolsOwnerRepo}/master/${PATHS.toolsRessources}/${bg.filename}`,
-    `https://raw.githubusercontent.com/${state.wsRepo}/${state.wsBranch}/${PATHS.websiteRessources}/${bg.filename}`
-  ];
+  const candidates = [];
+  for (const fn of filenames) {
+    candidates.push(`https://raw.githubusercontent.com/${DEFAULTS.toolsOwnerRepo}/master/${PATHS.toolsRessources}/${fn}`);
+    candidates.push(`https://raw.githubusercontent.com/${state.wsRepo}/${state.wsBranch}/${PATHS.websiteRessources}/${fn}`);
+  }
   for (const url of candidates) {
     try {
       const img = await loadImage(url);
@@ -460,6 +479,12 @@ async function fetchBackground(mapPage, lang) {
     }
   }
   return null;
+}
+
+function withSeasonSuffix(filename, season) {
+  const idx = filename.lastIndexOf(".");
+  if (idx < 0) return `${filename}_${season}`;
+  return `${filename.slice(0, idx)}_${season}${filename.slice(idx)}`;
 }
 
 function loadMarkerImage(page) {
@@ -582,9 +607,20 @@ function drawMissingMarkers(ctx, page, cat, langFactor, markerImg) {
 
 function drawSet(ctx, page, items, kind, cat, langFactor, markerImg) {
   Object.entries(items).forEach(([id, data]) => {
+    if (!matchesSeason(data)) return;
     const status = (kind === "node" ? cat.orphan.nodes : cat.orphan.edges).includes(id) ? "orphan" : "synced";
     drawMarker(ctx, page, data.x, data.y, id, kind, status, langFactor, markerImg);
   });
+}
+
+/**
+ * A node/edge with `seasons: ["halloween"]` is only shown when the matching
+ * season is selected. Missing or empty `seasons` means "always shown".
+ */
+function matchesSeason(data) {
+  const seasons = data?.seasons;
+  if (!Array.isArray(seasons) || seasons.length === 0) return true;
+  return seasons.includes(state.season || "normal");
 }
 
 function drawMarker(ctx, page, x, y, label, kind, status, langFactor, markerImg) {
@@ -651,7 +687,7 @@ function hitTest(mouseX, mouseY) {
   const candidates = [
     ...Object.entries(page.edges || {}).map(([k, d]) => ({ type: "edge", key: k, data: d })),
     ...Object.entries(page.nodes || {}).map(([k, d]) => ({ type: "node", key: k, data: d }))
-  ].reverse();
+  ].filter((c) => matchesSeason(c.data)).reverse();
   for (const c of candidates) {
     const p = coordToCanvas(c.data.x * langFactor, c.data.y * langFactor);
     const w = size.width * state.view.scale * langFactor;
@@ -775,6 +811,8 @@ function refreshInspector() {
       ${info?.attribute ? `<dt>Attr.</dt><dd>${info.attribute}</dd>` : ""}
       <dt>x</dt><dd><input type="number" id="inspX" value="${data ? data.x : 0}" ${editorDisabled}></dd>
       <dt>y</dt><dd><input type="number" id="inspY" value="${data ? data.y : 0}" ${editorDisabled}></dd>
+      <dt title="Liste de saisons séparées par virgule. Vide = toujours visible.">Saisons</dt>
+      <dd><input type="text" id="inspSeasons" placeholder="halloween, christmas" value="${data?.seasons ? data.seasons.join(", ") : ""}" ${editorDisabled}></dd>
     </dl>
     <div class="row-actions">
       <button id="inspApply" ${editorDisabled}>Appliquer</button>
@@ -786,6 +824,8 @@ function refreshInspector() {
     $("inspApply").addEventListener("click", () => {
       const x = parseFloat($("inspX").value);
       const y = parseFloat($("inspY").value);
+      const seasonsRaw = $("inspSeasons").value || "";
+      const seasons = seasonsRaw.split(",").map((s) => s.trim()).filter(Boolean);
       pushUndo();
       const target = type === "node" ? page.nodes : page.edges;
       if (target[key]) {
@@ -796,6 +836,8 @@ function refreshInspector() {
           ? { x, y }
           : { startMap: parseInt(key.split("_")[0], 10), endMap: parseInt(key.split("_")[1], 10), x, y };
       }
+      if (seasons.length > 0) target[key].seasons = seasons;
+      else delete target[key].seasons;
       render();
       refreshSyncPanel();
     });
@@ -1103,7 +1145,7 @@ async function renderImages() {
       const allItems = [
         ...Object.entries(page.nodes || {}).map(([k, d]) => ({ kind: "node", key: k, data: d })),
         ...Object.entries(page.edges || {}).map(([k, d]) => ({ kind: "edge", key: k, data: d }))
-      ];
+      ].filter((it) => matchesSeason(it.data));
       for (const it of allItems) {
         if (renderCancel) break;
         const blob = await renderOne(bg, markerImg, page, it, langFactor, maxDim, quality);
@@ -1422,6 +1464,47 @@ function wireUI() {
   $("wsBranch").value = localStorage.getItem(LS_KEYS.wsBranch) || DEFAULTS.wsBranch;
   $("cwRepo").value = localStorage.getItem(LS_KEYS.cwRepo) || DEFAULTS.cwOwnerRepo;
   $("wsRepo").value = localStorage.getItem(LS_KEYS.wsRepo) || DEFAULTS.wsOwnerRepo;
+  $("mapCoordsRepo").value = localStorage.getItem(LS_KEYS.mapCoordsRepo) || DEFAULTS.mapCoordsOwnerRepo;
+  $("mapCoordsBranch").value = localStorage.getItem(LS_KEYS.mapCoordsBranch) || DEFAULTS.mapCoordsBranch;
+  $("season").value = localStorage.getItem(LS_KEYS.season) || "normal";
+  state.mapCoordsRepo = $("mapCoordsRepo").value;
+  state.mapCoordsBranch = $("mapCoordsBranch").value;
+  state.season = $("season").value;
+
+  // Live persistence + state sync for advanced repo/branch/season fields.
+  const fallbacks = {
+    cwBranch: DEFAULTS.cwBranch,
+    wsBranch: DEFAULTS.wsBranch,
+    cwRepo: DEFAULTS.cwOwnerRepo,
+    wsRepo: DEFAULTS.wsOwnerRepo,
+    mapCoordsRepo: DEFAULTS.mapCoordsOwnerRepo,
+    mapCoordsBranch: DEFAULTS.mapCoordsBranch,
+    season: "normal"
+  };
+  const persistAndSync = (inputId, lsKey, stateKey, onChange) => {
+    const el = $(inputId);
+    const evt = el.tagName === "SELECT" ? "change" : "input";
+    el.addEventListener(evt, () => {
+      const v = (el.value ?? "").trim();
+      state[stateKey] = v || fallbacks[stateKey];
+      localStorage.setItem(lsKey, state[stateKey]);
+      if (onChange) onChange();
+    });
+  };
+  persistAndSync("cwBranch", LS_KEYS.cwBranch, "cwBranch");
+  persistAndSync("wsBranch", LS_KEYS.wsBranch, "wsBranch");
+  persistAndSync("cwRepo", LS_KEYS.cwRepo, "cwRepo");
+  persistAndSync("wsRepo", LS_KEYS.wsRepo, "wsRepo");
+  persistAndSync("mapCoordsRepo", LS_KEYS.mapCoordsRepo, "mapCoordsRepo");
+  persistAndSync("mapCoordsBranch", LS_KEYS.mapCoordsBranch, "mapCoordsBranch");
+  persistAndSync("season", LS_KEYS.season, "season", async () => {
+    // Season changed: invalidate background cache & re-render current tab.
+    state.backgroundsCache = {};
+    if (state.currentTab) {
+      await fetchBackground(state.currentTab, state.lang);
+      render();
+    }
+  });
 
   $("loadAll").addEventListener("click", loadAll);
 

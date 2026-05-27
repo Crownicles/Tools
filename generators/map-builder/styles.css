@@ -482,3 +482,14 @@ body.viewer #mapCanvas { cursor: grab; }
   70%  { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
   100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
 }
+
+/* Season selector & advanced repo selects */
+.repo-override select {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  font-size: 0.85rem;
+  margin-top: 2px;
+  min-width: 220px;
+}
