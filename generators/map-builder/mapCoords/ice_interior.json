@@ -1,0 +1,29 @@
+{
+  "mapPage": "ice_interior",
+  "displayName": "Île gelée - Intérieur",
+  "includeAttributes": ["pve_island"],
+  "idRange": {"min": 1100, "max": 1199},
+  "backgrounds": {
+    "fr": {"filename": "ice_island_interior_fr.jpg", "width": 2048, "height": 1536},
+    "en": {"filename": "ice_island_interior_en.jpg", "width": 4096, "height": 3072}
+  },
+  "marker": {
+    "image": "cross.png",
+    "anchor": "center",
+    "size": {"width": 150, "height": 150},
+    "anchorOffset": {"x": 75, "y": 75}
+  },
+  "coordSpace": "fr",
+  "scaling": {"fr": 1, "en": 2},
+  "nodes": {
+    "1102": {"x": 1030, "y": 788},
+    "1105": {"x": 1490, "y": 1160},
+    "1106": {"x": 1768, "y": 1358},
+    "1107": {"x": 1980, "y": 1481}
+  },
+  "edges": {
+    "1102_1105": {"startMap": 1102, "endMap": 1105, "x": 1189, "y": 1003},
+    "1105_1106": {"startMap": 1105, "endMap": 1106, "x": 1643, "y": 1244},
+    "1106_1107": {"startMap": 1106, "endMap": 1107, "x": 1885, "y": 1432}
+  }
+}

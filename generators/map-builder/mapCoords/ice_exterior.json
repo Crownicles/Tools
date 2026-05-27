@@ -1,0 +1,30 @@
+{
+  "mapPage": "ice_exterior",
+  "displayName": "Île gelée - Extérieur",
+  "includeAttributes": ["pve_island_entry", "pve_island"],
+  "idRange": {"min": 1100, "max": 1199},
+  "backgrounds": {
+    "fr": {"filename": "ice_island_exterior_fr.jpg", "width": 4096, "height": 3110},
+    "en": {"filename": "ice_island_exterior_en.jpg", "width": 4096, "height": 3110}
+  },
+  "marker": {
+    "image": "cross.png",
+    "anchor": "center",
+    "size": {"width": 150, "height": 150},
+    "anchorOffset": {"x": 75, "y": 75}
+  },
+  "coordSpace": "fr",
+  "scaling": {"fr": 1, "en": 1},
+  "nodes": {
+    "1100": {"x": 968, "y": 2542},
+    "1101": {"x": 1335, "y": 2060},
+    "1103": {"x": 2454, "y": 697},
+    "1104": {"x": 2513, "y": 392}
+  },
+  "edges": {
+    "1100_1101": {"startMap": 1100, "endMap": 1101, "x": 1196, "y": 2217},
+    "1101_1102": {"startMap": 1101, "endMap": 1102, "x": 1617, "y": 1850},
+    "1102_1103": {"startMap": 1102, "endMap": 1103, "x": 2350, "y": 858},
+    "1103_1104": {"startMap": 1103, "endMap": 1104, "x": 2488, "y": 526}
+  }
+}

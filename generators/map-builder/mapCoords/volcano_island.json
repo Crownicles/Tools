@@ -1,0 +1,34 @@
+{
+  "mapPage": "volcano_island",
+  "displayName": "Île volcanique",
+  "includeAttributes": ["pve_island_entry", "pve_island"],
+  "idRange": {"min": 1000, "max": 1099},
+  "backgrounds": {
+    "fr": {"filename": "volcano_island_fr.jpg", "width": 4096, "height": 2877},
+    "en": {"filename": "volcano_island_en.jpg", "width": 4096, "height": 2877}
+  },
+  "marker": {
+    "image": "cross.png",
+    "anchor": "center",
+    "size": {"width": 150, "height": 150},
+    "anchorOffset": {"x": 75, "y": 75}
+  },
+  "coordSpace": "fr",
+  "scaling": {"fr": 1, "en": 1},
+  "nodes": {
+    "1000": {"x": 726, "y": 1437},
+    "1001": {"x": 1467, "y": 1026},
+    "1002": {"x": 2436, "y": 1864},
+    "1003": {"x": 2448, "y": 1416},
+    "1004": {"x": 3159, "y": 1485},
+    "1005": {"x": 2562, "y": 700}
+  },
+  "edges": {
+    "1000_1001": {"startMap": 1000, "endMap": 1001, "x": 882, "y": 1296},
+    "1001_1002": {"startMap": 1001, "endMap": 1002, "x": 1980, "y": 1389},
+    "1001_1003": {"startMap": 1001, "endMap": 1003, "x": 1980, "y": 1389},
+    "1002_1004": {"startMap": 1002, "endMap": 1004, "x": 3084, "y": 1803},
+    "1003_1004": {"startMap": 1003, "endMap": 1004, "x": 2754, "y": 1439},
+    "1004_1005": {"startMap": 1004, "endMap": 1005, "x": 2985, "y": 759}
+  }
+}

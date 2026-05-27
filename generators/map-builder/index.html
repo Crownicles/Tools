@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crownicles - Map Builder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="viewerBanner" class="viewer-banner hidden">MODE LECTURE SEULE</div>
+
+    <header class="toolbar">
+      <div class="toolbar-left">
+        <h1>Crownicles · Map Builder</h1>
+        <div class="mode-toggle">
+          <label><input type="radio" name="mode" value="viewer" checked /> Viewer</label>
+          <label><input type="radio" name="mode" value="editor" /> Editor</label>
+        </div>
+      </div>
+
+      <div class="toolbar-center">
+        <label>Branche Crownicles
+          <input id="cwBranch" type="text" value="develop" autocomplete="off" />
+        </label>
+        <label>Branche Website
+          <input id="wsBranch" type="text" value="master" autocomplete="off" />
+        </label>
+        <button id="loadAll" type="button">Charger</button>
+        <span id="rateLimit" class="rate-limit"></span>
+      </div>
+
+      <div class="toolbar-right">
+        <label class="pat-label">PAT GitHub
+          <input id="pat" type="password" autocomplete="off" placeholder="github_pat_…" />
+        </label>
+        <button id="savePat" type="button" class="small">Sauver token</button>
+        <button id="clearPat" type="button" class="small">Effacer</button>
+        <button id="helpBtn" type="button" class="small">?</button>
+      </div>
+    </header>
+
+    <details id="repoOverride" class="repo-override">
+      <summary>Dépôts avancés</summary>
+      <div class="repo-override-grid">
+        <label>Crownicles owner/repo
+          <input id="cwRepo" type="text" value="Crownicles/Crownicles" />
+        </label>
+        <label>Website owner/repo
+          <input id="wsRepo" type="text" value="Crownicles/Website" />
+        </label>
+        <label class="checkbox-inline">
+          <input id="dryRun" type="checkbox" /> Dry-run (ne pousse rien)
+        </label>
+      </div>
+    </details>
+
+    <div id="tabs" class="tabs"></div>
+
+    <main class="main">
+      <section class="canvas-area">
+        <div class="canvas-controls">
+          <div class="canvas-controls-left">
+            <button id="zoomIn" type="button">+</button>
+            <button id="zoomOut" type="button">−</button>
+            <button id="zoomFit" type="button">Fit</button>
+            <button id="zoom100" type="button">100%</button>
+            <label><input type="radio" name="lang" value="fr" checked /> FR</label>
+            <label><input type="radio" name="lang" value="en" /> EN</label>
+            <label class="checkbox-inline"><input id="showLabels" type="checkbox" checked /> Labels</label>
+          </div>
+          <div class="canvas-controls-right">
+            <button id="undoBtn" type="button" title="Cmd/Ctrl+Z">↶ Undo</button>
+            <button id="redoBtn" type="button" title="Cmd/Ctrl+Shift+Z">↷ Redo</button>
+            <button id="renderBtn" type="button">Rendu images…</button>
+            <button id="exportBtn" type="button">Export coords ZIP</button>
+            <button id="prCwBtn" type="button">PR Crownicles</button>
+            <button id="prWsBtn" type="button">PR Website</button>
+          </div>
+        </div>
+
+        <div id="canvasWrapper" class="canvas-wrapper">
+          <canvas id="mapCanvas" width="1200" height="800"></canvas>
+          <div id="canvasPlaceholder" class="canvas-placeholder hidden">
+            Aucun fond d'écran chargé. Glisse une image ici.
+          </div>
+        </div>
+
+        <div id="dropOverlay" class="drop-overlay hidden">Déposer pour définir le fond</div>
+      </section>
+
+      <aside class="sidebar">
+        <section class="panel">
+          <h2>Statut sync</h2>
+          <details open><summary id="syncedHead">Synchronisés (0)</summary>
+            <ul id="syncedList" class="status-list"></ul>
+          </details>
+          <details><summary id="missingHead">Coords manquantes (0)</summary>
+            <ul id="missingList" class="status-list"></ul>
+          </details>
+          <details><summary id="orphanHead">Orphelins (0)</summary>
+            <ul id="orphanList" class="status-list"></ul>
+          </details>
+        </section>
+
+        <section class="panel">
+          <h2>Inspecteur</h2>
+          <div id="inspector" class="inspector">
+            <p class="hint">Sélectionne un marqueur.</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>État</h2>
+          <div id="status" class="status-subtle">Prêt.</div>
+        </section>
+      </aside>
+    </main>
+
+    <div id="contextMenu" class="context-menu hidden">
+      <button data-action="reset">Recentrer</button>
+      <button data-action="delete">Supprimer coords</button>
+      <button data-action="copy">Copier l'id</button>
+    </div>
+
+    <div id="newPageModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Nouvelle map page</h2>
+        <label>Filename (sans .json)<input id="npFilename" type="text" placeholder="my_island" /></label>
+        <label>Display name<input id="npDisplay" type="text" placeholder="Mon île" /></label>
+        <label>includeAttributes (séparés par virgule)<input id="npAttrs" type="text" placeholder="pve_island" /></label>
+        <label>idRange min<input id="npMin" type="number" /></label>
+        <label>idRange max<input id="npMax" type="number" /></label>
+        <div class="modal-actions">
+          <button id="npCancel" type="button">Annuler</button>
+          <button id="npCreate" type="button">Créer</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="renderModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Rendu d'images</h2>
+        <label>Portée
+          <select id="renderScope">
+            <option value="page">Onglet courant</option>
+            <option value="allPages">Tous les onglets</option>
+            <option value="allPagesAllLangs">Tous les onglets + toutes langues</option>
+          </select>
+        </label>
+        <label>Taille max longue dimension (px)
+          <input id="renderMaxDim" type="number" value="1920" min="256" step="32" />
+        </label>
+        <label>Qualité WebP : <span id="qualityLabel">0.90</span>
+          <input id="renderQuality" type="range" min="0.5" max="1.0" step="0.05" value="0.9" />
+        </label>
+        <label>Destination
+          <select id="renderDest">
+            <option value="zip">ZIP local</option>
+            <option value="pr">PR Website</option>
+          </select>
+        </label>
+        <div class="progress-wrap">
+          <div id="renderProgress" class="progress-bar"><span></span></div>
+          <div id="renderProgressLabel" class="status-subtle"></div>
+        </div>
+        <div class="modal-actions">
+          <button id="renderCancel" type="button">Annuler</button>
+          <button id="renderStart" type="button">Lancer</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="helpModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Raccourcis</h2>
+        <ul>
+          <li><kbd>Cmd/Ctrl</kbd> + <kbd>Z</kbd> : Undo</li>
+          <li><kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> : Redo</li>
+          <li><kbd>Space</kbd> + drag : Pan</li>
+          <li>Mouse wheel : Zoom</li>
+          <li><kbd>Shift</kbd> en draggant : pas de snap</li>
+          <li>Clic-droit sur marker : menu contextuel</li>
+        </ul>
+        <div class="modal-actions">
+          <button id="helpClose" type="button">Fermer</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dryRunPanel" class="dry-run-panel hidden">
+      <div class="dry-run-header">
+        <strong>Dry-run · appels API simulés</strong>
+        <button id="dryRunClose" type="button" class="small">×</button>
+      </div>
+      <pre id="dryRunLog"></pre>
+    </div>
+
+    <div id="toasts" class="toasts"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
