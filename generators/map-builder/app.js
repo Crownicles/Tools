@@ -391,15 +391,23 @@ function getPageRegistry(mapPage) {
     if (locationMatchesPage(id, info, page)) includedIds.add(String(id));
   });
   // Edges: both endpoints included.
+  // mapLinks defines each connection twice (one entry per direction), but
+  // mapCoords stores each edge once with a canonical key `min_max`.
+  // We deduplicate here so reverse-direction mapLinks don't appear as missing.
+  const seen = new Set();
   const includedEdges = [];
   state.links.forEach((link) => {
     if (!link) return;
     const sm = String(link.startMap);
     const em = String(link.endMap);
-    if (includedIds.has(sm) && includedIds.has(em)) {
-      const key = `${link.startMap}_${link.endMap}`;
-      includedEdges.push({ key, startMap: link.startMap, endMap: link.endMap });
-    }
+    if (!includedIds.has(sm) || !includedIds.has(em)) return;
+    const a = Number(link.startMap);
+    const b = Number(link.endMap);
+    const [lo, hi] = a < b ? [a, b] : [b, a];
+    const key = `${lo}_${hi}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    includedEdges.push({ key, startMap: lo, endMap: hi });
   });
   return { nodes: Array.from(includedIds), edges: includedEdges };
 }
