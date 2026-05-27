@@ -1109,8 +1109,8 @@ async function renderImages() {
   const dest = $("renderDest").value;
   renderCancel = false;
 
-  const pages = scope === "page" ? [state.currentTab] : Object.keys(state.mapPages);
-  const langs = scope === "allPagesAllLangs" ? ["fr", "en"] : [state.lang];
+  const pages = (scope === "page" || scope === "pageAllLangs") ? [state.currentTab] : Object.keys(state.mapPages);
+  const langs = (scope === "allPagesAllLangs" || scope === "pageAllLangs") ? ["fr", "en"] : [state.lang];
 
   const outputs = []; // { name, blob }
   let total = 0;
