@@ -11,8 +11,7 @@ d'images depuis `raw.githubusercontent.com` ne fonctionnent pas en `file://` à 
 restrictions CORS).
 
 ```bash
-cd /Users/bastlast/WebstormProjects/Tools/generators/map-builder
-python3 -m http.server 8765
+python3 -m http.server --directory /Users/bastlast/WebstormProjects/Tools/generators/map-builder 8765
 # puis ouvrir http://localhost:8765
 ```
 
@@ -24,7 +23,9 @@ Aucune dépendance Node, aucun build. Seul JSZip est chargé depuis un CDN (jsDe
    `pull_requests: write` sur les deux dépôts. Le coller dans le champ correspondant et
    cliquer « Sauver token ». Il est stocké en `localStorage` sous la clé `mapBuilderPat`
    (n'est jamais loggué ni envoyé ailleurs que sur api.github.com).
-2. **Branches** : par défaut `develop` côté Crownicles, `master` côté Website.
+2. **Branches** : par défaut `master` côté Crownicles (reflète la production), `master`
+   côté Website. Pour prévisualiser `develop` ou une branche WIP, changer le champ
+   « Branche Crownicles ».
    Le panneau « Dépôts avancés » permet aussi de changer le **repo + branche `mapCoords`**
    (par défaut `Crownicles/Tools@master`) et de sélectionner une **saison**
    (`normal` / `halloween` / `christmas`) qui influe sur le nom de fond chargé
@@ -40,15 +41,49 @@ Aucune dépendance Node, aucun build. Seul JSZip est chargé depuis un CDN (jsDe
 
 ## Onglets
 
-Un onglet par fichier `generators/map-builder/mapCoords/*.json` (stocké dans ce repo Tools).
+Un onglet = une zone géographique = une image de fond. Un fichier
+`generators/map-builder/mapCoords/*.json` par onglet (stocké dans ce repo Tools). Chaque
+page filtre les `mapLocations` selon ses `includeAttributes` (et optionnellement
+`idRange`).
+
+Pages actuelles :
+
+- `main_continent` — Continent principal (attributs `continent1`, `king_castle`,
+  `main_continent`).
+- `volcano_island` — Île volcanique PvE (`pve_island_entry`, `pve_island`, id ≥ 1000).
+- `ice_exterior` / `ice_interior` — Île gelée extérieur / intérieur.
+- `haunted_house` — Maison hantée d'Halloween (attribut `haunted`). Le fond
+  `haunted_<lang>.jpg` doit être présent dans le dépôt Website (`public/ressources/`).
+
 Le bouton `+ Nouvelle page` crée
 une nouvelle `mapPage` avec des valeurs par défaut raisonnables (marker `cross.png`).
+
+### Types de lieux non rendus
+
+Les `mapLocations` avec `type: "continent"` sont des pseudo-lieux logiques (le continent
+en tant qu'entité, pas un endroit visitable). Ils sont volontairement exclus de la liste
+« Coords manquantes » et du rendu sur la carte.
+
+## Placer un marqueur manquant (drag-and-drop)
+
+Les `mapLocations` / liens sans coordonnées apparaissent dans le panneau de droite sous
+« Coords manquantes » avec le hint orange `↪ glisse sur la carte`. Pour les placer :
+
+1. Passer en mode **Editor**.
+2. Saisir l'élément dans la liste de droite (curseur `grab`).
+3. Glisser-déposer sur la carte à l'emplacement voulu (contour orange en survol).
+4. Le marqueur passe en « Synchronisés » et peut être ajusté à la souris ou via
+   l'inspecteur.
+
+Tant qu'un élément n'est pas placé, il n'est **pas exporté** : le ZIP de coords et le
+push GitHub n'embarquent que les entrées effectivement positionnées.
 
 ## Statuts des marqueurs
 
 - **Synchronisé** : mapLocation présent ET coords définies.
 - **Coords manquantes** : mapLocation matche les `includeAttributes` / `idRange` de la page
-  mais n'a pas de coords → placé au centre, contour rouge.
+  mais n'a pas de coords → listé à droite uniquement, **pas dessiné sur le canvas**,
+  draggable vers la carte pour être placé.
 - **Coords orphelines** : entrée dans `mapCoords` sans mapLocation correspondante → en
   rouge, suppression proposée.
 
