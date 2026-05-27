@@ -493,3 +493,23 @@ body.viewer #mapCanvas { cursor: grab; }
   margin-top: 2px;
   min-width: 220px;
 }
+
+/* Drag-and-drop: missing markers from the sync panel onto the canvas */
+li.draggable {
+  cursor: grab;
+}
+li.draggable:active,
+li.draggable.dragging {
+  cursor: grabbing;
+  opacity: 0.6;
+}
+li.draggable .drag-hint {
+  font-size: 0.72rem;
+  color: #d97706;
+  margin-left: 6px;
+  opacity: 0.85;
+}
+#mapCanvas.drop-target {
+  outline: 3px dashed #f59e0b;
+  outline-offset: -3px;
+}

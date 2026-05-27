@@ -602,24 +602,9 @@ function render() {
   // Draw edges
   drawSet(ctx, page, page.edges || {}, "edge", cat, langFactor, markerImg);
 
-  // Cross-page edges (edges that include nodes belonging to this page on the location side
-  // even if the edge entry has no coord on this page).
-  drawMissingMarkers(ctx, page, cat, langFactor, markerImg);
-}
-
-function drawMissingMarkers(ctx, page, cat, langFactor, markerImg) {
-  const c = getCanvas();
-  const centerCoord = canvasToCoord(c.width / 2, c.height / 2);
-  cat.missing.nodes.forEach((id, i) => {
-    const fakeX = centerCoord.x + (i % 5) * 30 / state.view.scale;
-    const fakeY = centerCoord.y + Math.floor(i / 5) * 30 / state.view.scale;
-    drawMarker(ctx, page, fakeX, fakeY, id, "node", "missing", langFactor, markerImg);
-  });
-  cat.missing.edges.forEach((key, i) => {
-    const fakeX = centerCoord.x + ((i + 7) % 5) * 30 / state.view.scale;
-    const fakeY = centerCoord.y + 200 / state.view.scale + Math.floor(i / 5) * 30 / state.view.scale;
-    drawMarker(ctx, page, fakeX, fakeY, key, "edge", "missing", langFactor, markerImg);
-  });
+  // Missing markers are intentionally not drawn on the canvas: they would pile
+  // up at arbitrary positions and confuse the user. They live in the right-side
+  // sync panel and can be dragged from there onto the canvas to be placed.
 }
 
 function drawSet(ctx, page, items, kind, cat, langFactor, markerImg) {
@@ -784,8 +769,19 @@ function refreshSyncPanel() {
       const li = document.createElement("li");
       li.className = cls;
       const name = state.placeNames[key] ? ` · ${state.placeNames[key]}` : "";
-      li.innerHTML = `<span>${kind === "node" ? "N" : "E"} ${key}${name}</span>`;
+      const dragHint = cls === "missing" && state.mode === "editor" ? ` <span class="drag-hint">↪ glisse sur la carte</span>` : "";
+      li.innerHTML = `<span>${kind === "node" ? "N" : "E"} ${key}${name}</span>${dragHint}`;
       li.addEventListener("click", () => { state.selected = { type: kind, key }; refreshInspector(); render(); });
+      if (cls === "missing" && state.mode === "editor") {
+        li.draggable = true;
+        li.classList.add("draggable");
+        li.addEventListener("dragstart", (ev) => {
+          ev.dataTransfer.setData("application/x-crownicles-missing", JSON.stringify({ kind, key }));
+          ev.dataTransfer.effectAllowed = "copy";
+          li.classList.add("dragging");
+        });
+        li.addEventListener("dragend", () => li.classList.remove("dragging"));
+      }
       ul.appendChild(li);
     });
   };
@@ -997,6 +993,49 @@ function wireCanvasInteractions() {
     state.panState = null;
     state.dragState = null;
     c.classList.remove("panning", "dragging");
+  });
+
+  // Drag-and-drop from the missing list onto the canvas to place a coord.
+  c.addEventListener("dragover", (e) => {
+    if (state.mode !== "editor") return;
+    if (!Array.from(e.dataTransfer.types).includes("application/x-crownicles-missing")) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+    c.classList.add("drop-target");
+  });
+  c.addEventListener("dragleave", () => c.classList.remove("drop-target"));
+  c.addEventListener("drop", (e) => {
+    c.classList.remove("drop-target");
+    if (state.mode !== "editor") return;
+    const raw = e.dataTransfer.getData("application/x-crownicles-missing");
+    if (!raw) return;
+    e.preventDefault();
+    let payload;
+    try { payload = JSON.parse(raw); }
+    catch { return; }
+    const page = state.mapPages[state.currentTab];
+    if (!page) return;
+    const rect = c.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const coord = canvasToCoord(mx, my);
+    const langFactor = getScalingFactor(page, state.lang);
+    const x = Math.round(coord.x / langFactor);
+    const y = Math.round(coord.y / langFactor);
+    pushUndo();
+    if (payload.kind === "node") {
+      page.nodes = page.nodes || {};
+      page.nodes[payload.key] = { x, y };
+    } else {
+      const [lo, hi] = payload.key.split("_").map((n) => parseInt(n, 10));
+      page.edges = page.edges || {};
+      page.edges[payload.key] = { startMap: lo, endMap: hi, x, y };
+    }
+    state.selected = { type: payload.kind, key: payload.key };
+    render();
+    refreshSyncPanel();
+    refreshInspector();
+    toast(`${payload.kind === "node" ? "Nœud" : "Arête"} ${payload.key} placé(e) à (${x}, ${y})`, "success");
   });
 
   c.addEventListener("wheel", (e) => {
