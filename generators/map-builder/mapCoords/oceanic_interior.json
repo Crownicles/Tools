@@ -1,11 +1,11 @@
 {
-  "mapPage": "oceanic_island",
-  "displayName": "Île océanique",
-  "includeAttributes": ["pve_island_entry", "pve_island"],
+  "mapPage": "oceanic_interior",
+  "displayName": "Île océanique - Intérieur (souterrain)",
+  "includeAttributes": ["pve_island"],
   "idRange": {"min": 1200, "max": 1299},
   "backgrounds": {
-    "fr": {"filename": "oceanic_island_fr.jpg", "width": 4096, "height": 2744},
-    "en": {"filename": "oceanic_island_en.jpg", "width": 4096, "height": 2744}
+    "fr": {"filename": "oceanic_interior_fr.jpg", "width": 2048, "height": 1536},
+    "en": {"filename": "oceanic_interior_en.jpg", "width": 2048, "height": 1536}
   },
   "marker": {
     "image": "cross.png",

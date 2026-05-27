@@ -1,0 +1,20 @@
+{
+  "mapPage": "oceanic_exterior",
+  "displayName": "Île océanique - Extérieur",
+  "includeAttributes": ["pve_island_entry", "pve_island"],
+  "idRange": {"min": 1200, "max": 1299},
+  "backgrounds": {
+    "fr": {"filename": "oceanic_exterior_fr.jpg", "width": 2048, "height": 1555},
+    "en": {"filename": "oceanic_exterior_en.jpg", "width": 2048, "height": 1555}
+  },
+  "marker": {
+    "image": "cross.png",
+    "anchor": "center",
+    "size": {"width": 150, "height": 150},
+    "anchorOffset": {"x": 75, "y": 75}
+  },
+  "coordSpace": "fr",
+  "scaling": {"fr": 1, "en": 1},
+  "nodes": {},
+  "edges": {}
+}
