@@ -1,0 +1,20 @@
+{
+  "mapPage": "oceanic_island",
+  "displayName": "Île océanique",
+  "includeAttributes": ["pve_island_entry", "pve_island"],
+  "idRange": {"min": 1200, "max": 1299},
+  "backgrounds": {
+    "fr": {"filename": "oceanic_island_fr.jpg", "width": 4096, "height": 2744},
+    "en": {"filename": "oceanic_island_en.jpg", "width": 4096, "height": 2744}
+  },
+  "marker": {
+    "image": "cross.png",
+    "anchor": "center",
+    "size": {"width": 150, "height": 150},
+    "anchorOffset": {"x": 75, "y": 75}
+  },
+  "coordSpace": "fr",
+  "scaling": {"fr": 1, "en": 1},
+  "nodes": {},
+  "edges": {}
+}

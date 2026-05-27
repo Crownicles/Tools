@@ -546,3 +546,12 @@ li.draggable .drag-hint {
   color: #64748b;
   font-size: 0.82rem;
 }
+.sync-name-input {
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  margin: 0 4px;
+  font-family: monospace;
+  width: 130px;
+}

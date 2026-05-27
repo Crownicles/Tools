@@ -463,8 +463,19 @@ function computeSyncDiff() {
   Object.values(state.mapPages).forEach((p) => {
     (p.includeAttributes || []).forEach((a) => coveredAttrs.add(a));
   });
-  const newAttrs = new Map(); // attr -> { ids: string[], types: Set }
-  const outOfRange = new Map(); // pageKey -> { attr, ids: string[] }
+  // Collect existing idRanges per attribute for collision detection.
+  const rangesByAttr = new Map(); // attr -> [{key, min, max}]
+  Object.entries(state.mapPages).forEach(([key, p]) => {
+    if (!p.idRange) return;
+    (p.includeAttributes || []).forEach((a) => {
+      if (!rangesByAttr.has(a)) rangesByAttr.set(a, []);
+      rangesByAttr.get(a).push({ key, min: p.idRange.min, max: p.idRange.max });
+    });
+  });
+
+  const newAttrs = new Map(); // attr -> { ids, types }
+  const newIslands = new Map(); // synthetic key "attr@bucket" -> { attr, bucket, ids }
+  const outOfRange = new Map(); // pageKey -> { attr, ids } (only when extending makes sense: adjacent range)
 
   Object.entries(state.locations).forEach(([id, info]) => {
     if (!info || NON_RENDERABLE_LOCATION_TYPES.has(info.type)) return;
@@ -477,29 +488,37 @@ function computeSyncDiff() {
       slot.types.add(info.type);
       return;
     }
-    // Attribute is covered, but does some page accept this specific id?
     const accepted = Object.values(state.mapPages).some((p) => locationMatchesPage(id, info, p));
     if (accepted) return;
-    // Find first page declaring this attribute → propose to extend its idRange.
-    const targetKey = Object.keys(state.mapPages).find((k) =>
-      (state.mapPages[k].includeAttributes || []).includes(attr)
-    );
-    if (!targetKey) return;
-    if (!outOfRange.has(targetKey)) outOfRange.set(targetKey, { attr, ids: [] });
-    outOfRange.get(targetKey).ids.push(String(id));
+    const numId = parseInt(id, 10);
+    if (Number.isNaN(numId)) return;
+    const ranges = rangesByAttr.get(attr) || [];
+    // Is this id adjacent to (within 1) any existing range? → extend.
+    const adjacent = ranges.find((r) => numId === r.min - 1 || numId === r.max + 1);
+    if (adjacent) {
+      if (!outOfRange.has(adjacent.key)) outOfRange.set(adjacent.key, { attr, ids: [] });
+      outOfRange.get(adjacent.key).ids.push(String(id));
+      return;
+    }
+    // Otherwise treat as a new island: group by 100-bucket.
+    const bucket = Math.floor(numId / 100) * 100;
+    const key = `${attr}@${bucket}`;
+    if (!newIslands.has(key)) newIslands.set(key, { attr, bucket, ids: [] });
+    newIslands.get(key).ids.push(String(id));
   });
-  return { newAttrs, outOfRange };
+  return { newAttrs, newIslands, outOfRange };
 }
 
-function buildStubPage(attr, ids) {
+function buildStubPage(attr, ids, opts) {
   const numericIds = ids.map((i) => parseInt(i, 10)).filter((n) => !Number.isNaN(n));
+  const pageName = opts?.name || attr;
   const stub = {
-    mapPage: attr,
-    displayName: humanizeAttr(attr),
+    mapPage: pageName,
+    displayName: humanizeAttr(pageName),
     includeAttributes: [attr],
     backgrounds: {
-      fr: { filename: `${attr}_fr.jpg`, width: 4096, height: 2744 },
-      en: { filename: `${attr}_en.jpg`, width: 4096, height: 2744 }
+      fr: { filename: `${pageName}_fr.jpg`, width: 4096, height: 2744 },
+      en: { filename: `${pageName}_en.jpg`, width: 4096, height: 2744 }
     },
     marker: {
       image: "cross.png",
@@ -512,8 +531,10 @@ function buildStubPage(attr, ids) {
     nodes: {},
     edges: {}
   };
-  // Heuristic: if all IDs are >= 1000 (island/extension range), include a 100-wide idRange.
-  if (numericIds.length && numericIds.every((n) => n >= 1000)) {
+  // Apply idRange when caller specifies a bucket or when all IDs sit in the high (island) range.
+  if (opts?.bucket !== undefined) {
+    stub.idRange = { min: opts.bucket, max: opts.bucket + 99 };
+  } else if (numericIds.length && numericIds.every((n) => n >= 1000)) {
     const min = Math.min(...numericIds);
     const max = Math.max(...numericIds);
     const rangeStart = Math.floor(min / 100) * 100;
@@ -529,7 +550,7 @@ function openSyncModal() {
     return;
   }
   const diff = computeSyncDiff();
-  if (diff.newAttrs.size === 0 && diff.outOfRange.size === 0) {
+  if (diff.newAttrs.size === 0 && diff.newIslands.size === 0 && diff.outOfRange.size === 0) {
     toast("Rien à synchroniser, tout est déjà couvert.", "info", 6000);
     return;
   }
@@ -540,60 +561,77 @@ function openSyncModal() {
   const body = $("syncModalBody");
   body.innerHTML = "";
 
-  if (diff.newAttrs.size) {
+  const addCheckboxSection = (title, entries, render) => {
+    if (!entries.length) return;
     const h = document.createElement("h3");
-    h.textContent = `Nouvelles mapPages à créer (${diff.newAttrs.size})`;
+    h.textContent = `${title} (${entries.length})`;
     body.appendChild(h);
     const ul = document.createElement("ul");
     ul.className = "sync-list";
-    Array.from(diff.newAttrs.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .forEach(([attr, info]) => {
-        const preview = info.ids.slice(0, 6).join(", ") + (info.ids.length > 6 ? "…" : "");
-        const li = document.createElement("li");
-        li.innerHTML = `<label><input type="checkbox" data-sync="newAttr" data-attr="${attr}" checked /> <strong>${attr}</strong> <span class="hint">→ ${attr}.json (${info.ids.length} POIs : ${preview})</span></label>`;
-        ul.appendChild(li);
-      });
+    entries.forEach((e) => ul.appendChild(render(e)));
     body.appendChild(ul);
-  }
+  };
 
-  if (diff.outOfRange.size) {
-    const h = document.createElement("h3");
-    h.textContent = `idRange à étendre (${diff.outOfRange.size})`;
-    body.appendChild(h);
-    const ul = document.createElement("ul");
-    ul.className = "sync-list";
-    Array.from(diff.outOfRange.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .forEach(([pageKey, info]) => {
-        const preview = info.ids.slice(0, 6).join(", ") + (info.ids.length > 6 ? "…" : "");
-        const li = document.createElement("li");
-        li.innerHTML = `<label><input type="checkbox" data-sync="extendRange" data-page="${pageKey}" checked /> <strong>${pageKey}</strong> <span class="hint">+ ${info.ids.length} POIs (${preview})</span></label>`;
-        ul.appendChild(li);
-      });
-    body.appendChild(ul);
-  }
+  addCheckboxSection(
+    "Nouveaux attributs (mapPage à créer)",
+    Array.from(diff.newAttrs.entries()).sort(([a], [b]) => a.localeCompare(b)),
+    ([attr, info]) => {
+      const preview = info.ids.slice(0, 6).join(", ") + (info.ids.length > 6 ? "…" : "");
+      const li = document.createElement("li");
+      li.innerHTML = `<label><input type="checkbox" data-sync="newAttr" data-attr="${attr}" checked /> <strong>${attr}</strong> <span class="hint">→ ${attr}.json (${info.ids.length} POIs : ${preview})</span></label>`;
+      return li;
+    }
+  );
+
+  addCheckboxSection(
+    "Nouvelles îles (attribut partagé, bloc d'ID distinct)",
+    Array.from(diff.newIslands.entries()).sort(([a], [b]) => a.localeCompare(b)),
+    ([key, info]) => {
+      const preview = info.ids.slice(0, 6).join(", ") + (info.ids.length > 6 ? "…" : "");
+      const suggestedName = `island_${info.bucket}`;
+      const li = document.createElement("li");
+      li.innerHTML = `<label><input type="checkbox" data-sync="newIsland" data-key="${key}" checked /> <strong>${info.attr}</strong> bloc ${info.bucket}-${info.bucket + 99} → <input type="text" data-sync-name="${key}" value="${suggestedName}" class="sync-name-input" /> <span class="hint">(${info.ids.length} POIs : ${preview})</span></label>`;
+      return li;
+    }
+  );
+
+  addCheckboxSection(
+    "idRange à étendre (POIs adjacents)",
+    Array.from(diff.outOfRange.entries()).sort(([a], [b]) => a.localeCompare(b)),
+    ([pageKey, info]) => {
+      const preview = info.ids.slice(0, 6).join(", ") + (info.ids.length > 6 ? "…" : "");
+      const li = document.createElement("li");
+      li.innerHTML = `<label><input type="checkbox" data-sync="extendRange" data-page="${pageKey}" checked /> <strong>${pageKey}</strong> <span class="hint">+ ${info.ids.length} POIs (${preview})</span></label>`;
+      return li;
+    }
+  );
 
   $("syncModal").classList.remove("hidden");
 }
 
 function applySyncSelections() {
   const diff = state._syncDiff;
-  if (!diff) return { applied: 0, addedKeys: [] };
-  const addedKeys = [];
-  const newAttrs = Array.from(document.querySelectorAll('[data-sync="newAttr"]:checked'))
-    .map((cb) => cb.dataset.attr);
-  const extend = Array.from(document.querySelectorAll('[data-sync="extendRange"]:checked'))
-    .map((cb) => cb.dataset.page);
-
-  newAttrs.forEach((attr) => {
+  if (!diff) return { applied: 0 };
+  let applied = 0;
+  document.querySelectorAll('[data-sync="newAttr"]:checked').forEach((cb) => {
+    const attr = cb.dataset.attr;
     const info = diff.newAttrs.get(attr);
     if (!info) return;
-    const stub = buildStubPage(attr, info.ids);
-    state.mapPages[attr] = stub;
-    addedKeys.push(attr);
+    state.mapPages[attr] = buildStubPage(attr, info.ids);
+    applied++;
   });
-  extend.forEach((pageKey) => {
+  document.querySelectorAll('[data-sync="newIsland"]:checked').forEach((cb) => {
+    const key = cb.dataset.key;
+    const info = diff.newIslands.get(key);
+    if (!info) return;
+    const nameInput = document.querySelector(`[data-sync-name="${key}"]`);
+    const name = (nameInput?.value || `island_${info.bucket}`).trim().replace(/[^a-z0-9_]/gi, "_");
+    if (!name || state.mapPages[name]) return;
+    state.mapPages[name] = buildStubPage(info.attr, info.ids, { name, bucket: info.bucket });
+    applied++;
+  });
+  document.querySelectorAll('[data-sync="extendRange"]:checked').forEach((cb) => {
+    const pageKey = cb.dataset.page;
     const info = diff.outOfRange.get(pageKey);
     const page = state.mapPages[pageKey];
     if (!info || !page) return;
@@ -602,9 +640,9 @@ function applySyncSelections() {
     const curMin = page.idRange?.min ?? Math.min(...nums);
     const curMax = page.idRange?.max ?? Math.max(...nums);
     page.idRange = { min: Math.min(curMin, ...nums), max: Math.max(curMax, ...nums) };
-    addedKeys.push(pageKey);
+    applied++;
   });
-  return { applied: newAttrs.length + extend.length, addedKeys };
+  return { applied };
 }
 
 async function confirmSync(pushPr) {
