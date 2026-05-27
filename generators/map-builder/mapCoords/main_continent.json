@@ -1,7 +1,7 @@
 {
   "mapPage": "main_continent",
   "displayName": "Continent principal",
-  "includeAttributes": ["continent1", "king_castle", "main_continent", "haunted"],
+  "includeAttributes": ["continent1", "king_castle", "main_continent"],
   "backgrounds": {
     "fr": {"filename": "map_fr.jpg", "width": 8192, "height": 5488},
     "en": {"filename": "map_en.jpg", "width": 4096, "height": 2744}

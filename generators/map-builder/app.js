@@ -11,7 +11,9 @@
 const DEFAULTS = {
   cwOwnerRepo: "Crownicles/Crownicles",
   wsOwnerRepo: "Crownicles/Website",
-  cwBranch: "develop",
+  // Default to master so the tool reflects the production state (mapLocations / mapLinks).
+  // Use the UI selector to preview develop or any WIP branch.
+  cwBranch: "master",
   wsBranch: "master",
   toolsOwnerRepo: "Crownicles/Tools",
   // mapCoords lives in the Tools repo (source of truth), not in Crownicles.
@@ -370,8 +372,15 @@ async function loadAll() {
 // === Sync logic ===
 // ============================================================================
 
+// Location types that have no visual marker on any map page (pseudo-locations
+// representing logical entities, not geographic points). Aligned with the
+// Crownicles MapLocationType enum: `continent` denotes the continent itself,
+// not a place a player can be drawn at.
+const NON_RENDERABLE_LOCATION_TYPES = new Set(["continent"]);
+
 function locationMatchesPage(id, info, page) {
   if (!info || !page) return false;
+  if (NON_RENDERABLE_LOCATION_TYPES.has(info.type)) return false;
   const attrs = page.includeAttributes || [];
   if (attrs.length && !attrs.includes(info.attribute)) return false;
   if (page.idRange) {
