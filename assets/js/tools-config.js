@@ -218,5 +218,15 @@ const toolsConfig = [
         tags: ['Carte', 'Éditeur', 'PR', 'GitHub', 'Coords'],
         icon: '🗺️',
         status: 'active'
+    },
+    {
+        id: 'material-loot-balance',
+        title: 'Équilibrage Loot de Matériaux',
+        description: 'Simule et équilibre les pools de loot de matériaux par catégorie d\'upgrade. Affiche distributions, probabilités et impact des changements.',
+        path: 'generators/material-loot-balance.html',
+        category: 'Développement',
+        tags: ['Matériaux', 'Loot', 'Upgrades', 'Équilibrage', 'Probabilités'],
+        icon: '🎁',
+        status: 'active'
     }
 ];
