@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crownicles — Équilibrage Material Loot (15 catégories)</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧪</text></svg>">
+<style>
+:root{
+  --bg:#0f1115;--panel:#161a22;--panel2:#1d222d;--border:#2a3140;
+  --text:#e6edf3;--text-soft:#9fb0c4;--text-muted:#6b7a8f;
+  --accent:#7aa2ff;--accent2:#a6e3a1;--warn:#f9c74f;--err:#ef6f6c;
+  --common:#b0bec5;--uncommon:#81c784;--rare:#7986cb;
+  --r0:#888;--r1:#9fb0c4;--r2:#81c784;--r3:#4fc3f7;--r4:#7986cb;
+  --r5:#ba68c8;--r6:#ffb74d;--r7:#ef6f6c;--r8:#f48fb1;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.4}
+.container{max-width:1500px;margin:0 auto;padding:18px}
+header h1{margin:0 0 4px;font-size:1.55rem}
+header .subtitle{margin:0 0 14px;color:var(--text-soft);font-size:0.9rem}
+.gh-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;background:var(--panel);border:1px solid var(--border);padding:12px;border-radius:10px;margin-bottom:14px}
+.gh-bar .field{display:flex;flex-direction:column;gap:3px}
+.gh-bar label{font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em}
+.gh-bar input{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:0.88rem;min-width:130px}
+button{cursor:pointer;background:var(--accent);color:#0a0d12;border:none;padding:8px 14px;border-radius:6px;font-weight:600;font-size:0.88rem}
+button:hover{filter:brightness(1.1)}
+button:disabled{opacity:0.5;cursor:not-allowed}
+button.ghost{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+#status{padding:8px 12px;border-radius:6px;margin-bottom:12px;font-size:0.85rem;display:none}
+#status.loading{display:block;background:#1a2235;color:var(--accent)}
+#status.ok{display:block;background:#1a2b1a;color:var(--accent2)}
+#status.err{display:block;background:#2b1a1a;color:var(--err)}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.stat{background:var(--panel);border:1px solid var(--border);padding:8px 12px;border-radius:8px;font-size:0.85rem}
+.stat b{color:var(--accent);font-size:1rem;display:block}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:14px;flex-wrap:wrap}
+.tab{background:transparent;color:var(--text-soft);border:1px solid transparent;border-bottom:none;padding:8px 14px;border-radius:6px 6px 0 0;font-weight:500}
+.tab.active{background:var(--panel);color:var(--text);border-color:var(--border)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+.grid-cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:12px}
+.cat-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px}
+.cat-card h3{margin:0 0 4px;font-size:1rem;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.cat-card h3 .badge{background:var(--panel2);color:var(--text-soft);font-size:0.7rem;font-weight:500;padding:2px 6px;border-radius:10px;white-space:nowrap}
+.cat-card .desc{color:var(--text-muted);font-size:0.78rem;margin:0 0 8px}
+.pool-row{margin:6px 0;font-size:0.82rem}
+.pool-row .lbl{display:inline-block;width:80px;color:var(--text-muted);font-weight:600;text-transform:uppercase;font-size:0.7rem;letter-spacing:0.04em}
+.matchip{display:inline-block;background:var(--panel2);border:1px solid var(--border);padding:2px 7px;border-radius:11px;margin:2px 3px 2px 0;font-size:0.78rem;cursor:pointer;transition:all 0.1s}
+.matchip:hover{border-color:var(--accent);color:var(--accent)}
+.matchip.common{border-left:3px solid var(--common)}
+.matchip.uncommon{border-left:3px solid var(--uncommon)}
+.matchip.rare{border-left:3px solid var(--rare)}
+.cat-items{margin-top:8px;border-top:1px dashed var(--border);padding-top:8px;font-size:0.78rem;color:var(--text-soft)}
+.cat-items .ic{display:inline-block;background:var(--panel2);border-radius:4px;padding:1px 5px;margin:1px 2px 1px 0;cursor:pointer}
+.cat-items .ic:hover{color:var(--accent)}
+.rar-pill{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:4px;vertical-align:middle}
+table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:8px;overflow:hidden}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:0.85rem}
+th{background:var(--panel2);color:var(--text-soft);font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em;cursor:pointer;user-select:none}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+tr:hover td{background:rgba(122,162,255,0.05)}
+.filterbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.filterbar input,.filterbar select{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:6px 9px;border-radius:6px;font-size:0.85rem}
+.filterbar input[type=text]{min-width:240px}
+.cat-tag{display:inline-block;background:var(--panel2);border:1px solid var(--border);padding:1px 6px;border-radius:4px;margin:1px 2px;font-size:0.72rem;cursor:pointer;font-variant-numeric:tabular-nums}
+.cat-tag:hover{color:var(--accent);border-color:var(--accent)}
+.item-block{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:10px}
+.item-block h4{margin:0 0 4px;font-size:0.95rem}
+.item-block .meta{color:var(--text-muted);font-size:0.78rem;margin-bottom:8px}
+.lvl-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.lvl-cell{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:6px}
+.lvl-cell .lvl-h{font-weight:600;color:var(--accent);font-size:0.8rem;margin-bottom:4px}
+.lvl-cell .matline{font-size:0.74rem;margin:1px 0}
+.lvl-cell .qty{color:var(--accent2);font-weight:600;font-variant-numeric:tabular-nums;margin-right:4px}
+.bar{display:inline-block;background:var(--accent);height:8px;border-radius:2px;vertical-align:middle;margin-right:5px;min-width:1px}
+.bar.warn{background:var(--warn)}
+.bar.err{background:var(--err)}
+.bar.ok{background:var(--accent2)}
+.bal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:12px}
+.bal-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px}
+.bal-card h3{margin:0 0 8px;font-size:0.95rem;color:var(--accent)}
+.kpi-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.83rem}
+.kpi-row:last-child{border:none}
+.kpi-row .lbl{color:var(--text-soft)}
+.kpi-row .val{font-variant-numeric:tabular-nums;font-weight:600}
+.hidden{display:none!important}
+details{margin-top:6px}
+details summary{cursor:pointer;color:var(--accent);font-size:0.82rem;user-select:none}
+.legend{display:inline-flex;gap:10px;font-size:0.75rem;color:var(--text-muted);margin-left:6px}
+.legend span{display:flex;align-items:center;gap:4px}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🧪 Équilibrage Material Loot — 15 catégories</h1>
+    <p class="subtitle">Visualise les pools de matériaux par catégorie, l'usage par matériau, et le coût d'upgrade complet de chaque item (branche <code>materialloot</code>).</p>
+  </header>
+
+  <div class="gh-bar">
+    <div class="field"><label>Owner</label><input id="owner" value="Crownicles"></div>
+    <div class="field"><label>Repo</label><input id="repo" value="Crownicles"></div>
+    <div class="field"><label>Branche</label><input id="branch" value="materialloot"></div>
+    <button id="loadBtn">🚀 Charger depuis GitHub</button>
+    <button class="ghost" id="reloadBtn" style="display:none">🔄 Recharger</button>
+  </div>
+
+  <div id="status"></div>
+
+  <div id="main" class="hidden">
+    <div class="stats" id="statsBar"></div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="cats">📚 Catégories (15)</button>
+      <button class="tab" data-tab="mats">🧱 Matériaux</button>
+      <button class="tab" data-tab="items">⚒️ Items</button>
+      <button class="tab" data-tab="balance">⚖️ Équilibre</button>
+    </div>
+
+    <div class="tab-pane active" id="pane-cats">
+      <div class="filterbar">
+        <span class="legend">
+          <span><span class="rar-pill" style="background:var(--common)"></span>Common</span>
+          <span><span class="rar-pill" style="background:var(--uncommon)"></span>Uncommon</span>
+          <span><span class="rar-pill" style="background:var(--rare)"></span>Rare</span>
+        </span>
+      </div>
+      <div class="grid-cats" id="catsGrid"></div>
+    </div>
+
+    <div class="tab-pane" id="pane-mats">
+      <div class="filterbar">
+        <input type="text" id="matSearch" placeholder="🔍 Filtrer un matériau…">
+        <select id="matRarFilter">
+          <option value="">Toutes raretés</option>
+          <option value="1">Common</option>
+          <option value="2">Uncommon</option>
+          <option value="3">Rare</option>
+        </select>
+        <select id="matCatFilter"><option value="">Toutes catégories</option></select>
+      </div>
+      <table id="matsTable">
+        <thead><tr>
+          <th data-sort="id">#</th>
+          <th data-sort="name">Matériau</th>
+          <th data-sort="type">Type</th>
+          <th data-sort="rarity">Rareté</th>
+          <th class="num" data-sort="catCount"># Cat.</th>
+          <th>Catégories</th>
+          <th class="num" data-sort="itemCount"># Items</th>
+          <th class="num" data-sort="demand">Demande totale (1→5)</th>
+          <th class="num" data-sort="avgPerItem">Moy/item</th>
+        </tr></thead>
+        <tbody id="matsBody"></tbody>
+      </table>
+    </div>
+
+    <div class="tab-pane" id="pane-items">
+      <div class="filterbar">
+        <input type="text" id="itemSearch" placeholder="🔍 Filtrer un item…">
+        <select id="itemCatFilter"><option value="">Toutes catégories</option></select>
+        <select id="itemRarFilter"><option value="">Toutes raretés</option></select>
+        <select id="itemKindFilter">
+          <option value="">Tous</option>
+          <option value="weapon">Armes</option>
+          <option value="armor">Armures</option>
+        </select>
+        <span class="legend"><span>Affichés:&nbsp;<b id="itemsShownCount">0</b></span></span>
+      </div>
+      <div id="itemsList"></div>
+    </div>
+
+    <div class="tab-pane" id="pane-balance">
+      <div class="bal-grid" id="balGrid"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// State
+// ============================================================
+const ITEM_RARITIES = ["BASIC","COMMON","UNCOMMON","EXOTIC","RARE","SPECIAL","EPIC","LEGENDARY","MYTHICAL"];
+const MAT_RARITY = {COMMON:1,UNCOMMON:2,RARE:3};
+const MAT_RARITY_NAME = {1:"common",2:"uncommon",3:"rare"};
+const LEVEL_SHIFT_STEP = 1;
+
+const state = {
+  materials: {},        // id -> {rarity, type, name}
+  weapons: [],          // [{id, rarity, type, materialCategory, name}]
+  armors: [],           // same
+  pools: null,          // {cat: {1:[...common ids],2:[...unc],3:[...rare]}}
+  distincts: null,      // {ItemRarity: [ {1:n,2:n,3:n}, x5 ]}  (per level 1..5)
+  totals: null,         // {ItemRarity: { lvl: {1:n,2:n,3:n} }}
+  computed: null        // memoized stats
+};
+
+// ============================================================
+// Helpers
+// ============================================================
+function setStatus(msg,cls){
+  const el=document.getElementById('status');
+  el.className=cls||'';
+  el.textContent=msg;
+}
+async function fetchRaw(owner,repo,branch,path){
+  const url=`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+  const r=await fetch(url);
+  if(!r.ok) throw new Error(`${path}: ${r.status}`);
+  const txt=await r.text();
+  try{return JSON.parse(txt);}catch{return txt;}
+}
+async function fetchDirListing(owner,repo,branch,path){
+  const url=`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+  const r=await fetch(url);
+  if(!r.ok) throw new Error(`listing ${path}: ${r.status}`);
+  const j=await r.json();
+  return j.filter(f=>f.name.endsWith('.json'));
+}
+
+// ============================================================
+// Picker — exact reimplementation of ItemMaterialCategoryConstants.ts
+// ============================================================
+function hash32(seed){
+  // Math.imul replicates the Lib implementation
+  let x = seed | 0;
+  x = Math.imul(x ^ (x >>> 16), 0x85ebca6b);
+  x = Math.imul(x ^ (x >>> 13), 0xc2b2ae35);
+  x = x ^ (x >>> 16);
+  return x >>> 0;
+}
+function permutePool(pool, seed){
+  const out = pool.slice();
+  let st = hash32(seed) || 1;
+  for(let i=out.length-1;i>0;i--){
+    st = hash32(st + i);
+    const j = st % (i + 1);
+    const t = out[i]; out[i] = out[j]; out[j] = t;
+  }
+  return out;
+}
+function pickDistinct(subPool, itemId, matRarity, level, distinctCount){
+  if(distinctCount<=0 || subPool.length===0) return [];
+  const k = Math.min(distinctCount, subPool.length);
+  const perm = permutePool(subPool, itemId*31 + matRarity);
+  const start = ((level-1) * LEVEL_SHIFT_STEP) % perm.length;
+  const out = [];
+  for(let i=0;i<k;i++) out.push(perm[(start+i) % perm.length]);
+  return out;
+}
+
+// ============================================================
+// Compute upgrade materials for a single item at a single level
+// Returns Map<matId, qty>
+// ============================================================
+function upgradeMaterialsFor(item, level){
+  const result = new Map();
+  if(level<1 || level>5) return result;
+  const rarityName = ITEM_RARITIES[item.rarity];
+  const totals = state.totals[rarityName]?.[level];
+  const distincts = state.distincts[rarityName]?.[level-1];
+  if(!totals || !distincts) return result;
+  const pool = state.pools[item.materialCategory];
+  if(!pool) return result;
+
+  for(const mr of [1,2,3]){
+    const totalQty = totals[mr]||0;
+    if(totalQty<=0) continue;
+    const sub = pool[mr]||[];
+    const dc = Math.min(distincts[mr]||0, sub.length, totalQty);
+    if(dc<=0) continue;
+    const picked = pickDistinct(sub, item.id, mr, level, dc);
+    const base = Math.floor(totalQty / picked.length);
+    const rem = totalQty % picked.length;
+    for(let i=0;i<picked.length;i++){
+      const q = base + (i<rem ? 1 : 0);
+      result.set(picked[i], (result.get(picked[i])||0) + q);
+    }
+  }
+  return result;
+}
+
+// ============================================================
+// Parsers for the two TS constants files
+// ============================================================
+function parseInts(arrayBody){
+  return [...arrayBody.matchAll(/\d+/g)].map(m=>parseInt(m[0],10));
+}
+function parsePools(tsText){
+  // Find MATERIAL_POOLS_PER_CATEGORY = { ... };
+  const start = tsText.indexOf('MATERIAL_POOLS_PER_CATEGORY');
+  if(start<0) throw new Error('MATERIAL_POOLS_PER_CATEGORY not found');
+  const eq = tsText.indexOf('= {', start);
+  // Walk braces from the '{'
+  const braceStart = tsText.indexOf('{', eq);
+  let depth=0, i=braceStart;
+  for(; i<tsText.length; i++){
+    if(tsText[i]==='{') depth++;
+    else if(tsText[i]==='}'){ depth--; if(depth===0){ i++; break; } }
+  }
+  const body = tsText.slice(braceStart, i);
+
+  // For each category 1..15, extract its block, then for each MaterialRarity (COMMON/UNCOMMON/RARE) extract its array
+  const pools = {};
+  for(let cat=1; cat<=15; cat++){
+    // match "cat:" or numeric key followed by { ... } at this depth
+    const reCat = new RegExp(`(?:^|\\s|,)${cat}\\s*:\\s*\\{`,'g');
+    let m, found=null;
+    while((m=reCat.exec(body))!==null){
+      // ensure we're at category top level by tracking braces from the matched '{'
+      const openIdx = body.indexOf('{', m.index);
+      let d=0, j=openIdx;
+      for(; j<body.length; j++){
+        if(body[j]==='{') d++;
+        else if(body[j]==='}'){ d--; if(d===0){ j++; break; } }
+      }
+      found = body.slice(openIdx, j);
+      break;
+    }
+    if(!found) throw new Error(`Category ${cat} not found in pools`);
+    const sub = {};
+    for(const [name,val] of Object.entries(MAT_RARITY)){
+      const reRar = new RegExp(`MaterialRarity\\.${name}\\s*\\]\\s*:\\s*\\[([^\\]]*)\\]`);
+      const mm = found.match(reRar);
+      if(!mm) throw new Error(`Pool cat ${cat} rarity ${name} not found`);
+      sub[val] = parseInts(mm[1]);
+    }
+    pools[cat] = sub;
+  }
+  return pools;
+}
+function parseDistincts(tsText){
+  const start = tsText.indexOf('DISTINCT_MATERIALS_PER_ITEM_RARITY_AND_LEVEL');
+  if(start<0) throw new Error('DISTINCT_MATERIALS_PER_ITEM_RARITY_AND_LEVEL not found');
+  const eq = tsText.indexOf('= {', start);
+  const braceStart = tsText.indexOf('{', eq);
+  let d=0,i=braceStart;
+  for(;i<tsText.length;i++){
+    if(tsText[i]==='{') d++;
+    else if(tsText[i]==='}'){ d--; if(d===0){ i++; break; } }
+  }
+  const body = tsText.slice(braceStart,i);
+  const out = {};
+  for(const ir of ITEM_RARITIES){
+    // [ItemRarity.X]: [ {…}, {…}, {…}, {…}, {…} ]
+    const re = new RegExp(`ItemRarity\\.${ir}\\s*\\]\\s*:\\s*\\[([\\s\\S]*?)\\]\\s*(?=,\\s*\\[ItemRarity\\.|\\}\\s*;?)`);
+    const m = body.match(re);
+    if(!m){ out[ir] = [{},{},{},{},{}].map(_=>({1:0,2:0,3:0})); continue; }
+    const inner = m[1];
+    // Extract each { … } object
+    const objs = [];
+    let depth=0,startIdx=-1;
+    for(let j=0;j<inner.length;j++){
+      if(inner[j]==='{'){ if(depth===0) startIdx=j; depth++; }
+      else if(inner[j]==='}'){ depth--; if(depth===0) objs.push(inner.slice(startIdx,j+1)); }
+    }
+    out[ir] = objs.map(o=>{
+      const r = {1:0,2:0,3:0};
+      for(const [n,v] of Object.entries(MAT_RARITY)){
+        const mm = o.match(new RegExp(`MaterialRarity\\.${n}\\s*\\]\\s*:\\s*(\\d+)`));
+        r[v] = mm ? parseInt(mm[1],10) : 0;
+      }
+      return r;
+    });
+  }
+  return out;
+}
+function parseTotals(tsText){
+  // UPGRADE_MATERIALS_PER_ITEM_RARITY_AND_LEVEL
+  const start = tsText.indexOf('UPGRADE_MATERIALS_PER_ITEM_RARITY_AND_LEVEL');
+  if(start<0) throw new Error('UPGRADE_MATERIALS_PER_ITEM_RARITY_AND_LEVEL not found');
+  // Walk to first '{' after '= {'
+  const eq = tsText.indexOf('= {', start);
+  const braceStart = tsText.indexOf('{', eq);
+  let d=0,i=braceStart;
+  for(;i<tsText.length;i++){
+    if(tsText[i]==='{') d++;
+    else if(tsText[i]==='}'){ d--; if(d===0){ i++; break; } }
+  }
+  const body = tsText.slice(braceStart,i);
+  const out = {};
+  for(const ir of ITEM_RARITIES){
+    // Find "[ItemRarity.IR]: { ... }" — extract balanced brace block
+    const reHead = new RegExp(`ItemRarity\\.${ir}\\s*\\]\\s*:\\s*\\{`);
+    const mh = body.match(reHead);
+    if(!mh){ out[ir] = {1:{1:0,2:0,3:0},2:{1:0,2:0,3:0},3:{1:0,2:0,3:0},4:{1:0,2:0,3:0},5:{1:0,2:0,3:0}}; continue; }
+    const openIdx = body.indexOf('{', mh.index + mh[0].length - 1);
+    let dd=0, j=openIdx;
+    for(;j<body.length;j++){
+      if(body[j]==='{') dd++;
+      else if(body[j]==='}'){ dd--; if(dd===0){ j++; break; } }
+    }
+    const inner = body.slice(openIdx, j);
+    const lvls = {};
+    for(let lvl=1; lvl<=5; lvl++){
+      const reLvl = new RegExp(`(?:^|[^\\d])${lvl}\\s*:\\s*\\{`);
+      const ml = inner.match(reLvl);
+      if(!ml){ lvls[lvl] = {1:0,2:0,3:0}; continue; }
+      const o = inner.indexOf('{', ml.index);
+      let dx=0,k=o;
+      for(;k<inner.length;k++){
+        if(inner[k]==='{') dx++;
+        else if(inner[k]==='}'){ dx--; if(dx===0){ k++; break; } }
+      }
+      const lvlBody = inner.slice(o,k);
+      const r = {1:0,2:0,3:0};
+      for(const [n,v] of Object.entries(MAT_RARITY)){
+        const mm = lvlBody.match(new RegExp(`MaterialRarity\\.${n}\\s*\\]\\s*:\\s*(\\d+)`));
+        r[v] = mm ? parseInt(mm[1],10) : 0;
+      }
+      lvls[lvl] = r;
+    }
+    out[ir] = lvls;
+  }
+  return out;
+}
+
+// ============================================================
+// Loader
+// ============================================================
+async function load(){
+  const owner=document.getElementById('owner').value.trim();
+  const repo=document.getElementById('repo').value.trim();
+  const branch=document.getElementById('branch').value.trim();
+  document.getElementById('loadBtn').disabled=true;
+  try{
+    setStatus('📡 Constants TS…','loading');
+    const [poolsTxt, itemConstTxt, tr] = await Promise.all([
+      fetchRaw(owner,repo,branch,'Lib/src/constants/ItemMaterialCategoryConstants.ts'),
+      fetchRaw(owner,repo,branch,'Lib/src/constants/ItemConstants.ts'),
+      fetchRaw(owner,repo,branch,'Lang/fr/models.json').catch(()=>({}))
+    ]);
+    state.pools = parsePools(poolsTxt);
+    state.distincts = parseDistincts(poolsTxt);
+    state.totals = parseTotals(itemConstTxt);
+
+    const matNames = tr?.materials || {};
+    const weaponNames = tr?.weapons || {};
+    const armorNames = tr?.armors || {};
+
+    setStatus('📡 Matériaux…','loading');
+    const matList = await fetchDirListing(owner,repo,branch,'Core/resources/materials');
+    state.materials = {};
+    await Promise.all(matList.map(async f=>{
+      const id = parseInt(f.name.replace('.json',''),10);
+      try{
+        const j = await fetchRaw(owner,repo,branch,`Core/resources/materials/${f.name}`);
+        state.materials[id] = {
+          rarity: j.rarity, type: j.type,
+          name: matNames[id]?.name || matNames[id] || `mat#${id}`
+        };
+      }catch{}
+    }));
+
+    setStatus('📡 Armes…','loading');
+    const wList = await fetchDirListing(owner,repo,branch,'Core/resources/weapons');
+    state.weapons = [];
+    await Promise.all(wList.map(async f=>{
+      const id = parseInt(f.name.replace('.json',''),10);
+      try{
+        const j = await fetchRaw(owner,repo,branch,`Core/resources/weapons/${f.name}`);
+        if(j.materialCategory){
+          state.weapons.push({
+            id, kind:'weapon', rarity:j.rarity, type:j.type,
+            materialCategory:j.materialCategory,
+            name: weaponNames[id]?.name || weaponNames[id] || `weapon#${id}`
+          });
+        }
+      }catch{}
+    }));
+
+    setStatus('📡 Armures…','loading');
+    const aList = await fetchDirListing(owner,repo,branch,'Core/resources/armors');
+    state.armors = [];
+    await Promise.all(aList.map(async f=>{
+      const id = parseInt(f.name.replace('.json',''),10);
+      try{
+        const j = await fetchRaw(owner,repo,branch,`Core/resources/armors/${f.name}`);
+        if(j.materialCategory){
+          state.armors.push({
+            id, kind:'armor', rarity:j.rarity, type:j.type,
+            materialCategory:j.materialCategory,
+            name: armorNames[id]?.name || armorNames[id] || `armor#${id}`
+          });
+        }
+      }catch{}
+    }));
+
+    state.weapons.sort((a,b)=>a.id-b.id);
+    state.armors.sort((a,b)=>a.id-b.id);
+
+    setStatus('🔬 Calculs…','loading');
+    compute();
+    setStatus(`✅ Chargé: ${Object.keys(state.materials).length} mats, ${state.weapons.length} armes, ${state.armors.length} armures`,'ok');
+    document.getElementById('main').classList.remove('hidden');
+    document.getElementById('reloadBtn').style.display='';
+    renderAll();
+  }catch(e){
+    console.error(e);
+    setStatus(`❌ ${e.message}`,'err');
+  }finally{
+    document.getElementById('loadBtn').disabled=false;
+  }
+}
+
+// ============================================================
+// Compute aggregated stats
+// ============================================================
+function compute(){
+  // For every (item, level), accumulate qty per matId.
+  // Final structures:
+  //  - perMaterial[id] = { itemCount, demand, perItem:Map(itemId->qty), categories:Set }
+  //  - perCategory[cat] = { items:[…], totalDemandByRarity:{1,2,3}, byMatRarity:Map }
+  const items = [...state.weapons, ...state.armors];
+  const perMat = {};
+  for(const id of Object.keys(state.materials)) perMat[id] = {
+    itemCount:0, demand:0, perItem:new Map(), categories:new Set()
+  };
+  const perCat = {};
+  for(let c=1;c<=15;c++){
+    perCat[c] = { items:[], totalDemand:0, byMatRarity:{1:0,2:0,3:0}, matIdsTouched:new Set() };
+    for(const mr of [1,2,3]) for(const id of (state.pools[c]?.[mr]||[])){
+      perMat[id]?.categories.add(c);
+    }
+  }
+  for(const it of items){
+    const cat = it.materialCategory;
+    if(!perCat[cat]) continue;
+    perCat[cat].items.push(it);
+    const perItemTotals = new Map();
+    for(let lvl=1; lvl<=5; lvl++){
+      const m = upgradeMaterialsFor(it, lvl);
+      for(const [matId, qty] of m){
+        perItemTotals.set(matId,(perItemTotals.get(matId)||0)+qty);
+      }
+    }
+    for(const [matId, qty] of perItemTotals){
+      const pm = perMat[matId];
+      if(!pm) continue;
+      pm.itemCount += 1;
+      pm.demand += qty;
+      pm.perItem.set(it.id, qty);
+      perCat[cat].totalDemand += qty;
+      perCat[cat].matIdsTouched.add(matId);
+      const mr = state.materials[matId]?.rarity;
+      if(mr) perCat[cat].byMatRarity[mr] = (perCat[cat].byMatRarity[mr]||0) + qty;
+    }
+  }
+  state.computed = { perMat, perCat, items };
+}
+
+// ============================================================
+// Renderers
+// ============================================================
+function rarityName(r){ return ITEM_RARITIES[r] || `?${r}`; }
+function matName(id){ return state.materials[id]?.name || `mat#${id}`; }
+function matRarityClass(id){ const r=state.materials[id]?.rarity; return MAT_RARITY_NAME[r]||''; }
+
+function renderStats(){
+  const totalItems = state.weapons.length + state.armors.length;
+  const totalCatItems = Object.values(state.computed.perCat).reduce((a,c)=>a+c.items.length,0);
+  const totalDemand = Object.values(state.computed.perMat).reduce((a,m)=>a+m.demand,0);
+  const unusedMats = Object.entries(state.computed.perMat).filter(([_,m])=>m.itemCount===0).length;
+  const html=`
+    <div class="stat"><b>${totalItems}</b>Items totaux</div>
+    <div class="stat"><b>${state.weapons.length}</b>Armes</div>
+    <div class="stat"><b>${state.armors.length}</b>Armures</div>
+    <div class="stat"><b>${Object.keys(state.materials).length}</b>Matériaux</div>
+    <div class="stat"><b>${totalDemand.toLocaleString('fr-FR')}</b>Unités demandées (full upgrade 1→5 de tous les items)</div>
+    <div class="stat" style="color:${unusedMats?'var(--err)':'var(--accent2)'}"><b>${unusedMats}</b>Matériaux non-utilisés</div>
+  `;
+  document.getElementById('statsBar').innerHTML=html;
+}
+
+function renderCats(){
+  const c=state.computed.perCat;
+  const html = [];
+  for(let cat=1;cat<=15;cat++){
+    const data = c[cat];
+    const pool = state.pools[cat];
+    const itemCount = data.items.length;
+    const chips = mr => (pool[mr]||[]).map(id=>{
+      const dem = data.byMatRarity[mr] ? '' : '';
+      const used = state.computed.perMat[id]?.perItem.size || 0;
+      return `<span class="matchip ${MAT_RARITY_NAME[mr]}" title="Utilisé par ${used} items de cette cat." onclick="focusMat(${id})">${matName(id)}</span>`;
+    }).join('');
+    html.push(`
+      <div class="cat-card">
+        <h3>Cat ${cat}
+          <span class="badge">${itemCount} items · ${data.totalDemand.toLocaleString('fr-FR')} u</span>
+        </h3>
+        <p class="desc">Pool: ${(pool[1]||[]).length} C · ${(pool[2]||[]).length} U · ${(pool[3]||[]).length} R · Touchés: ${data.matIdsTouched.size}/20</p>
+        <div class="pool-row"><span class="lbl">Common</span>${chips(1)} <small style="color:var(--text-muted)">(${data.byMatRarity[1]} u)</small></div>
+        <div class="pool-row"><span class="lbl">Uncommon</span>${chips(2)} <small style="color:var(--text-muted)">(${data.byMatRarity[2]} u)</small></div>
+        <div class="pool-row"><span class="lbl">Rare</span>${chips(3)} <small style="color:var(--text-muted)">(${data.byMatRarity[3]} u)</small></div>
+        <div class="cat-items">
+          <b>Items (${itemCount}):</b>
+          ${data.items.map(it=>`<span class="ic" onclick="focusItem('${it.kind}',${it.id})" title="${rarityName(it.rarity)}">${it.kind==='weapon'?'⚔️':'🛡️'} ${it.name}</span>`).join('')}
+        </div>
+      </div>
+    `);
+  }
+  document.getElementById('catsGrid').innerHTML = html.join('');
+}
+
+let matSortKey='id', matSortDir=1;
+function renderMats(){
+  const search=document.getElementById('matSearch').value.toLowerCase().trim();
+  const rarF=document.getElementById('matRarFilter').value;
+  const catF=document.getElementById('matCatFilter').value;
+  const rows=[];
+  for(const [idStr,m] of Object.entries(state.materials)){
+    const id=parseInt(idStr,10);
+    const pm=state.computed.perMat[id]||{itemCount:0,demand:0,categories:new Set()};
+    if(search && !m.name.toLowerCase().includes(search) && String(id)!==search) continue;
+    if(rarF && String(m.rarity)!==rarF) continue;
+    if(catF && !pm.categories.has(parseInt(catF,10))) continue;
+    rows.push({
+      id, name:m.name, type:m.type||'-', rarity:m.rarity,
+      catCount:pm.categories.size, cats:[...pm.categories].sort((a,b)=>a-b),
+      itemCount:pm.itemCount, demand:pm.demand,
+      avgPerItem: pm.itemCount? +(pm.demand/pm.itemCount).toFixed(2):0
+    });
+  }
+  rows.sort((a,b)=>{
+    const va=a[matSortKey], vb=b[matSortKey];
+    if(typeof va==='string') return va.localeCompare(vb)*matSortDir;
+    return (va-vb)*matSortDir;
+  });
+  const tbody=document.getElementById('matsBody');
+  tbody.innerHTML = rows.map(r=>`
+    <tr id="mat-row-${r.id}">
+      <td class="num">${r.id}</td>
+      <td><span class="rar-pill" style="background:var(--${MAT_RARITY_NAME[r.rarity]})"></span>${r.name}</td>
+      <td>${r.type}</td>
+      <td>${MAT_RARITY_NAME[r.rarity]||'?'}</td>
+      <td class="num">${r.catCount}</td>
+      <td>${r.cats.map(c=>`<span class="cat-tag" onclick="focusCat(${c})">${c}</span>`).join('')}</td>
+      <td class="num">${r.itemCount}</td>
+      <td class="num"><span class="bar" style="width:${Math.min(60,r.demand/4)}px"></span>${r.demand.toLocaleString('fr-FR')}</td>
+      <td class="num">${r.avgPerItem}</td>
+    </tr>`).join('');
+}
+
+let itemSortKey='id';
+function renderItems(){
+  const search=document.getElementById('itemSearch').value.toLowerCase().trim();
+  const catF=document.getElementById('itemCatFilter').value;
+  const rarF=document.getElementById('itemRarFilter').value;
+  const kindF=document.getElementById('itemKindFilter').value;
+  const all=[...state.weapons,...state.armors];
+  const filtered = all.filter(it=>{
+    if(search && !it.name.toLowerCase().includes(search) && String(it.id)!==search) return false;
+    if(catF && String(it.materialCategory)!==catF) return false;
+    if(rarF && String(it.rarity)!==rarF) return false;
+    if(kindF && it.kind!==kindF) return false;
+    return true;
+  });
+  document.getElementById('itemsShownCount').textContent = filtered.length;
+  // Limit rendering to first 80 to keep DOM light; show note if truncated
+  const slice = filtered.slice(0, 80);
+  const html = slice.map(it=>{
+    const lvls = [];
+    for(let lvl=1; lvl<=5; lvl++){
+      const m = upgradeMaterialsFor(it, lvl);
+      const lines = [...m.entries()]
+        .sort((a,b)=>{
+          const ra=state.materials[a[0]]?.rarity||0, rb=state.materials[b[0]]?.rarity||0;
+          if(ra!==rb) return ra-rb;
+          return b[1]-a[1];
+        })
+        .map(([mid,q])=>`<div class="matline"><span class="qty">${q}×</span><span class="${matRarityClass(mid)}" style="color:var(--${matRarityClass(mid)})">${matName(mid)}</span></div>`)
+        .join('');
+      lvls.push(`<div class="lvl-cell"><div class="lvl-h">Lvl ${lvl}</div>${lines||'<i style="color:var(--text-muted);font-size:0.75rem">∅</i>'}</div>`);
+    }
+    return `<div class="item-block" id="item-${it.kind}-${it.id}">
+      <h4>${it.kind==='weapon'?'⚔️':'🛡️'} #${it.id} — ${it.name}
+        <span style="font-weight:400;color:var(--text-muted);font-size:0.78rem;margin-left:8px">${rarityName(it.rarity)} · Cat ${it.materialCategory} · type ${it.type??'∅'}</span></h4>
+      <div class="lvl-grid">${lvls.join('')}</div>
+    </div>`;
+  }).join('');
+  const trunc = filtered.length>slice.length
+    ? `<div style="color:var(--text-muted);padding:8px;text-align:center">… ${filtered.length-slice.length} items supplémentaires masqués (affine le filtre)</div>` : '';
+  document.getElementById('itemsList').innerHTML = html + trunc;
+}
+
+function renderBalance(){
+  const c=state.computed;
+  // Material usage spread
+  const mats = Object.entries(c.perMat).map(([id,m])=>({id:+id,name:matName(+id),rarity:state.materials[+id]?.rarity,demand:m.demand,items:m.itemCount,cats:m.categories.size}));
+  const byRar = {1:[],2:[],3:[]};
+  for(const m of mats) if(m.rarity) byRar[m.rarity].push(m);
+
+  function block(title, list, fmt){
+    return `<div class="bal-card"><h3>${title}</h3>${list.map(fmt).join('')||'<i>—</i>'}</div>`;
+  }
+  function kpi(lbl,val){ return `<div class="kpi-row"><span class="lbl">${lbl}</span><span class="val">${val}</span></div>`; }
+
+  const cats = Object.entries(c.perCat).map(([n,d])=>({cat:+n,items:d.items.length,demand:d.totalDemand,touched:d.matIdsTouched.size}));
+
+  // Per-rarity hottest / coldest
+  const tops=[],bots=[];
+  for(const r of [1,2,3]){
+    const arr = byRar[r].filter(m=>m.items>0).sort((a,b)=>b.demand-a.demand);
+    const arrCold = byRar[r].slice().sort((a,b)=>a.demand-b.demand);
+    tops.push({r, top: arr.slice(0,5)});
+    bots.push({r, bot: arrCold.slice(0,5)});
+  }
+
+  const unused = mats.filter(m=>m.items===0).sort((a,b)=>a.id-b.id);
+  const fmtMat = m=>`<div class="kpi-row"><span class="lbl">${m.name} <small style="color:var(--text-muted)">(#${m.id}, ${m.cats} cats)</small></span><span class="val">${m.demand} u · ${m.items} items</span></div>`;
+  const fmtCat = c=>`<div class="kpi-row"><span class="lbl">Cat ${c.cat}</span><span class="val">${c.items} items · ${c.demand} u · ${c.touched}/20</span></div>`;
+
+  const html = [
+    block('🔥 Top demande Common', tops[0].top, fmtMat),
+    block('🔥 Top demande Uncommon', tops[1].top, fmtMat),
+    block('🔥 Top demande Rare', tops[2].top, fmtMat),
+    block('❄️ Plus froids Common', bots[0].bot, fmtMat),
+    block('❄️ Plus froids Uncommon', bots[1].bot, fmtMat),
+    block('❄️ Plus froids Rare', bots[2].bot, fmtMat),
+    block('📊 Catégories — items', cats.slice().sort((a,b)=>b.items-a.items), fmtCat),
+    block('📊 Catégories — demande totale', cats.slice().sort((a,b)=>b.demand-a.demand), fmtCat),
+    block('📊 Catégories — couverture pool', cats.slice().sort((a,b)=>a.touched-b.touched), fmtCat),
+    unused.length
+      ? block('⚠️ Matériaux jamais demandés', unused, fmtMat)
+      : `<div class="bal-card"><h3>✅ Tous les matériaux sont utilisés</h3></div>`
+  ].join('');
+  document.getElementById('balGrid').innerHTML = html;
+}
+
+function renderAll(){
+  // populate filter dropdowns
+  const catSel = (id)=>{
+    const el=document.getElementById(id);
+    el.innerHTML='<option value="">Toutes catégories</option>'+Array.from({length:15},(_,i)=>`<option value="${i+1}">Cat ${i+1}</option>`).join('');
+  };
+  catSel('matCatFilter'); catSel('itemCatFilter');
+  const rarSel = document.getElementById('itemRarFilter');
+  rarSel.innerHTML='<option value="">Toutes raretés</option>'+ITEM_RARITIES.map((n,i)=>`<option value="${i}">${i} ${n}</option>`).join('');
+  renderStats(); renderCats(); renderMats(); renderItems(); renderBalance();
+}
+
+// ============================================================
+// Cross-tab navigation helpers
+// ============================================================
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===t));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.toggle('active', p.id==='pane-'+t));
+}
+function focusMat(id){
+  switchTab('mats');
+  document.getElementById('matSearch').value=matName(id);
+  renderMats();
+  setTimeout(()=>document.getElementById(`mat-row-${id}`)?.scrollIntoView({behavior:'smooth',block:'center'}),50);
+}
+function focusCat(c){
+  switchTab('cats');
+  setTimeout(()=>document.querySelectorAll('.cat-card')[c-1]?.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+function focusItem(kind,id){
+  switchTab('items');
+  document.getElementById('itemKindFilter').value=kind;
+  document.getElementById('itemSearch').value=String(id);
+  renderItems();
+  setTimeout(()=>document.getElementById(`item-${kind}-${id}`)?.scrollIntoView({behavior:'smooth',block:'center'}),50);
+}
+
+// ============================================================
+// Wire up
+// ============================================================
+document.getElementById('loadBtn').addEventListener('click', load);
+document.getElementById('reloadBtn').addEventListener('click', load);
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+for(const id of ['matSearch','matRarFilter','matCatFilter']) document.getElementById(id).addEventListener('input',renderMats);
+for(const id of ['itemSearch','itemCatFilter','itemRarFilter','itemKindFilter']) document.getElementById(id).addEventListener('input',renderItems);
+document.querySelectorAll('#matsTable th[data-sort]').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const k=th.dataset.sort;
+    if(matSortKey===k) matSortDir*=-1; else { matSortKey=k; matSortDir=1; }
+    renderMats();
+  });
+});
+</script>
+</body>
+</html>
