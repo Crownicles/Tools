@@ -8,6 +8,7 @@ let translations = {};
 let recipes = [];
 let weapons = [];
 let armors = [];
+let pools = {};
 let plantData = {};
 let BOSS_LOOT_TABLES = {};
 let itemTypeStats = { weapons: {}, armors: {} };

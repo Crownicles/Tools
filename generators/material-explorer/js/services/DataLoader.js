@@ -44,6 +44,19 @@ async function loadFromGithub() {
         updateStatus('📡 Chargement des traductions...', 'loading');
         translations = await fetchRaw(owner, repo, branch, 'Lang/fr/models.json');
 
+        // Category material pools (Core/resources/itemMaterialCategories/<id>.json)
+        updateStatus('📡 Chargement des pools de catégories...', 'loading');
+        const poolFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/itemMaterialCategories');
+        pools = {};
+        await Promise.all(poolFiles.map(async file => {
+            const cat = parseInt(file.name.replace('.json', ''), 10);
+            try {
+                const data = await fetchRaw(owner, repo, branch, `Core/resources/itemMaterialCategories/${file.name}`);
+                pools[cat] = { 1: data.common || [], 2: data.uncommon || [], 3: data.rare || [] };
+            }
+            catch { /* category file missing on this branch */ }
+        }));
+
         // Recipes
         updateStatus('📡 Chargement des recettes...', 'loading');
         const recipeFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/cooking/recipes');
@@ -69,7 +82,7 @@ async function loadFromGithub() {
             const batch = weaponFiles.slice(i, i + batchSize);
             const results = await Promise.all(batch.map(file =>
                 fetchRaw(owner, repo, branch, `Core/resources/weapons/${file.name}`)
-                    .then(data => ({ id: parseInt(file.name.replace('.json', ''), 10), rarity: data.rarity, type: data.type }))
+                    .then(data => ({ id: parseInt(file.name.replace('.json', ''), 10), rarity: data.rarity, type: data.type, materialCategory: data.materialCategory }))
                     .catch(() => null)
             ));
             for (const r of results) {
@@ -84,7 +97,7 @@ async function loadFromGithub() {
             const batch = armorFiles.slice(i, i + batchSize);
             const results = await Promise.all(batch.map(file =>
                 fetchRaw(owner, repo, branch, `Core/resources/armors/${file.name}`)
-                    .then(data => ({ id: parseInt(file.name.replace('.json', ''), 10), rarity: data.rarity, type: data.type }))
+                    .then(data => ({ id: parseInt(file.name.replace('.json', ''), 10), rarity: data.rarity, type: data.type, materialCategory: data.materialCategory }))
                     .catch(() => null)
             ));
             for (const r of results) {

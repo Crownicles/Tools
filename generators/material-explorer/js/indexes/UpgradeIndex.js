@@ -2,30 +2,51 @@
 // Reproduces Core/src/data/MainItem.ts `getUpgradeMaterials` to build the
 // reverse mapping materialId -> [{ itemId, category, level, quantity }].
 //
-// The selection algorithm is pseudo-random: it uses a seed computed from
-// the item id and level, combined with the material rarity and a multiplier
-// (Knuth's 2654435761). The result is deterministic — identical inputs
-// always pick the same material(s).
-//
-// JS operator precedence: `<<` is lower than `+`, so `seed + i + matRarity << 6`
-// is parsed as `(seed + i + matRarity) << 6`. We intentionally keep that to
-// match the game logic exactly.
+// Each item draws its upgrade materials from the pool of its `materialCategory`
+// (Core/resources/itemMaterialCategories/<id>.json), split by material rarity.
+// For every (item rarity, level, material rarity) bucket we read the total
+// quantity (UPGRADE_TABLE) and the number of distinct materials (DISTINCT_TABLE),
+// then pick that many distinct ids from the sub-pool with a deterministic
+// sliding window (`pickDistinct`) seeded by the item id — matching
+// `pickDistinctMaterials` in Lib/src/constants/ItemMaterialCategoryConstants.ts.
 // ==========================================================================
+
+// Mirrors RandomUtils.deterministicShuffle (Math.imul-based hash + Fisher-Yates).
+function upgradeHash32(seed) {
+    let x = seed | 0;
+    x = Math.imul(x ^ (x >>> 16), 0x85ebca6b);
+    x = Math.imul(x ^ (x >>> 13), 0xc2b2ae35);
+    x = x ^ (x >>> 16);
+    return x >>> 0;
+}
+
+function permutePool(pool, seed) {
+    const out = pool.slice();
+    let st = upgradeHash32(seed) || 1;
+    for (let i = out.length - 1; i > 0; i--) {
+        st = upgradeHash32(st + i);
+        const j = st % (i + 1);
+        const t = out[i]; out[i] = out[j]; out[j] = t;
+    }
+    return out;
+}
+
+// Mirrors pickDistinctMaterials: shuffle seeded by itemId*31 + matRarity, then
+// a 1-slot sliding window over the levels.
+function pickDistinct(subPool, itemId, matRarity, level, distinctCount) {
+    if (distinctCount <= 0 || subPool.length === 0) return [];
+    const k = Math.min(distinctCount, subPool.length);
+    const perm = permutePool(subPool, itemId * 31 + matRarity);
+    const start = (level - 1) % perm.length;
+    const out = [];
+    for (let i = 0; i < k; i++) out.push(perm[(start + i) % perm.length]);
+    return out;
+}
 
 function buildUpgradeIndex() {
     upgradeIndex = {};
     for (const id of Object.keys(materials)) {
         upgradeIndex[id] = [];
-    }
-
-    // Group materials by type, sorted by id (matches server DataController ordering)
-    const materialsByType = {};
-    for (const [id, mat] of Object.entries(materials)) {
-        if (!materialsByType[mat.type]) materialsByType[mat.type] = [];
-        materialsByType[mat.type].push({ id: parseInt(id, 10), rarity: mat.rarity });
-    }
-    for (const type in materialsByType) {
-        materialsByType[type].sort((a, b) => a.id - b.id);
     }
 
     const allItems = [
@@ -34,43 +55,45 @@ function buildUpgradeIndex() {
     ];
 
     for (const item of allItems) {
-        const upgradeTableForRarity = UPGRADE_TABLE[item.rarity];
-        if (!upgradeTableForRarity) continue;
-
-        const typeMaterials = materialsByType[item.type];
-        if (!typeMaterials || typeMaterials.length === 0) continue;
+        const totalsForRarity = UPGRADE_TABLE[item.rarity];
+        const distinctsForRarity = DISTINCT_TABLE[item.rarity];
+        const pool = pools[item.materialCategory];
+        if (!totalsForRarity || !distinctsForRarity || !pool) continue;
 
         for (let level = 1; level <= 5; level++) {
-            const counts = upgradeTableForRarity[level];
-            if (!counts) continue;
+            const totals = totalsForRarity[level];
+            const distincts = distinctsForRarity[level];
+            if (!totals || !distincts) continue;
 
-            const seed = (item.id << 4) | level;
+            for (const matRarity of [1, 2, 3]) {
+                const totalQty = totals[matRarity] || 0;
+                if (totalQty <= 0) continue;
 
-            for (const matRarityStr of Object.keys(counts)) {
-                const matRarity = parseInt(matRarityStr, 10);
-                const count = counts[matRarity];
-                if (count <= 0) continue;
+                const subPool = pool[matRarity] || [];
+                const distinctCount = Math.min(distincts[matRarity] || 0, subPool.length, totalQty);
+                if (distinctCount <= 0) continue;
 
-                const filtered = typeMaterials.filter(m => m.rarity === matRarity);
-                if (filtered.length === 0) continue;
+                const picked = pickDistinct(subPool, item.id, matRarity, level, distinctCount);
+                const base = Math.floor(totalQty / picked.length);
+                const rem = totalQty % picked.length;
 
-                for (let i = 0; i < count; i++) {
-                    const index = Math.abs(((seed + i + matRarity << 6) * 2654435761) % filtered.length);
-                    const selectedMat = filtered[index];
-                    if (!upgradeIndex[selectedMat.id]) continue;
+                for (let i = 0; i < picked.length; i++) {
+                    const matId = picked[i];
+                    const quantity = base + (i < rem ? 1 : 0);
+                    if (!upgradeIndex[matId]) continue;
 
-                    const existing = upgradeIndex[selectedMat.id].find(
+                    const existing = upgradeIndex[matId].find(
                         e => e.itemId === item.id && e.category === item.category && e.level === level
                     );
                     if (existing) {
-                        existing.quantity++;
+                        existing.quantity += quantity;
                     }
                     else {
-                        upgradeIndex[selectedMat.id].push({
+                        upgradeIndex[matId].push({
                             itemId: item.id,
                             category: item.category,
                             level,
-                            quantity: 1
+                            quantity
                         });
                     }
                 }
