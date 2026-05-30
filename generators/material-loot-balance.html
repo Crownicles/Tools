@@ -303,40 +303,20 @@ async function loadPools(owner,repo,branch){
   }
   return pools;
 }
-function parseDistincts(tsText){
-  const start = tsText.indexOf('DISTINCT_MATERIALS_PER_ITEM_RARITY_AND_LEVEL');
-  if(start<0) throw new Error('DISTINCT_MATERIALS_PER_ITEM_RARITY_AND_LEVEL not found');
-  const eq = tsText.indexOf('= {', start);
-  const braceStart = tsText.indexOf('{', eq);
-  let d=0,i=braceStart;
-  for(;i<tsText.length;i++){
-    if(tsText[i]==='{') d++;
-    else if(tsText[i]==='}'){ d--; if(d===0){ i++; break; } }
-  }
-  const body = tsText.slice(braceStart,i);
+// Distinct-material counts moved out of the Lib TS constant into per-item-rarity
+// JSON resources (Core/resources/itemUpgradeMaterialCounts/<itemRarity>.json,
+// each holding { levels: [ {common,uncommon,rare} x5 ] }). The file name is the
+// numeric ItemRarity, i.e. its index in ITEM_RARITIES.
+async function loadDistincts(owner,repo,branch){
   const out = {};
-  for(const ir of ITEM_RARITIES){
-    // [ItemRarity.X]: [ {…}, {…}, {…}, {…}, {…} ]
-    const re = new RegExp(`ItemRarity\\.${ir}\\s*\\]\\s*:\\s*\\[([\\s\\S]*?)\\]\\s*(?=,\\s*\\[ItemRarity\\.|\\}\\s*;?)`);
-    const m = body.match(re);
-    if(!m){ out[ir] = [{},{},{},{},{}].map(_=>({1:0,2:0,3:0})); continue; }
-    const inner = m[1];
-    // Extract each { … } object
-    const objs = [];
-    let depth=0,startIdx=-1;
-    for(let j=0;j<inner.length;j++){
-      if(inner[j]==='{'){ if(depth===0) startIdx=j; depth++; }
-      else if(inner[j]==='}'){ depth--; if(depth===0) objs.push(inner.slice(startIdx,j+1)); }
-    }
-    out[ir] = objs.map(o=>{
-      const r = {1:0,2:0,3:0};
-      for(const [n,v] of Object.entries(MAT_RARITY)){
-        const mm = o.match(new RegExp(`MaterialRarity\\.${n}\\s*\\]\\s*:\\s*(\\d+)`));
-        r[v] = mm ? parseInt(mm[1],10) : 0;
-      }
-      return r;
-    });
-  }
+  await Promise.all(ITEM_RARITIES.map(async (name, idx)=>{
+    const j = await fetchRaw(owner,repo,branch,`Core/resources/itemUpgradeMaterialCounts/${idx}.json`);
+    out[name] = (j.levels||[]).map(lvl=>({
+      [MAT_RARITY.COMMON]: lvl.common||0,
+      [MAT_RARITY.UNCOMMON]: lvl.uncommon||0,
+      [MAT_RARITY.RARE]: lvl.rare||0
+    }));
+  }));
   return out;
 }
 function parseTotals(tsText){
@@ -399,13 +379,12 @@ async function load(){
   document.getElementById('loadBtn').disabled=true;
   try{
     setStatus('📡 Constants TS…','loading');
-    const [poolsTxt, itemConstTxt, tr] = await Promise.all([
-      fetchRaw(owner,repo,branch,'Lib/src/constants/ItemMaterialCategoryConstants.ts'),
+    const [itemConstTxt, tr] = await Promise.all([
       fetchRaw(owner,repo,branch,'Lib/src/constants/ItemConstants.ts'),
       fetchRaw(owner,repo,branch,'Lang/fr/models.json').catch(()=>({}))
     ]);
     state.pools = await loadPools(owner,repo,branch);
-    state.distincts = parseDistincts(poolsTxt);
+    state.distincts = await loadDistincts(owner,repo,branch);
     state.totals = parseTotals(itemConstTxt);
 
     const matNames = tr?.materials || {};

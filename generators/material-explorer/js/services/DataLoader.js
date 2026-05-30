@@ -57,6 +57,25 @@ async function loadFromGithub() {
             catch { /* category file missing on this branch */ }
         }));
 
+        // Distinct material counts per item rarity
+        // (Core/resources/itemUpgradeMaterialCounts/<itemRarity>.json, each holding
+        // { levels: [ {common,uncommon,rare} x5 ] }).
+        updateStatus('📡 Chargement des comptes de matériaux...', 'loading');
+        const distinctFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/itemUpgradeMaterialCounts');
+        distinctCounts = {};
+        await Promise.all(distinctFiles.map(async file => {
+            const rarity = parseInt(file.name.replace('.json', ''), 10);
+            try {
+                const data = await fetchRaw(owner, repo, branch, `Core/resources/itemUpgradeMaterialCounts/${file.name}`);
+                const levels = {};
+                (data.levels || []).forEach((lvl, index) => {
+                    levels[index + 1] = { 1: lvl.common || 0, 2: lvl.uncommon || 0, 3: lvl.rare || 0 };
+                });
+                distinctCounts[rarity] = levels;
+            }
+            catch { /* rarity file missing on this branch */ }
+        }));
+
         // Recipes
         updateStatus('📡 Chargement des recettes...', 'loading');
         const recipeFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/cooking/recipes');

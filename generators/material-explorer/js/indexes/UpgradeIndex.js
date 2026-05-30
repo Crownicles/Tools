@@ -5,7 +5,8 @@
 // Each item draws its upgrade materials from the pool of its `materialCategory`
 // (Core/resources/itemMaterialCategories/<id>.json), split by material rarity.
 // For every (item rarity, level, material rarity) bucket we read the total
-// quantity (UPGRADE_TABLE) and the number of distinct materials (DISTINCT_TABLE),
+// quantity (UPGRADE_TABLE) and the number of distinct materials (distinctCounts,
+// loaded from Core/resources/itemUpgradeMaterialCounts/<itemRarity>.json),
 // then pick that many distinct ids from the sub-pool with a deterministic
 // sliding window (`pickDistinct`) seeded by the item id — matching
 // `pickDistinctMaterials` in Lib/src/constants/ItemMaterialCategoryConstants.ts.
@@ -56,7 +57,7 @@ function buildUpgradeIndex() {
 
     for (const item of allItems) {
         const totalsForRarity = UPGRADE_TABLE[item.rarity];
-        const distinctsForRarity = DISTINCT_TABLE[item.rarity];
+        const distinctsForRarity = distinctCounts[item.rarity];
         const pool = pools[item.materialCategory];
         if (!totalsForRarity || !distinctsForRarity || !pool) continue;
 

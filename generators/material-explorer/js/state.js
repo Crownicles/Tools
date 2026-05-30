@@ -9,6 +9,7 @@ let recipes = [];
 let weapons = [];
 let armors = [];
 let pools = {};
+let distinctCounts = {};
 let plantData = {};
 let BOSS_LOOT_TABLES = {};
 let itemTypeStats = { weapons: {}, armors: {} };
