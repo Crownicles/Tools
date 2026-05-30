@@ -284,49 +284,22 @@ function upgradeMaterialsFor(item, level){
 // ============================================================
 // Parsers for the two TS constants files
 // ============================================================
-function parseInts(arrayBody){
-  return [...arrayBody.matchAll(/\d+/g)].map(m=>parseInt(m[0],10));
-}
-function parsePools(tsText){
-  // Find MATERIAL_POOLS_PER_CATEGORY = { ... };
-  const start = tsText.indexOf('MATERIAL_POOLS_PER_CATEGORY');
-  if(start<0) throw new Error('MATERIAL_POOLS_PER_CATEGORY not found');
-  const eq = tsText.indexOf('= {', start);
-  // Walk braces from the '{'
-  const braceStart = tsText.indexOf('{', eq);
-  let depth=0, i=braceStart;
-  for(; i<tsText.length; i++){
-    if(tsText[i]==='{') depth++;
-    else if(tsText[i]==='}'){ depth--; if(depth===0){ i++; break; } }
-  }
-  const body = tsText.slice(braceStart, i);
-
-  // For each category 1..15, extract its block, then for each MaterialRarity (COMMON/UNCOMMON/RARE) extract its array
+// Pools moved out of the Lib TS constant into per-category JSON resources
+// (Core/resources/itemMaterialCategories/<id>.json, keys common/uncommon/rare).
+async function loadPools(owner,repo,branch){
+  const list = await fetchDirListing(owner,repo,branch,'Core/resources/itemMaterialCategories');
   const pools = {};
+  await Promise.all(list.map(async f=>{
+    const cat = parseInt(f.name.replace('.json',''),10);
+    const j = await fetchRaw(owner,repo,branch,`Core/resources/itemMaterialCategories/${f.name}`);
+    pools[cat] = {
+      [MAT_RARITY.COMMON]: j.common||[],
+      [MAT_RARITY.UNCOMMON]: j.uncommon||[],
+      [MAT_RARITY.RARE]: j.rare||[]
+    };
+  }));
   for(let cat=1; cat<=15; cat++){
-    // match "cat:" or numeric key followed by { ... } at this depth
-    const reCat = new RegExp(`(?:^|\\s|,)${cat}\\s*:\\s*\\{`,'g');
-    let m, found=null;
-    while((m=reCat.exec(body))!==null){
-      // ensure we're at category top level by tracking braces from the matched '{'
-      const openIdx = body.indexOf('{', m.index);
-      let d=0, j=openIdx;
-      for(; j<body.length; j++){
-        if(body[j]==='{') d++;
-        else if(body[j]==='}'){ d--; if(d===0){ j++; break; } }
-      }
-      found = body.slice(openIdx, j);
-      break;
-    }
-    if(!found) throw new Error(`Category ${cat} not found in pools`);
-    const sub = {};
-    for(const [name,val] of Object.entries(MAT_RARITY)){
-      const reRar = new RegExp(`MaterialRarity\\.${name}\\s*\\]\\s*:\\s*\\[([^\\]]*)\\]`);
-      const mm = found.match(reRar);
-      if(!mm) throw new Error(`Pool cat ${cat} rarity ${name} not found`);
-      sub[val] = parseInts(mm[1]);
-    }
-    pools[cat] = sub;
+    if(!pools[cat]) throw new Error(`Category ${cat} not found in pools`);
   }
   return pools;
 }
@@ -431,7 +404,7 @@ async function load(){
       fetchRaw(owner,repo,branch,'Lib/src/constants/ItemConstants.ts'),
       fetchRaw(owner,repo,branch,'Lang/fr/models.json').catch(()=>({}))
     ]);
-    state.pools = parsePools(poolsTxt);
+    state.pools = await loadPools(owner,repo,branch);
     state.distincts = parseDistincts(poolsTxt);
     state.totals = parseTotals(itemConstTxt);
 
