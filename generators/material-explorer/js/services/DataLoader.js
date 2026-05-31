@@ -3,6 +3,108 @@
 // weapons, armors, plant compost names, and boss loot tables.
 // ==========================================================================
 
+// Materials map material rarity names to their numeric ids (mirrors MaterialRarity).
+const MAT_RARITY = { COMMON: 1, UNCOMMON: 2, RARE: 3 };
+
+// Extract the balanced `{ ... }` block whose opening brace is the first `{`
+// found at or after `fromIndex` in `text`. Returns the substring including braces.
+function extractBraceBlock(text, fromIndex) {
+    const open = text.indexOf('{', fromIndex);
+    if (open < 0) {
+        return null;
+    }
+    let depth = 0;
+    for (let i = open; i < text.length; i++) {
+        if (text[i] === '{') {
+            depth++;
+        }
+        else if (text[i] === '}') {
+            depth--;
+            if (depth === 0) {
+                return text.slice(open, i + 1);
+            }
+        }
+    }
+    return null;
+}
+
+// Parse UPGRADE_MATERIALS_PER_ITEM_RARITY_AND_LEVEL from ItemConstants.ts into
+// { [itemRarity 0..8]: { [level 1..5]: { 1:common, 2:uncommon, 3:rare } } }.
+function parseUpgradeTotals(tsText) {
+    const anchor = tsText.indexOf('UPGRADE_MATERIALS_PER_ITEM_RARITY_AND_LEVEL');
+    if (anchor < 0) {
+        throw new Error('UPGRADE_MATERIALS_PER_ITEM_RARITY_AND_LEVEL not found');
+    }
+    // The type annotation also contains braces, so jump to the value block (`= {`).
+    const body = extractBraceBlock(tsText, tsText.indexOf('= {', anchor));
+    if (!body) {
+        throw new Error('UPGRADE_MATERIALS table body not found');
+    }
+    const out = {};
+    for (const [rarityName, rarity] of Object.entries(ITEM_RARITY)) {
+        const head = body.match(new RegExp(`ItemRarity\\.${rarityName}\\s*\\]\\s*:\\s*\\{`));
+        const levels = {};
+        if (head) {
+            const inner = extractBraceBlock(body, head.index);
+            for (let level = 1; level <= 5; level++) {
+                const levelHead = inner.match(new RegExp(`(?:^|[^\\d])${level}\\s*:\\s*\\{`));
+                const counts = { 1: 0, 2: 0, 3: 0 };
+                if (levelHead) {
+                    const levelBody = extractBraceBlock(inner, levelHead.index);
+                    for (const [matName, matRarity] of Object.entries(MAT_RARITY)) {
+                        const match = levelBody.match(new RegExp(`MaterialRarity\\.${matName}\\s*\\]\\s*:\\s*(\\d+)`));
+                        counts[matRarity] = match ? parseInt(match[1], 10) : 0;
+                    }
+                }
+                levels[level] = counts;
+            }
+        }
+        out[rarity] = levels;
+    }
+    return out;
+}
+
+// Parse the `key: [ ...ids ]` arrays of EXPEDITION_LOOT_TABLES from
+// ExpeditionConstants.ts into { [locationKey]: number[] }.
+function parseExpeditionLoot(tsText) {
+    const anchor = tsText.indexOf('EXPEDITION_LOOT_TABLES');
+    if (anchor < 0) {
+        throw new Error('EXPEDITION_LOOT_TABLES not found');
+    }
+    const body = extractBraceBlock(tsText, tsText.indexOf('= {', anchor));
+    if (!body) {
+        throw new Error('EXPEDITION_LOOT_TABLES body not found');
+    }
+    const out = {};
+    const entryRegex = /(\w+)\s*:\s*\[([\s\S]*?)\]/g;
+    let entry;
+    while ((entry = entryRegex.exec(body)) !== null) {
+        const ids = entry[2].replace(/\/\/.*$/gm, '').match(/\d+/g);
+        out[entry[1]] = ids ? ids.map(Number) : [];
+    }
+    return out;
+}
+
+// Parse the ordered `compostMaterials: [ ...ids ]` arrays of PLANT_TYPES from
+// PlantConstants.ts into { [plantId 1..N]: number[] } (array order = plant id).
+function parsePlantCompost(tsText) {
+    const anchor = tsText.indexOf('PLANT_TYPES');
+    if (anchor < 0) {
+        throw new Error('PLANT_TYPES not found');
+    }
+    const body = tsText.slice(tsText.indexOf('[', anchor));
+    const out = {};
+    const compostRegex = /compostMaterials\s*:\s*\[([\s\S]*?)\]/g;
+    let match;
+    let plantId = 1;
+    while ((match = compostRegex.exec(body)) !== null) {
+        const ids = match[1].replace(/\/\/.*$/gm, '').match(/\d+/g);
+        out[plantId] = ids ? ids.map(Number) : [];
+        plantId++;
+    }
+    return out;
+}
+
 async function loadFromGithub() {
     const owner = document.getElementById('repoOwner').value.trim();
     const repo = document.getElementById('repoName').value.trim();
@@ -75,6 +177,42 @@ async function loadFromGithub() {
             }
             catch { /* rarity file missing on this branch */ }
         }));
+
+        // Upgrade totals, expedition loot and plant compost live in TS constants
+        // (no JSON export), so fetch + parse them to stay in sync with the source.
+        updateStatus('📡 Chargement des tables de constantes...', 'loading');
+        try {
+            const itemConstTxt = await fetchText(owner, repo, branch, 'Lib/src/constants/ItemConstants.ts');
+            UPGRADE_TABLE = parseUpgradeTotals(itemConstTxt);
+        }
+        catch (err) {
+            console.warn('UPGRADE_TABLE not available on this branch:', err);
+            UPGRADE_TABLE = {};
+        }
+        try {
+            const expeditionConstTxt = await fetchText(owner, repo, branch, 'Lib/src/constants/ExpeditionConstants.ts');
+            const loot = parseExpeditionLoot(expeditionConstTxt);
+            for (const [key, ids] of Object.entries(loot)) {
+                if (EXPEDITION_LOOT_TABLES[key]) {
+                    EXPEDITION_LOOT_TABLES[key].materials = ids;
+                }
+            }
+        }
+        catch (err) {
+            console.warn('EXPEDITION_LOOT_TABLES not available on this branch:', err);
+        }
+        try {
+            const plantConstTxt = await fetchText(owner, repo, branch, 'Lib/src/constants/PlantConstants.ts');
+            const compost = parsePlantCompost(plantConstTxt);
+            for (const [id, ids] of Object.entries(compost)) {
+                if (PLANT_COMPOST[id]) {
+                    PLANT_COMPOST[id].materials = ids;
+                }
+            }
+        }
+        catch (err) {
+            console.warn('PLANT_COMPOST not available on this branch:', err);
+        }
 
         // Recipes
         updateStatus('📡 Chargement des recettes...', 'loading');

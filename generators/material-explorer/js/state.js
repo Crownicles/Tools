@@ -10,6 +10,7 @@ let weapons = [];
 let armors = [];
 let pools = {};
 let distinctCounts = {};
+let UPGRADE_TABLE = {};
 let plantData = {};
 let BOSS_LOOT_TABLES = {};
 let itemTypeStats = { weapons: {}, armors: {} };

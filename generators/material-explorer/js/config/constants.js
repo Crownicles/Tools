@@ -1,6 +1,8 @@
 // ==========================================================================
-// Static catalog data — material/item rarity tables and hardcoded loot maps
-// for systems (expeditions, compost) that have no GitHub-importable source.
+// Static catalog data — material/item rarity labels, emojis and display-only
+// metadata. Loot tables (upgrade totals, expedition and compost materials) are
+// loaded at runtime from the Crownicles source so they stay in sync (see
+// DataLoader.js); only their non-source metadata (names, emojis) lives here.
 // ==========================================================================
 
 const MATERIAL_TYPE_EMOJI = {
@@ -30,48 +32,42 @@ const ITEM_RARITY_NAMES = {
     4: 'Rare', 5: 'Spécial', 6: 'Épique', 7: 'Légendaire', 8: 'Mythique'
 };
 
-// UPGRADE_MATERIALS_PER_ITEM_RARITY_AND_LEVEL[itemRarity][level][materialRarity] = count
-// materialRarity: 1=Common, 2=Uncommon, 3=Rare
-const UPGRADE_TABLE = {
-    0: { 1: {1:0,2:0,3:0}, 2: {1:0,2:0,3:0}, 3: {1:0,2:0,3:0}, 4: {1:0,2:0,3:0}, 5: {1:0,2:0,3:0} },
-    1: { 1: {1:2,2:0,3:0}, 2: {1:3,2:0,3:0}, 3: {1:4,2:0,3:0}, 4: {1:5,2:0,3:0}, 5: {1:6,2:0,3:0} },
-    2: { 1: {1:2,2:0,3:0}, 2: {1:4,2:0,3:0}, 3: {1:5,2:1,3:0}, 4: {1:6,2:2,3:0}, 5: {1:6,2:4,3:0} },
-    3: { 1: {1:3,2:0,3:0}, 2: {1:4,2:1,3:0}, 3: {1:5,2:3,3:0}, 4: {1:6,2:5,3:0}, 5: {1:8,2:5,3:1} },
-    4: { 1: {1:5,2:0,3:0}, 2: {1:6,2:2,3:0}, 3: {1:7,2:3,3:1}, 4: {1:8,2:4,3:2}, 5: {1:9,2:5,3:3} },
-    5: { 1: {1:8,2:2,3:0}, 2: {1:9,2:4,3:1}, 3: {1:10,2:5,3:2}, 4: {1:11,2:6,3:3}, 5: {1:12,2:7,3:5} },
-    6: { 1: {1:8,2:2,3:3}, 2: {1:9,2:4,3:5}, 3: {1:10,2:5,3:7}, 4: {1:11,2:6,3:9}, 5: {1:12,2:7,3:12} },
-    7: { 1: {1:10,2:5,3:5}, 2: {1:15,2:10,3:8}, 3: {1:20,2:15,3:12}, 4: {1:25,2:20,3:15}, 5: {1:30,2:25,3:20} },
-    8: { 1: {1:15,2:10,3:10}, 2: {1:20,2:15,3:15}, 3: {1:25,2:20,3:20}, 4: {1:30,2:25,3:25}, 5: {1:40,2:30,3:30} }
-};
+// UPGRADE_MATERIALS_PER_ITEM_RARITY_AND_LEVEL[itemRarity][level][materialRarity] = total count
+// Loaded at runtime from Lib/src/constants/ItemConstants.ts into the `UPGRADE_TABLE`
+// global (see parseUpgradeTotals in DataLoader.js).
 
 // DISTINCT_MATERIALS_PER_ITEM_RARITY_AND_LEVEL[itemRarity][level][materialRarity] = distinct count
 // Loaded at runtime from Core/resources/itemUpgradeMaterialCounts/<itemRarity>.json
 // into the `distinctCounts` global (see DataLoader.js).
 
-// Expedition loot tables (hardcoded from ExpeditionConstants.ts — not yet imported from GitHub)
+// Expedition loot tables. `name` / `emoji` are display-only metadata (not in the
+// Crownicles source); the `materials` arrays are loaded at runtime from
+// Lib/src/constants/ExpeditionConstants.ts (see parseExpeditionLoot in DataLoader.js).
 const EXPEDITION_LOOT_TABLES = {
-    forest: { name: 'Forêt', emoji: '🌲', materials: [14, 20, 29, 45, 6, 40] },
-    mountain: { name: 'Montagne', emoji: '⛰️', materials: [32, 34, 44, 47, 11, 31] },
-    desert: { name: 'Désert', emoji: '🏜️', materials: [54, 55, 49, 50, 61, 65] },
-    swamp: { name: 'Marais', emoji: '🐊', materials: [63, 64, 53, 60, 67, 72] },
-    ruins: { name: 'Ruines', emoji: '🏚️', materials: [77, 79, 66, 71, 75, 76] },
-    cave: { name: 'Grotte', emoji: '🦇', materials: [82, 89, 74, 78, 83, 84] },
-    plains: { name: 'Plaines', emoji: '🌾', materials: [35, 42, 80, 81, 85, 86] },
-    coast: { name: 'Côte', emoji: '🏖️', materials: [52, 58, 70, 2, 88, 90] }
+    forest: { name: 'Forêt', emoji: '🌲', materials: [] },
+    mountain: { name: 'Montagne', emoji: '⛰️', materials: [] },
+    desert: { name: 'Désert', emoji: '🏜️', materials: [] },
+    swamp: { name: 'Marais', emoji: '🐊', materials: [] },
+    ruins: { name: 'Ruines', emoji: '🏚️', materials: [] },
+    cave: { name: 'Grotte', emoji: '🦇', materials: [] },
+    plains: { name: 'Plaines', emoji: '🌾', materials: [] },
+    coast: { name: 'Côte', emoji: '🏖️', materials: [] }
 };
 
-// Plant compost data (hardcoded from PlantConstants.ts — not yet imported from GitHub)
+// Plant compost data. `name` is filled from translations at load time; the
+// `materials` arrays are loaded at runtime from Lib/src/constants/PlantConstants.ts
+// (see parsePlantCompost in DataLoader.js).
 const PLANT_COMPOST = {
-    1: { name: 'Herbe commune', materials: [52, 54, 37] },
-    2: { name: 'Trèfle doré', materials: [43, 59, 25] },
-    3: { name: 'Mousse lunaire', materials: [53, 30, 89] },
-    4: { name: 'Racine de fer', materials: [70, 41, 81] },
-    5: { name: 'Champignon nocturne', materials: [55, 66, 36] },
-    6: { name: 'Feuille venimeuse', materials: [10, 17, 38] },
-    7: { name: 'Bulbe de feu', materials: [35, 82, 44] },
-    8: { name: 'Plante carnée', materials: [42, 48, 26] },
-    9: { name: 'Fleur de cristal', materials: [34, 67, 69] },
-    10: { name: 'Arbre ancien', materials: [84, 31, 18] }
+    1: { name: 'Herbe commune', materials: [] },
+    2: { name: 'Trèfle doré', materials: [] },
+    3: { name: 'Mousse lunaire', materials: [] },
+    4: { name: 'Racine de fer', materials: [] },
+    5: { name: 'Champignon nocturne', materials: [] },
+    6: { name: 'Feuille venimeuse', materials: [] },
+    7: { name: 'Bulbe de feu', materials: [] },
+    8: { name: 'Plante carnée', materials: [] },
+    9: { name: 'Fleur de cristal', materials: [] },
+    10: { name: 'Arbre ancien', materials: [] }
 };
 
 // Map ID → island display metadata. Island is derived from mapId as
