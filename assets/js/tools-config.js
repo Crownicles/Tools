@@ -140,6 +140,16 @@ const toolsConfig = [
         status: 'obsolete'
     },
     {
+        id: 'event-editor',
+        title: 'Éditeur d\'événements',
+        description: 'Visualise et édite les big events (texte principal, choix avec emojis, conséquences de chaque sortie) depuis GitHub, puis exporte un fichier .patch appliquable sur la codebase.',
+        path: 'generators/event-editor.html',
+        category: 'Visualisation',
+        tags: ['Événements', 'GitHub', 'Édition', 'patch', 'Visualisation'],
+        icon: '📜',
+        status: 'active'
+    },
+    {
         id: 'map-graph',
         title: 'Graphe de la carte',
         description: 'Vue en graphe des nœuds de la carte.',
