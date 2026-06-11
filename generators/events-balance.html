@@ -202,6 +202,7 @@ class EventsBalanceApp {
         this.sortCol = "bestEV";
         this.sortDir = "desc";
         this.search = "";
+        this.loopMaxLen = 4;       // max number of locations in a farming loop
         this.renderWeights();
         this.loadBranches();
     }
@@ -652,6 +653,97 @@ class EventsBalanceApp {
                     </tbody>
                 </table>
                 </div>
+            </div>
+
+            ${this.renderLoopsSection()}`;
+    }
+
+    // ---- Most profitable farming loops (cycles in the mapLinks graph) ----
+    // Build adjacency from mapLinks, enumerate simple cycles up to loopMaxLen,
+    // and rank them by value-per-minute = sum(avgBestEV of visited locations) / sum(tripDuration).
+    // The travel-time score itself (~1 pt/min for every loop) is constant and omitted, so ranking is unaffected.
+    findLoops(maxLen, avgEVByLoc) {
+        const adj = {};
+        this.links.forEach(l => { (adj[l.startMap] ||= []).push({ to: l.endMap, dur: l.tripDuration }); });
+        const nodes = [...new Set(this.links.flatMap(l => [l.startMap, l.endMap]))].sort((a, b) => a - b);
+        const loops = [];
+        let explored = 0;
+        const CAP = 300000;
+        for (const start of nodes) {
+            const dfs = (cur, path, dur, val) => {
+                if (explored > CAP) return;
+                explored++;
+                for (const e of (adj[cur] || [])) {
+                    if (e.to === start && path.length >= 2) {
+                        const totalDur = dur + e.dur;
+                        if (totalDur > 0) loops.push({ path: [...path], dur: totalDur, val, yieldPerMin: val / totalDur });
+                    } else if (e.to > start && !path.includes(e.to) && path.length < maxLen) {
+                        dfs(e.to, [...path, e.to], dur + e.dur, val + (avgEVByLoc[e.to] || 0));
+                    }
+                }
+            };
+            dfs(start, [start], 0, avgEVByLoc[start] || 0);
+        }
+        return loops.sort((a, b) => b.yieldPerMin - a.yieldPerMin);
+    }
+
+    setLoopMaxLen(v) {
+        const n = parseInt(v, 10);
+        if (!Number.isNaN(n) && n >= 2 && n <= 8) {
+            this.loopMaxLen = n;
+            this.renderLocationsPane();
+        }
+    }
+
+    renderLoopsSection() {
+        // avgBestEV per location across the whole graph (0 if no event pool there)
+        const avgEVByLoc = {};
+        const graphNodes = [...new Set(this.links.flatMap(l => [l.startMap, l.endMap]))];
+        graphNodes.forEach(id => {
+            const pool = this.eventsAtLocation(id);
+            avgEVByLoc[id] = pool.length ? pool.reduce((s, e) => s + e.bestEV, 0) / pool.length : 0;
+        });
+
+        const loops = this.findLoops(this.loopMaxLen, avgEVByLoc);
+        const top = loops.slice(0, 40);
+        const nameOf = id => this.locations[id]?.name || `Lieu ${id}`;
+
+        return `
+            <div class="card">
+                <h3 style="margin-top:0">🔁 Boucles de farm les plus rentables</h3>
+                <div class="row" style="margin-bottom:10px">
+                    <div class="field">
+                        <label>Longueur max de boucle (lieux)</label>
+                        <input type="number" min="2" max="8" value="${this.loopMaxLen}" oninput="app.setLoopMaxLen(this.value)">
+                    </div>
+                    <div class="hint" style="align-self:center">
+                        ${loops.length} cycle(s) détecté(s) dans le graphe des routes.
+                    </div>
+                </div>
+                <p class="hint">
+                    Une boucle est un cycle de voyages où le joueur revient à son point de départ. Le <strong>rendement/min</strong> =
+                    valeur event cumulée des lieux visités ÷ durée totale du cycle. C'est le meilleur indicateur de farm :
+                    une boucle courte vers des lieux généreux ressort en haut. Le score lié au temps de trajet (~1 pt/min, identique partout) est ignoré car il ne change pas le classement.
+                </p>
+                <div class="table-scroll">
+                <table>
+                    <thead><tr>
+                        <th class="num">Rendement/min</th><th class="num">Lieux</th><th class="num">Durée totale</th>
+                        <th class="num">Valeur/tour</th><th>Boucle</th>
+                    </tr></thead>
+                    <tbody>
+                        ${top.map((l, i) => `
+                            <tr>
+                                <td class="num"><strong style="color:${i === 0 ? "var(--good)" : "inherit"}">${l.yieldPerMin.toFixed(2)}</strong></td>
+                                <td class="num">${l.path.length}</td>
+                                <td class="num">${l.dur}</td>
+                                <td class="num">${Math.round(l.val)}</td>
+                                <td>${l.path.map(n => this.esc(nameOf(n))).join(" → ")} ↩</td>
+                            </tr>`).join("")}
+                    </tbody>
+                </table>
+                </div>
+                ${loops.length === 0 ? `<p class="hint">Aucune boucle trouvée (graphe de routes non chargé ?).</p>` : ""}
             </div>`;
     }
 
