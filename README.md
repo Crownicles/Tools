@@ -11,6 +11,7 @@ Ce repo présente différents outils pour travailler sur Crownicles
 - [Pet Expedition Simulator](https://crownicles.github.io/Tools/generators/expedition-simulator.html) - Simulateur d'expéditions pour familiers
 - [Events](https://crownicles.github.io/Tools/generators/events.html)  - Permet de générer les JSONs pour les évents
 - [Event Editor](https://crownicles.github.io/Tools/generators/event-editor.html) - Visualise et édite les big events (texte, choix, conséquences) depuis GitHub et exporte un fichier `.patch` appliquable sur la codebase
+- [Events Balance](https://crownicles.github.io/Tools/generators/events-balance.html) - Analyse d'équilibrage des big events : valeur du meilleur choix, détection des events trop rentables/punitifs et rentabilité des routes/localisations
 - [Items json to csv](https://crownicles.github.io/Tools/generators/itemCSVGenerator.html) - convertit les JSONs d'objets en CSV pour une utilisation dans Excel
 - [Explorateur d'Objets](https://crownicles.github.io/Tools/generators/item-explorer/) - Interface de comparaison d'objets avec filtrage, recherche et analyse statistique avancée.
 - [Ckwalidé](https://crownicles.github.io/Tools/generators/ckwalide.html) - Recherche rapide d'IDs pour les items, familiers et lieux de Crownicles

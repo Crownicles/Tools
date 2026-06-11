@@ -150,6 +150,16 @@ const toolsConfig = [
         status: 'active'
     },
     {
+        id: 'events-balance',
+        title: 'Équilibrage des événements',
+        description: 'Analyse l\'équilibrage des big events en supposant que le joueur connaît les meilleurs choix : valeur attendue par event, détection des events trop rentables ou trop punitifs, et rentabilité des routes/localisations.',
+        path: 'generators/events-balance.html',
+        category: 'Développement',
+        tags: ['Équilibrage', 'Événements', 'GitHub', 'Statistiques', 'Routes'],
+        icon: '⚖️',
+        status: 'active'
+    },
+    {
         id: 'map-graph',
         title: 'Graphe de la carte',
         description: 'Vue en graphe des nœuds de la carte.',

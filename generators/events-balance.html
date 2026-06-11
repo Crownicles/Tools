@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crownicles Events Balance</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --bg-soft: #273449;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --accent: #6366f1;
+            --accent2: #8b5cf6;
+            --good: #22c55e;
+            --warn: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; background: var(--bg); color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.5;
+        }
+        .container { max-width: 1600px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; margin-bottom: 18px; }
+        header h1 { margin: 0 0 4px; font-size: 1.9rem; }
+        .subtitle { color: var(--text-muted); margin: 0; }
+
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 18px; margin-bottom: 16px;
+        }
+        .row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+        .field { display: flex; flex-direction: column; gap: 4px; }
+        .field label { font-size: .78rem; color: var(--text-muted); font-weight: 600; }
+        .field input, .field select {
+            padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
+            background: var(--bg-soft); color: var(--text); font-size: .92rem; min-width: 150px;
+        }
+        button.btn {
+            padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
+            font-weight: 600; color: white; font-size: .95rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            transition: transform .15s ease;
+        }
+        button.btn:hover:not(:disabled) { transform: translateY(-2px); }
+        button.btn:disabled { opacity: .5; cursor: not-allowed; }
+        .btn-ghost { background: var(--bg-soft); border: 1px solid var(--border); }
+
+        .rate-limit { font-size: .76rem; color: var(--text-muted); margin-left: auto; }
+
+        .loading { text-align: center; padding: 50px; color: var(--text-muted); }
+        .spinner {
+            width: 36px; height: 36px; margin: 0 auto 14px;
+            border: 3px solid var(--border); border-top-color: var(--accent);
+            border-radius: 50%; animation: spin .8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+        .stat-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+        .stat-box .value { font-size: 1.6rem; font-weight: 700; }
+        .stat-box .label { font-size: .76rem; color: var(--text-muted); }
+
+        .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .tab {
+            padding: 9px 16px; border-radius: 999px; cursor: pointer;
+            background: var(--bg-card); border: 1px solid var(--border);
+            color: var(--text-muted); font-weight: 600; font-size: .88rem;
+        }
+        .tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .chart-wide { grid-column: 1 / -1; }
+        @media (max-width: 1000px) { .chart-grid { grid-template-columns: 1fr; } }
+        canvas { max-height: 360px; }
+
+        table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { cursor: pointer; user-select: none; color: var(--text-muted); position: sticky; top: 0; background: var(--bg-card); white-space: nowrap; }
+        th:hover { color: var(--text); }
+        tr:hover td { background: var(--bg-soft); }
+        .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+        .flag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: .74rem; font-weight: 700; }
+        .flag.ok { background: rgba(34,197,94,.18); color: var(--good); }
+        .flag.high { background: rgba(245,158,11,.2); color: var(--warn); }
+        .flag.vhigh { background: rgba(239,68,68,.2); color: var(--danger); }
+        .flag.low { background: rgba(59,130,246,.2); color: var(--info); }
+        .flag.vlow { background: rgba(139,92,246,.25); color: var(--accent2); }
+        .flag.special { background: rgba(148,163,184,.2); color: var(--text-muted); }
+
+        .table-scroll { max-height: 620px; overflow: auto; border: 1px solid var(--border); border-radius: 10px; }
+
+        details.weights { margin-top: 12px; }
+        details.weights summary { cursor: pointer; font-weight: 600; color: var(--text-muted); }
+        .weights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 12px; }
+        .weights-grid .field input { min-width: 0; width: 100%; }
+
+        .hint { font-size: .8rem; color: var(--text-muted); }
+        .pane { display: none; }
+        .pane.active { display: block; }
+
+        .search-bar { margin-bottom: 12px; }
+        .search-bar input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-soft); color: var(--text); }
+
+        .breakdown { font-size: .8rem; color: var(--text-muted); }
+        .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: var(--text-muted); margin-top: 8px; }
+        .legend span { display: inline-flex; align-items: center; gap: 5px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        code { background: var(--bg-soft); padding: 1px 6px; border-radius: 5px; font-size: .82rem; }
+        a { color: var(--accent2); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>⚖️ Crownicles Events Balance</h1>
+        <p class="subtitle">Analyse d'équilibrage des big events : valeur du meilleur choix, rentabilité des routes, détection des events déséquilibrés</p>
+    </header>
+
+    <div class="card">
+        <div class="row">
+            <div class="field">
+                <label for="branch-select">🌿 Branche</label>
+                <select id="branch-select"><option value="develop">develop</option></select>
+            </div>
+            <button class="btn" id="loadBtn" onclick="app.load()">🚀 Charger depuis GitHub</button>
+            <div class="rate-limit" id="rate-limit"></div>
+        </div>
+        <details class="weights">
+            <summary>⚙️ Pondération du modèle de valeur (avancé)</summary>
+            <p class="hint" style="margin:8px 0 0">
+                La « valeur » d'une sortie combine ses gains/pertes en une unité commune. Les leviers spécifiques aux events
+                (argent, points bonus, XP bonus, PV, énergie, gemmes, objet/familier, temps perdu, effets, oneshot) sont pondérés ci-dessous.
+                La partie liée au temps de trajet (commune à tous les events) est volontairement neutralisée pour comparer les events entre eux.
+            </p>
+            <div class="weights-grid" id="weights-grid"></div>
+            <button class="btn btn-ghost" style="margin-top:10px" onclick="app.resetWeights()">↺ Réinitialiser</button>
+        </details>
+    </div>
+
+    <div id="content">
+        <div class="card"><div class="hint">Sélectionnez une branche puis chargez les données pour démarrer l'analyse.</div></div>
+    </div>
+</div>
+
+<script>
+const OWNER = "Crownicles";
+const REPO = "Crownicles";
+const EVENTS_PATH = "Core/resources/events";
+const MAPLINKS_PATH = "Core/resources/mapLinks";
+const MAPLOCATIONS_PATH = "Core/resources/mapLocations";
+const EVENTS_TEXT_PATH = "Lang/fr/events.json";
+const MODELS_PATH = "Lang/fr/models.json";
+
+// Effect base durations (minutes) from Lib/src/types/Effect.ts
+const EFFECT_TIME = {
+    none: 0, occupied: 0, sleeping: 180, drunk: 240, freezing: 60, feetHurt: 110,
+    hurt: 300, sick: 330, jailed: 1440, injured: 660, starving: 50, confounded: 40,
+    scared: 15, lost: 270, fished: 5, dead: 16666667
+};
+const EFFECT_LABEL = {
+    none: "Aucun", occupied: "Occupé", sleeping: "Endormi", drunk: "Ivre", freezing: "Gelé",
+    feetHurt: "Pieds blessés", hurt: "Blessé", sick: "Malade", jailed: "Emprisonné",
+    injured: "Gravement blessé", starving: "Affamé", confounded: "Confus", scared: "Effrayé",
+    lost: "Perdu", fished: "Pêché", dead: "Mort"
+};
+// XP constants from Lib/src/constants/BigEventConstants.ts
+const XP = { BASE: 172, HEALTH_BONUS: 230, RANDOM_ITEM_BONUS: 345, MONEY_BONUS: 115,
+    OCCUPIED_PENALTY: 125, SLEEPING_STARVING_PENALTY: 130, CONFOUNDED_PENALTY: 140 };
+
+// Default value-model weights (1 unit ≈ "1 point of player value")
+const DEFAULT_WEIGHTS = {
+    money: 1,            // per coin
+    bonusPoints: 1,      // per score point
+    xp: 0.15,            // per xp point
+    health: 12,          // per HP
+    energy: 1.5,         // per energy point
+    gems: 30,            // per gem
+    lostTimeMin: 0.5,    // cost per minute of lost time/effect
+    randomItem: 250,     // estimated value of a random item
+    randomPet: 400,      // estimated value of a random pet
+    givePet: 400,        // estimated value of a given pet
+    oneshot: 4000        // death penalty (subtracted)
+};
+
+class EventsBalanceApp {
+    constructor() {
+        this.weights = { ...DEFAULT_WEIGHTS };
+        this.events = [];          // [{id, data, text, possibilities:[...], bestChoice, ...}]
+        this.locations = {};       // id -> {type, attribute, name}
+        this.links = [];           // [{id, startMap, endMap, tripDuration}]
+        this.models = {};
+        this.charts = {};
+        this.tab = "events";
+        this.sortCol = "bestEV";
+        this.sortDir = "desc";
+        this.search = "";
+        this.renderWeights();
+        this.loadBranches();
+    }
+
+    // ---------------- loading ----------------
+    async loadBranches() {
+        try {
+            const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/branches?per_page=100`);
+            this.trackRate(res);
+            const branches = await res.json();
+            if (!Array.isArray(branches)) return;
+            const sel = document.getElementById("branch-select");
+            sel.innerHTML = branches.map(b =>
+                `<option value="${b.name}" ${b.name === "develop" ? "selected" : ""}>${b.name}</option>`
+            ).join("");
+        } catch (e) { console.warn("branches", e); }
+    }
+
+    trackRate(res) {
+        const r = res.headers.get("X-RateLimit-Remaining");
+        const l = res.headers.get("X-RateLimit-Limit");
+        if (r !== null) document.getElementById("rate-limit").textContent = `API GitHub : ${r}/${l} requêtes restantes`;
+    }
+
+    async listDir(branch, path) {
+        const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${branch}`);
+        this.trackRate(res);
+        const files = await res.json();
+        if (!Array.isArray(files)) throw new Error(`Listing impossible pour ${path} (limite API atteinte ?)`);
+        return files.filter(f => f.name.endsWith(".json"));
+    }
+
+    async load() {
+        const branch = document.getElementById("branch-select").value;
+        const content = document.getElementById("content");
+        document.getElementById("loadBtn").disabled = true;
+        content.innerHTML = `<div class="card"><div class="loading"><div class="spinner"></div>Chargement des events, routes et localisations...</div></div>`;
+        try {
+            const rawBase = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}`;
+            const [eventFiles, linkFiles, locFiles] = await Promise.all([
+                this.listDir(branch, EVENTS_PATH),
+                this.listDir(branch, MAPLINKS_PATH),
+                this.listDir(branch, MAPLOCATIONS_PATH)
+            ]);
+
+            const fetchJson = (path) => fetch(`${rawBase}/${path}`).then(r => r.json());
+
+            const [eventsData, linksData, locsData, textData, models] = await Promise.all([
+                Promise.all(eventFiles.map(f => fetchJson(`${EVENTS_PATH}/${f.name}`).then(d => ({ id: f.name.replace(".json", ""), data: d })))),
+                Promise.all(linkFiles.map(f => fetchJson(`${MAPLINKS_PATH}/${f.name}`).then(d => ({ id: f.name.replace(".json", ""), ...d })))),
+                Promise.all(locFiles.map(f => fetchJson(`${MAPLOCATIONS_PATH}/${f.name}`).then(d => ({ id: f.name.replace(".json", ""), ...d })))),
+                fetchJson(EVENTS_TEXT_PATH).catch(() => ({})),
+                fetchJson(MODELS_PATH).catch(() => ({}))
+            ]);
+
+            this.models = models;
+            this.texts = textData;
+            this.links = linksData;
+            this.locations = {};
+            locsData.forEach(l => {
+                this.locations[l.id] = {
+                    ...l,
+                    name: models.map_locations?.[l.id]?.name || `Lieu ${l.id}`,
+                    typeName: models.map_types?.[l.type]?.name || l.type
+                };
+            });
+
+            this.processEvents(eventsData);
+            this.render();
+        } catch (err) {
+            content.innerHTML = `<div class="card" style="color:var(--danger)">❌ Erreur : ${err.message}</div>`;
+        } finally {
+            document.getElementById("loadBtn").disabled = false;
+        }
+    }
+
+    // ---------------- value model ----------------
+    // XP gained by an outcome, replicating PossibilityOutcome.applyOutcomeExperience
+    computeXp(o) {
+        let xp = XP.BASE
+            + ((o.health ?? 0) > 0 ? XP.HEALTH_BONUS : 0)
+            + (o.randomItem ? XP.RANDOM_ITEM_BONUS : 0)
+            + ((o.money ?? 0) > 0 ? XP.MONEY_BONUS : 0);
+        switch (o.effect ?? "none") {
+            case "occupied": xp -= XP.OCCUPIED_PENALTY; break;
+            case "sleeping": case "starving": xp -= XP.SLEEPING_STARVING_PENALTY; break;
+            case "confounded": xp -= XP.CONFOUNDED_PENALTY; break;
+            case "none": break;
+            default: xp = 0; // any other effect kills the base xp
+        }
+        if ((o.health ?? 0) < 0 || o.oneshot === true || xp < 0) xp = 0;
+        xp += o.bonusExperience ?? 0;
+        return xp;
+    }
+
+    lostTimeOf(o) {
+        const eff = o.effect ?? "none";
+        const extra = (eff === "occupied" || eff === "none") ? 0 : (EFFECT_TIME[eff] ?? 0);
+        return (o.lostTime ?? 0) + extra;
+    }
+
+    // Composite "player value" of a single outcome
+    outcomeValue(o) {
+        const w = this.weights;
+        if (o.oneshot === true) {
+            // Death dominates; still counts time/loss but mostly the penalty
+            return -w.oneshot;
+        }
+        let v = 0;
+        v += (o.money ?? 0) * w.money;
+        v += (o.bonusPoints ?? 0) * w.bonusPoints;
+        v += this.computeXp(o) * w.xp;
+        v += (o.health ?? 0) * w.health;
+        v += (o.energy ?? 0) * w.energy;
+        v += (o.gems ?? 0) * w.gems;
+        v -= this.lostTimeOf(o) * w.lostTimeMin;
+        if (o.randomItem) v += w.randomItem;
+        if (o.randomPet) v += w.randomPet;
+        if (o.givePet) v += w.givePet;
+        return v;
+    }
+
+    // Sub-metric sums for an outcome (raw, for breakdown displays)
+    outcomeMetrics(o) {
+        return {
+            money: o.money ?? 0,
+            bonusPoints: o.bonusPoints ?? 0,
+            xp: this.computeXp(o),
+            health: o.health ?? 0,
+            energy: o.energy ?? 0,
+            gems: o.gems ?? 0,
+            lostTime: this.lostTimeOf(o),
+            item: o.randomItem ? 1 : 0,
+            pet: (o.randomPet || o.givePet) ? 1 : 0,
+            oneshot: o.oneshot === true ? 1 : 0
+        };
+    }
+
+    processEvents(eventsData) {
+        this.events = eventsData.map(({ id, data }) => {
+            const txt = this.texts?.[id] || {};
+            const possEntries = Object.entries(data.possibilities || {});
+            const possibilities = possEntries.map(([name, poss]) => {
+                const outcomes = Object.entries(poss.outcomes || {}).map(([okey, o]) => ({
+                    key: okey, value: this.outcomeValue(o), metrics: this.outcomeMetrics(o), raw: o
+                }));
+                // uniform pick => mean
+                const ev = outcomes.length ? outcomes.reduce((s, x) => s + x.value, 0) / outcomes.length : 0;
+                const min = outcomes.length ? Math.min(...outcomes.map(x => x.value)) : 0;
+                const max = outcomes.length ? Math.max(...outcomes.map(x => x.value)) : 0;
+                const variance = outcomes.length ? outcomes.reduce((s, x) => s + (x.value - ev) ** 2, 0) / outcomes.length : 0;
+                const isDefault = !txt?.possibilities?.[name]?.text;
+                return { name, isDefault, outcomes, ev, min, max, std: Math.sqrt(variance), hasCondition: !!poss.condition };
+            });
+
+            const choices = possibilities.filter(p => !p.isDefault);
+            const defaults = possibilities.filter(p => p.isDefault);
+            const pool = choices.length ? choices : possibilities; // if only default exists, use it
+            const best = pool.reduce((a, b) => (b.ev > a.ev ? b : a), pool[0]);
+            const worst = pool.reduce((a, b) => (b.ev < a.ev ? b : a), pool[0]);
+            const defaultEV = defaults.length ? defaults.reduce((s, p) => s + p.ev, 0) / defaults.length : null;
+
+            // Triggers.
+            // Empty triggers [] => event is NEVER picked randomly; only reachable via `nextEvent` (special/story/reward events).
+            // Global random event => has >=1 trigger with no mapId. Location event => >=1 trigger with a mapId.
+            const triggers = data.triggers || [];
+            const mapIds = [...new Set(triggers.filter(t => t.mapId != null).map(t => t.mapId))];
+            const isNextEventOnly = triggers.length === 0;
+            const isGlobal = !isNextEventOnly && triggers.some(t => t.mapId == null);
+            const levels = triggers.map(t => t.level).filter(v => v != null);
+            const mapAttributes = [...new Set(triggers.flatMap(t => t.mapAttributes || []))];
+            const dateRestricted = triggers.some(t => t.date);
+
+            return {
+                id, data,
+                text: (txt.text || "").replace(/\{emote:[^}]+\}/g, "").trim(),
+                possibilities, choices, defaults,
+                bestEV: best ? best.ev : 0,
+                bestName: best ? best.name : "—",
+                worstEV: worst ? worst.ev : 0,
+                defaultEV,
+                bestRisk: best ? best.std : 0,
+                regret: best && worst ? best.ev - worst.ev : 0, // punishment for a bad choice
+                nbChoices: choices.length,
+                nbOutcomes: possibilities.reduce((s, p) => s + p.outcomes.length, 0),
+                mapIds, isGlobal, isNextEventOnly, levels, mapAttributes, dateRestricted,
+                tags: data.tags || []
+            };
+        });
+
+        // Baseline = only normal random events (exclude nextEvent-only special/reward events that aren't randomly drawn).
+        const normal = this.events.filter(e => !e.isNextEventOnly);
+        const evs = normal.map(e => e.bestEV);
+        const mean = evs.reduce((s, v) => s + v, 0) / (evs.length || 1);
+        const std = Math.sqrt(evs.reduce((s, v) => s + (v - mean) ** 2, 0) / (evs.length || 1)) || 1;
+        const median = this.median(evs);
+        // Robust scale via MAD (median absolute deviation), insensitive to extreme outliers.
+        const mad = this.median(evs.map(v => Math.abs(v - median)));
+        const robustStd = (1.4826 * mad) || std || 1;
+        this.evStats = { mean, std, median, robustStd, ...this.quartiles(evs) };
+        this.events.forEach(e => {
+            e.z = (e.bestEV - median) / robustStd; // robust z-score
+            e.flag = e.isNextEventOnly ? { cls: "special", label: "Spécial (nextEvent)" } : this.flagFor(e.z);
+        });
+    }
+
+    median(arr) { const s = [...arr].sort((a, b) => a - b); const m = Math.floor(s.length / 2); return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }
+    quartiles(arr) {
+        const s = [...arr].sort((a, b) => a - b);
+        const q = p => { const i = (s.length - 1) * p; const lo = Math.floor(i), hi = Math.ceil(i); return s[lo] + (s[hi] - s[lo]) * (i - lo); };
+        const q1 = q(0.25), q3 = q(0.75); return { q1, q3, iqr: q3 - q1 };
+    }
+    flagFor(z) {
+        if (z > 2) return { cls: "vhigh", label: "Trop rentable" };
+        if (z > 1) return { cls: "high", label: "Rentable" };
+        if (z < -2) return { cls: "vlow", label: "Trop punitif" };
+        if (z < -1) return { cls: "low", label: "Punitif" };
+        return { cls: "ok", label: "Équilibré" };
+    }
+
+    // event pool applicable at a location id (only events actually drawn randomly there)
+    eventsAtLocation(locId) {
+        return this.events.filter(e => !e.isNextEventOnly && (e.isGlobal || e.mapIds.includes(Number(locId)) || e.mapIds.includes(locId)));
+    }
+
+    // ---------------- weights UI ----------------
+    renderWeights() {
+        const labels = {
+            money: "💰 Argent (par pièce)", bonusPoints: "🏆 Points bonus", xp: "✨ XP (par point)",
+            health: "❤️ PV", energy: "⚡ Énergie", gems: "💎 Gemmes", lostTimeMin: "⏱️ Coût/min perdue",
+            randomItem: "🎁 Objet aléatoire", randomPet: "🐾 Familier aléatoire", givePet: "🐾 Familier donné",
+            oneshot: "💀 Pénalité de mort"
+        };
+        const grid = document.getElementById("weights-grid");
+        grid.innerHTML = Object.keys(DEFAULT_WEIGHTS).map(k => `
+            <div class="field">
+                <label>${labels[k]}</label>
+                <input type="number" step="any" value="${this.weights[k]}" data-w="${k}" oninput="app.onWeight(this)">
+            </div>`).join("");
+    }
+    onWeight(input) {
+        const k = input.dataset.w;
+        const v = parseFloat(input.value);
+        if (!Number.isNaN(v)) {
+            this.weights[k] = v;
+            if (this.events.length) { this.processEvents(this.events.map(e => ({ id: e.id, data: e.data }))); this.render(); }
+        }
+    }
+    resetWeights() { this.weights = { ...DEFAULT_WEIGHTS }; this.renderWeights(); if (this.events.length) { this.processEvents(this.events.map(e => ({ id: e.id, data: e.data }))); this.render(); } }
+
+    // ---------------- rendering ----------------
+    render() {
+        const content = document.getElementById("content");
+        const balanced = this.events.filter(e => e.flag.cls === "ok").length;
+        const tooHigh = this.events.filter(e => e.flag.cls === "vhigh" || e.flag.cls === "high").length;
+        const tooLow = this.events.filter(e => e.flag.cls === "vlow" || e.flag.cls === "low").length;
+        const globalCount = this.events.filter(e => e.isGlobal).length;
+
+        content.innerHTML = `
+            <div class="stats-row">
+                <div class="stat-box"><div class="value">${this.events.length}</div><div class="label">Events</div></div>
+                <div class="stat-box"><div class="value">${globalCount}</div><div class="label">Events globaux</div></div>
+                <div class="stat-box"><div class="value">${Object.keys(this.locations).length}</div><div class="label">Localisations</div></div>
+                <div class="stat-box"><div class="value" style="color:var(--good)">${balanced}</div><div class="label">Équilibrés</div></div>
+                <div class="stat-box"><div class="value" style="color:var(--warn)">${tooHigh}</div><div class="label">Trop rentables</div></div>
+                <div class="stat-box"><div class="value" style="color:var(--info)">${tooLow}</div><div class="label">Trop punitifs</div></div>
+                <div class="stat-box"><div class="value">${Math.round(this.evStats.mean)}</div><div class="label">Valeur moyenne</div></div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab ${this.tab === "events" ? "active" : ""}" onclick="app.setTab('events')">📋 Events</div>
+                <div class="tab ${this.tab === "charts" ? "active" : ""}" onclick="app.setTab('charts')">📊 Graphiques</div>
+                <div class="tab ${this.tab === "locations" ? "active" : ""}" onclick="app.setTab('locations')">🗺️ Routes & localisations</div>
+            </div>
+
+            <div class="pane ${this.tab === "events" ? "active" : ""}" id="pane-events"></div>
+            <div class="pane ${this.tab === "charts" ? "active" : ""}" id="pane-charts"></div>
+            <div class="pane ${this.tab === "locations" ? "active" : ""}" id="pane-locations"></div>
+        `;
+        this.renderEventsPane();
+        this.renderLocationsPane();
+        if (this.tab === "charts") this.renderCharts();
+    }
+
+    setTab(t) {
+        this.tab = t;
+        document.querySelectorAll(".tab").forEach(el => el.classList.remove("active"));
+        document.querySelectorAll(".pane").forEach(el => el.classList.remove("active"));
+        event.target.classList.add("active");
+        document.getElementById(`pane-${t}`).classList.add("active");
+        if (t === "charts") this.renderCharts();
+    }
+
+    sortBy(col) {
+        if (this.sortCol === col) this.sortDir = this.sortDir === "asc" ? "desc" : "asc";
+        else { this.sortCol = col; this.sortDir = "desc"; }
+        this.renderEventsPane();
+    }
+
+    renderEventsPane() {
+        const pane = document.getElementById("pane-events");
+        if (!pane) return;
+        const dir = this.sortDir === "asc" ? 1 : -1;
+        let rows = [...this.events];
+        if (this.search) {
+            const s = this.search;
+            rows = rows.filter(e => `${e.id} ${e.text} ${e.bestName} ${e.tags.join(" ")}`.toLowerCase().includes(s));
+        }
+        rows.sort((a, b) => {
+            let va = a[this.sortCol], vb = b[this.sortCol];
+            if (typeof va === "string") return va.localeCompare(vb) * dir;
+            return ((va ?? 0) - (vb ?? 0)) * dir;
+        });
+
+        const head = (col, label) => `<th onclick="app.sortBy('${col}')">${label}${this.sortCol === col ? (this.sortDir === "asc" ? " ▲" : " ▼") : ""}</th>`;
+        pane.innerHTML = `
+            <div class="card">
+                <div class="search-bar"><input placeholder="🔎 Filtrer par id, texte, choix, tag..." value="${this.search}" oninput="app.search=this.value.toLowerCase();app.renderEventsPane()"></div>
+                <div class="legend">
+                    <span><span class="dot" style="background:var(--good)"></span>Équilibré (|z|≤1)</span>
+                    <span><span class="dot" style="background:var(--warn)"></span>Rentable (z&gt;1)</span>
+                    <span><span class="dot" style="background:var(--danger)"></span>Trop rentable (z&gt;2)</span>
+                    <span><span class="dot" style="background:var(--info)"></span>Punitif (z&lt;-1)</span>
+                    <span><span class="dot" style="background:var(--accent2)"></span>Trop punitif (z&lt;-2)</span>
+                    <span><span class="dot" style="background:var(--text-muted)"></span>Spécial (nextEvent, hors baseline)</span>
+                </div>
+                <div class="table-scroll" style="margin-top:10px">
+                <table>
+                    <thead><tr>
+                        ${head("id", "ID")}
+                        <th>Texte</th>
+                        ${head("bestEV", "Valeur meilleur choix")}
+                        ${head("z", "Écart (z)")}
+                        <th>Équilibrage</th>
+                        ${head("regret", "Punition mauvais choix")}
+                        ${head("bestRisk", "Risque (σ)")}
+                        ${head("defaultEV", "Valeur défaut")}
+                        ${head("nbChoices", "Choix")}
+                        <th>Portée</th>
+                    </tr></thead>
+                    <tbody>
+                        ${rows.map(e => `
+                            <tr>
+                                <td><strong>${e.id}</strong></td>
+                                <td title="${this.esc(e.text)}">${this.esc(e.text.slice(0, 60))}${e.text.length > 60 ? "…" : ""}</td>
+                                <td class="num"><strong>${Math.round(e.bestEV)}</strong> <span class="breakdown">(${this.esc(e.bestName)})</span></td>
+                                <td class="num">${e.z.toFixed(2)}</td>
+                                <td><span class="flag ${e.flag.cls}">${e.flag.label}</span></td>
+                                <td class="num">${Math.round(e.regret)}</td>
+                                <td class="num">${Math.round(e.bestRisk)}</td>
+                                <td class="num">${e.defaultEV == null ? "—" : Math.round(e.defaultEV)}</td>
+                                <td class="num">${e.nbChoices}</td>
+                                <td>${e.isNextEventOnly ? "✨ Spécial" : e.isGlobal ? "🌍 Global" : "📍 " + e.mapIds.length + " lieu(x)"}${e.levels.length ? " ·niv≥" + Math.min(...e.levels) : ""}${e.dateRestricted ? " ·📅" : ""}</td>
+                            </tr>`).join("")}
+                    </tbody>
+                </table>
+                </div>
+                <p class="hint" style="margin-top:8px">
+                    <strong>Valeur meilleur choix</strong> = valeur attendue de la possibilité optimale (moyenne de ses sorties, tirées uniformément).
+                    <strong>Punition mauvais choix</strong> = écart entre le meilleur et le pire choix (incite-t-il à bien choisir ?).
+                    <strong>Risque (σ)</strong> = variabilité interne du meilleur choix.
+                </p>
+            </div>`;
+    }
+
+    renderLocationsPane() {
+        const pane = document.getElementById("pane-locations");
+        if (!pane) return;
+
+        // location-level metrics: expected value when arriving (uniform random among pool)
+        const locStats = Object.entries(this.locations).map(([id, loc]) => {
+            const pool = this.eventsAtLocation(id);
+            const evs = pool.map(e => e.bestEV);
+            const avg = evs.length ? evs.reduce((s, v) => s + v, 0) / evs.length : 0;
+            const worstAvg = pool.length ? pool.reduce((s, e) => s + e.worstEV, 0) / pool.length : 0;
+            return { id, ...loc, poolSize: pool.length, avgBestEV: avg, avgWorstEV: worstAvg, localCount: pool.filter(e => !e.isGlobal).length };
+        }).filter(l => l.poolSize > 0);
+
+        const avgs = locStats.map(l => l.avgBestEV);
+        const mean = avgs.reduce((s, v) => s + v, 0) / (avgs.length || 1);
+        const std = Math.sqrt(avgs.reduce((s, v) => s + (v - mean) ** 2, 0) / (avgs.length || 1)) || 1;
+        locStats.forEach(l => { l.z = (l.avgBestEV - mean) / std; l.flag = this.flagForLoc(l.z); });
+        locStats.sort((a, b) => b.avgBestEV - a.avgBestEV);
+
+        // route table: each maplink => destination location profitability
+        const routes = this.links
+            .filter(l => this.locations[l.endMap])
+            .map(l => {
+                const dest = locStats.find(s => s.id == l.endMap);
+                const origin = this.locations[l.startMap];
+                return {
+                    id: l.id, startMap: l.startMap, endMap: l.endMap,
+                    originName: origin?.name || `Lieu ${l.startMap}`,
+                    destName: this.locations[l.endMap]?.name || `Lieu ${l.endMap}`,
+                    tripDuration: l.tripDuration,
+                    avgBestEV: dest ? dest.avgBestEV : null,
+                    flag: dest ? dest.flag : null,
+                    poolSize: dest ? dest.poolSize : 0
+                };
+            })
+            .filter(r => r.avgBestEV != null)
+            .sort((a, b) => b.avgBestEV - a.avgBestEV);
+
+        pane.innerHTML = `
+            <div class="card">
+                <h3 style="margin-top:0">🗺️ Rentabilité par localisation (destination de voyage)</h3>
+                <p class="hint">Valeur attendue à l'arrivée = moyenne de la « valeur meilleur choix » sur le pool d'events pouvant s'y déclencher (events globaux + spécifiques au lieu). Permet de repérer des destinations trop généreuses ou trop hostiles.</p>
+                <div class="table-scroll" style="margin-top:10px">
+                <table>
+                    <thead><tr>
+                        <th>Lieu</th><th>Type</th><th>Attribut</th>
+                        <th class="num">Valeur moy.</th><th class="num">Écart (z)</th><th>Équilibrage</th>
+                        <th class="num">Events (dont locaux)</th><th class="num">Valeur pire cas</th>
+                    </tr></thead>
+                    <tbody>
+                        ${locStats.map(l => `
+                            <tr>
+                                <td><strong>${this.esc(l.name)}</strong> <span class="breakdown">#${l.id}</span></td>
+                                <td>${this.esc(l.typeName || "")}</td>
+                                <td>${this.esc(l.attribute || "")}</td>
+                                <td class="num"><strong>${Math.round(l.avgBestEV)}</strong></td>
+                                <td class="num">${l.z.toFixed(2)}</td>
+                                <td><span class="flag ${l.flag.cls}">${l.flag.label}</span></td>
+                                <td class="num">${l.poolSize} <span class="breakdown">(${l.localCount})</span></td>
+                                <td class="num">${Math.round(l.avgWorstEV)}</td>
+                            </tr>`).join("")}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-top:0">🛣️ Routes (mapLinks) classées par rentabilité de destination</h3>
+                <div class="table-scroll">
+                <table>
+                    <thead><tr>
+                        <th>Route</th><th class="num">Durée (min)</th><th class="num">Valeur dest.</th><th>Équilibrage</th><th class="num">Pool events</th>
+                    </tr></thead>
+                    <tbody>
+                        ${routes.map(r => `
+                            <tr>
+                                <td>${this.esc(r.originName)} → <strong>${this.esc(r.destName)}</strong></td>
+                                <td class="num">${r.tripDuration}</td>
+                                <td class="num"><strong>${Math.round(r.avgBestEV)}</strong></td>
+                                <td><span class="flag ${r.flag.cls}">${r.flag.label}</span></td>
+                                <td class="num">${r.poolSize}</td>
+                            </tr>`).join("")}
+                    </tbody>
+                </table>
+                </div>
+            </div>`;
+    }
+
+    flagForLoc(z) {
+        if (z > 1.5) return { cls: "vhigh", label: "Trop rentable" };
+        if (z > 0.6) return { cls: "high", label: "Rentable" };
+        if (z < -1.5) return { cls: "vlow", label: "Trop hostile" };
+        if (z < -0.6) return { cls: "low", label: "Hostile" };
+        return { cls: "ok", label: "Équilibré" };
+    }
+
+    renderCharts() {
+        const pane = document.getElementById("pane-charts");
+        if (!pane) return;
+        pane.innerHTML = `
+            <div class="chart-grid">
+                <div class="card"><h3 style="margin-top:0">Distribution des valeurs (meilleur choix)</h3><canvas id="c-dist"></canvas></div>
+                <div class="card"><h3 style="margin-top:0">Répartition de l'équilibrage</h3><canvas id="c-flags"></canvas></div>
+                <div class="card chart-wide"><h3 style="margin-top:0">Valeur du meilleur choix par event (trié)</h3><canvas id="c-bars"></canvas></div>
+                <div class="card chart-wide"><h3 style="margin-top:0">Valeur du meilleur choix vs punition du mauvais choix</h3><canvas id="c-scatter"></canvas></div>
+            </div>`;
+        Object.values(this.charts).forEach(c => c.destroy());
+        this.charts = {};
+        Chart.defaults.color = "#94a3b8";
+        Chart.defaults.borderColor = "#334155";
+
+        // Charts compare only normal random events (special nextEvent-only events would skew the scale).
+        const normalEvents = this.events.filter(e => !e.isNextEventOnly);
+
+        // histogram of bestEV
+        const evs = normalEvents.map(e => e.bestEV);
+        const minV = Math.min(...evs), maxV = Math.max(...evs);
+        const bins = 18; const w = (maxV - minV) / bins || 1;
+        const hist = new Array(bins).fill(0);
+        evs.forEach(v => { let i = Math.floor((v - minV) / w); if (i >= bins) i = bins - 1; if (i < 0) i = 0; hist[i]++; });
+        this.charts.dist = new Chart(document.getElementById("c-dist"), {
+            type: "bar",
+            data: { labels: hist.map((_, i) => Math.round(minV + i * w)), datasets: [{ label: "Nb events", data: hist, backgroundColor: "#6366f1" }] },
+            options: { plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: "Valeur meilleur choix" } } } }
+        });
+
+        // flags doughnut
+        const counts = { "Trop punitif": 0, "Punitif": 0, "Équilibré": 0, "Rentable": 0, "Trop rentable": 0 };
+        normalEvents.forEach(e => counts[e.flag.label]++);
+        this.charts.flags = new Chart(document.getElementById("c-flags"), {
+            type: "doughnut",
+            data: { labels: Object.keys(counts), datasets: [{ data: Object.values(counts), backgroundColor: ["#8b5cf6", "#3b82f6", "#22c55e", "#f59e0b", "#ef4444"] }] }
+        });
+
+        // sorted bars
+        const sorted = [...normalEvents].sort((a, b) => b.bestEV - a.bestEV);
+        this.charts.bars = new Chart(document.getElementById("c-bars"), {
+            type: "bar",
+            data: {
+                labels: sorted.map(e => "#" + e.id),
+                datasets: [{ label: "Valeur meilleur choix", data: sorted.map(e => Math.round(e.bestEV)),
+                    backgroundColor: sorted.map(e => ({ vhigh: "#ef4444", high: "#f59e0b", ok: "#22c55e", low: "#3b82f6", vlow: "#8b5cf6" }[e.flag.cls])) }]
+            },
+            options: { plugins: { legend: { display: false }, tooltip: { callbacks: { afterLabel: ctx => this.esc(sorted[ctx.dataIndex].text.slice(0, 50)) } } } }
+        });
+
+        // scatter EV vs regret
+        this.charts.scatter = new Chart(document.getElementById("c-scatter"), {
+            type: "scatter",
+            data: { datasets: [{ label: "Events", data: normalEvents.map(e => ({ x: Math.round(e.bestEV), y: Math.round(e.regret), id: e.id })),
+                backgroundColor: normalEvents.map(e => ({ vhigh: "#ef4444", high: "#f59e0b", ok: "#22c55e", low: "#3b82f6", vlow: "#8b5cf6", special: "#94a3b8" }[e.flag.cls])) }] },
+            options: {
+                plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `#${ctx.raw.id} — valeur ${ctx.raw.x}, punition ${ctx.raw.y}` } } },
+                scales: { x: { title: { display: true, text: "Valeur meilleur choix" } }, y: { title: { display: true, text: "Punition mauvais choix" } } }
+            }
+        });
+    }
+
+    esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+}
+
+const app = new EventsBalanceApp();
+</script>
+</body>
+</html>
