@@ -659,22 +659,36 @@ class EventsBalanceApp {
     }
 
     // ---- Most profitable farming loops (cycles in the mapLinks graph) ----
-    // Build adjacency from mapLinks, enumerate simple cycles up to loopMaxLen,
+    // Build adjacency from mapLinks, enumerate simple directed cycles up to loopMaxLen,
     // and rank them by value-per-minute = sum(avgBestEV of visited locations) / sum(tripDuration).
     // The travel-time score itself (~1 pt/min for every loop) is constant and omitted, so ranking is unaffected.
+    //
+    // Game rule (Maps.getNextPlayerAvailableMaps): the player can NEVER go back to the location they
+    // came from, UNLESS it is the only available exit (dead-end). An immediate U-turn (next === prev)
+    // only occurs in a 2-location loop A→B→A; for cycles of 3+ distinct locations, prev and next are
+    // always different so no U-turn happens. Therefore a 2-loop is only followable when BOTH locations
+    // are mutual dead-ends (each one's only outgoing link points back to the other).
     findLoops(maxLen, avgEVByLoc) {
         const adj = {};
         this.links.forEach(l => { (adj[l.startMap] ||= []).push({ to: l.endMap, dur: l.tripDuration }); });
+        const outNeighbors = id => (adj[id] || []).map(e => e.to);
+        // A 2-loop [a,b] is allowed only if a's sole outgoing target (excluding b) set is empty and same for b.
+        const isMutualDeadEnd = (a, b) =>
+            outNeighbors(a).filter(t => t !== b).length === 0
+            && outNeighbors(b).filter(t => t !== a).length === 0;
+
         const nodes = [...new Set(this.links.flatMap(l => [l.startMap, l.endMap]))].sort((a, b) => a - b);
         const loops = [];
         let explored = 0;
-        const CAP = 300000;
+        const CAP = 500000;
         for (const start of nodes) {
             const dfs = (cur, path, dur, val) => {
                 if (explored > CAP) return;
                 explored++;
                 for (const e of (adj[cur] || [])) {
                     if (e.to === start && path.length >= 2) {
+                        // Closing the cycle. Reject U-turn 2-loops unless both are dead-ends.
+                        if (path.length === 2 && !isMutualDeadEnd(path[0], path[1])) continue;
                         const totalDur = dur + e.dur;
                         if (totalDur > 0) loops.push({ path: [...path], dur: totalDur, val, yieldPerMin: val / totalDur });
                     } else if (e.to > start && !path.includes(e.to) && path.length < maxLen) {
@@ -724,6 +738,7 @@ class EventsBalanceApp {
                     Une boucle est un cycle de voyages où le joueur revient à son point de départ. Le <strong>rendement/min</strong> =
                     valeur event cumulée des lieux visités ÷ durée totale du cycle. C'est le meilleur indicateur de farm :
                     une boucle courte vers des lieux généreux ressort en haut. Le score lié au temps de trajet (~1 pt/min, identique partout) est ignoré car il ne change pas le classement.
+                    Conformément à la règle du jeu, le <strong>demi-tour est interdit</strong> (on ne peut pas repartir vers le lieu d'où l'on vient) : les boucles de 2 lieux ne sont gardées que pour les culs-de-sac réciproques.
                 </p>
                 <div class="table-scroll">
                 <table>
