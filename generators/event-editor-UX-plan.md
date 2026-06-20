@@ -73,11 +73,11 @@
 - [x] 2.2.5 — Vérif : 14 sorties de l'event #13 lisibles sans scroll horizontal ; ordre conservé à l'export.
 
 ### 2.3 Modales custom + validation (remplacer prompt/confirm)
-- [ ] 2.3.1 — Composant modale réutilisable (focus trap, `Esc`, overlay, bouton Annuler) avec tokens existants.
-- [ ] 2.3.2 — Création event / choix / sortie & renommages via formulaire intégré (valeurs par défaut, aide format).
-- [ ] 2.3.3 — Validation inline : ID event numérique unique, mapId triggers numériques, nom de choix non vide/valide, emoji non vide, nombres bornés.
-- [ ] 2.3.4 — Validation du **JSON avancé** au blur (format + signaler divergence avec champs structurés).
-- [ ] 2.3.5 — Vérif : plus aucun `prompt()/confirm()` natif ; erreurs affichées en clair, non bloquantes.
+- [x] 2.3.1 — Composant modale réutilisable (focus trap, `Esc`, overlay, bouton Annuler) avec tokens existants.
+- [x] 2.3.2 — Création event / choix / sortie & renommages via formulaire intégré (valeurs par défaut, aide format).
+- [x] 2.3.3 — Validation inline : ID event numérique unique, mapId triggers numériques, nom de choix non vide/valide, emoji non vide, nombres bornés.
+- [x] 2.3.4 — Validation du **JSON avancé** au blur (format + signaler divergence avec champs structurés).
+- [x] 2.3.5 — Vérif : plus aucun `prompt()/confirm()` natif ; erreurs affichées en clair, non bloquantes.
 
 ### 2.4 Recherche d'event scalable (Nielsen #6)
 - [ ] 2.4.1 — **Combobox filtrante** (input + liste déroulante filtrée, navigation flèches/Enter) au-dessus / à la place du `<select>`.

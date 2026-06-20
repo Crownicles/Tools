@@ -623,7 +623,7 @@
                     aria-label="Champs avancés (JSON) de la sortie ${key}"
                     placeholder='{ "randomItem": { "rarity": { "min": 2 } } }'
                     onchange="editAdvanced('${id}','${name}','${key}',this.value,this)">${escapeHtml(advJson)}</textarea>
-                <div class="json-error">JSON invalide — modification ignorée.</div>
+                <div class="json-error" role="alert">JSON invalide — modification ignorée.</div>
             </details>`;
             html += `</div>`;
         } else {
@@ -773,6 +773,13 @@
             catch (e) { errEl.style.display = "block"; return; }
         }
         errEl.style.display = "none";
+        // Subtle divergence hint: the advanced JSON only round-trips ADVANCED_FIELDS,
+        // so any scalar field set here (e.g. money) is also editable through a
+        // dedicated control above. Warn via the persistent status bar since the
+        // textarea is re-rendered right after.
+        const dupes = SCALAR_FIELDS
+            .map(f => f.key)
+            .filter(k => parsed && Object.prototype.hasOwnProperty.call(parsed, k));
         if (!eff.possibilities[name]) eff.possibilities[name] = { outcomes: {} };
         if (!eff.possibilities[name].outcomes[key]) eff.possibilities[name].outcomes[key] = {};
         const outcome = eff.possibilities[name].outcomes[key];
@@ -782,6 +789,9 @@
         markEffect(id);
         drawEvent(id);
         reopenChoice(name);
+        if (dupes.length) {
+            setStatus(`ℹ️ Le JSON avancé a aussi défini ${dupes.join(", ")} — déjà éditable(s) via les champs ci-dessus.`, "loading");
+        }
     }
 
     function editEmoji(id, name, outcomeKey, value) {
@@ -950,31 +960,264 @@
         }
     }
 
+    // ---------------------------------------------------------------------------
+    // Reusable form modal, replacing native browser dialogs. One modal at a time.
+    //   openFormModal({ title, fields, submitLabel, onSubmit })
+    //   fields: [{ name, label, type:'text'|'number'|'textarea', value,
+    //              placeholder, hint, required, validate(value, allValues) }]
+    //   validate() returns an error string or null. onSubmit(values) is called
+    //   only when every field is valid; returning false keeps the modal open.
+    // ---------------------------------------------------------------------------
+    let __modalKeydownHandler = null;
+    let __modalPreviousFocus = null;
+
+    function closeModal() {
+        const overlay = document.querySelector(".modal-overlay");
+        if (!overlay) return;
+        if (__modalKeydownHandler) {
+            document.removeEventListener("keydown", __modalKeydownHandler);
+            __modalKeydownHandler = null;
+        }
+        overlay.remove();
+        // Restore focus to the element that was focused before opening.
+        if (__modalPreviousFocus && typeof __modalPreviousFocus.focus === "function") {
+            __modalPreviousFocus.focus();
+        }
+        __modalPreviousFocus = null;
+    }
+
+    function openFormModal(options) {
+        const { title, fields = [], submitLabel = "Valider", onSubmit } = options || {};
+
+        // Only one modal at a time.
+        closeModal();
+        __modalPreviousFocus = document.activeElement;
+
+        const titleId = "modal-title-" + Math.random().toString(36).slice(2, 8);
+
+        const overlay = document.createElement("div");
+        overlay.className = "modal-overlay";
+
+        const card = document.createElement("div");
+        card.className = "modal";
+        card.setAttribute("role", "dialog");
+        card.setAttribute("aria-modal", "true");
+        card.setAttribute("aria-labelledby", titleId);
+
+        const titleEl = document.createElement("h2");
+        titleEl.className = "modal-title";
+        titleEl.id = titleId;
+        titleEl.textContent = title || "";
+        card.appendChild(titleEl);
+
+        const form = document.createElement("form");
+        form.noValidate = true;
+
+        // Per-field controls keyed by field name.
+        const controls = {};
+
+        function currentValues() {
+            const values = {};
+            for (const f of fields) {
+                const el = controls[f.name].input;
+                values[f.name] = el.value;
+            }
+            return values;
+        }
+
+        function validateField(f) {
+            const ctrl = controls[f.name];
+            const value = ctrl.input.value;
+            const values = currentValues();
+            let error = null;
+            if (f.required && value.trim() === "") {
+                error = "Ce champ est requis.";
+            } else if (typeof f.validate === "function") {
+                error = f.validate(value, values) || null;
+            }
+            ctrl.errorEl.textContent = error || "";
+            ctrl.errorEl.style.display = error ? "block" : "none";
+            ctrl.input.setAttribute("aria-invalid", error ? "true" : "false");
+            return !error;
+        }
+
+        function validateAll() {
+            let ok = true;
+            for (const f of fields) {
+                if (!validateField(f)) ok = false;
+            }
+            submitBtn.disabled = !ok;
+            return ok;
+        }
+
+        for (const f of fields) {
+            const fieldWrap = document.createElement("div");
+            fieldWrap.className = "modal-field";
+
+            const inputId = "modal-field-" + f.name + "-" + Math.random().toString(36).slice(2, 6);
+
+            const label = document.createElement("label");
+            label.setAttribute("for", inputId);
+            label.textContent = f.label || f.name;
+            fieldWrap.appendChild(label);
+
+            let input;
+            if (f.type === "textarea") {
+                input = document.createElement("textarea");
+                input.rows = 3;
+            } else {
+                input = document.createElement("input");
+                input.type = f.type === "number" ? "number" : "text";
+            }
+            input.id = inputId;
+            input.value = f.value != null ? String(f.value) : "";
+            if (f.placeholder) input.placeholder = f.placeholder;
+            fieldWrap.appendChild(input);
+
+            const errorEl = document.createElement("div");
+            errorEl.className = "field-error";
+            errorEl.setAttribute("role", "alert");
+            errorEl.style.display = "none";
+            fieldWrap.appendChild(errorEl);
+
+            if (f.hint) {
+                const hint = document.createElement("div");
+                hint.className = "field-hint";
+                hint.textContent = f.hint;
+                fieldWrap.appendChild(hint);
+            }
+
+            controls[f.name] = { input, errorEl, field: f };
+
+            input.addEventListener("input", () => validateAll());
+            input.addEventListener("blur", () => validateField(f));
+
+            form.appendChild(fieldWrap);
+        }
+
+        const footer = document.createElement("div");
+        footer.className = "modal-footer";
+
+        const submitBtn = document.createElement("button");
+        submitBtn.type = "submit";
+        submitBtn.className = "btn btn-primary";
+        submitBtn.textContent = submitLabel;
+
+        const cancelBtn = document.createElement("button");
+        cancelBtn.type = "button";
+        cancelBtn.className = "btn btn-ghost";
+        cancelBtn.textContent = "Annuler";
+        cancelBtn.addEventListener("click", closeModal);
+
+        footer.appendChild(cancelBtn);
+        footer.appendChild(submitBtn);
+        form.appendChild(footer);
+
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+            if (!validateAll()) {
+                // Focus the first invalid field.
+                for (const f of fields) {
+                    if (controls[f.name].input.getAttribute("aria-invalid") === "true") {
+                        controls[f.name].input.focus();
+                        break;
+                    }
+                }
+                return;
+            }
+            const result = typeof onSubmit === "function" ? onSubmit(currentValues()) : true;
+            if (result !== false) closeModal();
+        });
+
+        card.appendChild(form);
+        overlay.appendChild(card);
+
+        // Backdrop click cancels.
+        overlay.addEventListener("mousedown", e => { if (e.target === overlay) closeModal(); });
+
+        // Focus trap + Esc handling.
+        function focusable() {
+            return Array.from(card.querySelectorAll(
+                'input, textarea, select, button, [href], [tabindex]:not([tabindex="-1"])'
+            )).filter(el => !el.disabled && el.offsetParent !== null);
+        }
+        __modalKeydownHandler = function (e) {
+            if (e.key === "Escape") {
+                e.preventDefault();
+                closeModal();
+                return;
+            }
+            if (e.key === "Tab") {
+                const items = focusable();
+                if (items.length === 0) return;
+                const first = items[0];
+                const last = items[items.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        };
+        document.addEventListener("keydown", __modalKeydownHandler);
+
+        document.body.appendChild(overlay);
+
+        // Initial validation state (e.g. disable submit when required empty).
+        validateAll();
+
+        // Focus the first field on open.
+        if (fields.length && controls[fields[0].name]) {
+            controls[fields[0].name].input.focus();
+        } else {
+            submitBtn.focus();
+        }
+    }
+
     // ---- event-level ----
     function promptNewEvent() {
-        const id = (prompt("Identifiant du nouvel event (nombre) :") || "").trim();
-        if (!id) return;
-        if (!/^\d+$/.test(id)) { setStatus("⚠️ L'identifiant doit être un nombre.", "error"); return; }
-        if (state.textsData[id]) { setStatus(`⚠️ L'event #${id} existe déjà.`, "error"); return; }
+        openFormModal({
+            title: "Nouvel event",
+            submitLabel: "Créer",
+            fields: [
+                {
+                    name: "id",
+                    label: "Identifiant du nouvel event",
+                    type: "number",
+                    required: true,
+                    hint: "Nombre entier, unique",
+                    validate: v => !/^\d+$/.test(v.trim())
+                        ? "L'identifiant doit être un nombre."
+                        : state.textsData[v.trim()]
+                            ? `L'event #${v.trim()} existe déjà.`
+                            : null
+                }
+            ],
+            onSubmit: values => {
+                const id = values.id.trim();
 
-        state.textsData[id] = { text: "", possibilities: {} };
-        if (!state.textsOrder.includes(id)) state.textsOrder.push(id);
-        markTexts();
+                state.textsData[id] = { text: "", possibilities: {} };
+                if (!state.textsOrder.includes(id)) state.textsOrder.push(id);
+                markTexts();
 
-        state.effectData[id] = { possibilities: {}, triggers: [] };
-        state.effectOrder[id] = ["possibilities", "triggers"];
-        state.createdEffects.add(id);
-        scheduleSave();
-        markEffect(id);
+                state.effectData[id] = { possibilities: {}, triggers: [] };
+                state.effectOrder[id] = ["possibilities", "triggers"];
+                state.createdEffects.add(id);
+                scheduleSave();
+                markEffect(id);
 
-        iconEnsureEvent(id);
-        markIcons();
+                iconEnsureEvent(id);
+                markIcons();
 
-        state.selected = id;
-        populateEventSelect(document.getElementById("filterText").value);
-        document.getElementById("eventSelect").value = id;
-        drawEvent(id);
-        setStatus(`✅ Event #${id} créé. Ajoutez des choix et un mapId déclencheur.`, "success");
+                state.selected = id;
+                populateEventSelect(document.getElementById("filterText").value);
+                document.getElementById("eventSelect").value = id;
+                drawEvent(id);
+                setStatus(`✅ Event #${id} créé. Ajoutez des choix et un mapId déclencheur.`, "success");
+            }
+        });
     }
 
     function deleteEvent(id) {
@@ -1028,29 +1271,53 @@
 
     // ---- choice (possibility) level ----
     function addChoice(id) {
-        const name = (prompt("Nom interne du choix (ex : goForge, end) :") || "").trim();
-        if (!name) return;
-        if (!VALID_NAME.test(name)) { setStatus("⚠️ Nom invalide (lettres/chiffres/_ , commence par une lettre).", "error"); return; }
         const tEv = ensureTextEvent(id);
         const eEv = ensureEffectEvent(id);
-        if (tEv.possibilities[name] || eEv.possibilities[name]) { setStatus(`⚠️ Le choix « ${name} » existe déjà.`, "error"); return; }
+        openFormModal({
+            title: "Nouveau choix",
+            submitLabel: "Ajouter",
+            fields: [
+                {
+                    name: "name",
+                    label: "Nom interne du choix",
+                    type: "text",
+                    required: true,
+                    placeholder: "ex : goForge, end",
+                    hint: "Lettres/chiffres/_ , commence par une lettre",
+                    validate: v => !VALID_NAME.test(v.trim())
+                        ? "Nom invalide."
+                        : (tEv.possibilities[v.trim()] || eEv.possibilities[v.trim()])
+                            ? `Le choix « ${v.trim()} » existe déjà.`
+                            : null
+                },
+                {
+                    name: "choiceText",
+                    label: "Texte du bouton",
+                    type: "textarea",
+                    required: false,
+                    hint: "Laisser vide pour un résultat par défaut (sans bouton)"
+                }
+            ],
+            onSubmit: values => {
+                const name = values.name.trim();
+                const choiceText = values.choiceText.trim();
+                const isDefault = choiceText === "";
 
-        const choiceText = (prompt("Texte du bouton (laisser vide pour un résultat par défaut sans bouton) :") || "").trim();
-        const isDefault = choiceText === "";
+                const tPoss = { outcomes: { "0": "" } };
+                if (!isDefault) tPoss.text = choiceText;
+                tEv.possibilities[name] = tPoss;
+                markTexts();
 
-        const tPoss = { outcomes: { "0": "" } };
-        if (!isDefault) tPoss.text = choiceText;
-        tEv.possibilities[name] = tPoss;
-        markTexts();
+                eEv.possibilities[name] = { outcomes: { "0": {} } };
+                markEffect(id);
 
-        eEv.possibilities[name] = { outcomes: { "0": {} } };
-        markEffect(id);
+                iconAddPossibility(id, name, isDefault);
+                markIcons();
 
-        iconAddPossibility(id, name, isDefault);
-        markIcons();
-
-        drawEvent(id);
-        reopenChoice(name);
+                drawEvent(id);
+                reopenChoice(name);
+            }
+        });
     }
 
     function deleteChoice(id, name) {

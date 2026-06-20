@@ -556,3 +556,78 @@
             border-top: 1px solid var(--border-color);
         }
 
+        /* ---- Generic form modal (openFormModal) ---- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(0, 0, 0, .55);
+        }
+        .modal {
+            display: flex;
+            flex-direction: column;
+            width: min(480px, 100%);
+            max-height: 85vh;
+            overflow: auto;
+            padding: 20px 22px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .3);
+        }
+        .modal-title {
+            margin: 0 0 16px;
+            font-size: 1.15rem;
+            color: var(--text-primary);
+        }
+        .modal-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 16px;
+        }
+        .modal-field label {
+            font-size: .85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .modal-field input,
+        .modal-field textarea {
+            width: 100%;
+            padding: 8px 10px;
+            font: inherit;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+        }
+        .modal-field input:focus,
+        .modal-field textarea:focus {
+            outline: 2px solid var(--accent-secondary);
+            outline-offset: 1px;
+        }
+        .modal-field input[aria-invalid="true"],
+        .modal-field textarea[aria-invalid="true"] {
+            border-color: var(--danger);
+        }
+        .field-error {
+            color: var(--danger);
+            font-size: .78rem;
+        }
+        .field-error:empty { display: none; }
+        .field-hint {
+            color: var(--text-secondary);
+            font-size: .76rem;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
