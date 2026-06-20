@@ -2684,6 +2684,241 @@
         banner.style.display = "flex";
     }
 
+    // ---------------------------------------------------------------------------
+    // Global keyboard shortcuts + command palette
+    // ---------------------------------------------------------------------------
+
+    // Focus the primary event search (combobox), falling back to the filter
+    // input then the native select. Selects existing text for quick replace.
+    function focusEventSearch() {
+        const combo = document.getElementById("eventCombo");
+        if (combo) { combo.focus(); if (typeof combo.select === "function") combo.select(); return; }
+        const filter = document.getElementById("filterText");
+        if (filter) { filter.focus(); if (typeof filter.select === "function") filter.select(); return; }
+        const sel = document.getElementById("eventSelect");
+        if (sel) sel.focus();
+    }
+
+    // Close the visually-topmost open overlay through its proper close path.
+    // Returns true if something was closed. Safe/idempotent when nothing open.
+    function closeTopmostOverlay() {
+        const overlays = Array.from(document.querySelectorAll(
+            ".command-palette-overlay, .emoji-picker-overlay, .modal-overlay, .diff-modal-overlay"
+        ));
+        if (!overlays.length) return false;
+        // Overlays are appended to <body>, so the last in DOM order is on top.
+        const top = overlays[overlays.length - 1];
+        if (top.classList.contains("command-palette-overlay")) {
+            closeCommandPalette();
+        } else if (top.classList.contains("emoji-picker-overlay")) {
+            closeEmojiPicker();
+        } else if (top.classList.contains("modal-overlay")) {
+            closeModal();
+        } else {
+            // Diff preview overlay: no exposed close fn, remove it directly.
+            top.remove();
+        }
+        return true;
+    }
+
+    // Single global handler (capture phase) so Escape pre-empts per-modal
+    // handlers (avoids double-close) and Cmd/Ctrl combos work from any focus.
+    function handleGlobalShortcuts(e) {
+        const mod = e.metaKey || e.ctrlKey;
+
+        // Modifier combos: safe to intercept globally — they never conflict
+        // with plain typing, copy/paste, etc. These are checked BEFORE any
+        // "is typing" gate so they also work inside text fields.
+        if (mod && !e.altKey) {
+            const key = (e.key || "").toLowerCase();
+            if (key === "s") { e.preventDefault(); showDiffPreview(); return; }
+            if (key === "f") { e.preventDefault(); focusEventSearch(); return; }
+            if (key === "k") { e.preventDefault(); openCommandPalette(); return; }
+            return; // leave every other modifier combo to the browser
+        }
+
+        // Escape: close the topmost overlay, else dismiss the latest toast.
+        if (e.key === "Escape") {
+            if (closeTopmostOverlay()) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+            }
+            const toasts = document.querySelectorAll("#toastContainer .toast");
+            if (toasts.length) {
+                const last = toasts[toasts.length - 1];
+                const closeBtn = last.querySelector(".toast-close");
+                if (closeBtn) closeBtn.click(); else last.remove();
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+            }
+            // Nothing to close: do NOT preventDefault — keep native Esc behavior.
+        }
+    }
+
+    // Build the (context-sensitive) command list. Commands needing a selected
+    // event are omitted entirely when no event is selected.
+    function buildPaletteCommands() {
+        const cmds = [
+            { label: "Nouvel event", hint: "Créer", run: () => promptNewEvent() }
+        ];
+        if (state.selected) {
+            cmds.push({ label: "Ajouter un choix", hint: "Event #" + state.selected, run: () => addChoice(state.selected) });
+            const possNames = Object.keys(
+                (state.textsData && state.textsData[state.selected] && state.textsData[state.selected].possibilities)
+                || (state.effectData && state.effectData[state.selected] && state.effectData[state.selected].possibilities)
+                || {}
+            );
+            if (possNames.length) {
+                cmds.push({ label: "Ajouter une sortie au 1er choix", hint: "« " + possNames[0] + " »", run: () => addOutcome(state.selected, possNames[0]) });
+            }
+        }
+        cmds.push({ label: "Aperçu du diff", hint: "Ctrl/Cmd+S", run: () => showDiffPreview() });
+        cmds.push({ label: "Exporter le patch", hint: "Télécharger", run: () => exportPatch() });
+        cmds.push({ label: "Aller à un event…", hint: "Ctrl/Cmd+F", run: () => focusEventSearch() });
+        cmds.push({
+            label: "Basculer le mode relecteur",
+            hint: "Relecture",
+            run: () => {
+                const cb = document.getElementById("reviewToggle");
+                if (cb) { cb.checked = !cb.checked; toggleReviewMode(cb.checked); }
+                else { toggleReviewMode(!state.reviewMode); }
+            }
+        });
+        if (typeof toggleCompareMode === "function") {
+            cmds.push({ label: "Basculer le mode comparaison", hint: "Comparaison", run: () => toggleCompareMode() });
+        }
+        return cmds;
+    }
+
+    // ---- Command palette overlay ----
+    let __paletteKeydownHandler = null;
+    let __palettePreviousFocus = null;
+
+    function closeCommandPalette() {
+        const overlay = document.querySelector(".command-palette-overlay");
+        if (!overlay) return;
+        if (__paletteKeydownHandler) {
+            document.removeEventListener("keydown", __paletteKeydownHandler);
+            __paletteKeydownHandler = null;
+        }
+        overlay.remove();
+        if (__palettePreviousFocus && typeof __palettePreviousFocus.focus === "function") {
+            __palettePreviousFocus.focus();
+        }
+        __palettePreviousFocus = null;
+    }
+
+    function openCommandPalette() {
+        if (document.querySelector(".command-palette-overlay")) return;
+        __palettePreviousFocus = document.activeElement;
+
+        const commands = buildPaletteCommands();
+        let filtered = commands.slice();
+        let active = 0;
+
+        const overlay = document.createElement("div");
+        overlay.className = "command-palette-overlay";
+
+        const card = document.createElement("div");
+        card.className = "command-palette";
+        card.setAttribute("role", "dialog");
+        card.setAttribute("aria-modal", "true");
+        card.setAttribute("aria-label", "Palette de commandes");
+
+        const search = document.createElement("input");
+        search.type = "text";
+        search.className = "command-palette-search";
+        search.placeholder = "Tapez une commande…";
+        search.setAttribute("aria-label", "Rechercher une commande");
+        search.autocomplete = "off";
+
+        const list = document.createElement("ul");
+        list.className = "command-list";
+        list.setAttribute("role", "listbox");
+
+        card.appendChild(search);
+        card.appendChild(list);
+        overlay.appendChild(card);
+
+        function render() {
+            list.innerHTML = "";
+            if (!filtered.length) {
+                const empty = document.createElement("li");
+                empty.className = "command-empty";
+                empty.textContent = "Aucune commande.";
+                list.appendChild(empty);
+                return;
+            }
+            filtered.forEach((cmd, i) => {
+                const li = document.createElement("li");
+                li.className = "command-item" + (i === active ? " command-active" : "");
+                li.setAttribute("role", "option");
+                li.setAttribute("aria-selected", i === active ? "true" : "false");
+
+                const label = document.createElement("span");
+                label.className = "command-label";
+                label.textContent = cmd.label;
+                li.appendChild(label);
+
+                if (cmd.hint) {
+                    const hint = document.createElement("span");
+                    hint.className = "command-hint";
+                    hint.textContent = cmd.hint;
+                    li.appendChild(hint);
+                }
+
+                li.addEventListener("mousedown", ev => ev.preventDefault()); // keep search focused
+                li.addEventListener("click", () => runCommand(i));
+                li.addEventListener("mousemove", () => { if (active !== i) { active = i; render(); } });
+                list.appendChild(li);
+            });
+        }
+
+        function applyFilter(q) {
+            const needle = q.trim().toLowerCase();
+            filtered = needle
+                ? commands.filter(c => c.label.toLowerCase().includes(needle))
+                : commands.slice();
+            active = 0;
+            render();
+        }
+
+        function runCommand(i) {
+            const cmd = filtered[i];
+            if (!cmd) return;
+            closeCommandPalette(); // close first, then execute
+            try { cmd.run(); } catch (err) { console.error("Commande échouée :", err); }
+        }
+
+        search.addEventListener("input", () => applyFilter(search.value));
+        overlay.addEventListener("mousedown", ev => { if (ev.target === overlay) closeCommandPalette(); });
+
+        // Arrow/Enter navigation. Escape is handled by the global capture
+        // handler (closeTopmostOverlay) so it isn't duplicated here.
+        __paletteKeydownHandler = function (ev) {
+            if (ev.key === "ArrowDown") {
+                ev.preventDefault();
+                if (filtered.length) { active = (active + 1) % filtered.length; render(); }
+            } else if (ev.key === "ArrowUp") {
+                ev.preventDefault();
+                if (filtered.length) { active = (active - 1 + filtered.length) % filtered.length; render(); }
+            } else if (ev.key === "Enter") {
+                ev.preventDefault();
+                runCommand(active);
+            }
+        };
+        document.addEventListener("keydown", __paletteKeydownHandler);
+
+        document.body.appendChild(overlay);
+        render();
+        search.focus();
+    }
+
+    // Register the single global shortcut listener (capture phase, once).
+    document.addEventListener("keydown", handleGlobalShortcuts, true);
+
     // Warn before leaving with unsaved edits.
     window.addEventListener("beforeunload", e => {
         if (hasUnsavedChanges()) { e.preventDefault(); e.returnValue = ""; }

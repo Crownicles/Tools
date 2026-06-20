@@ -93,9 +93,9 @@
 - [x] 2.5.4 — Vérif : insertion d'un emoji via picker ; chargement direct sans corriger la branche.
 
 ### 2.6 Raccourcis clavier (Nielsen #7)
-- [ ] 2.6.1 — `Cmd/Ctrl+S` = Exporter (ou ouvrir l'aperçu) ; `Cmd/Ctrl+F` = focus recherche event ; `Esc` = ferme modale/toast.
-- [ ] 2.6.2 — (Optionnel) Command palette `Cmd/Ctrl+K` : nouvel event, +choix, +sortie, exporter, aller à event, mode relecteur.
-- [ ] 2.6.3 — Vérif : raccourcis fonctionnels, n'interfèrent pas avec la saisie dans les champs.
+- [x] 2.6.1 — `Cmd/Ctrl+S` = Exporter (ou ouvrir l'aperçu) ; `Cmd/Ctrl+F` = focus recherche event ; `Esc` = ferme modale/toast.
+- [x] 2.6.2 — (Optionnel) Command palette `Cmd/Ctrl+K` : nouvel event, +choix, +sortie, exporter, aller à event, mode relecteur.
+- [x] 2.6.3 — Vérif : raccourcis fonctionnels, n'interfèrent pas avec la saisie dans les champs.
 
 ---
 
