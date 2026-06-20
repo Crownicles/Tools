@@ -234,6 +234,28 @@
         .mini-field.checkbox { flex-direction: row; align-items: center; gap: 6px; grid-column: span 2; }
         .mini-field.checkbox label { font-size: .82rem; }
 
+        /* P2.1: semantic effect groups (fieldsets) */
+        .effect-group {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px 12px;
+            margin: 0;
+        }
+        .effect-group legend {
+            font-size: .72rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            padding: 0 6px;
+        }
+        /* Per-outcome toggle row for revealing zero-value effects */
+        .conseq-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .effect-empty-hint { font-style: italic; }
+        /* Collapse zero-value effects by default; reveal when the toggle is on. */
+        .effect-zero { display: none; }
+        .conseq.show-all-effects .effect-zero { display: flex; }
+
         .summary-pills { display: flex; flex-wrap: wrap; gap: 6px; }
         .pill {
             font-size: .76rem; padding: 3px 9px; border-radius: 999px;

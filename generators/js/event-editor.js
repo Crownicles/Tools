@@ -60,9 +60,31 @@
         { key: "gems", label: "💎 Gemmes" },
         { key: "bonusExperience", label: "✨ XP bonus" },
         { key: "bonusPoints", label: "🏆 Points bonus" },
-        { key: "nextEvent", label: "➡️ Event suivant" },
-        { key: "mapLink", label: "🗺️ MapLink" }
+        { key: "nextEvent", label: "➡️ Event suivant", hint: "Identifiant numérique de l'event déclenché ensuite (-1 = aléatoire)" },
+        { key: "mapLink", label: "🗺️ MapLink", hint: "Identifiant numérique du MapLink de destination" }
     ];
+
+    // Fast lookup of a scalar field's {label, hint} by key.
+    const SCALAR_FIELD_MAP = Object.fromEntries(SCALAR_FIELDS.map(f => [f.key, f]));
+
+    // Declarative grouping of the effect controls into semantic fieldsets.
+    // Keys reference SCALAR_FIELDS entries, plus the three bespoke controls
+    // ("effect" select, "oneshot" + "forceStayInCity" checkboxes).
+    const EFFECT_GROUPS = [
+        { legend: "Ressources", keys: ["health", "money", "energy", "gems", "bonusExperience", "bonusPoints", "lostTime"] },
+        { legend: "Navigation", keys: ["nextEvent", "mapLink", "forceStayInCity"] },
+        { legend: "État & Flags", keys: ["effect", "oneshot"] }
+    ];
+
+    // Returns true when an effect control holds a "zero" / unset value:
+    // empty/null/0 for scalars, "" for the effect select, unchecked for booleans.
+    function isZeroEffect(outcome, controlKey) {
+        if (controlKey === "effect") return (outcome.effect || "") === "";
+        if (controlKey === "oneshot") return !outcome.oneshot;
+        if (controlKey === "forceStayInCity") return !outcome.forceStayInCity;
+        const v = outcome[controlKey];
+        return v == null || v === "" || Number(v) === 0;
+    }
 
     // Fields edited through the advanced JSON textarea
     const ADVANCED_FIELDS = [
@@ -811,44 +833,73 @@
         // Structured scalar editors
         const hasEffect = state.effectData[id] != null;
         if (hasEffect) {
-            html += `<div class="conseq"><div class="conseq-grid">`;
-            SCALAR_FIELDS.forEach(f => {
-                const v = outcome[f.key];
+            // --- Per-control markup builders (same ids/handlers as before, now grouped) ---
+            const renderScalarField = fkey => {
+                const f = SCALAR_FIELD_MAP[fkey];
+                const v = outcome[fkey];
                 const fieldId = genId("sf");
-                const hint = f.key === "mapLink"
-                    ? "Identifiant numérique du MapLink de destination"
-                    : f.key === "nextEvent"
-                        ? "Identifiant numérique de l'event déclenché ensuite (-1 = aléatoire)"
-                        : "";
-                html += `<div class="mini-field">
+                const zero = isZeroEffect(outcome, fkey);
+                const hint = f.hint || "";
+                return `<div class="mini-field${zero ? " effect-zero" : ""}">
                     <label for="${fieldId}">${f.label}</label>
                     <input type="number" id="${fieldId}" value="${v == null ? "" : v}"${hint ? ` title="${hint}"` : ""}
-                        onchange="editScalar('${id}','${name}','${key}','${f.key}',this.value)">
+                        onchange="editScalar('${id}','${name}','${key}','${fkey}',this.value)">
                 </div>`;
+            };
+
+            const renderEffectSelect = () => {
+                const effectId = genId("ef");
+                const zero = isZeroEffect(outcome, "effect");
+                return `<div class="mini-field${zero ? " effect-zero" : ""}">
+                    <label for="${effectId}">🎭 Effet</label>
+                    <select id="${effectId}" title="Altération d'état appliquée au joueur après ce résultat" onchange="editScalar('${id}','${name}','${key}','effect',this.value)">
+                        ${Object.keys(EFFECTS).filter(e => e !== "").map(e =>
+                            `<option value="${e === "none" ? "" : e}" ${(outcome.effect || "") === (e === "none" ? "" : e) ? "selected" : ""}>${EFFECTS[e]}</option>`
+                        ).join("")}
+                    </select>
+                </div>`;
+            };
+
+            const renderOneshot = () => {
+                const zero = isZeroEffect(outcome, "oneshot");
+                return `<div class="mini-field checkbox${zero ? " effect-zero" : ""}">
+                    <input type="checkbox" id="os-${id}-${name}-${key}" ${outcome.oneshot ? "checked" : ""}
+                        onchange="editScalar('${id}','${name}','${key}','oneshot',this.checked)">
+                    <label for="os-${id}-${name}-${key}">💀 One-shot (mort)</label>
+                </div>`;
+            };
+
+            const renderForceStay = () => {
+                const zero = isZeroEffect(outcome, "forceStayInCity");
+                return `<div class="mini-field checkbox${zero ? " effect-zero" : ""}">
+                    <input type="checkbox" id="fsc-${id}-${name}-${key}" ${outcome.forceStayInCity ? "checked" : ""}
+                        onchange="editScalar('${id}','${name}','${key}','forceStayInCity',this.checked)">
+                    <label for="fsc-${id}-${name}-${key}">🏙️ Rester en ville (forcé)</label>
+                </div>`;
+            };
+
+            const renderControl = ck => {
+                if (ck === "effect") return renderEffectSelect();
+                if (ck === "oneshot") return renderOneshot();
+                if (ck === "forceStayInCity") return renderForceStay();
+                return renderScalarField(ck);
+            };
+
+            // At least one effect set? Drives the "no effect" hint next to the toggle.
+            const anyNonZero = EFFECT_GROUPS.some(g => g.keys.some(ck => !isZeroEffect(outcome, ck)));
+
+            html += `<div class="conseq">`;
+            // Per-outcome toggle: collapsed by default (only non-zero effects shown).
+            html += `<div class="conseq-toolbar">
+                <button type="button" class="btn-mini effect-toggle" aria-expanded="false"
+                    title="Afficher aussi les effets laissés à zéro" onclick="toggleAllEffects(this)">➕ Afficher tous les effets</button>
+                ${anyNonZero ? "" : `<span class="hint effect-empty-hint">Aucun effet — cliquez pour éditer</span>`}
+            </div>`;
+            EFFECT_GROUPS.forEach(g => {
+                html += `<fieldset class="effect-group"><legend>${g.legend}</legend><div class="conseq-grid">`;
+                g.keys.forEach(ck => { html += renderControl(ck); });
+                html += `</div></fieldset>`;
             });
-            // effect select
-            const effectId = genId("ef");
-            html += `<div class="mini-field">
-                <label for="${effectId}">🎭 Effet</label>
-                <select id="${effectId}" title="Altération d'état appliquée au joueur après ce résultat" onchange="editScalar('${id}','${name}','${key}','effect',this.value)">
-                    ${Object.keys(EFFECTS).filter(e => e !== "").map(e =>
-                        `<option value="${e === "none" ? "" : e}" ${(outcome.effect || "") === (e === "none" ? "" : e) ? "selected" : ""}>${EFFECTS[e]}</option>`
-                    ).join("")}
-                </select>
-            </div>`;
-            // oneshot
-            html += `<div class="mini-field checkbox">
-                <input type="checkbox" id="os-${id}-${name}-${key}" ${outcome.oneshot ? "checked" : ""}
-                    onchange="editScalar('${id}','${name}','${key}','oneshot',this.checked)">
-                <label for="os-${id}-${name}-${key}">💀 One-shot (mort)</label>
-            </div>`;
-            // forceStayInCity
-            html += `<div class="mini-field checkbox">
-                <input type="checkbox" id="fsc-${id}-${name}-${key}" ${outcome.forceStayInCity ? "checked" : ""}
-                    onchange="editScalar('${id}','${name}','${key}','forceStayInCity',this.checked)">
-                <label for="fsc-${id}-${name}-${key}">🏙️ Rester en ville (forcé)</label>
-            </div>`;
-            html += `</div>`;
 
             // advanced JSON
             const adv = {};
@@ -936,6 +987,17 @@
         if (panel) panel.classList.toggle("compare-mode", compareMode);
         const btn = document.getElementById("compareToggle");
         if (btn) btn.setAttribute("aria-pressed", compareMode ? "true" : "false");
+    }
+
+    // Reveal / hide the zero-value effect fields within one outcome's .conseq block.
+    // Purely presentational: hidden fields stay in the DOM (display:none) so their
+    // handlers and ids are intact — editing a revealed field works normally.
+    function toggleAllEffects(btnEl) {
+        const conseq = btnEl.closest(".conseq");
+        if (!conseq) return;
+        const showing = conseq.classList.toggle("show-all-effects");
+        btnEl.setAttribute("aria-expanded", showing ? "true" : "false");
+        btnEl.textContent = showing ? "➖ Réduire" : "➕ Afficher tous les effets";
     }
 
     // ---------------------------------------------------------------------------
