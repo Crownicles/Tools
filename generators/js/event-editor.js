@@ -678,6 +678,32 @@
         if (state.selected) drawEvent(state.selected);
     }
 
+    // Ordered list of event ids used for reviewer-mode navigation.
+    function reviewEventOrder() {
+        return state.textsOrder.length ? state.textsOrder : Object.keys(state.textsData);
+    }
+
+    // Move to the previous/next event in textsOrder while in reviewer mode.
+    // Re-uses the canonical selection function so combo, native select and the
+    // draw path (renderEvent -> drawEvent -> drawEventReview) all stay in sync.
+    function reviewGoToNeighbor(direction) {
+        if (!state.reviewMode) return;
+        const order = reviewEventOrder();
+        const pos = order.indexOf(state.selected);
+        if (pos < 0) return;
+        const targetId = direction === "prev" ? order[pos - 1] : order[pos + 1];
+        if (!targetId) return;
+        selectComboOption(targetId);
+    }
+
+    // True when the event target is a typing surface, so keyboard nav never
+    // hijacks caret movement inside the auto-growing review textareas.
+    function isEditableTarget(target) {
+        if (!target) return false;
+        if (target.isContentEditable) return true;
+        return !!(target.closest && target.closest("input, textarea, select, [contenteditable='true']"));
+    }
+
     function autoGrow(el) {
         el.style.height = "auto";
         el.style.height = (el.scrollHeight + 2) + "px";
@@ -690,7 +716,33 @@
 
     function drawEventReview(id, textEv, icons, possNames) {
         const panel = document.getElementById("eventPanel");
+
+        // Navigation neighbours + completion indicators (reviewer-mode only).
+        const order = reviewEventOrder();
+        const pos = order.indexOf(id);
+        const prevId = pos > 0 ? order[pos - 1] : null;
+        const nextId = pos >= 0 && pos < order.length - 1 ? order[pos + 1] : null;
+        let totalOutcomes = 0;
+        possNames.forEach(name => {
+            totalOutcomes += Object.keys(textEv.possibilities?.[name]?.outcomes || {}).length;
+        });
+        const posLabel = pos >= 0 ? `${pos + 1} / ${order.length}` : `— / ${order.length}`;
+
         let html = `<div class="review-doc">`;
+        html += `<div class="review-nav">
+            <div class="review-nav-controls">
+                <button type="button" class="btn btn-ghost btn-mini" onclick="reviewGoToNeighbor('prev')"
+                    ${prevId ? "" : "disabled aria-disabled=\"true\""} title="Event précédent (Alt+← ou K)"
+                    aria-label="Event précédent">◀ Précédent</button>
+                <button type="button" class="btn btn-ghost btn-mini" onclick="reviewGoToNeighbor('next')"
+                    ${nextId ? "" : "disabled aria-disabled=\"true\""} title="Event suivant (Alt+→ ou J)"
+                    aria-label="Event suivant">Suivant ▶</button>
+            </div>
+            <div class="review-nav-status">
+                <span class="review-nav-pos">Event #${escapeHtml(id)} — ${posLabel}</span>
+                <span class="review-nav-summary">🎲 ${possNames.length} choix · ${totalOutcomes} sortie(s)</span>
+            </div>
+        </div>`;
         html += `<div class="review-meta"><span class="badge">🎯 Event #${id}</span> ${renderModifiedBadges()}</div>`;
 
         html += `<div class="field-label">Texte principal</div>`;
@@ -704,10 +756,14 @@
             const emoji = emojiFor(icons, name);
             const emojiInfo = icons[name];
 
+            const outcomeKeys = Object.keys(textEv.possibilities?.[name]?.outcomes || {})
+                .sort((a, b) => Number(a) - Number(b));
+
             html += `<div class="review-choice">`;
             html += `<div class="review-choice-head">
                 <span class="review-choice-emoji">${escapeHtml(emoji || "•")}</span>
                 <span class="review-choice-text ${isDefault ? "default" : ""}">${isDefault ? "Résultat par défaut" : escapeHtml(choiceText)}</span>
+                <span class="review-outcome-count" title="Nombre de sorties pour ce choix">${outcomeKeys.length} sortie(s)</span>
             </div>`;
 
             if (!isDefault) {
@@ -716,14 +772,14 @@
                 html += `<div style="height:10px"></div>`;
             }
 
-            const outcomeKeys = Object.keys(textEv.possibilities?.[name]?.outcomes || {})
-                .sort((a, b) => Number(a) - Number(b));
             outcomeKeys.forEach(k => {
                 const txt = textEv.possibilities?.[name]?.outcomes?.[k];
+                const isEmpty = txt == null || String(txt).trim() === "";
                 const outEmoji = (emojiInfo && emojiInfo.type === "object" && emojiInfo.outcomes[k]) ? emojiInfo.outcomes[k].value : null;
-                html += `<div class="review-outcome">
+                html += `<div class="review-outcome${isEmpty ? " review-empty" : ""}">
                     <span class="review-outcome-emoji">${escapeHtml(outEmoji || "↳")}</span>
                     ${reviewArea("", `editOutcomeText('${id}','${escapeHtml(name)}','${k}',this.value)`)}${escapeHtml(txt == null ? "" : txt)}</textarea>
+                    ${isEmpty ? `<span class="review-empty-chip" title="Texte de sortie manquant">⚠️ vide</span>` : ""}
                 </div>`;
             });
             html += `</div>`;
@@ -2862,6 +2918,27 @@
             if (key === "f") { e.preventDefault(); focusEventSearch(); return; }
             if (key === "k") { e.preventDefault(); openCommandPalette(); return; }
             return; // leave every other modifier combo to the browser
+        }
+
+        // Reviewer-mode fast navigation between events. Gated to review mode and
+        // only when focus is NOT in a typing surface, so it never hijacks the
+        // caret inside the review textareas nor collides with the Cmd/Ctrl combos
+        // handled above (this branch requires no Cmd/Ctrl modifier).
+        if (state.reviewMode && !isEditableTarget(e.target)) {
+            const k = (e.key || "");
+            if (e.altKey && (k === "ArrowRight" || k === "ArrowLeft")) {
+                e.preventDefault();
+                reviewGoToNeighbor(k === "ArrowRight" ? "next" : "prev");
+                return;
+            }
+            if (!e.altKey && !e.shiftKey) {
+                const lower = k.toLowerCase();
+                if (lower === "j" || lower === "k") {
+                    e.preventDefault();
+                    reviewGoToNeighbor(lower === "j" ? "next" : "prev");
+                    return;
+                }
+            }
         }
 
         // Escape: close the topmost overlay, else dismiss the latest toast.

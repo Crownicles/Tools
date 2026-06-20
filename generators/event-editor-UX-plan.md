@@ -107,7 +107,7 @@
 - [x] 3.4 — Responsive mobile : largeurs fluides (`min()`/`%`), supprimer les largeurs fixes 340/360px, toolbar repliée.
 - [x] 3.5 — Ajouter un favicon (supprime le 404, finition perçue).
 - [x] 3.6 — (Optionnel) Tokens **dark mode** prêts via les variables CSS existantes.
-- [ ] 3.7 — Renforcer le **mode relecteur** : navigation rapide entre textes, indicateurs de sorties.
+- [x] 3.7 — Renforcer le **mode relecteur** : navigation rapide entre textes, indicateurs de sorties.
 
 ---
 

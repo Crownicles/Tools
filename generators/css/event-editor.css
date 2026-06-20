@@ -355,6 +355,55 @@
         .review-text-area.event-main { font-size: 1.5rem; line-height: 1.7; font-weight: 500; }
         .review-meta { text-align: center; margin-bottom: 22px; }
 
+        /* Reviewer-mode navigation bar + completion indicators */
+        .review-nav {
+            position: sticky; top: 8px; z-index: 5;
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            flex-wrap: wrap;
+            margin: 0 0 18px; padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color); border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        .review-nav-controls { display: flex; gap: 8px; flex: 0 0 auto; }
+        .review-nav-status {
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+            font-size: .85rem; color: var(--text-secondary);
+        }
+        .review-nav-pos { font-weight: 600; }
+        .review-nav-summary {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 3px 10px; border-radius: 999px;
+            background: var(--bg-tertiary); border: 1px solid var(--border-color);
+            color: var(--text-secondary); white-space: nowrap;
+        }
+        .review-nav .btn-mini[disabled],
+        .review-nav .btn-mini[aria-disabled="true"] {
+            opacity: .45; cursor: default; pointer-events: none;
+        }
+
+        .review-choice-head .review-outcome-count {
+            margin-left: auto; flex: 0 0 auto;
+            font-size: .75rem; font-weight: 600;
+            padding: 2px 10px; border-radius: 999px;
+            background: var(--bg-tertiary); border: 1px solid var(--border-color);
+            color: var(--text-secondary); white-space: nowrap;
+        }
+
+        /* Empty outcome flagging — subtle amber, matching .badge.modified */
+        .review-outcome.review-empty .review-text-area {
+            border-color: rgba(245, 158, 11, .45);
+            background: rgba(245, 158, 11, .08);
+        }
+        .review-empty-chip {
+            flex: 0 0 auto; align-self: flex-start;
+            font-size: .72rem; font-weight: 600; white-space: nowrap;
+            padding: 2px 8px; border-radius: 999px;
+            background: rgba(245, 158, 11, .16);
+            border: 1px solid rgba(245, 158, 11, .4);
+            color: var(--warning);
+        }
+
         /* Non-blocking draft restore banner */
         .restore-banner {
             position: sticky; top: 0; z-index: 100;
