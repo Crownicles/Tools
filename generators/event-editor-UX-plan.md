@@ -44,11 +44,11 @@
 - [x] 1.3.6 — Vérif : éditer → recharger l'onglet → bannière proposée → restauration fidèle (mêmes badges modifiés, même `.patch`).
 
 ### 1.4 Suppressions réversibles (Nielsen #3)
-- [ ] 1.4.1 — Système de **toast** réutilisable (conteneur fixe, file d'attente, auto-dismiss 6–8 s, bouton « Annuler »).
-- [ ] 1.4.2 — `deleteEvent` / `deleteChoice` / `deleteOutcome` : capturer un **snapshot** de la donnée supprimée (textes + effets + emojis + ordres) avant suppression, et proposer « Annuler » qui restaure exactement.
-- [ ] 1.4.3 — Garantir que l'élément supprimé est **réellement** retiré du `.patch` tant que non annulé (pas de soft-delete fantôme dans le diff).
-- [ ] 1.4.4 — Remplacer les `confirm()` destructifs par : suppression immédiate + toast undo (modèle « delete-then-undo », plus fluide qu'un confirm).
-- [ ] 1.4.5 — Vérif : supprimer une sortie → Annuler → état identique ; supprimer sans annuler → absente du `.patch`.
+- [x] 1.4.1 — Système de **toast** réutilisable (conteneur fixe, file d'attente, auto-dismiss 6–8 s, bouton « Annuler »).
+- [x] 1.4.2 — `deleteEvent` / `deleteChoice` / `deleteOutcome` : capturer un **snapshot** de la donnée supprimée (textes + effets + emojis + ordres) avant suppression, et proposer « Annuler » qui restaure exactement.
+- [x] 1.4.3 — Garantir que l'élément supprimé est **réellement** retiré du `.patch` tant que non annulé (pas de soft-delete fantôme dans le diff).
+- [x] 1.4.4 — Remplacer les `confirm()` destructifs par : suppression immédiate + toast undo (modèle « delete-then-undo », plus fluide qu'un confirm).
+- [x] 1.4.5 — Vérif : supprimer une sortie → Annuler → état identique ; supprimer sans annuler → absente du `.patch`.
 
 ### 1.5 Barre d'action sticky (Nielsen #1, #7)
 - [ ] 1.5.1 — Barre fine **sticky** (haut) toujours visible : nom repo@branche, compteur « N fichier(s) modifié(s) », bouton **Exporter**, bouton « Aperçu du diff ».

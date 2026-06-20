@@ -285,3 +285,62 @@
         .restore-banner-msg { font-size: .92rem; font-weight: 500; }
         .restore-banner-actions { display: flex; gap: 8px; flex: 0 0 auto; }
 
+        /* ---- Toast system ---- */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: min(420px, calc(100vw - 40px));
+            pointer-events: none;
+        }
+        .toast {
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-secondary);
+            border-radius: 10px;
+            box-shadow: 0 8px 24px var(--shadow);
+            color: var(--text-primary);
+            font-size: .9rem;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity .18s ease, transform .18s ease;
+        }
+        .toast.toast-visible { opacity: 1; transform: translateY(0); }
+        .toast-success { border-left-color: var(--success); }
+        .toast-danger { border-left-color: var(--danger); }
+        .toast-msg { flex: 1 1 auto; line-height: 1.35; }
+        .toast-action {
+            flex: 0 0 auto;
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: .82rem;
+            white-space: nowrap;
+        }
+        .toast-action:hover { background: #e9eef5; }
+        .toast-close {
+            flex: 0 0 auto;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            padding: 2px 4px;
+            border-radius: 6px;
+        }
+        .toast-close:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+

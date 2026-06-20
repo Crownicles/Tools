@@ -77,6 +77,63 @@
     }
 
     // ---------------------------------------------------------------------------
+    // Toast system (reusable, no external libs)
+    // ---------------------------------------------------------------------------
+    function showToast({ message, actionLabel, onAction, duration = 4000, variant } = {}) {
+        const container = document.getElementById("toastContainer");
+        if (!container) return { dismiss() {} };
+
+        const toast = document.createElement("div");
+        toast.className = "toast" + (variant ? " toast-" + variant : "");
+
+        const msg = document.createElement("span");
+        msg.className = "toast-msg";
+        msg.textContent = message || "";
+        toast.appendChild(msg);
+
+        let timer = null;
+        let dismissed = false;
+        function dismiss() {
+            if (dismissed) return;
+            dismissed = true;
+            if (timer) { clearTimeout(timer); timer = null; }
+            toast.classList.remove("toast-visible");
+            const remove = () => { if (toast.parentNode) toast.parentNode.removeChild(toast); };
+            toast.addEventListener("transitionend", remove, { once: true });
+            setTimeout(remove, 250); // fallback if transitionend doesn't fire
+        }
+
+        if (actionLabel && typeof onAction === "function") {
+            const actionBtn = document.createElement("button");
+            actionBtn.className = "toast-action";
+            actionBtn.type = "button";
+            actionBtn.textContent = actionLabel;
+            actionBtn.addEventListener("click", () => {
+                try { onAction(); } finally { dismiss(); }
+            });
+            toast.appendChild(actionBtn);
+        }
+
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "toast-close";
+        closeBtn.type = "button";
+        closeBtn.setAttribute("aria-label", "Fermer");
+        closeBtn.textContent = "✕";
+        closeBtn.addEventListener("click", dismiss);
+        toast.appendChild(closeBtn);
+
+        container.appendChild(toast);
+        // Trigger enter transition on next frame.
+        requestAnimationFrame(() => toast.classList.add("toast-visible"));
+
+        if (duration && duration > 0) {
+            timer = setTimeout(dismiss, duration);
+        }
+
+        return { dismiss };
+    }
+
+    // ---------------------------------------------------------------------------
     // GitHub / file loading
     // ---------------------------------------------------------------------------
     async function fetchRawText(owner, repo, branch, path) {
@@ -750,6 +807,91 @@
         state.iconsOrder = state.iconsOrder.filter(x => x !== id);
     }
 
+    // ---------------------------------------------------------------------------
+    // Reversible deletes: snapshot / restore of the affected state slices
+    // ---------------------------------------------------------------------------
+    function deepClone(value) {
+        if (value === undefined) return undefined;
+        if (typeof structuredClone === "function") {
+            try { return structuredClone(value); }
+            catch (_e) { /* fall through to JSON clone for non-cloneable data */ }
+        }
+        return JSON.parse(JSON.stringify(value));
+    }
+
+    // Capture every state slice keyed by an event id BEFORE any mutation, so the
+    // delete can be fully reversed. The clones live only in the toast closure;
+    // once the toast is gone the deletion is permanent (no soft-delete ghost).
+    function snapshotForDelete(id) {
+        return {
+            id,
+            hadText: id in state.textsData,
+            textsData: deepClone(state.textsData[id]),
+            textsOrder: [...state.textsOrder],
+            hadEffectData: id in state.effectData,
+            effectData: deepClone(state.effectData[id]),
+            hadEffectOrder: id in state.effectOrder,
+            effectOrder: deepClone(state.effectOrder[id]),
+            hadEffectRaw: id in state.effectRaw,
+            effectRaw: state.effectRaw[id],
+            hadIcons: id in state.iconsEvents,
+            iconsEvents: deepClone(state.iconsEvents[id]),
+            iconsOrder: [...state.iconsOrder],
+            inCreatedEffects: state.createdEffects.has(id),
+            inDeletedEffects: state.deletedEffects.has(id),
+            inModifiedEffects: state.modified.effects.has(id),
+            selected: state.selected
+        };
+    }
+
+    // Write captured slices back into state and re-render. Restoring the whole
+    // textsData/effectData/iconsEvents slices wholesale preserves outcome and
+    // choice order, and re-aligning the Sets makes the exported patch identical
+    // to the pre-delete state.
+    function restoreFromSnapshot(snap) {
+        const { id } = snap;
+
+        // texts
+        if (snap.hadText) state.textsData[id] = snap.textsData;
+        else delete state.textsData[id];
+        state.textsOrder = [...snap.textsOrder];
+
+        // effects
+        if (snap.hadEffectData) state.effectData[id] = snap.effectData;
+        else delete state.effectData[id];
+        if (snap.hadEffectOrder) state.effectOrder[id] = snap.effectOrder;
+        else delete state.effectOrder[id];
+        if (snap.hadEffectRaw) state.effectRaw[id] = snap.effectRaw;
+        else delete state.effectRaw[id];
+
+        // icons
+        if (snap.hadIcons) state.iconsEvents[id] = snap.iconsEvents;
+        else delete state.iconsEvents[id];
+        state.iconsOrder = [...snap.iconsOrder];
+
+        // membership Sets — restore exactly so the exported patch round-trips
+        if (snap.inCreatedEffects) state.createdEffects.add(id); else state.createdEffects.delete(id);
+        if (snap.inDeletedEffects) state.deletedEffects.add(id); else state.deletedEffects.delete(id);
+        if (snap.inModifiedEffects) state.modified.effects.add(id); else state.modified.effects.delete(id);
+
+        state.selected = snap.selected;
+
+        markTexts();
+        markIcons();
+        refreshBadges();
+        scheduleSave();
+
+        populateEventSelect(document.getElementById("filterText").value);
+        if (id in state.textsData) {
+            // Re-select and redraw the restored event (works for event, choice
+            // and outcome undo since the deleted id is the selected one).
+            state.selected = id;
+            const sel = document.getElementById("eventSelect");
+            if (sel) sel.value = id;
+            drawEvent(id);
+        }
+    }
+
     // ---- event-level ----
     function promptNewEvent() {
         const id = (prompt("Identifiant du nouvel event (nombre) :") || "").trim();
@@ -778,7 +920,7 @@
     }
 
     function deleteEvent(id) {
-        if (!confirm(`Supprimer entièrement l'event #${id} (textes, effets, emojis) ?`)) return;
+        const snap = snapshotForDelete(id);
 
         delete state.textsData[id];
         state.textsOrder = state.textsOrder.filter(x => x !== id);
@@ -803,6 +945,13 @@
         document.getElementById("eventPanel").innerHTML =
             `<div class="placeholder"><div class="ico">🗑️</div><p>Event #${id} supprimé. Sélectionnez un autre event.</p></div>`;
         setStatus(`✅ Event #${id} supprimé. Exportez le patch pour appliquer la suppression.`, "success");
+        showToast({
+            message: `Event #${id} supprimé.`,
+            actionLabel: "Annuler",
+            duration: 7000,
+            variant: "danger",
+            onAction: () => restoreFromSnapshot(snap)
+        });
     }
 
     function editTriggers(id, rawValue) {
@@ -847,7 +996,7 @@
     }
 
     function deleteChoice(id, name) {
-        if (!confirm(`Supprimer le choix « ${name} » et toutes ses sorties ?`)) return;
+        const snap = snapshotForDelete(id);
         if (state.textsData[id] && state.textsData[id].possibilities) delete state.textsData[id].possibilities[name];
         markTexts();
         if (state.effectData[id] && state.effectData[id].possibilities) delete state.effectData[id].possibilities[name];
@@ -855,6 +1004,13 @@
         iconDeletePossibility(id, name);
         markIcons();
         drawEvent(id);
+        showToast({
+            message: `Choix « ${name} » supprimé.`,
+            actionLabel: "Annuler",
+            duration: 7000,
+            variant: "danger",
+            onAction: () => restoreFromSnapshot(snap)
+        });
     }
 
     // ---- outcome level ----
@@ -889,7 +1045,7 @@
     }
 
     function deleteOutcome(id, name, key) {
-        if (!confirm(`Supprimer la sortie ${key} du choix « ${name} » ?`)) return;
+        const snap = snapshotForDelete(id);
         if (state.textsData[id]?.possibilities?.[name]?.outcomes) delete state.textsData[id].possibilities[name].outcomes[key];
         markTexts();
         if (state.effectData[id]?.possibilities?.[name]?.outcomes) delete state.effectData[id].possibilities[name].outcomes[key];
@@ -898,6 +1054,16 @@
         markIcons();
         drawEvent(id);
         reopenChoice(name);
+        showToast({
+            message: `Sortie ${key} du choix « ${name} » supprimée.`,
+            actionLabel: "Annuler",
+            duration: 7000,
+            variant: "danger",
+            onAction: () => {
+                restoreFromSnapshot(snap);
+                reopenChoice(name);
+            }
+        });
     }
 
 
