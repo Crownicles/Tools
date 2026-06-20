@@ -1,0 +1,1274 @@
+    // ---------------------------------------------------------------------------
+    // State
+    // ---------------------------------------------------------------------------
+    const PATHS = {
+        texts: "Lang/fr/events.json",
+        icons: "Lib/src/CrowniclesIcons.ts",
+        effect: id => `Core/resources/events/${id}.json`
+    };
+
+    const state = {
+        source: null,               // {owner, repo, branch} when loaded from GitHub
+        textsRaw: null,             // raw string of events.json
+        textsData: null,            // parsed object
+        textsOrder: [],             // original root key order
+        iconsRaw: null,             // raw string of CrowniclesIcons.ts
+        iconsEvents: {},            // id -> { order:[names], possibilities:{name:entry}, tailWs }
+        iconsOrder: [],             // event id order inside the events: {} block
+        iconsBlock: null,           // { start, end, tailWs } span of the events: {} block in iconsRaw
+        effectRaw: {},              // id -> raw string of N.json
+        effectData: {},             // id -> parsed object
+        effectOrder: {},            // id -> root key order
+        selected: null,             // selected event id
+        reviewMode: false,          // distraction-free large-text proofreading mode
+        modified: { texts: false, icons: false, effects: new Set() },
+        createdEffects: new Set(),  // effect files that are brand new (export as new file)
+        deletedEffects: new Set()   // effect files removed via event deletion (export as deleted file)
+    };
+
+    // French labels for effects (from Lib/src/types/Effect.ts)
+    const EFFECTS = {
+        "": "Aucun (none)",
+        none: "Aucun",
+        occupied: "Occupé",
+        sleeping: "Endormi",
+        drunk: "Ivre",
+        freezing: "Gelé",
+        feetHurt: "Pieds blessés",
+        hurt: "Blessé",
+        sick: "Malade",
+        jailed: "Emprisonné",
+        injured: "Gravement blessé",
+        starving: "Affamé",
+        confounded: "Confus",
+        scared: "Effrayé",
+        lost: "Perdu",
+        fished: "Pêché",
+        dead: "Mort"
+    };
+
+    // Scalar fields shown as structured inputs
+    const SCALAR_FIELDS = [
+        { key: "lostTime", label: "⏱️ Temps perdu (min)" },
+        { key: "health", label: "❤️ PV" },
+        { key: "money", label: "💰 Argent" },
+        { key: "energy", label: "⚡ Énergie" },
+        { key: "gems", label: "💎 Gemmes" },
+        { key: "bonusExperience", label: "✨ XP bonus" },
+        { key: "bonusPoints", label: "🏆 Points bonus" },
+        { key: "nextEvent", label: "➡️ Event suivant" },
+        { key: "mapLink", label: "🗺️ MapLink" }
+    ];
+
+    // Fields edited through the advanced JSON textarea
+    const ADVANCED_FIELDS = [
+        "randomItem", "randomPet", "givePet",
+        "mapTypesDestination", "mapTypesExcludeDestination",
+        "tags", "condition"
+    ];
+
+    // ---------------------------------------------------------------------------
+    // Status helpers
+    // ---------------------------------------------------------------------------
+    function setStatus(msg, type) {
+        const el = document.getElementById("status");
+        el.textContent = msg;
+        el.className = "status " + (type || "");
+    }
+
+    // ---------------------------------------------------------------------------
+    // GitHub / file loading
+    // ---------------------------------------------------------------------------
+    async function fetchRawText(owner, repo, branch, path) {
+        const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+        const resp = await fetch(url);
+        if (!resp.ok) {
+            throw new Error(`${path} : ${resp.status} ${resp.statusText}`);
+        }
+        return resp.text();
+    }
+
+    async function loadFromGithub() {
+        const owner = document.getElementById("repoOwner").value.trim();
+        const repo = document.getElementById("repoName").value.trim();
+        const branch = document.getElementById("branchName").value.trim();
+        if (!owner || !repo || !branch) {
+            setStatus("⚠️ Renseignez le propriétaire, le repository et la branche.", "error");
+            return;
+        }
+
+        const btn = document.getElementById("loadBtn");
+        const spinner = document.getElementById("loadSpinner");
+        const btnText = document.getElementById("loadBtnText");
+        btn.disabled = true; spinner.style.display = "block"; btnText.textContent = "Chargement...";
+
+        try {
+            setStatus("📡 Chargement des textes (events.json)...", "loading");
+            const textsRaw = await fetchRawText(owner, repo, branch, PATHS.texts);
+            setStatus("😀 Chargement des emojis (CrowniclesIcons.ts)...", "loading");
+            const iconsRaw = await fetchRawText(owner, repo, branch, PATHS.icons);
+
+            resetState();
+            state.source = { owner, repo, branch };
+            ingestTexts(textsRaw);
+            ingestIcons(iconsRaw);
+
+            finishLoad(`Chargé depuis ${owner}/${repo}@${branch}`);
+        } catch (err) {
+            console.error(err);
+            setStatus(`❌ Erreur : ${err.message}`, "error");
+        } finally {
+            btn.disabled = false; spinner.style.display = "none"; btnText.textContent = "🚀 Charger depuis GitHub";
+        }
+    }
+
+    function onLocalFile(kind, input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            try {
+                if (kind === "texts") {
+                    if (!state.textsRaw && !state.iconsRaw) resetState();
+                    ingestTexts(reader.result);
+                    document.getElementById("box-texts").classList.add("loaded");
+                } else if (kind === "icons") {
+                    ingestIcons(reader.result);
+                    document.getElementById("box-icons").classList.add("loaded");
+                }
+                if (state.textsData) finishLoad("Fichiers locaux chargés");
+            } catch (err) {
+                setStatus(`❌ ${file.name} : ${err.message}`, "error");
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function onLocalEffects(input) {
+        const files = [...input.files];
+        let loaded = 0;
+        files.forEach(file => {
+            const id = file.name.replace(/\.json$/, "");
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    ingestEffect(id, reader.result);
+                    loaded++;
+                    document.getElementById("box-effects").classList.add("loaded");
+                    if (loaded === files.length) {
+                        setStatus(`✅ ${loaded} fichier(s) d'effets chargé(s).`, "success");
+                        if (state.selected) renderEvent(state.selected);
+                    }
+                } catch (err) {
+                    setStatus(`❌ ${file.name} : ${err.message}`, "error");
+                }
+            };
+            reader.readAsText(file);
+        });
+    }
+
+    function resetState() {
+        state.source = null;
+        state.textsRaw = state.textsData = state.iconsRaw = null;
+        state.textsOrder = [];
+        state.iconsEvents = {};
+        state.iconsOrder = [];
+        state.iconsBlock = null;
+        state.effectRaw = {}; state.effectData = {}; state.effectOrder = {};
+        state.selected = null;
+        state.modified = { texts: false, icons: false, effects: new Set() };
+        state.createdEffects = new Set();
+        state.deletedEffects = new Set();
+    }
+
+    function ingestTexts(raw) {
+        state.textsRaw = raw;
+        state.textsData = JSON.parse(raw);
+        state.textsOrder = captureRootOrder(raw);
+        state.modified.texts = false;
+    }
+
+    function ingestIcons(raw) {
+        state.iconsRaw = raw;
+        const parsed = parseIconsEvents(raw);
+        state.iconsEvents = parsed.events;
+        state.iconsOrder = parsed.order;
+        state.iconsBlock = parsed.block;
+        state.modified.icons = false;
+    }
+
+    function ingestEffect(id, raw) {
+        state.effectRaw[id] = raw;
+        state.effectData[id] = JSON.parse(raw);
+        state.effectOrder[id] = captureRootOrder(raw);
+        state.modified.effects.delete(id);
+    }
+
+    function finishLoad(message) {
+        document.getElementById("selectorPanel").style.display = "block";
+        document.getElementById("exportBtn").disabled = false;
+        populateEventSelect("");
+        setStatus(`✅ ${message} — ${Object.keys(state.textsData).length} events disponibles.`, "success");
+    }
+
+    // ---------------------------------------------------------------------------
+    // Event selector
+    // ---------------------------------------------------------------------------
+    function populateEventSelect(filter) {
+        const select = document.getElementById("eventSelect");
+        const ids = state.textsOrder.length ? state.textsOrder : Object.keys(state.textsData);
+        const f = (filter || "").toLowerCase().trim();
+        const previous = state.selected;
+        select.innerHTML = "";
+        const placeholder = document.createElement("option");
+        placeholder.value = ""; placeholder.textContent = "— choisir un event —";
+        select.appendChild(placeholder);
+        ids.forEach(id => {
+            const ev = state.textsData[id];
+            if (!ev) return;
+            const text = (ev.text || "").replace(/\{emote:[^}]+\}/g, "").trim();
+            const label = `#${id} — ${text.slice(0, 70)}${text.length > 70 ? "…" : ""}`;
+            if (f && !label.toLowerCase().includes(f) && id !== f) return;
+            const opt = document.createElement("option");
+            opt.value = id; opt.textContent = label;
+            if (id === previous) opt.selected = true;
+            select.appendChild(opt);
+        });
+    }
+
+    function onSelectEvent(id) {
+        if (!id) return;
+        state.selected = id;
+        renderEvent(id);
+    }
+
+    async function renderEvent(id) {
+        const panel = document.getElementById("eventPanel");
+        // Lazily fetch effect data from GitHub if needed
+        if (!state.effectData[id]) {
+            if (state.source) {
+                panel.innerHTML = `<div class="placeholder"><div class="ico">⏳</div><p>Chargement des effets de l'event #${id}...</p></div>`;
+                try {
+                    const raw = await fetchRawText(state.source.owner, state.source.repo, state.source.branch, PATHS.effect(id));
+                    ingestEffect(id, raw);
+                } catch (err) {
+                    panel.innerHTML = `<div class="placeholder"><div class="ico">⚠️</div><p>Effets introuvables pour #${id} (${err.message}).<br>Les conséquences ne pourront pas être éditées.</p></div>`;
+                }
+            }
+        }
+        drawEvent(id);
+    }
+
+    // ---------------------------------------------------------------------------
+    // Rendering
+    // ---------------------------------------------------------------------------
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    function drawEvent(id) {
+        const panel = document.getElementById("eventPanel");
+        const textEv = state.textsData[id] || { possibilities: {} };
+        const effEv = state.effectData[id] || { possibilities: {} };
+        const icons = state.iconsEvents[id] ? state.iconsEvents[id].possibilities : {};
+
+        const possNames = [...new Set([
+            ...Object.keys(textEv.possibilities || {}),
+            ...Object.keys(effEv.possibilities || {})
+        ])];
+        // Show real choices first (those with a text), then default ones (end / no text)
+        possNames.sort((a, b) => {
+            const ta = textEv.possibilities?.[a]?.text ? 0 : 1;
+            const tb = textEv.possibilities?.[b]?.text ? 0 : 1;
+            if (ta !== tb) return ta - tb;
+            return a.localeCompare(b);
+        });
+
+        if (state.reviewMode) {
+            drawEventReview(id, textEv, icons, possNames);
+            return;
+        }
+
+        let html = "";
+        html += `<div class="event-meta">
+            <span class="badge">🎯 Event #${id}</span>
+            <span class="badge">🎲 ${possNames.length} possibilité(s)</span>
+            ${renderModifiedBadges()}
+        </div>`;
+
+        const triggersStr = ((effEv.triggers || []).map(t => t.mapId)).join(", ");
+        html += `<div class="event-toolbar">
+            <div class="mini-field" style="flex:1; min-width:220px">
+                <label>🧭 Triggers — mapId déclencheurs (séparés par des virgules)</label>
+                <input type="text" value="${escapeHtml(triggersStr)}" placeholder="ex : 6, 10"
+                    onchange="editTriggers('${id}', this.value)">
+            </div>
+            <button class="btn-mini" onclick="addChoice('${id}')">➕ Ajouter un choix</button>
+            <button class="btn-mini btn-mini-danger" onclick="deleteEvent('${id}')">🗑️ Supprimer l'event</button>
+        </div>`;
+
+        html += `<div class="main-text-box">
+            <div class="field-label">Texte principal de l'event</div>
+            <textarea rows="3" oninput="editMainText('${id}', this.value)">${escapeHtml(textEv.text || "")}</textarea>
+        </div>`;
+
+        html += `<div class="choices">`;
+        possNames.forEach(name => {
+            html += renderChoice(id, name, textEv, effEv, icons);
+        });
+        html += `</div>`;
+
+        panel.innerHTML = html;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Reviewer mode: distraction-free, large texts, auto-growing editable areas
+    // ---------------------------------------------------------------------------
+    function toggleReviewMode(on) {
+        state.reviewMode = on;
+        document.body.classList.toggle("review-mode", on);
+        if (state.selected) drawEvent(state.selected);
+    }
+
+    function autoGrow(el) {
+        el.style.height = "auto";
+        el.style.height = (el.scrollHeight + 2) + "px";
+    }
+
+    function reviewArea(extraClass, oninput) {
+        // returns the opening tag string; caller supplies inner text + closing tag
+        return `<textarea class="review-text-area ${extraClass}" rows="1" oninput="autoGrow(this);${oninput}">`;
+    }
+
+    function drawEventReview(id, textEv, icons, possNames) {
+        const panel = document.getElementById("eventPanel");
+        let html = `<div class="review-doc">`;
+        html += `<div class="review-meta"><span class="badge">🎯 Event #${id}</span> ${renderModifiedBadges()}</div>`;
+
+        html += `<div class="field-label">Texte principal</div>`;
+        html += reviewArea("event-main", `editMainText('${id}', this.value)`)
+            + escapeHtml(textEv.text || "") + `</textarea>`;
+        html += `<div style="height:18px"></div>`;
+
+        possNames.forEach(name => {
+            const choiceText = textEv.possibilities?.[name]?.text || "";
+            const isDefault = !choiceText;
+            const emoji = emojiFor(icons, name);
+            const emojiInfo = icons[name];
+
+            html += `<div class="review-choice">`;
+            html += `<div class="review-choice-head">
+                <span class="review-choice-emoji">${escapeHtml(emoji || "•")}</span>
+                <span class="review-choice-text ${isDefault ? "default" : ""}">${isDefault ? "Résultat par défaut" : escapeHtml(choiceText)}</span>
+            </div>`;
+
+            if (!isDefault) {
+                html += reviewArea("", `editChoiceText('${id}','${escapeHtml(name)}',this.value)`)
+                    + escapeHtml(choiceText) + `</textarea>`;
+                html += `<div style="height:10px"></div>`;
+            }
+
+            const outcomeKeys = Object.keys(textEv.possibilities?.[name]?.outcomes || {})
+                .sort((a, b) => Number(a) - Number(b));
+            outcomeKeys.forEach(k => {
+                const txt = textEv.possibilities?.[name]?.outcomes?.[k];
+                const outEmoji = (emojiInfo && emojiInfo.type === "object" && emojiInfo.outcomes[k]) ? emojiInfo.outcomes[k].value : null;
+                html += `<div class="review-outcome">
+                    <span class="review-outcome-emoji">${escapeHtml(outEmoji || "↳")}</span>
+                    ${reviewArea("", `editOutcomeText('${id}','${escapeHtml(name)}','${k}',this.value)`)}${escapeHtml(txt == null ? "" : txt)}</textarea>
+                </div>`;
+            });
+            html += `</div>`;
+        });
+
+        html += `</div>`;
+        panel.innerHTML = html;
+        // size all textareas to their content
+        panel.querySelectorAll(".review-text-area").forEach(autoGrow);
+    }
+
+    function renderModifiedBadges() {
+        const parts = [];
+        if (state.modified.texts) parts.push(`<span class="badge modified">✎ events.json</span>`);
+        if (state.modified.icons) parts.push(`<span class="badge modified">✎ CrowniclesIcons.ts</span>`);
+        state.modified.effects.forEach(id => parts.push(`<span class="badge modified">✎ events/${id}.json</span>`));
+        return parts.join("");
+    }
+
+    function emojiFor(icons, name) {
+        const info = icons[name];
+        if (!info) return null;
+        if (info.type === "string") return info.value;
+        if (info.type === "object") {
+            const first = Object.values(info.outcomes)[0];
+            return first ? first.value : null;
+        }
+        return null;
+    }
+
+    function renderChoice(id, name, textEv, effEv, icons) {
+        const choiceText = textEv.possibilities?.[name]?.text || "";
+        const isDefault = !choiceText;
+        const emoji = emojiFor(icons, name);
+        const emojiInfo = icons[name];
+
+        const outcomeKeys = [...new Set([
+            ...Object.keys(textEv.possibilities?.[name]?.outcomes || {}),
+            ...Object.keys(effEv.possibilities?.[name]?.outcomes || {})
+        ])].sort((a, b) => Number(a) - Number(b));
+
+        let emojiControl;
+        if (emojiInfo && emojiInfo.type === "string") {
+            emojiControl = `<input class="emoji-input" value="${escapeHtml(emoji || "")}" title="Emoji du choix"
+                onchange="editEmoji('${id}','${name}',null,this.value)">`;
+        } else {
+            emojiControl = `<div class="choice-emoji">${escapeHtml(emoji || "❓")}</div>`;
+        }
+
+        let head = `<div class="choice-header" onclick="toggleChoice(this)">
+            ${emojiControl}
+            <div class="choice-title">${escapeHtml(name)} ${isDefault ? '<span class="default-tag">— résultat par défaut</span>' : ""}</div>
+            <button class="btn-mini btn-mini-danger" title="Supprimer le choix"
+                onclick="event.stopPropagation(); deleteChoice('${id}','${name}')">🗑️</button>
+            <div class="choice-toggle">▶</div>
+        </div>`;
+
+        let body = `<div class="choice-body">`;
+        if (!isDefault) {
+            body += `<div class="choice-text-edit">
+                <div class="field-label">Texte du choix (bouton)</div>
+                <textarea rows="2" oninput="editChoiceText('${id}','${name}',this.value)">${escapeHtml(choiceText)}</textarea>
+            </div>`;
+        }
+        body += `<div class="outcomes-scroll"><div class="outcomes">`;
+        outcomeKeys.forEach(k => {
+            body += renderOutcome(id, name, k, textEv, effEv, emojiInfo);
+        });
+        body += `</div></div>`;
+        body += `<button class="btn-mini add-outcome-btn" onclick="addOutcome('${id}','${name}')">➕ Ajouter une sortie</button>`;
+        body += `</div>`;
+
+        return `<div class="choice-card">${head}${body}</div>`;
+    }
+
+    function renderOutcome(id, name, key, textEv, effEv, emojiInfo) {
+        const text = textEv.possibilities?.[name]?.outcomes?.[key];
+        const outcome = effEv.possibilities?.[name]?.outcomes?.[key] || {};
+        const outEmoji = (emojiInfo && emojiInfo.type === "object" && emojiInfo.outcomes[key]) ? emojiInfo.outcomes[key].value : null;
+
+        let html = `<div class="outcome-card">`;
+        html += `<div class="outcome-head">
+            <span class="outcome-tag">Sortie ${key}</span>
+            <div class="outcome-head-right">
+                ${outEmoji !== null ? `<input class="emoji-input" value="${escapeHtml(outEmoji)}" onchange="editEmoji('${id}','${name}','${key}',this.value)">` : ""}
+                <button class="btn-mini btn-mini-danger" title="Supprimer la sortie"
+                    onclick="deleteOutcome('${id}','${name}','${key}')">🗑️</button>
+            </div>
+        </div>`;
+
+        html += `<div>
+            <div class="field-label">Texte du résultat</div>
+            <textarea rows="4" oninput="editOutcomeText('${id}','${name}','${key}',this.value)">${escapeHtml(text == null ? "" : text)}</textarea>
+        </div>`;
+
+        // Summary pills
+        html += `<div class="summary-pills">${summaryPills(outcome)}</div>`;
+
+        // Structured scalar editors
+        const hasEffect = state.effectData[id] != null;
+        if (hasEffect) {
+            html += `<div class="conseq"><div class="conseq-grid">`;
+            SCALAR_FIELDS.forEach(f => {
+                const v = outcome[f.key];
+                html += `<div class="mini-field">
+                    <label>${f.label}</label>
+                    <input type="number" value="${v == null ? "" : v}"
+                        onchange="editScalar('${id}','${name}','${key}','${f.key}',this.value)">
+                </div>`;
+            });
+            // effect select
+            html += `<div class="mini-field">
+                <label>🎭 Effet</label>
+                <select onchange="editScalar('${id}','${name}','${key}','effect',this.value)">
+                    ${Object.keys(EFFECTS).filter(e => e !== "").map(e =>
+                        `<option value="${e === "none" ? "" : e}" ${(outcome.effect || "") === (e === "none" ? "" : e) ? "selected" : ""}>${EFFECTS[e]}</option>`
+                    ).join("")}
+                </select>
+            </div>`;
+            // oneshot
+            html += `<div class="mini-field checkbox">
+                <input type="checkbox" id="os-${id}-${name}-${key}" ${outcome.oneshot ? "checked" : ""}
+                    onchange="editScalar('${id}','${name}','${key}','oneshot',this.checked)">
+                <label for="os-${id}-${name}-${key}">💀 One-shot (mort)</label>
+            </div>`;
+            // forceStayInCity
+            html += `<div class="mini-field checkbox">
+                <input type="checkbox" id="fsc-${id}-${name}-${key}" ${outcome.forceStayInCity ? "checked" : ""}
+                    onchange="editScalar('${id}','${name}','${key}','forceStayInCity',this.checked)">
+                <label for="fsc-${id}-${name}-${key}">🏙️ Rester en ville (forcé)</label>
+            </div>`;
+            html += `</div>`;
+
+            // advanced JSON
+            const adv = {};
+            ADVANCED_FIELDS.forEach(k => { if (outcome[k] !== undefined) adv[k] = outcome[k]; });
+            const advJson = Object.keys(adv).length ? JSON.stringify(adv, null, 2) : "";
+            html += `<details class="advanced" ${advJson ? "open" : ""}>
+                <summary>Champs avancés (JSON) — randomItem, givePet, condition, tags…</summary>
+                <textarea rows="${advJson ? Math.min(12, advJson.split("\n").length + 1) : 3}"
+                    placeholder='{ "randomItem": { "rarity": { "min": 2 } } }'
+                    onchange="editAdvanced('${id}','${name}','${key}',this.value,this)">${escapeHtml(advJson)}</textarea>
+                <div class="json-error">JSON invalide — modification ignorée.</div>
+            </details>`;
+            html += `</div>`;
+        } else {
+            html += `<div class="hint">Effets non chargés pour cet event.</div>`;
+        }
+
+        html += `</div>`;
+        return html;
+    }
+
+    function fmtSigned(n) { return n > 0 ? `+${n}` : `${n}`; }
+
+    function summaryPills(o) {
+        const pills = [];
+        const add = (cls, txt) => pills.push(`<span class="pill ${cls}">${txt}</span>`);
+        if (o.lostTime) add("neg", `⏱️ ${o.lostTime} min`);
+        if (o.health != null && o.health !== 0) add(o.health > 0 ? "pos" : "neg", `❤️ ${fmtSigned(o.health)}`);
+        if (o.money != null && o.money !== 0) add(o.money > 0 ? "pos" : "neg", `💰 ${fmtSigned(o.money)}`);
+        if (o.energy != null && o.energy !== 0) add(o.energy > 0 ? "pos" : "neg", `⚡ ${fmtSigned(o.energy)}`);
+        if (o.gems != null && o.gems !== 0) add(o.gems > 0 ? "pos" : "neg", `💎 ${fmtSigned(o.gems)}`);
+        if (o.effect) add("special", `🎭 ${EFFECTS[o.effect] || o.effect}`);
+        if (o.randomItem) add("special", "🎁 Objet aléatoire");
+        if (o.randomPet) add("special", "🐾 Familier aléatoire");
+        if (o.givePet) add("special", `🐾 Familier ${(o.givePet.petIds || []).join(", ")}`);
+        if (o.oneshot) add("neg", "💀 Mort");
+        if (o.forceStayInCity) add("special", "🏙️ Reste en ville");
+        if (o.nextEvent != null) add("special", `➡️ Event ${o.nextEvent}`);
+        if (o.bonusExperience) add("pos", `✨ XP ${fmtSigned(o.bonusExperience)}`);
+        if (o.bonusPoints) add("pos", `🏆 Pts ${fmtSigned(o.bonusPoints)}`);
+        if (o.mapLink != null) add("special", `🗺️ Lien ${o.mapLink}`);
+        if (o.tags) add("special", `🏷️ ${o.tags.join(", ")}`);
+        if (o.condition) add("special", "🧩 Condition");
+        if (!pills.length) add("", "Aucune conséquence");
+        return pills.join("");
+    }
+
+    function toggleChoice(headerEl) {
+        headerEl.parentElement.classList.toggle("open");
+    }
+
+    // ---------------------------------------------------------------------------
+    // Edit handlers
+    // ---------------------------------------------------------------------------
+    function ensureTextPossibility(id, name) {
+        const ev = state.textsData[id] || (state.textsData[id] = { possibilities: {} });
+        if (!ev.possibilities) ev.possibilities = {};
+        if (!ev.possibilities[name]) ev.possibilities[name] = { outcomes: {} };
+        if (!ev.possibilities[name].outcomes) ev.possibilities[name].outcomes = {};
+        return ev.possibilities[name];
+    }
+
+    function editMainText(id, value) {
+        state.textsData[id].text = value;
+        markTexts();
+    }
+    function editChoiceText(id, name, value) {
+        const poss = ensureTextPossibility(id, name);
+        // keep "outcomes" before "text" to match file convention
+        const outcomes = poss.outcomes;
+        delete poss.outcomes; delete poss.text;
+        poss.outcomes = outcomes;
+        if (value !== "") poss.text = value;
+        markTexts();
+    }
+    function editOutcomeText(id, name, key, value) {
+        const poss = ensureTextPossibility(id, name);
+        poss.outcomes[key] = value;
+        markTexts();
+    }
+    function markTexts() {
+        if (!state.modified.texts) { state.modified.texts = true; refreshBadges(); }
+    }
+
+    function editScalar(id, name, key, field, rawValue) {
+        const eff = state.effectData[id];
+        if (!eff) return;
+        if (!eff.possibilities[name]) eff.possibilities[name] = { outcomes: {} };
+        if (!eff.possibilities[name].outcomes[key]) eff.possibilities[name].outcomes[key] = {};
+        const outcome = eff.possibilities[name].outcomes[key];
+
+        if (field === "oneshot") {
+            if (rawValue) outcome.oneshot = true; else delete outcome.oneshot;
+        } else if (field === "forceStayInCity") {
+            if (rawValue) outcome.forceStayInCity = true; else delete outcome.forceStayInCity;
+        } else if (field === "effect") {
+            if (rawValue) outcome.effect = rawValue; else delete outcome.effect;
+        } else {
+            const num = rawValue === "" ? null : Number(rawValue);
+            if (num === null || Number.isNaN(num) || num === 0) {
+                delete outcome[field];
+            } else {
+                outcome[field] = num;
+            }
+        }
+        eff.possibilities[name].outcomes[key] = sortKeys(outcome);
+        markEffect(id);
+        // Re-render to update summary pills
+        drawEvent(id);
+        reopenChoice(name);
+    }
+
+    function editAdvanced(id, name, key, rawValue, ta) {
+        const eff = state.effectData[id];
+        if (!eff) return;
+        const errEl = ta.parentElement.querySelector(".json-error");
+        let parsed = {};
+        if (rawValue.trim() !== "") {
+            try { parsed = JSON.parse(rawValue); }
+            catch (e) { errEl.style.display = "block"; return; }
+        }
+        errEl.style.display = "none";
+        if (!eff.possibilities[name]) eff.possibilities[name] = { outcomes: {} };
+        if (!eff.possibilities[name].outcomes[key]) eff.possibilities[name].outcomes[key] = {};
+        const outcome = eff.possibilities[name].outcomes[key];
+        ADVANCED_FIELDS.forEach(k => delete outcome[k]);
+        Object.assign(outcome, parsed);
+        eff.possibilities[name].outcomes[key] = sortKeys(outcome);
+        markEffect(id);
+        drawEvent(id);
+        reopenChoice(name);
+    }
+
+    function editEmoji(id, name, outcomeKey, value) {
+        const info = state.iconsEvents[id] && state.iconsEvents[id].possibilities[name];
+        if (!info) return;
+        if (outcomeKey === null && info.type === "string") {
+            info.value = value;
+        } else if (outcomeKey !== null && info.type === "object" && info.outcomes[outcomeKey]) {
+            info.outcomes[outcomeKey].value = value;
+        }
+        markIcons();
+    }
+
+    // ---------------------------------------------------------------------------
+    // Structural editing: add / delete events, choices, outcomes
+    // ---------------------------------------------------------------------------
+    const PLACEHOLDER_EMOJI = "❓";
+    const VALID_NAME = /^[A-Za-z][A-Za-z0-9_]*$/;
+
+    function ensureEffectEvent(id) {
+        if (!state.effectData[id]) {
+            state.effectData[id] = { possibilities: {}, triggers: [] };
+            state.effectOrder[id] = ["possibilities", "triggers"];
+        }
+        if (!state.effectData[id].possibilities) state.effectData[id].possibilities = {};
+        return state.effectData[id];
+    }
+
+    function ensureTextEvent(id) {
+        if (!state.textsData[id]) state.textsData[id] = { text: "", possibilities: {} };
+        if (!state.textsData[id].possibilities) state.textsData[id].possibilities = {};
+        return state.textsData[id];
+    }
+
+    // ---- icons structural helpers ----
+    function iconInsertIdOrdered(id) {
+        if (state.iconsOrder.includes(id)) return;
+        let pos = state.iconsOrder.findIndex(x => x > id); // lexicographic, matches file convention
+        if (pos < 0) pos = state.iconsOrder.length;
+        state.iconsOrder.splice(pos, 0, id);
+    }
+    function iconEnsureEvent(id) {
+        if (!state.iconsEvents[id]) {
+            state.iconsEvents[id] = { order: [], possibilities: {}, tailWs: "\n\t\t" };
+            iconInsertIdOrdered(id);
+        }
+        return state.iconsEvents[id];
+    }
+    function iconAddPossibility(id, name, isDefault) {
+        const ev = iconEnsureEvent(id);
+        if (ev.possibilities[name]) return;
+        ev.possibilities[name] = isDefault
+            ? { type: "object", outcomes: { "0": { value: PLACEHOLDER_EMOJI } }, outcomeOrder: ["0"] }
+            : { type: "string", value: PLACEHOLDER_EMOJI };
+        ev.order.push(name);
+    }
+    function iconDeletePossibility(id, name) {
+        const ev = state.iconsEvents[id];
+        if (!ev || !ev.possibilities[name]) return;
+        delete ev.possibilities[name];
+        ev.order = ev.order.filter(n => n !== name);
+    }
+    function iconAddOutcome(id, name, key) {
+        const ev = state.iconsEvents[id];
+        const e = ev && ev.possibilities[name];
+        if (!e || e.type !== "object" || e.outcomes[key]) return;
+        e.outcomes[key] = { value: PLACEHOLDER_EMOJI };
+        e.outcomeOrder.push(key);
+        e.outcomeOrder.sort((a, b) => Number(a) - Number(b));
+    }
+    function iconDeleteOutcome(id, name, key) {
+        const ev = state.iconsEvents[id];
+        const e = ev && ev.possibilities[name];
+        if (!e || e.type !== "object" || !e.outcomes[key]) return;
+        delete e.outcomes[key];
+        e.outcomeOrder = e.outcomeOrder.filter(k => k !== key);
+        if (e.outcomeOrder.length === 0) iconDeletePossibility(id, name);
+    }
+    function iconDeleteEvent(id) {
+        delete state.iconsEvents[id];
+        state.iconsOrder = state.iconsOrder.filter(x => x !== id);
+    }
+
+    // ---- event-level ----
+    function promptNewEvent() {
+        const id = (prompt("Identifiant du nouvel event (nombre) :") || "").trim();
+        if (!id) return;
+        if (!/^\d+$/.test(id)) { setStatus("⚠️ L'identifiant doit être un nombre.", "error"); return; }
+        if (state.textsData[id]) { setStatus(`⚠️ L'event #${id} existe déjà.`, "error"); return; }
+
+        state.textsData[id] = { text: "", possibilities: {} };
+        if (!state.textsOrder.includes(id)) state.textsOrder.push(id);
+        markTexts();
+
+        state.effectData[id] = { possibilities: {}, triggers: [] };
+        state.effectOrder[id] = ["possibilities", "triggers"];
+        state.createdEffects.add(id);
+        markEffect(id);
+
+        iconEnsureEvent(id);
+        markIcons();
+
+        state.selected = id;
+        populateEventSelect(document.getElementById("filterText").value);
+        document.getElementById("eventSelect").value = id;
+        drawEvent(id);
+        setStatus(`✅ Event #${id} créé. Ajoutez des choix et un mapId déclencheur.`, "success");
+    }
+
+    function deleteEvent(id) {
+        if (!confirm(`Supprimer entièrement l'event #${id} (textes, effets, emojis) ?`)) return;
+
+        delete state.textsData[id];
+        state.textsOrder = state.textsOrder.filter(x => x !== id);
+        markTexts();
+
+        if (state.createdEffects.has(id)) {
+            state.createdEffects.delete(id);
+            state.modified.effects.delete(id);
+        } else if (state.effectRaw[id] !== undefined) {
+            state.deletedEffects.add(id);
+            state.modified.effects.delete(id);
+        }
+        delete state.effectData[id];
+        delete state.effectOrder[id];
+
+        iconDeleteEvent(id);
+        markIcons();
+
+        state.selected = null;
+        populateEventSelect(document.getElementById("filterText").value);
+        document.getElementById("eventPanel").innerHTML =
+            `<div class="placeholder"><div class="ico">🗑️</div><p>Event #${id} supprimé. Sélectionnez un autre event.</p></div>`;
+        setStatus(`✅ Event #${id} supprimé. Exportez le patch pour appliquer la suppression.`, "success");
+    }
+
+    function editTriggers(id, rawValue) {
+        const eff = ensureEffectEvent(id);
+        const ids = rawValue.split(",").map(s => s.trim()).filter(s => s !== "");
+        const mapIds = [];
+        for (const s of ids) {
+            if (!/^\d+$/.test(s)) { setStatus("⚠️ Les mapId doivent être des nombres séparés par des virgules.", "error"); return; }
+            mapIds.push(Number(s));
+        }
+        eff.triggers = mapIds.map(mapId => ({ mapId }));
+        if (!state.effectOrder[id]) state.effectOrder[id] = ["possibilities", "triggers"];
+        else if (!state.effectOrder[id].includes("triggers")) state.effectOrder[id].push("triggers");
+        markEffect(id);
+    }
+
+    // ---- choice (possibility) level ----
+    function addChoice(id) {
+        const name = (prompt("Nom interne du choix (ex : goForge, end) :") || "").trim();
+        if (!name) return;
+        if (!VALID_NAME.test(name)) { setStatus("⚠️ Nom invalide (lettres/chiffres/_ , commence par une lettre).", "error"); return; }
+        const tEv = ensureTextEvent(id);
+        const eEv = ensureEffectEvent(id);
+        if (tEv.possibilities[name] || eEv.possibilities[name]) { setStatus(`⚠️ Le choix « ${name} » existe déjà.`, "error"); return; }
+
+        const choiceText = (prompt("Texte du bouton (laisser vide pour un résultat par défaut sans bouton) :") || "").trim();
+        const isDefault = choiceText === "";
+
+        const tPoss = { outcomes: { "0": "" } };
+        if (!isDefault) tPoss.text = choiceText;
+        tEv.possibilities[name] = tPoss;
+        markTexts();
+
+        eEv.possibilities[name] = { outcomes: { "0": {} } };
+        markEffect(id);
+
+        iconAddPossibility(id, name, isDefault);
+        markIcons();
+
+        drawEvent(id);
+        reopenChoice(name);
+    }
+
+    function deleteChoice(id, name) {
+        if (!confirm(`Supprimer le choix « ${name} » et toutes ses sorties ?`)) return;
+        if (state.textsData[id] && state.textsData[id].possibilities) delete state.textsData[id].possibilities[name];
+        markTexts();
+        if (state.effectData[id] && state.effectData[id].possibilities) delete state.effectData[id].possibilities[name];
+        markEffect(id);
+        iconDeletePossibility(id, name);
+        markIcons();
+        drawEvent(id);
+    }
+
+    // ---- outcome level ----
+    function nextOutcomeKey(id, name) {
+        const keys = [
+            ...Object.keys(state.textsData[id]?.possibilities?.[name]?.outcomes || {}),
+            ...Object.keys(state.effectData[id]?.possibilities?.[name]?.outcomes || {})
+        ].map(Number).filter(n => !Number.isNaN(n));
+        return String(keys.length ? Math.max(...keys) + 1 : 0);
+    }
+
+    function addOutcome(id, name) {
+        const key = nextOutcomeKey(id, name);
+        const tEv = ensureTextEvent(id);
+        if (!tEv.possibilities[name]) tEv.possibilities[name] = { outcomes: {} };
+        if (!tEv.possibilities[name].outcomes) tEv.possibilities[name].outcomes = {};
+        tEv.possibilities[name].outcomes[key] = "";
+        markTexts();
+
+        const eEv = ensureEffectEvent(id);
+        if (!eEv.possibilities[name]) eEv.possibilities[name] = { outcomes: {} };
+        if (!eEv.possibilities[name].outcomes) eEv.possibilities[name].outcomes = {};
+        eEv.possibilities[name].outcomes[key] = {};
+        markEffect(id);
+
+        const iconEntry = state.iconsEvents[id] && state.iconsEvents[id].possibilities[name];
+        if (iconEntry && iconEntry.type === "object") iconAddOutcome(id, name, key);
+        markIcons();
+
+        drawEvent(id);
+        reopenChoice(name);
+    }
+
+    function deleteOutcome(id, name, key) {
+        if (!confirm(`Supprimer la sortie ${key} du choix « ${name} » ?`)) return;
+        if (state.textsData[id]?.possibilities?.[name]?.outcomes) delete state.textsData[id].possibilities[name].outcomes[key];
+        markTexts();
+        if (state.effectData[id]?.possibilities?.[name]?.outcomes) delete state.effectData[id].possibilities[name].outcomes[key];
+        markEffect(id);
+        iconDeleteOutcome(id, name, key);
+        markIcons();
+        drawEvent(id);
+        reopenChoice(name);
+    }
+
+
+    function markEffect(id) {
+        if (!state.modified.effects.has(id)) { state.modified.effects.add(id); }
+        refreshBadges();
+    }
+
+    function refreshBadges() {
+        const meta = document.querySelector(".event-meta");
+        if (!meta) return;
+        // Remove old modified badges then re-add
+        meta.querySelectorAll(".badge.modified").forEach(b => b.remove());
+        meta.insertAdjacentHTML("beforeend", renderModifiedBadges());
+    }
+
+    function reopenChoice(name) {
+        // After a re-render, reopen the choice card matching this possibility name
+        document.querySelectorAll(".choice-card").forEach(card => {
+            const title = card.querySelector(".choice-title");
+            if (title && title.textContent.trim().startsWith(name)) card.classList.add("open");
+        });
+    }
+
+    // ---------------------------------------------------------------------------
+    // Key ordering helpers
+    // ---------------------------------------------------------------------------
+    function sortKeys(obj) {
+        const sorted = {};
+        Object.keys(obj).sort().forEach(k => { sorted[k] = obj[k]; });
+        return sorted;
+    }
+
+    function captureRootOrder(raw) {
+        return [...raw.matchAll(/^  "([^"]+)"\s*:/gm)].map(m => m[1]);
+    }
+
+    // ---------------------------------------------------------------------------
+    // Custom JSON serializer that reproduces the repo formatting exactly
+    // (2-space indent, no trailing newline, original root key order)
+    // ---------------------------------------------------------------------------
+    function serializeJson(value, rootOrder) {
+        function ser(v, indent, isRoot) {
+            if (v === null || typeof v !== "object") return JSON.stringify(v);
+            const pad = "  ".repeat(indent);
+            const pad2 = "  ".repeat(indent + 1);
+            if (Array.isArray(v)) {
+                if (v.length === 0) return "[]";
+                return "[\n" + v.map(e => pad2 + ser(e, indent + 1, false)).join(",\n") + "\n" + pad + "]";
+            }
+            let keys = Object.keys(v);
+            if (isRoot && rootOrder && rootOrder.length) {
+                const known = rootOrder.filter(k => k in v);
+                const extra = keys.filter(k => !rootOrder.includes(k));
+                keys = [...known, ...extra];
+            }
+            if (keys.length === 0) return "{}";
+            return "{\n" + keys.map(k => pad2 + JSON.stringify(k) + ": " + ser(v[k], indent + 1, false)).join(",\n") + "\n" + pad + "}";
+        }
+        return ser(value, 0, true);
+    }
+
+    // ---------------------------------------------------------------------------
+    // CrowniclesIcons.ts parsing + surgical editing
+    // ---------------------------------------------------------------------------
+    function matchBrace(text, openIdx) {
+        let depth = 0, inStr = false, strCh = "";
+        for (let i = openIdx; i < text.length; i++) {
+            const c = text[i];
+            if (inStr) {
+                if (c === "\\") { i++; continue; }
+                if (c === strCh) inStr = false;
+                continue;
+            }
+            if (c === '"' || c === "'" || c === "`") { inStr = true; strCh = c; continue; }
+            if (c === "{") depth++;
+            else if (c === "}") { depth--; if (depth === 0) return i; }
+        }
+        return -1;
+    }
+
+    function iconsTailWs(raw, end) {
+        // whitespace run immediately preceding the closing brace at `end`
+        let t = end - 1;
+        while (t >= 0 && /\s/.test(raw[t])) t--;
+        return raw.slice(t + 1, end);
+    }
+
+    // Parses the `events: { ... }` block of CrowniclesIcons.ts into an ordered model.
+    // Returns { events, order, block } where:
+    //   events[id] = { order:[names], possibilities:{ name: entry }, tailWs }
+    //   entry = { type:"string", value } | { type:"object", outcomes:{ key:{value} }, outcomeOrder:[keys] }
+    //   block = { start, end, tailWs }  (offsets of the `{`...`}` in raw)
+    function parseIconsEvents(raw) {
+        const events = {};
+        const order = [];
+        const m = raw.match(/events:\s*\{\s*\d+\s*:/);
+        if (!m) return { events, order, block: null };
+        const braceStart = raw.indexOf("{", m.index);
+        const blockEnd = matchBrace(raw, braceStart);
+        if (blockEnd < 0) return { events, order, block: null };
+
+        const evRe = /(\d+)\s*:\s*\{/g;
+        evRe.lastIndex = braceStart + 1;
+        let mm;
+        while ((mm = evRe.exec(raw)) && mm.index < blockEnd) {
+            const id = mm[1];
+            const evBrace = raw.indexOf("{", mm.index);
+            const evEnd = matchBrace(raw, evBrace);
+            if (evBrace > blockEnd || evEnd < 0) break;
+            events[id] = { ...parsePossibilityEmojis(raw, evBrace, evEnd), tailWs: iconsTailWs(raw, evEnd) };
+            order.push(id);
+            evRe.lastIndex = evEnd + 1;
+        }
+        return { events, order, block: { start: braceStart, end: blockEnd, tailWs: iconsTailWs(raw, blockEnd) } };
+    }
+
+    function parsePossibilityEmojis(raw, evBrace, evEnd) {
+        const possibilities = {};
+        const possOrder = [];
+        const entryRe = /([A-Za-z0-9_]+)\s*:\s*/g;
+        entryRe.lastIndex = evBrace + 1;
+        let mm;
+        while ((mm = entryRe.exec(raw)) && mm.index < evEnd) {
+            const name = mm[1];
+            let p = entryRe.lastIndex;
+            while (p < evEnd && /\s/.test(raw[p])) p++;
+            if (raw[p] === '"' || raw[p] === "'") {
+                const q = raw[p];
+                let j = p + 1;
+                while (j < evEnd && raw[j] !== q) { if (raw[j] === "\\") j++; j++; }
+                possibilities[name] = { type: "string", value: raw.slice(p + 1, j) };
+                possOrder.push(name);
+                entryRe.lastIndex = j + 1;
+            } else if (raw[p] === "{") {
+                const objStart = p;
+                const objEnd = matchBrace(raw, objStart);
+                const outcomes = {};
+                const outcomeOrder = [];
+                const outRe = /(\d+)\s*:\s*("|')/g;
+                outRe.lastIndex = objStart + 1;
+                let om;
+                while ((om = outRe.exec(raw)) && om.index < objEnd) {
+                    const okey = om[1];
+                    const q = om[2];
+                    const valStart = outRe.lastIndex - 1;
+                    let j = valStart + 1;
+                    while (j < objEnd && raw[j] !== q) { if (raw[j] === "\\") j++; j++; }
+                    outcomes[okey] = { value: raw.slice(valStart + 1, j) };
+                    outcomeOrder.push(okey);
+                    outRe.lastIndex = j + 1;
+                }
+                possibilities[name] = { type: "object", outcomes, outcomeOrder };
+                possOrder.push(name);
+                entryRe.lastIndex = objEnd + 1;
+            }
+        }
+        return { possibilities, order: possOrder };
+    }
+
+    // Re-emit the `events: { ... }` block from the ordered model, byte-for-byte
+    // identical to the original when unchanged (verified via round-trip).
+    function serializeIconsBlock() {
+        const T = "\t";
+        const body = state.iconsOrder.map(id => {
+            const ev = state.iconsEvents[id];
+            const entries = ev.order.map(name => {
+                const e = ev.possibilities[name];
+                if (e.type === "string") return T + T + T + name + ": " + JSON.stringify(e.value);
+                const ks = e.outcomeOrder;
+                if (ks.length === 1) {
+                    return T + T + T + name + ": { " + ks[0] + ": " + JSON.stringify(e.outcomes[ks[0]].value) + " }";
+                }
+                return T + T + T + name + ": {\n"
+                    + ks.map(k => T + T + T + T + k + ": " + JSON.stringify(e.outcomes[k].value)).join(",\n")
+                    + "\n" + T + T + T + "}";
+            }).join(",\n");
+            const tail = ev.tailWs || ("\n" + T + T);
+            return T + T + id + ": {\n" + entries + tail + "}";
+        }).join(",\n");
+        const blockTail = (state.iconsBlock && state.iconsBlock.tailWs) || ("\n" + T);
+        return "{\n" + body + blockTail + "}";
+    }
+
+    function buildIconsNewRaw() {
+        if (!state.iconsBlock) return state.iconsRaw;
+        const block = serializeIconsBlock();
+        return state.iconsRaw.slice(0, state.iconsBlock.start) + block + state.iconsRaw.slice(state.iconsBlock.end + 1);
+    }
+
+    function markIcons() {
+        if (!state.modified.icons) { state.modified.icons = true; refreshBadges(); }
+    }
+
+    // ---------------------------------------------------------------------------
+    // Unified diff (git-applicable)
+    // ---------------------------------------------------------------------------
+    function splitLines(text) {
+        const eof = text.endsWith("\n");
+        const lines = text.split("\n");
+        if (eof) lines.pop();
+        return { lines, eof };
+    }
+
+    function diffOps(a, b) {
+        // common prefix / suffix trim
+        let start = 0;
+        while (start < a.length && start < b.length && a[start] === b[start]) start++;
+        let aEnd = a.length, bEnd = b.length;
+        while (aEnd > start && bEnd > start && a[aEnd - 1] === b[bEnd - 1]) { aEnd--; bEnd--; }
+
+        const aMid = a.slice(start, aEnd);
+        const bMid = b.slice(start, bEnd);
+        const ops = [];
+        for (let i = 0; i < start; i++) ops.push({ type: "eq", line: a[i] });
+
+        const n = aMid.length, m = bMid.length;
+        if (n * m > 4000000) {
+            // Fallback for very large changed regions: delete then insert
+            for (let i = 0; i < n; i++) ops.push({ type: "del", line: aMid[i] });
+            for (let j = 0; j < m; j++) ops.push({ type: "ins", line: bMid[j] });
+        } else {
+            const dp = Array.from({ length: n + 1 }, () => new Uint32Array(m + 1));
+            for (let i = n - 1; i >= 0; i--)
+                for (let j = m - 1; j >= 0; j--)
+                    dp[i][j] = aMid[i] === bMid[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+            let i = 0, j = 0;
+            while (i < n && j < m) {
+                if (aMid[i] === bMid[j]) { ops.push({ type: "eq", line: aMid[i] }); i++; j++; }
+                else if (dp[i + 1][j] >= dp[i][j + 1]) { ops.push({ type: "del", line: aMid[i] }); i++; }
+                else { ops.push({ type: "ins", line: bMid[j] }); j++; }
+            }
+            while (i < n) { ops.push({ type: "del", line: aMid[i] }); i++; }
+            while (j < m) { ops.push({ type: "ins", line: bMid[j] }); j++; }
+        }
+
+        for (let k = aEnd; k < a.length; k++) ops.push({ type: "eq", line: a[k] });
+        return ops;
+    }
+
+    function unifiedDiff(oldText, newText, path) {
+        if (oldText === newText) return "";
+        const A = splitLines(oldText);
+        const B = splitLines(newText);
+        const ops = diffOps(A.lines, B.lines);
+
+        // tag with 0-based indices
+        let ai = 0, bi = 0;
+        const tagged = ops.map(op => {
+            const t = { type: op.type, line: op.line, a: null, b: null };
+            if (op.type === "eq") { t.a = ai++; t.b = bi++; }
+            else if (op.type === "del") { t.a = ai++; }
+            else { t.b = bi++; }
+            return t;
+        });
+
+        const context = 3;
+        const isChange = tagged.map(t => t.type !== "eq");
+        const hunks = [];
+        let idx = 0;
+        while (idx < tagged.length) {
+            if (!isChange[idx]) { idx++; continue; }
+            let hEnd = idx;
+            let j = idx;
+            while (j < tagged.length) {
+                if (isChange[j]) { hEnd = j; j++; continue; }
+                let k = j;
+                while (k < tagged.length && !isChange[k]) k++;
+                if (k < tagged.length && (k - j) <= 2 * context) { j = k; continue; }
+                break;
+            }
+            const s = Math.max(0, idx - context);
+            const e = Math.min(tagged.length, hEnd + 1 + context);
+            hunks.push({ s, e });
+            idx = e;
+        }
+
+        const out = [];
+        out.push(`diff --git a/${path} b/${path}`);
+        out.push(`--- a/${path}`);
+        out.push(`+++ b/${path}`);
+
+        const lastA = A.lines.length - 1;
+        const lastB = B.lines.length - 1;
+
+        hunks.forEach(h => {
+            let aStart = null, bStart = null, aCount = 0, bCount = 0;
+            for (let k = h.s; k < h.e; k++) {
+                const t = tagged[k];
+                if (t.type === "del" || t.type === "eq") { if (aStart === null) aStart = t.a; aCount++; }
+                if (t.type === "ins" || t.type === "eq") { if (bStart === null) bStart = t.b; bCount++; }
+            }
+            if (aStart === null) aStart = 0; else aStart += 1;
+            if (bStart === null) bStart = 0; else bStart += 1;
+            out.push(`@@ -${aStart},${aCount} +${bStart},${bCount} @@`);
+
+            for (let k = h.s; k < h.e; k++) {
+                const t = tagged[k];
+                const prefix = t.type === "eq" ? " " : (t.type === "del" ? "-" : "+");
+                out.push(prefix + t.line);
+                let pushed = false;
+                if ((prefix === "-" || prefix === " ") && t.a === lastA && !A.eof) {
+                    out.push("\\ No newline at end of file");
+                    pushed = true;
+                }
+                if ((prefix === "+" || prefix === " ") && t.b === lastB && !B.eof && !(prefix === " " && pushed)) {
+                    out.push("\\ No newline at end of file");
+                }
+            }
+        });
+
+        return out.join("\n");
+    }
+
+    // ---------------------------------------------------------------------------
+    // Export
+    // ---------------------------------------------------------------------------
+    function fileCreateDiff(path, text) {
+        const { lines, eof } = splitLines(text);
+        const out = [
+            `diff --git a/${path} b/${path}`,
+            `new file mode 100644`,
+            `--- /dev/null`,
+            `+++ b/${path}`,
+            `@@ -0,0 +1,${lines.length} @@`
+        ];
+        lines.forEach((l, i) => {
+            out.push("+" + l);
+            if (i === lines.length - 1 && !eof) out.push("\\ No newline at end of file");
+        });
+        return out.join("\n");
+    }
+
+    function fileDeleteDiff(path, text) {
+        const { lines, eof } = splitLines(text);
+        const out = [
+            `diff --git a/${path} b/${path}`,
+            `deleted file mode 100644`,
+            `--- a/${path}`,
+            `+++ /dev/null`,
+            `@@ -1,${lines.length} +0,0 @@`
+        ];
+        lines.forEach((l, i) => {
+            out.push("-" + l);
+            if (i === lines.length - 1 && !eof) out.push("\\ No newline at end of file");
+        });
+        return out.join("\n");
+    }
+
+    function exportPatch() {
+        const parts = [];
+
+        if (state.modified.texts) {
+            const newText = serializeJson(state.textsData, state.textsOrder);
+            const d = unifiedDiff(state.textsRaw, newText, PATHS.texts);
+            if (d) parts.push(d);
+        }
+
+        [...state.modified.effects]
+            .filter(id => !state.deletedEffects.has(id))
+            .sort((a, b) => Number(a) - Number(b))
+            .forEach(id => {
+                const newText = serializeJson(state.effectData[id], state.effectOrder[id]);
+                if (state.createdEffects.has(id)) {
+                    parts.push(fileCreateDiff(PATHS.effect(id), newText));
+                } else {
+                    const d = unifiedDiff(state.effectRaw[id], newText, PATHS.effect(id));
+                    if (d) parts.push(d);
+                }
+            });
+
+        [...state.deletedEffects]
+            .sort((a, b) => Number(a) - Number(b))
+            .forEach(id => {
+                if (state.effectRaw[id] !== undefined) {
+                    parts.push(fileDeleteDiff(PATHS.effect(id), state.effectRaw[id]));
+                }
+            });
+
+        if (state.modified.icons) {
+            const newIcons = buildIconsNewRaw();
+            const d = unifiedDiff(state.iconsRaw, newIcons, PATHS.icons);
+            if (d) parts.push(d);
+        }
+
+        if (!parts.length) {
+            setStatus("ℹ️ Aucune modification à exporter.", "loading");
+            return;
+        }
+
+        const patch = parts.join("\n") + "\n";
+        const branch = state.source ? state.source.branch : "local";
+        const blob = new Blob([patch], { type: "text/x-patch" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `crownicles-events-${branch}.patch`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+
+        setStatus(`✅ Patch généré (${parts.length} fichier(s)). Appliquez-le avec : git apply crownicles-events-${branch}.patch`, "success");
+    }
