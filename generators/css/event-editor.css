@@ -3,7 +3,7 @@
             --bg-secondary: #ffffff;
             --bg-tertiary: #f1f5f9;
             --text-primary: #1e293b;
-            --text-secondary: #64748b;
+            --text-secondary: #475569;
             --accent-primary: #e94560;
             --accent-secondary: #6366f1;
             --border-color: #e2e8f0;
@@ -153,7 +153,7 @@
             font-family: inherit;
             font-size: .92rem;
             color: var(--text-primary);
-            background: #fff;
+            background: var(--bg-secondary);
             resize: vertical;
         }
         textarea:focus { border-color: var(--accent-secondary); }
@@ -181,7 +181,7 @@
             font-size: 1.6rem; line-height: 1;
             min-width: 42px; height: 42px;
             display: flex; align-items: center; justify-content: center;
-            background: #fff; border: 1px solid var(--border-color); border-radius: 10px;
+            background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px;
         }
         .emoji-input {
             width: 52px; text-align: center; font-size: 1.2rem;
@@ -244,7 +244,7 @@
             display: flex; gap: 14px; align-items: stretch;
             overflow-x: auto; min-width: min-content; padding-bottom: 6px;
         }
-        .compare-mode .outcome-card { flex: 0 0 340px; }
+        .compare-mode .outcome-card { flex: 0 0 min(340px, 80vw); }
         #compareToggle[aria-pressed="true"] {
             background: var(--accent-secondary); color: #fff; border-color: var(--accent-secondary);
         }
@@ -255,7 +255,7 @@
         .mini-field label { font-size: .72rem; color: var(--text-secondary); font-weight: 600; }
         .mini-field input, .mini-field select {
             padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 6px;
-            font-size: .85rem; background: #fff; color: var(--text-primary);
+            font-size: .85rem; background: var(--bg-secondary); color: var(--text-primary);
         }
         .mini-field.checkbox { flex-direction: row; align-items: center; gap: 6px; grid-column: span 2; }
         .mini-field.checkbox label { font-size: .82rem; }
@@ -320,7 +320,7 @@
         .file-box .file-name { font-size: .8rem; color: var(--text-secondary); word-break: break-all; }
         input[type=file] { font-size: .82rem; margin-top: 6px; }
 
-        select#eventSelect { min-width: 360px; max-width: 100%; }
+        select#eventSelect { min-width: min(360px, 100%); max-width: 100%; }
 
         /* ---------------- Reviewer mode ---------------- */
         .review-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: .9rem; color: var(--text-secondary); cursor: pointer; user-select: none; }
@@ -350,7 +350,7 @@
             resize: none; overflow: hidden;
         }
         .review-text-area:hover { border-color: var(--border-color); }
-        .review-text-area:focus { border-color: var(--accent-secondary); background: #fff; }
+        .review-text-area:focus { border-color: var(--accent-secondary); background: var(--bg-secondary); }
         .review-text-area:focus:not(:focus-visible) { outline: none; }
         .review-text-area.event-main { font-size: 1.5rem; line-height: 1.7; font-weight: 500; }
         .review-meta { text-align: center; margin-bottom: 22px; }
@@ -951,5 +951,68 @@
             font-size: .8rem;
             font-weight: 600;
             color: var(--text-secondary);
+        }
+
+        /* -------------------------------------------------------------------
+         * Responsive: phones / narrow viewports (<= 640px).
+         * Goal: no horizontal page overflow at ~375px. Fixed widths go fluid,
+         * flex rows wrap to single column. Compare mode keeps its intentional
+         * inner horizontal scroll (capped via min(340px, 80vw) above).
+         * ------------------------------------------------------------------- */
+        @media (max-width: 640px) {
+            .container { padding: 12px; }
+
+            /* Form fields stretch full width instead of forcing a min width. */
+            .input-group { min-width: 0; width: 100%; }
+            .file-box { min-width: 0; width: 100%; flex: 1 1 100%; }
+
+            /* Single-column outcomes (avoid the 320px min-track overflow). */
+            .outcomes { grid-template-columns: 1fr; }
+            .conseq-grid { grid-template-columns: 1fr; }
+            .mini-field.checkbox { grid-column: auto; }
+
+            /* Let toolbars / rows wrap cleanly. */
+            .row,
+            .event-toolbar,
+            .conseq-toolbar,
+            .file-inputs { flex-wrap: wrap; gap: 10px; }
+
+            /* Sticky action bar wraps instead of overflowing. */
+            .action-bar {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px 12px;
+                padding: 10px 12px;
+            }
+            .action-bar-middle { flex: 1 1 100%; order: -1; }
+            .action-bar-left,
+            .action-bar-right { flex-wrap: wrap; justify-content: center; }
+
+            /* Event selector / combobox fill the row. */
+            select#eventSelect { width: 100%; min-width: 0; }
+        }
+
+        /* -------------------------------------------------------------------
+         * Dark mode (system preference only — no manual toggle).
+         * Overrides token VALUES; the rest of the stylesheet already uses
+         * the tokens, so surfaces, text and borders adapt automatically.
+         * ------------------------------------------------------------------- */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #0f172a;
+                --bg-secondary: #1e293b;
+                --bg-tertiary: #334155;
+                --text-primary: #e2e8f0;
+                --text-secondary: #94a3b8;
+                --accent-primary: #f4577a;
+                --accent-secondary: #818cf8;
+                --border-color: #334155;
+                --shadow: rgba(0, 0, 0, 0.45);
+            }
+
+            /* Hover surfaces hardcoded for light mode → dark equivalents. */
+            .choice-header:hover,
+            .btn-mini:hover,
+            .toast-action:hover { background: #3b4a63; }
         }
 

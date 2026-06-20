@@ -103,10 +103,10 @@
 
 - [x] 3.1 — Regrouper les 12 champs d'effets en `fieldset/legend` (Ressources / Navigation / Flags) ; replier les effets à zéro par défaut.
 - [x] 3.2 — Badges « modifié » **cliquables** (scroll vers la section) + filtre « modifiés uniquement ».
-- [ ] 3.3 — Rehausser le contraste `--text-secondary` (≈ `#475569`) pour hints/sous-titres/labels secondaires (WCAG 1.4.3).
-- [ ] 3.4 — Responsive mobile : largeurs fluides (`min()`/`%`), supprimer les largeurs fixes 340/360px, toolbar repliée.
-- [ ] 3.5 — Ajouter un favicon (supprime le 404, finition perçue).
-- [ ] 3.6 — (Optionnel) Tokens **dark mode** prêts via les variables CSS existantes.
+- [x] 3.3 — Rehausser le contraste `--text-secondary` (≈ `#475569`) pour hints/sous-titres/labels secondaires (WCAG 1.4.3).
+- [x] 3.4 — Responsive mobile : largeurs fluides (`min()`/`%`), supprimer les largeurs fixes 340/360px, toolbar repliée.
+- [x] 3.5 — Ajouter un favicon (supprime le 404, finition perçue).
+- [x] 3.6 — (Optionnel) Tokens **dark mode** prêts via les variables CSS existantes.
 - [ ] 3.7 — Renforcer le **mode relecteur** : navigation rapide entre textes, indicateurs de sorties.
 
 ---
