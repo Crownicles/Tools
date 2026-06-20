@@ -435,7 +435,8 @@
             emojiControl = `<div class="choice-emoji">${escapeHtml(emoji || "❓")}</div>`;
         }
 
-        let head = `<div class="choice-header" onclick="toggleChoice(this)">
+        let head = `<div class="choice-header" role="button" tabindex="0" aria-expanded="false"
+            onclick="toggleChoice(this)" onkeydown="onChoiceHeaderKey(event, this)">
             ${emojiControl}
             <div class="choice-title">${escapeHtml(name)} ${isDefault ? '<span class="default-tag">— résultat par défaut</span>' : ""}</div>
             <button class="btn-mini btn-mini-danger" title="Supprimer le choix"
@@ -574,7 +575,15 @@
     }
 
     function toggleChoice(headerEl) {
-        headerEl.parentElement.classList.toggle("open");
+        const isOpen = headerEl.parentElement.classList.toggle("open");
+        headerEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+
+    function onChoiceHeaderKey(e, el) {
+        if ((e.key === "Enter" || e.key === " ") && e.target === el) {
+            e.preventDefault();
+            toggleChoice(el);
+        }
     }
 
     // ---------------------------------------------------------------------------
@@ -906,7 +915,11 @@
         // After a re-render, reopen the choice card matching this possibility name
         document.querySelectorAll(".choice-card").forEach(card => {
             const title = card.querySelector(".choice-title");
-            if (title && title.textContent.trim().startsWith(name)) card.classList.add("open");
+            if (title && title.textContent.trim().startsWith(name)) {
+                card.classList.add("open");
+                const header = card.querySelector(".choice-header");
+                if (header) header.setAttribute("aria-expanded", "true");
+            }
         });
     }
 

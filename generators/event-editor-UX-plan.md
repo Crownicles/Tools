@@ -31,9 +31,9 @@
 - [x] 1.1.5 — Vérif : `[...document.querySelectorAll('input,textarea,select')].every(e => e.labels?.length || e.getAttribute('aria-label'))` retourne `true` sur event #13.
 
 ### 1.2 Focus visible & clavier de base (WCAG 2.4.7 / 2.1.1)
-- [ ] 1.2.1 — CSS : remplacer tout `outline:none` par un `:focus-visible` cohérent (halo 2px `--accent-secondary`) sur `button`, `.btn`, `.btn-mini`, `input`, `select`, `textarea`, accordéons, `summary`.
-- [ ] 1.2.2 — Accordéons choix/sortie : rendre les entêtes activables au clavier (`role="button"` + `tabindex=0` + `Enter`/`Space`) **ou** convertir en vrai `<button>` ; ajouter `aria-expanded`/`aria-controls`.
-- [ ] 1.2.3 — Vérif : navigation `Tab` complète, focus toujours visible, accordéon ouvrable au clavier.
+- [x] 1.2.1 — CSS : remplacer tout `outline:none` par un `:focus-visible` cohérent (halo 2px `--accent-secondary`) sur `button`, `.btn`, `.btn-mini`, `input`, `select`, `textarea`, accordéons, `summary`.
+- [x] 1.2.2 — Accordéons choix/sortie : rendre les entêtes activables au clavier (`role="button"` + `tabindex=0` + `Enter`/`Space`) **ou** convertir en vrai `<button>` ; ajouter `aria-expanded`/`aria-controls`.
+- [x] 1.2.3 — Vérif : navigation `Tab` complète, focus toujours visible, accordéon ouvrable au clavier.
 
 ### 1.3 Prévention de perte de données (Nielsen #5)
 - [ ] 1.3.1 — Drapeau global `dirty` (déjà partiellement via `state.modified`) consolidé en un getter `isDirty()`.

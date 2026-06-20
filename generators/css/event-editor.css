@@ -52,7 +52,26 @@
             font-size: 0.92rem;
             min-width: 170px;
         }
-        .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--accent-secondary); }
+        .input-group input:focus, .input-group select:focus { border-color: var(--accent-secondary); }
+        .input-group input:focus:not(:focus-visible), .input-group select:focus:not(:focus-visible) { outline: none; }
+
+        /* Strong, consistent keyboard focus ring (WCAG 2.4.7) */
+        :focus-visible,
+        button:focus-visible,
+        .btn:focus-visible,
+        .btn-mini:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible,
+        summary:focus-visible,
+        .emoji-input:focus-visible,
+        .mini-field input:focus-visible,
+        .mini-field select:focus-visible,
+        .choice-header:focus-visible {
+            outline: 2px solid var(--accent-secondary);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px rgba(99,102,241,.30);
+        }
 
         button.btn {
             padding: 11px 22px;
@@ -111,7 +130,8 @@
             background: #fff;
             resize: vertical;
         }
-        textarea:focus { outline: none; border-color: var(--accent-secondary); }
+        textarea:focus { border-color: var(--accent-secondary); }
+        textarea:focus:not(:focus-visible) { outline: none; }
 
         .field-label { font-size: .78rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .03em; margin-bottom: 4px; }
         .main-text-box { margin-bottom: 18px; }
@@ -247,6 +267,7 @@
             resize: none; overflow: hidden;
         }
         .review-text-area:hover { border-color: var(--border-color); }
-        .review-text-area:focus { outline: none; border-color: var(--accent-secondary); background: #fff; }
+        .review-text-area:focus { border-color: var(--accent-secondary); background: #fff; }
+        .review-text-area:focus:not(:focus-visible) { outline: none; }
         .review-text-area.event-main { font-size: 1.5rem; line-height: 1.7; font-weight: 500; }
         .review-meta { text-align: center; margin-bottom: 22px; }
