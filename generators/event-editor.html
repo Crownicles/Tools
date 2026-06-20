@@ -11,46 +11,46 @@
 <div id="restoreBanner" class="restore-banner" style="display:none"></div>
 <div class="container">
     <header>
-        <h1>📜 Crownicles Event Editor</h1>
+        <h1>Crownicles Event Editor</h1>
         <p class="subtitle">Visualisez, éditez les big events et exportez un <code>.patch</code> appliquable sur la codebase</p>
     </header>
 
     <div class="panel collapsible-on-review">
         <div class="row">
             <div class="input-group">
-                <label for="repoOwner">👤 Propriétaire</label>
+                <label for="repoOwner">Propriétaire</label>
                 <input type="text" id="repoOwner" value="Crownicles">
             </div>
             <div class="input-group">
-                <label for="repoName">📁 Repository</label>
+                <label for="repoName">Repository</label>
                 <input type="text" id="repoName" value="Crownicles">
             </div>
             <div class="input-group">
-                <label for="branchName">🌿 Branche</label>
+                <label for="branchName">Branche</label>
                 <input type="text" id="branchName" value="master">
             </div>
             <button class="btn btn-primary" id="loadBtn" onclick="loadFromGithub()">
                 <span class="spinner" id="loadSpinner"></span>
-                <span id="loadBtnText">🚀 Charger depuis GitHub</span>
+                <span id="loadBtnText">Charger depuis GitHub</span>
             </button>
             <div class="sep"></div>
             <button class="btn btn-export" id="exportBtn" onclick="exportPatch()" disabled>
-                💾 Exporter les modifications (.patch)
+                Exporter (.patch)
             </button>
         </div>
         <div class="file-inputs" style="margin-top:14px">
             <div class="file-box" id="box-texts">
-                <label for="fileTexts"><strong>🇫🇷 Textes</strong></label>
+                <label for="fileTexts"><strong>Textes</strong></label>
                 <div class="file-name">Lang/fr/events.json</div>
                 <input type="file" id="fileTexts" accept=".json" onchange="onLocalFile('texts', this)">
             </div>
             <div class="file-box" id="box-icons">
-                <label for="fileIcons"><strong>😀 Emojis</strong></label>
+                <label for="fileIcons"><strong>Emojis</strong></label>
                 <div class="file-name">Lib/src/CrowniclesIcons.ts</div>
                 <input type="file" id="fileIcons" accept=".ts" onchange="onLocalFile('icons', this)">
             </div>
             <div class="file-box" id="box-effects">
-                <label for="fileEffects"><strong>⚙️ Effets (optionnel)</strong></label>
+                <label for="fileEffects"><strong>Effets (optionnel)</strong></label>
                 <div class="file-name">Core/resources/events/*.json (multi-sélection)</div>
                 <input type="file" id="fileEffects" accept=".json" multiple onchange="onLocalEffects(this)">
             </div>
@@ -71,15 +71,15 @@
             <span id="actionBarCount" class="action-bar-count"></span>
         </div>
         <div class="action-bar-right">
-            <button class="btn btn-mini" id="actionBarPreview" onclick="showDiffPreview()">👁️ Aperçu du diff</button>
-            <button class="btn btn-export" id="actionBarExport" onclick="exportPatch()">💾 Exporter</button>
+            <button class="btn btn-mini" id="actionBarPreview" onclick="showDiffPreview()">Aperçu du diff</button>
+            <button class="btn btn-export" id="actionBarExport" onclick="exportPatch()">Exporter</button>
         </div>
     </div>
 
     <div class="panel" id="selectorPanel" style="display:none">
-        <div class="row">
-            <div class="input-group" style="flex:1">
-                <label for="eventCombo">🎯 Rechercher / sélectionner un event</label>
+        <div class="row selector-row">
+            <div class="input-group input-group--search">
+                <label for="eventCombo">Rechercher / sélectionner un event</label>
                 <div class="combo-wrapper">
                     <input type="text" id="eventCombo" role="combobox" aria-expanded="false"
                            aria-autocomplete="list" aria-controls="eventComboList" autocomplete="off"
@@ -87,17 +87,11 @@
                     <ul id="eventComboList" role="listbox" aria-label="Résultats de recherche d'events" hidden></ul>
                 </div>
             </div>
-            <div class="input-group">
-                <label>&nbsp;</label>
-                <label class="review-toggle">
-                    <input type="checkbox" id="reviewToggle" onchange="toggleReviewMode(this.checked)">
-                    📖 Mode relecteur
-                </label>
-            </div>
-            <div class="input-group">
-                <label>&nbsp;</label>
-                <button class="btn btn-primary" onclick="promptNewEvent()">➕ Nouvel event</button>
-            </div>
+            <label class="review-toggle">
+                <input type="checkbox" id="reviewToggle" onchange="toggleReviewMode(this.checked)">
+                Mode relecteur
+            </label>
+            <button class="btn btn-primary" onclick="promptNewEvent()">Nouvel event</button>
         </div>
         <details class="combo-fallback">
             <summary>Liste déroulante classique</summary>
