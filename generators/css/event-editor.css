@@ -271,3 +271,17 @@
         .review-text-area:focus:not(:focus-visible) { outline: none; }
         .review-text-area.event-main { font-size: 1.5rem; line-height: 1.7; font-weight: 500; }
         .review-meta { text-align: center; margin-bottom: 22px; }
+
+        /* Non-blocking draft restore banner */
+        .restore-banner {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+            flex-wrap: wrap;
+            padding: 12px 20px;
+            background: rgba(59, 130, 246, .14);
+            border-bottom: 1px solid rgba(59, 130, 246, .35);
+            color: var(--text-primary);
+        }
+        .restore-banner-msg { font-size: .92rem; font-weight: 500; }
+        .restore-banner-actions { display: flex; gap: 8px; flex: 0 0 auto; }
+

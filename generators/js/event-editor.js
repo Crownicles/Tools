@@ -617,6 +617,7 @@
     }
     function markTexts() {
         if (!state.modified.texts) { state.modified.texts = true; refreshBadges(); }
+        scheduleSave();
     }
 
     function editScalar(id, name, key, field, rawValue) {
@@ -763,6 +764,7 @@
         state.effectData[id] = { possibilities: {}, triggers: [] };
         state.effectOrder[id] = ["possibilities", "triggers"];
         state.createdEffects.add(id);
+        scheduleSave();
         markEffect(id);
 
         iconEnsureEvent(id);
@@ -789,6 +791,7 @@
             state.deletedEffects.add(id);
             state.modified.effects.delete(id);
         }
+        scheduleSave();
         delete state.effectData[id];
         delete state.effectOrder[id];
 
@@ -901,6 +904,7 @@
     function markEffect(id) {
         if (!state.modified.effects.has(id)) { state.modified.effects.add(id); }
         refreshBadges();
+        scheduleSave();
     }
 
     function refreshBadges() {
@@ -1091,6 +1095,7 @@
 
     function markIcons() {
         if (!state.modified.icons) { state.modified.icons = true; refreshBadges(); }
+        scheduleSave();
     }
 
     // ---------------------------------------------------------------------------
@@ -1302,4 +1307,207 @@
         URL.revokeObjectURL(url);
 
         setStatus(`✅ Patch généré (${parts.length} fichier(s)). Appliquez-le avec : git apply crownicles-events-${branch}.patch`, "success");
+
+        // Exported == saved: drop the autosaved draft and clear the dirty flags so
+        // the beforeunload guard no longer fires on this freshly exported session.
+        try { localStorage.removeItem(storageKey()); } catch (err) { console.warn("Suppression du brouillon impossible :", err); }
+        state.modified = { texts: false, icons: false, effects: new Set() };
+        state.createdEffects = new Set();
+        state.deletedEffects = new Set();
+        refreshBadges();
+    }
+
+    // ---------------------------------------------------------------------------
+    // Autosave / unsaved-changes guard (localStorage drafts)
+    // ---------------------------------------------------------------------------
+    const DRAFT_PREFIX = "crownicles-event-editor:";
+
+    function hasUnsavedChanges() {
+        return state.modified.texts
+            || state.modified.icons
+            || state.modified.effects.size > 0
+            || state.createdEffects.size > 0
+            || state.deletedEffects.size > 0;
+    }
+
+    function storageKey() {
+        const src = state.source;
+        return DRAFT_PREFIX + (src ? `${src.owner}/${src.repo}@${src.branch}` : "local");
+    }
+
+    function saveDraft() {
+        try {
+            const snapshot = {
+                savedAt: new Date().toISOString(),
+                source: state.source,
+                textsRaw: state.textsRaw,
+                textsData: state.textsData,
+                textsOrder: state.textsOrder,
+                iconsRaw: state.iconsRaw,
+                iconsEvents: state.iconsEvents,
+                iconsOrder: state.iconsOrder,
+                iconsBlock: state.iconsBlock,
+                effectRaw: state.effectRaw,
+                effectData: state.effectData,
+                effectOrder: state.effectOrder,
+                selected: state.selected,
+                reviewMode: state.reviewMode,
+                modified: {
+                    texts: state.modified.texts,
+                    icons: state.modified.icons,
+                    effects: [...state.modified.effects]
+                },
+                createdEffects: [...state.createdEffects],
+                deletedEffects: [...state.deletedEffects]
+            };
+            localStorage.setItem(storageKey(), JSON.stringify(snapshot));
+        } catch (err) {
+            console.warn("Sauvegarde du brouillon impossible :", err);
+        }
+    }
+
+    let __saveTimer = null;
+    function scheduleSave() {
+        if (__saveTimer) clearTimeout(__saveTimer);
+        __saveTimer = setTimeout(() => {
+            __saveTimer = null;
+            // Only persist when there is something loaded to restore later.
+            if (state.textsData) saveDraft();
+        }, 800);
+    }
+
+    function restoreDraft(key) {
+        let snapshot;
+        try {
+            snapshot = JSON.parse(localStorage.getItem(key));
+        } catch (err) {
+            console.warn("Brouillon illisible :", err);
+            return;
+        }
+        if (!snapshot) { hideRestoreBanner(); return; }
+
+        resetState();
+        state.source = snapshot.source || null;
+        state.textsRaw = snapshot.textsRaw;
+        state.textsData = snapshot.textsData;
+        state.textsOrder = snapshot.textsOrder || [];
+        state.iconsRaw = snapshot.iconsRaw;
+        state.iconsEvents = snapshot.iconsEvents || {};
+        state.iconsOrder = snapshot.iconsOrder || [];
+        state.iconsBlock = snapshot.iconsBlock || null;
+        state.effectRaw = snapshot.effectRaw || {};
+        state.effectData = snapshot.effectData || {};
+        state.effectOrder = snapshot.effectOrder || {};
+        state.selected = snapshot.selected || null;
+        state.reviewMode = !!snapshot.reviewMode;
+        state.modified = {
+            texts: !!(snapshot.modified && snapshot.modified.texts),
+            icons: !!(snapshot.modified && snapshot.modified.icons),
+            effects: new Set((snapshot.modified && snapshot.modified.effects) || [])
+        };
+        state.createdEffects = new Set(snapshot.createdEffects || []);
+        state.deletedEffects = new Set(snapshot.deletedEffects || []);
+
+        // Reflect the source into the load-panel inputs.
+        if (state.source) {
+            const o = document.getElementById("repoOwner");
+            const r = document.getElementById("repoName");
+            const b = document.getElementById("branchName");
+            if (o) o.value = state.source.owner;
+            if (r) r.value = state.source.repo;
+            if (b) b.value = state.source.branch;
+        }
+
+        const label = state.source
+            ? `${state.source.owner}/${state.source.repo}@${state.source.branch}`
+            : "fichiers locaux";
+        finishLoad(`Brouillon restauré (${label})`);
+        if (state.selected) onSelectEvent(state.selected);
+
+        hideRestoreBanner();
+    }
+
+    function draftTimeAgo(iso) {
+        const then = new Date(iso).getTime();
+        if (Number.isNaN(then)) return "un instant";
+        const secs = Math.max(0, Math.round((Date.now() - then) / 1000));
+        if (secs < 60) return `${secs} s`;
+        const mins = Math.round(secs / 60);
+        if (mins < 60) return `${mins} min`;
+        const hours = Math.round(mins / 60);
+        if (hours < 24) return `${hours} h`;
+        return `${Math.round(hours / 24)} j`;
+    }
+
+    function listDrafts() {
+        const drafts = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key || !key.startsWith(DRAFT_PREFIX)) continue;
+            try {
+                const snap = JSON.parse(localStorage.getItem(key));
+                if (snap) drafts.push({ key, snap });
+            } catch (err) {
+                console.warn("Brouillon corrompu ignoré :", key, err);
+            }
+        }
+        return drafts;
+    }
+
+    function hideRestoreBanner() {
+        const banner = document.getElementById("restoreBanner");
+        if (banner) { banner.style.display = "none"; banner.innerHTML = ""; }
+    }
+
+    function maybeShowRestoreBanner() {
+        const banner = document.getElementById("restoreBanner");
+        if (!banner) return;
+        const drafts = listDrafts();
+        if (!drafts.length) return;
+
+        // Target the most recently saved draft.
+        drafts.sort((a, b) => String(b.snap.savedAt || "").localeCompare(String(a.snap.savedAt || "")));
+        const { key, snap } = drafts[0];
+        const src = snap.source;
+        const label = src ? `${src.owner}/${src.repo}@${src.branch}` : "fichiers locaux";
+        const ago = snap.savedAt ? draftTimeAgo(snap.savedAt) : "un instant";
+
+        banner.innerHTML = "";
+        const msg = document.createElement("span");
+        msg.className = "restore-banner-msg";
+        msg.textContent = `💾 Un brouillon non exporté existe (${label}, sauvé il y a ${ago}).`;
+
+        const actions = document.createElement("span");
+        actions.className = "restore-banner-actions";
+
+        const restoreBtn = document.createElement("button");
+        restoreBtn.className = "btn-mini";
+        restoreBtn.textContent = "Restaurer";
+        restoreBtn.addEventListener("click", () => restoreDraft(key));
+
+        const ignoreBtn = document.createElement("button");
+        ignoreBtn.className = "btn-mini btn-mini-danger";
+        ignoreBtn.textContent = "Ignorer";
+        ignoreBtn.addEventListener("click", () => {
+            try { localStorage.removeItem(key); } catch (err) { console.warn("Suppression du brouillon impossible :", err); }
+            hideRestoreBanner();
+        });
+
+        actions.appendChild(restoreBtn);
+        actions.appendChild(ignoreBtn);
+        banner.appendChild(msg);
+        banner.appendChild(actions);
+        banner.style.display = "flex";
+    }
+
+    // Warn before leaving with unsaved edits.
+    window.addEventListener("beforeunload", e => {
+        if (hasUnsavedChanges()) { e.preventDefault(); e.returnValue = ""; }
+    });
+
+    // Offer to restore a draft on startup.
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", maybeShowRestoreBanner);
+    } else {
+        maybeShowRestoreBanner();
     }

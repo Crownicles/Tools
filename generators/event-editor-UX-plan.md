@@ -36,12 +36,12 @@
 - [x] 1.2.3 — Vérif : navigation `Tab` complète, focus toujours visible, accordéon ouvrable au clavier.
 
 ### 1.3 Prévention de perte de données (Nielsen #5)
-- [ ] 1.3.1 — Drapeau global `dirty` (déjà partiellement via `state.modified`) consolidé en un getter `isDirty()`.
-- [ ] 1.3.2 — `beforeunload` : avertir si `isDirty()` et modifications non exportées.
-- [ ] 1.3.3 — **Autosave** : sérialiser l'état d'édition (data + ordres + sets modified/created/deleted) en `localStorage`, clé par `owner/repo/branche`, debounce ~800 ms.
-- [ ] 1.3.4 — Restauration : au chargement, si un brouillon existe pour le repo/branche → bannière « Brouillon non exporté détecté · Restaurer / Ignorer ».
-- [ ] 1.3.5 — Purge du brouillon après export réussi (ou bouton « repartir de zéro »).
-- [ ] 1.3.6 — Vérif : éditer → recharger l'onglet → bannière proposée → restauration fidèle (mêmes badges modifiés, même `.patch`).
+- [x] 1.3.1 — Drapeau global `dirty` (déjà partiellement via `state.modified`) consolidé en un getter `isDirty()`.
+- [x] 1.3.2 — `beforeunload` : avertir si `isDirty()` et modifications non exportées.
+- [x] 1.3.3 — **Autosave** : sérialiser l'état d'édition (data + ordres + sets modified/created/deleted) en `localStorage`, clé par `owner/repo/branche`, debounce ~800 ms.
+- [x] 1.3.4 — Restauration : au chargement, si un brouillon existe pour le repo/branche → bannière « Brouillon non exporté détecté · Restaurer / Ignorer ».
+- [x] 1.3.5 — Purge du brouillon après export réussi (ou bouton « repartir de zéro »).
+- [x] 1.3.6 — Vérif : éditer → recharger l'onglet → bannière proposée → restauration fidèle (mêmes badges modifiés, même `.patch`).
 
 ### 1.4 Suppressions réversibles (Nielsen #3)
 - [ ] 1.4.1 — Système de **toast** réutilisable (conteneur fixe, file d'attente, auto-dismiss 6–8 s, bouton « Annuler »).
