@@ -24,11 +24,11 @@
 ## PHASE 1 — P0 : Accessibilité & sécurité du travail (priorité absolue)
 
 ### 1.1 Accessibilité des champs (WCAG 1.3.1 / 4.1.2)
-- [ ] 1.1.1 — `renderOutcome` : chaque `input[number]`, `select`, `checkbox`, `textarea` reçoit un `id` unique + `<label for>` (ou `aria-label` dérivé du libellé `.mini-field`). Cibler les **126** inputs / **33** textarea.
-- [ ] 1.1.2 — Champs ambigus (`MapLink`, `Effet`, `Event suivant`) : ajouter une description courte (`aria-describedby` ou title) sur le format attendu.
-- [ ] 1.1.3 — Inputs fichiers (texts/icons/effects) : `<label for>` explicite + texte du format (.json/.ts).
-- [ ] 1.1.4 — Textarea de texte de choix/sortie : label/`aria-label` (« Texte de la sortie N », « Texte du bouton du choix X »).
-- [ ] 1.1.5 — Vérif : `[...document.querySelectorAll('input,textarea,select')].every(e => e.labels?.length || e.getAttribute('aria-label'))` retourne `true` sur event #13.
+- [x] 1.1.1 — `renderOutcome` : chaque `input[number]`, `select`, `checkbox`, `textarea` reçoit un `id` unique + `<label for>` (ou `aria-label` dérivé du libellé `.mini-field`). Cibler les **126** inputs / **33** textarea.
+- [x] 1.1.2 — Champs ambigus (`MapLink`, `Effet`, `Event suivant`) : ajouter une description courte (`aria-describedby` ou title) sur le format attendu.
+- [x] 1.1.3 — Inputs fichiers (texts/icons/effects) : `<label for>` explicite + texte du format (.json/.ts).
+- [x] 1.1.4 — Textarea de texte de choix/sortie : label/`aria-label` (« Texte de la sortie N », « Texte du bouton du choix X »).
+- [x] 1.1.5 — Vérif : `[...document.querySelectorAll('input,textarea,select')].every(e => e.labels?.length || e.getAttribute('aria-label'))` retourne `true` sur event #13.
 
 ### 1.2 Focus visible & clavier de base (WCAG 2.4.7 / 2.1.1)
 - [ ] 1.2.1 — CSS : remplacer tout `outline:none` par un `:focus-visible` cohérent (halo 2px `--accent-secondary`) sur `button`, `.btn`, `.btn-mini`, `input`, `select`, `textarea`, accordéons, `summary`.

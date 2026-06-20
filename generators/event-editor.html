@@ -38,17 +38,17 @@
         </div>
         <div class="file-inputs" style="margin-top:14px">
             <div class="file-box" id="box-texts">
-                <strong>🇫🇷 Textes</strong>
+                <label for="fileTexts"><strong>🇫🇷 Textes</strong></label>
                 <div class="file-name">Lang/fr/events.json</div>
                 <input type="file" id="fileTexts" accept=".json" onchange="onLocalFile('texts', this)">
             </div>
             <div class="file-box" id="box-icons">
-                <strong>😀 Emojis</strong>
+                <label for="fileIcons"><strong>😀 Emojis</strong></label>
                 <div class="file-name">Lib/src/CrowniclesIcons.ts</div>
                 <input type="file" id="fileIcons" accept=".ts" onchange="onLocalFile('icons', this)">
             </div>
             <div class="file-box" id="box-effects">
-                <strong>⚙️ Effets (optionnel)</strong>
+                <label for="fileEffects"><strong>⚙️ Effets (optionnel)</strong></label>
                 <div class="file-name">Core/resources/events/*.json (multi-sélection)</div>
                 <input type="file" id="fileEffects" accept=".json" multiple onchange="onLocalEffects(this)">
             </div>

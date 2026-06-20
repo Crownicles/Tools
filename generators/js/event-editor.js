@@ -309,6 +309,7 @@
             <div class="mini-field" style="flex:1; min-width:220px">
                 <label>🧭 Triggers — mapId déclencheurs (séparés par des virgules)</label>
                 <input type="text" value="${escapeHtml(triggersStr)}" placeholder="ex : 6, 10"
+                    aria-label="Triggers (mapId déclencheurs séparés par des virgules)"
                     onchange="editTriggers('${id}', this.value)">
             </div>
             <button class="btn-mini" onclick="addChoice('${id}')">➕ Ajouter un choix</button>
@@ -317,7 +318,7 @@
 
         html += `<div class="main-text-box">
             <div class="field-label">Texte principal de l'event</div>
-            <textarea rows="3" oninput="editMainText('${id}', this.value)">${escapeHtml(textEv.text || "")}</textarea>
+            <textarea rows="3" aria-label="Texte principal de l'event ${id}" oninput="editMainText('${id}', this.value)">${escapeHtml(textEv.text || "")}</textarea>
         </div>`;
 
         html += `<div class="choices">`;
@@ -428,6 +429,7 @@
         let emojiControl;
         if (emojiInfo && emojiInfo.type === "string") {
             emojiControl = `<input class="emoji-input" value="${escapeHtml(emoji || "")}" title="Emoji du choix"
+                aria-label="Emoji du choix ${escapeHtml(name)}"
                 onchange="editEmoji('${id}','${name}',null,this.value)">`;
         } else {
             emojiControl = `<div class="choice-emoji">${escapeHtml(emoji || "❓")}</div>`;
@@ -445,7 +447,7 @@
         if (!isDefault) {
             body += `<div class="choice-text-edit">
                 <div class="field-label">Texte du choix (bouton)</div>
-                <textarea rows="2" oninput="editChoiceText('${id}','${name}',this.value)">${escapeHtml(choiceText)}</textarea>
+                <textarea rows="2" aria-label="Texte du bouton du choix ${escapeHtml(name)}" oninput="editChoiceText('${id}','${name}',this.value)">${escapeHtml(choiceText)}</textarea>
             </div>`;
         }
         body += `<div class="outcomes-scroll"><div class="outcomes">`;
@@ -468,7 +470,7 @@
         html += `<div class="outcome-head">
             <span class="outcome-tag">Sortie ${key}</span>
             <div class="outcome-head-right">
-                ${outEmoji !== null ? `<input class="emoji-input" value="${escapeHtml(outEmoji)}" onchange="editEmoji('${id}','${name}','${key}',this.value)">` : ""}
+                ${outEmoji !== null ? `<input class="emoji-input" value="${escapeHtml(outEmoji)}" aria-label="Emoji de la sortie ${key}" onchange="editEmoji('${id}','${name}','${key}',this.value)">` : ""}
                 <button class="btn-mini btn-mini-danger" title="Supprimer la sortie"
                     onclick="deleteOutcome('${id}','${name}','${key}')">🗑️</button>
             </div>
@@ -476,7 +478,7 @@
 
         html += `<div>
             <div class="field-label">Texte du résultat</div>
-            <textarea rows="4" oninput="editOutcomeText('${id}','${name}','${key}',this.value)">${escapeHtml(text == null ? "" : text)}</textarea>
+            <textarea rows="4" aria-label="Texte de la sortie ${key}" oninput="editOutcomeText('${id}','${name}','${key}',this.value)">${escapeHtml(text == null ? "" : text)}</textarea>
         </div>`;
 
         // Summary pills
@@ -488,16 +490,23 @@
             html += `<div class="conseq"><div class="conseq-grid">`;
             SCALAR_FIELDS.forEach(f => {
                 const v = outcome[f.key];
+                const fieldId = genId("sf");
+                const hint = f.key === "mapLink"
+                    ? "Identifiant numérique du MapLink de destination"
+                    : f.key === "nextEvent"
+                        ? "Identifiant numérique de l'event déclenché ensuite (-1 = aléatoire)"
+                        : "";
                 html += `<div class="mini-field">
-                    <label>${f.label}</label>
-                    <input type="number" value="${v == null ? "" : v}"
+                    <label for="${fieldId}">${f.label}</label>
+                    <input type="number" id="${fieldId}" value="${v == null ? "" : v}"${hint ? ` title="${hint}"` : ""}
                         onchange="editScalar('${id}','${name}','${key}','${f.key}',this.value)">
                 </div>`;
             });
             // effect select
+            const effectId = genId("ef");
             html += `<div class="mini-field">
-                <label>🎭 Effet</label>
-                <select onchange="editScalar('${id}','${name}','${key}','effect',this.value)">
+                <label for="${effectId}">🎭 Effet</label>
+                <select id="${effectId}" title="Altération d'état appliquée au joueur après ce résultat" onchange="editScalar('${id}','${name}','${key}','effect',this.value)">
                     ${Object.keys(EFFECTS).filter(e => e !== "").map(e =>
                         `<option value="${e === "none" ? "" : e}" ${(outcome.effect || "") === (e === "none" ? "" : e) ? "selected" : ""}>${EFFECTS[e]}</option>`
                     ).join("")}
@@ -524,6 +533,7 @@
             html += `<details class="advanced" ${advJson ? "open" : ""}>
                 <summary>Champs avancés (JSON) — randomItem, givePet, condition, tags…</summary>
                 <textarea rows="${advJson ? Math.min(12, advJson.split("\n").length + 1) : 3}"
+                    aria-label="Champs avancés (JSON) de la sortie ${key}"
                     placeholder='{ "randomItem": { "rarity": { "min": 2 } } }'
                     onchange="editAdvanced('${id}','${name}','${key}',this.value,this)">${escapeHtml(advJson)}</textarea>
                 <div class="json-error">JSON invalide — modification ignorée.</div>
