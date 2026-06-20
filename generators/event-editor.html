@@ -78,12 +78,13 @@
     <div class="panel" id="selectorPanel" style="display:none">
         <div class="row">
             <div class="input-group" style="flex:1">
-                <label for="eventSelect">🎯 Sélectionner un event</label>
-                <select id="eventSelect" onchange="onSelectEvent(this.value)"></select>
-            </div>
-            <div class="input-group">
-                <label for="filterText">🔎 Filtrer</label>
-                <input type="text" id="filterText" placeholder="texte ou id..." oninput="populateEventSelect(this.value)">
+                <label for="eventCombo">🎯 Rechercher / sélectionner un event</label>
+                <div class="combo-wrapper">
+                    <input type="text" id="eventCombo" role="combobox" aria-expanded="false"
+                           aria-autocomplete="list" aria-controls="eventComboList" autocomplete="off"
+                           placeholder="Rechercher un event (id, titre, texte, mapId)...">
+                    <ul id="eventComboList" role="listbox" aria-label="Résultats de recherche d'events" hidden></ul>
+                </div>
             </div>
             <div class="input-group">
                 <label>&nbsp;</label>
@@ -97,6 +98,19 @@
                 <button class="btn btn-primary" onclick="promptNewEvent()">➕ Nouvel event</button>
             </div>
         </div>
+        <details class="combo-fallback">
+            <summary>Liste déroulante classique</summary>
+            <div class="row" style="margin-top:10px">
+                <div class="input-group" style="flex:1">
+                    <label for="eventSelect">Sélection (liste native)</label>
+                    <select id="eventSelect" onchange="onSelectEvent(this.value)"></select>
+                </div>
+                <div class="input-group">
+                    <label for="filterText">🔎 Filtrer la liste</label>
+                    <input type="text" id="filterText" placeholder="texte ou id..." oninput="populateEventSelect(this.value)">
+                </div>
+            </div>
+        </details>
     </div>
 
     <div class="panel" id="eventPanel">

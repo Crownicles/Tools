@@ -80,11 +80,11 @@
 - [x] 2.3.5 — Vérif : plus aucun `prompt()/confirm()` natif ; erreurs affichées en clair, non bloquantes.
 
 ### 2.4 Recherche d'event scalable (Nielsen #6)
-- [ ] 2.4.1 — **Combobox filtrante** (input + liste déroulante filtrée, navigation flèches/Enter) au-dessus / à la place du `<select>`.
-- [ ] 2.4.2 — Conserver un `<select>` natif accessible en repli (ne pas dégrader l'a11y).
-- [ ] 2.4.3 — Recherche multi-critères : ID, titre, texte, trigger (mapId), statut « modifié ».
-- [ ] 2.4.4 — Indicateur « modifié » et (optionnel) regroupement par zone dans la liste.
-- [ ] 2.4.5 — Vérif : retrouver l'event #45 par titre et par mapId ; sélection au clavier.
+- [x] 2.4.1 — **Combobox filtrante** (input + liste déroulante filtrée, navigation flèches/Enter) au-dessus / à la place du `<select>`.
+- [x] 2.4.2 — Conserver un `<select>` natif accessible en repli (ne pas dégrader l'a11y).
+- [x] 2.4.3 — Recherche multi-critères : ID, titre, texte, trigger (mapId), statut « modifié ».
+- [x] 2.4.4 — Indicateur « modifié » et (optionnel) regroupement par zone dans la liste.
+- [x] 2.4.5 — Vérif : retrouver l'event #45 par titre et par mapId ; sélection au clavier.
 
 ### 2.5 Palette emoji + défauts de chargement
 - [ ] 2.5.1 — **Picker emoji** branché sur les icônes chargées depuis `CrowniclesIcons.ts` (recherche par nom, aperçu, insertion).

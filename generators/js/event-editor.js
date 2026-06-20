@@ -284,6 +284,7 @@
                 : "Fichiers locaux";
         }
         updateActionBar();
+        setupEventCombo();
         populateEventSelect("");
         setStatus(`✅ ${message} — ${Object.keys(state.textsData).length} events disponibles.`, "success");
     }
@@ -291,6 +292,23 @@
     // ---------------------------------------------------------------------------
     // Event selector
     // ---------------------------------------------------------------------------
+
+    // Combobox runtime state (filtering search-as-you-type UI above the native select).
+    const comboState = { open: false, options: [], active: -1, wired: false };
+    const COMBO_LIMIT = 50;
+
+    // Strip emote tokens and build the human label shared by the select and the combobox.
+    function buildEventLabel(id) {
+        const ev = state.textsData && state.textsData[id];
+        const text = ((ev && ev.text) || "").replace(/\{emote:[^}]+\}/g, "").trim();
+        return `#${id} — ${text.slice(0, 70)}${text.length > 70 ? "…" : ""}`;
+    }
+
+    // Single source of truth for "is this event modified?" (effect file edited).
+    function isEventModified(id) {
+        return state.modified.effects.has(id);
+    }
+
     function populateEventSelect(filter) {
         const select = document.getElementById("eventSelect");
         const ids = state.textsOrder.length ? state.textsOrder : Object.keys(state.textsData);
@@ -303,20 +321,220 @@
         ids.forEach(id => {
             const ev = state.textsData[id];
             if (!ev) return;
-            const text = (ev.text || "").replace(/\{emote:[^}]+\}/g, "").trim();
-            const label = `#${id} — ${text.slice(0, 70)}${text.length > 70 ? "…" : ""}`;
+            const label = buildEventLabel(id);
             if (f && !label.toLowerCase().includes(f) && id !== f) return;
             const opt = document.createElement("option");
             opt.value = id; opt.textContent = label;
             if (id === previous) opt.selected = true;
             select.appendChild(opt);
         });
+        // Keep the combobox dropdown consistent when it is currently open.
+        if (comboState.open) {
+            const comboInput = document.getElementById("eventCombo");
+            renderComboList(comboInput ? comboInput.value : "");
+        }
     }
 
     function onSelectEvent(id) {
         if (!id) return;
         state.selected = id;
+        // Keep the combobox input text in sync when the selection comes from the native select.
+        const comboInput = document.getElementById("eventCombo");
+        if (comboInput) comboInput.value = buildEventLabel(id);
         renderEvent(id);
+    }
+
+    // ---------------------------------------------------------------------------
+    // Filtering combobox (primary search UI; native <select> is the a11y fallback)
+    // ---------------------------------------------------------------------------
+
+    // Multi-criteria, case-insensitive match used to filter events in the combobox.
+    function comboEventMatches(id, q) {
+        if (!q) return true;
+        // Special token: typing "modifié"/"modified" narrows to modified events.
+        if (q === "modifié" || q === "modifie" || q === "modified") return isEventModified(id);
+        // 1) id (substring covers exact match)
+        if (id.toLowerCase().includes(q)) return true;
+        const ev = state.textsData[id] || {};
+        // 2) event text / title
+        const text = (ev.text || "").replace(/\{emote:[^}]+\}/g, "").toLowerCase();
+        if (text.includes(q)) return true;
+        // 3) any choice / possibility text
+        const poss = ev.possibilities || {};
+        for (const name of Object.keys(poss)) {
+            const ct = ((poss[name] && poss[name].text) || "").replace(/\{emote:[^}]+\}/g, "").toLowerCase();
+            if (ct.includes(q)) return true;
+        }
+        // 4) mapId triggers — ONLY when the effect file for this event is already loaded.
+        const eff = state.effectData[id];
+        if (eff && Array.isArray(eff.triggers)) {
+            for (const t of eff.triggers) {
+                if (t && String(t.mapId).toLowerCase().includes(q)) return true;
+            }
+        }
+        return false;
+    }
+
+    function renderComboList(query) {
+        const list = document.getElementById("eventComboList");
+        if (!list || !state.textsData) return;
+        const q = (query || "").toLowerCase().trim();
+        const ids = state.textsOrder.length ? state.textsOrder : Object.keys(state.textsData);
+        const matches = ids.filter(id => state.textsData[id] && comboEventMatches(id, q));
+        list.innerHTML = "";
+        comboState.options = [];
+        comboState.active = -1;
+        const shown = matches.slice(0, COMBO_LIMIT);
+        shown.forEach(id => {
+            const li = document.createElement("li");
+            li.className = "combo-option";
+            li.id = "eventComboOpt-" + id;
+            li.setAttribute("role", "option");
+            li.setAttribute("aria-selected", "false");
+            li.dataset.id = id;
+
+            const idSpan = document.createElement("span");
+            idSpan.className = "combo-option-id";
+            idSpan.textContent = "#" + id;
+
+            const txtSpan = document.createElement("span");
+            txtSpan.className = "combo-option-text";
+            const ev = state.textsData[id];
+            const text = ((ev && ev.text) || "").replace(/\{emote:[^}]+\}/g, "").trim();
+            txtSpan.textContent = text ? text.slice(0, 70) + (text.length > 70 ? "…" : "") : "(sans texte)";
+
+            li.appendChild(idSpan);
+            li.appendChild(txtSpan);
+            if (isEventModified(id)) {
+                const badge = document.createElement("span");
+                badge.className = "combo-badge";
+                badge.textContent = "✎ modifié";
+                li.appendChild(badge);
+            }
+            // Prevent the input blur from firing before the click selection runs.
+            li.addEventListener("mousedown", e => e.preventDefault());
+            li.addEventListener("click", () => selectComboOption(id));
+            list.appendChild(li);
+            comboState.options.push(li);
+        });
+
+        if (matches.length > shown.length) {
+            const note = document.createElement("li");
+            note.className = "combo-note";
+            note.setAttribute("aria-disabled", "true");
+            note.textContent = `… ${matches.length - shown.length} autres résultats — affinez la recherche`;
+            list.appendChild(note);
+        }
+        if (!shown.length) {
+            const empty = document.createElement("li");
+            empty.className = "combo-note";
+            empty.setAttribute("aria-disabled", "true");
+            empty.textContent = "Aucun event ne correspond.";
+            list.appendChild(empty);
+        }
+    }
+
+    function openCombo() {
+        const list = document.getElementById("eventComboList");
+        const input = document.getElementById("eventCombo");
+        if (!list || !input) return;
+        list.hidden = false;
+        input.setAttribute("aria-expanded", "true");
+        comboState.open = true;
+    }
+
+    function closeCombo() {
+        const list = document.getElementById("eventComboList");
+        const input = document.getElementById("eventCombo");
+        if (list) list.hidden = true;
+        if (input) {
+            input.setAttribute("aria-expanded", "false");
+            input.removeAttribute("aria-activedescendant");
+        }
+        comboState.open = false;
+        comboState.active = -1;
+    }
+
+    function setComboActive(index) {
+        const input = document.getElementById("eventCombo");
+        comboState.options.forEach(li => {
+            li.setAttribute("aria-selected", "false");
+            li.classList.remove("combo-active");
+        });
+        if (index < 0 || index >= comboState.options.length) {
+            comboState.active = -1;
+            if (input) input.removeAttribute("aria-activedescendant");
+            return;
+        }
+        comboState.active = index;
+        const li = comboState.options[index];
+        li.setAttribute("aria-selected", "true");
+        li.classList.add("combo-active");
+        if (input) input.setAttribute("aria-activedescendant", li.id);
+        li.scrollIntoView({ block: "nearest" });
+    }
+
+    function moveComboActive(delta) {
+        const n = comboState.options.length;
+        if (!n) return;
+        const idx = comboState.active < 0
+            ? (delta > 0 ? 0 : n - 1)
+            : (comboState.active + delta + n) % n;
+        setComboActive(idx);
+    }
+
+    function selectComboOption(id) {
+        if (!id) return;
+        const input = document.getElementById("eventCombo");
+        if (input) input.value = buildEventLabel(id);
+        state.selected = id;
+        // Sync the native select fallback; repopulate it fully if the id was filtered out.
+        const select = document.getElementById("eventSelect");
+        if (select) {
+            const present = Array.from(select.options).some(o => o.value === id);
+            if (!present) populateEventSelect("");
+            select.value = id;
+        }
+        closeCombo();
+        onSelectEvent(id);
+    }
+
+    function setupEventCombo() {
+        if (comboState.wired) return;
+        const input = document.getElementById("eventCombo");
+        if (!input) return;
+        comboState.wired = true;
+
+        input.addEventListener("input", () => { renderComboList(input.value); openCombo(); });
+        input.addEventListener("focus", () => { input.select(); renderComboList(input.value); openCombo(); });
+        input.addEventListener("keydown", e => {
+            switch (e.key) {
+                case "ArrowDown":
+                    e.preventDefault();
+                    if (!comboState.open) { renderComboList(input.value); openCombo(); }
+                    moveComboActive(1);
+                    break;
+                case "ArrowUp":
+                    e.preventDefault();
+                    if (!comboState.open) { renderComboList(input.value); openCombo(); }
+                    moveComboActive(-1);
+                    break;
+                case "Enter": {
+                    e.preventDefault();
+                    const li = comboState.active >= 0 ? comboState.options[comboState.active] : comboState.options[0];
+                    if (li) selectComboOption(li.dataset.id);
+                    break;
+                }
+                case "Escape":
+                    e.preventDefault();
+                    closeCombo();
+                    break;
+                default:
+                    break;
+            }
+        });
+        // Delay close so a click on an option is processed before blur hides the list.
+        input.addEventListener("blur", () => setTimeout(closeCombo, 120));
     }
 
     async function renderEvent(id) {
@@ -1214,6 +1432,8 @@
                 state.selected = id;
                 populateEventSelect(document.getElementById("filterText").value);
                 document.getElementById("eventSelect").value = id;
+                const comboInput = document.getElementById("eventCombo");
+                if (comboInput) comboInput.value = buildEventLabel(id);
                 drawEvent(id);
                 setStatus(`✅ Event #${id} créé. Ajoutez des choix et un mapId déclencheur.`, "success");
             }
@@ -1243,6 +1463,8 @@
 
         state.selected = null;
         populateEventSelect(document.getElementById("filterText").value);
+        const comboInputDel = document.getElementById("eventCombo");
+        if (comboInputDel) comboInputDel.value = "";
         document.getElementById("eventPanel").innerHTML =
             `<div class="placeholder"><div class="ico">🗑️</div><p>Event #${id} supprimé. Sélectionnez un autre event.</p></div>`;
         setStatus(`✅ Event #${id} supprimé. Exportez le patch pour appliquer la suppression.`, "success");
