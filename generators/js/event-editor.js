@@ -22,6 +22,7 @@
         effectOrder: {},            // id -> root key order
         selected: null,             // selected event id
         reviewMode: false,          // distraction-free large-text proofreading mode
+        showAllEffects: new Set(),  // "id|name|key" outcomes whose zero-value effects are revealed
         modified: { texts: false, icons: false, effects: new Set() },
         createdEffects: new Set(),  // effect files that are brand new (export as new file)
         deletedEffects: new Set()   // effect files removed via event deletion (export as deleted file)
@@ -260,6 +261,7 @@
         state.effectRaw = {}; state.effectData = {}; state.effectOrder = {};
         state.selected = null;
         state.modified = { texts: false, icons: false, effects: new Set() };
+        state.showAllEffects = new Set();
         state.createdEffects = new Set();
         state.deletedEffects = new Set();
     }
@@ -1008,13 +1010,15 @@
 
             // At least one effect set? Drives the "no effect" hint next to the toggle.
             const anyNonZero = EFFECT_GROUPS.some(g => g.keys.some(ck => !isZeroEffect(outcome, ck)));
+            const outRef = `${id}|${name}|${key}`;
+            const showAll = state.showAllEffects.has(outRef);
 
-            html += `<div class="conseq">`;
+            html += `<div class="conseq${showAll ? " show-all-effects" : ""}" data-out-ref="${escapeHtml(outRef)}">`;
             // Per-outcome toggle: collapsed by default (only non-zero effects shown).
             html += `<div class="conseq-toolbar">
-                <button type="button" class="btn-mini effect-toggle" aria-expanded="false"
-                    title="Afficher aussi les effets laissés à zéro" onclick="toggleAllEffects(this)">➕ Afficher tous les effets</button>
-                ${anyNonZero ? "" : `<span class="hint effect-empty-hint">Aucun effet — cliquez pour éditer</span>`}
+                <button type="button" class="btn-mini effect-toggle" aria-expanded="${showAll ? "true" : "false"}"
+                    title="Afficher aussi les effets laissés à zéro" onclick="toggleAllEffects(this)">${showAll ? "➖ Réduire" : "➕ Afficher tous les effets"}</button>
+                ${anyNonZero ? "" : `<button type="button" class="effect-empty-hint" onclick="toggleAllEffects(this)">Aucun effet — cliquez pour ajouter</button>`}
             </div>`;
             EFFECT_GROUPS.forEach(g => {
                 html += `<fieldset class="effect-group"><legend>${g.legend}</legend><div class="conseq-grid">`;
@@ -1117,8 +1121,15 @@
         const conseq = btnEl.closest(".conseq");
         if (!conseq) return;
         const showing = conseq.classList.toggle("show-all-effects");
-        btnEl.setAttribute("aria-expanded", showing ? "true" : "false");
-        btnEl.textContent = showing ? "➖ Réduire" : "➕ Afficher tous les effets";
+        const ref = conseq.getAttribute("data-out-ref");
+        if (ref) {
+            if (showing) state.showAllEffects.add(ref); else state.showAllEffects.delete(ref);
+        }
+        const toggleBtn = conseq.querySelector(".effect-toggle");
+        if (toggleBtn) {
+            toggleBtn.setAttribute("aria-expanded", showing ? "true" : "false");
+            toggleBtn.textContent = showing ? "➖ Réduire" : "➕ Afficher tous les effets";
+        }
     }
 
     // ---------------------------------------------------------------------------

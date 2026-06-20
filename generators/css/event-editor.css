@@ -97,7 +97,6 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 0.92rem;
-            color: white;
             transition: background .15s ease, box-shadow .15s ease, transform .15s ease, opacity .15s ease;
             display: inline-flex;
             align-items: center;
@@ -106,10 +105,10 @@
         }
         button.btn:hover:not(:disabled) { transform: translateY(-1px); }
         button.btn:disabled { opacity: .55; cursor: not-allowed; }
-        .btn-primary { background: var(--accent-secondary); }
-        .btn-primary:hover:not(:disabled) { background: #4f46e5; box-shadow: 0 4px 14px rgba(99,102,241,.28); }
-        .btn-export { background: var(--success); }
-        .btn-export:hover:not(:disabled) { background: #16a34a; box-shadow: 0 4px 14px rgba(34,197,94,.28); }
+        .btn-primary { background: #4f46e5; color: #fff; }
+        .btn-primary:hover:not(:disabled) { background: #4338ca; box-shadow: 0 4px 14px rgba(79,70,229,.3); }
+        .btn-export { background: #15803d; color: #fff; }
+        .btn-export:hover:not(:disabled) { background: #166534; box-shadow: 0 4px 14px rgba(21,128,61,.3); }
         .btn-ghost { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); }
 
         .spinner {
@@ -218,9 +217,13 @@
         .outcomes-scroll { padding-bottom: 6px; }
         .outcomes {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            /* Cap at 3 columns max so outcome cards never get too cramped. */
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 14px;
             align-items: start;
+        }
+        @media (max-width: 1180px) {
+            .outcomes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
         .outcome-card {
             border: 1px solid var(--border-color);
@@ -296,6 +299,11 @@
         /* Per-outcome toggle row for revealing zero-value effects */
         .conseq-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .effect-empty-hint { font-style: italic; }
+        button.effect-empty-hint {
+            border: none; background: none; padding: 0; cursor: pointer;
+            color: var(--text-secondary); font-size: .8rem; text-decoration: underline;
+        }
+        button.effect-empty-hint:hover { color: var(--text-primary); }
         /* Collapse zero-value effects by default; reveal when the toggle is on. */
         .effect-zero { display: none; }
         .conseq.show-all-effects .effect-zero { display: flex; }
@@ -323,7 +331,7 @@
             font-weight: 600; font-size: .82rem; white-space: nowrap;
         }
         .btn-mini:hover { background: #e9eef5; }
-        .btn-mini-danger { color: var(--danger); border-color: rgba(239,68,68,.3); background: rgba(239,68,68,.08); padding: 4px 8px; }
+        .btn-mini-danger { color: #b91c1c; border-color: rgba(239,68,68,.3); background: rgba(239,68,68,.08); padding: 4px 8px; }
         .btn-mini-danger:hover { background: rgba(239,68,68,.16); }
         .event-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 16px; }
         .add-outcome-btn { margin-top: 12px; align-self: center; }
