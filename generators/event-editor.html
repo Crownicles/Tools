@@ -61,6 +61,20 @@
         <div class="status" id="status"></div>
     </div>
 
+    <div id="actionBar" class="action-bar" style="display:none">
+        <div class="action-bar-left">
+            <span id="actionBarRepo" class="action-bar-repo"></span>
+            <span id="actionBarStatus" class="action-bar-pill"></span>
+        </div>
+        <div class="action-bar-middle">
+            <span id="actionBarCount" class="action-bar-count"></span>
+        </div>
+        <div class="action-bar-right">
+            <button class="btn btn-mini" id="actionBarPreview" onclick="showDiffPreview()">👁️ Aperçu du diff</button>
+            <button class="btn btn-export" id="actionBarExport" onclick="exportPatch()">💾 Exporter</button>
+        </div>
+    </div>
+
     <div class="panel" id="selectorPanel" style="display:none">
         <div class="row">
             <div class="input-group" style="flex:1">

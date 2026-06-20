@@ -272,6 +272,15 @@
     function finishLoad(message) {
         document.getElementById("selectorPanel").style.display = "block";
         document.getElementById("exportBtn").disabled = false;
+        const bar = document.getElementById("actionBar");
+        if (bar) bar.style.display = "flex";
+        const repoEl = document.getElementById("actionBarRepo");
+        if (repoEl) {
+            repoEl.textContent = state.source
+                ? `${state.source.owner}/${state.source.repo}@${state.source.branch}`
+                : "Fichiers locaux";
+        }
+        updateActionBar();
         populateEventSelect("");
         setStatus(`✅ ${message} — ${Object.keys(state.textsData).length} events disponibles.`, "success");
     }
@@ -1074,6 +1083,7 @@
     }
 
     function refreshBadges() {
+        updateActionBar();
         const meta = document.querySelector(".event-meta");
         if (!meta) return;
         // Remove old modified badges then re-add
@@ -1419,7 +1429,10 @@
         return out.join("\n");
     }
 
-    function exportPatch() {
+    // Build the array of unified-diff strings that make up the patch, without
+    // downloading anything. Pure function over current state — used by both
+    // exportPatch() (download) and showDiffPreview() (preview).
+    function buildPatchParts() {
         const parts = [];
 
         if (state.modified.texts) {
@@ -1455,6 +1468,32 @@
             if (d) parts.push(d);
         }
 
+        return parts;
+    }
+
+    // Assemble the full patch text. Returns "" when there is nothing to export.
+    function buildPatchString() {
+        const parts = buildPatchParts();
+        return parts.length ? parts.join("\n") + "\n" : "";
+    }
+
+    // Number of files that would appear in the exported patch.
+    function countModifiedFiles() {
+        let n = 0;
+        if (state.modified.texts) n++;
+        if (state.modified.icons) n++;
+        [...state.modified.effects].forEach(id => {
+            if (!state.deletedEffects.has(id)) n++;
+        });
+        [...state.deletedEffects].forEach(id => {
+            if (state.effectRaw[id] !== undefined) n++;
+        });
+        return n;
+    }
+
+    function exportPatch() {
+        const parts = buildPatchParts();
+
         if (!parts.length) {
             setStatus("ℹ️ Aucune modification à exporter.", "loading");
             return;
@@ -1481,7 +1520,76 @@
         state.createdEffects = new Set();
         state.deletedEffects = new Set();
         refreshBadges();
+        updateActionBar();
     }
+
+    // ---------------------------------------------------------------------------
+    // Sticky action bar
+    // ---------------------------------------------------------------------------
+    function updateActionBar() {
+        const bar = document.getElementById("actionBar");
+        if (!bar) return;
+
+        const count = countModifiedFiles();
+        const countEl = document.getElementById("actionBarCount");
+        if (countEl) {
+            countEl.textContent = count === 0
+                ? "Aucune modification"
+                : `${count} fichier${count > 1 ? "s" : ""} modifié${count > 1 ? "s" : ""}`;
+        }
+
+        const pill = document.getElementById("actionBarStatus");
+        if (pill) {
+            const dirty = hasUnsavedChanges();
+            pill.textContent = dirty ? "● Modifié" : "✓ À jour";
+            pill.classList.toggle("modified", dirty);
+            pill.classList.toggle("clean", !dirty);
+        }
+
+        const noFiles = count === 0;
+        const previewBtn = document.getElementById("actionBarPreview");
+        const exportBtn = document.getElementById("actionBarExport");
+        if (previewBtn) previewBtn.disabled = noFiles;
+        if (exportBtn) exportBtn.disabled = noFiles;
+    }
+
+    // Basic but real diff preview overlay. The text shown MUST equal what
+    // exportPatch() downloads (both go through the same buildPatch* helpers).
+    function showDiffPreview() {
+        const patch = buildPatchString();
+        if (!patch) {
+            setStatus("ℹ️ Aucune modification à prévisualiser.", "loading");
+            return;
+        }
+
+        const existing = document.querySelector(".diff-modal-overlay");
+        if (existing) existing.remove();
+
+        const overlay = document.createElement("div");
+        overlay.className = "diff-modal-overlay";
+        overlay.innerHTML = `
+            <div class="diff-modal" role="dialog" aria-modal="true" aria-label="Aperçu du diff">
+                <div class="diff-modal-header">
+                    <strong>👁️ Aperçu du diff</strong>
+                    <button class="btn-mini diff-modal-close" type="button" aria-label="Fermer">✕</button>
+                </div>
+                <pre class="diff-modal-body">${escapeHtml(patch)}</pre>
+            </div>`;
+
+        function close() {
+            overlay.remove();
+            document.removeEventListener("keydown", onKey);
+        }
+        function onKey(e) {
+            if (e.key === "Escape") close();
+        }
+        overlay.addEventListener("click", e => { if (e.target === overlay) close(); });
+        overlay.querySelector(".diff-modal-close").addEventListener("click", close);
+        document.addEventListener("keydown", onKey);
+
+        document.body.appendChild(overlay);
+    }
+
 
     // ---------------------------------------------------------------------------
     // Autosave / unsaved-changes guard (localStorage drafts)

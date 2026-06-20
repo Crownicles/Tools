@@ -51,9 +51,9 @@
 - [x] 1.4.5 — Vérif : supprimer une sortie → Annuler → état identique ; supprimer sans annuler → absente du `.patch`.
 
 ### 1.5 Barre d'action sticky (Nielsen #1, #7)
-- [ ] 1.5.1 — Barre fine **sticky** (haut) toujours visible : nom repo@branche, compteur « N fichier(s) modifié(s) », bouton **Exporter**, bouton « Aperçu du diff ».
-- [ ] 1.5.2 — État visuel propre/modifié (pastille). Le panneau de chargement complet reste accessible mais peut se replier.
-- [ ] 1.5.3 — Vérif : sur event #13 (long), Exporter reste atteignable sans remonter en haut.
+- [x] 1.5.1 — Barre fine **sticky** (haut) toujours visible : nom repo@branche, compteur « N fichier(s) modifié(s) », bouton **Exporter**, bouton « Aperçu du diff ».
+- [x] 1.5.2 — État visuel propre/modifié (pastille). Le panneau de chargement complet reste accessible mais peut se replier.
+- [x] 1.5.3 — Vérif : sur event #13 (long), Exporter reste atteignable sans remonter en haut.
 
 ---
 
