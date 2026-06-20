@@ -404,7 +404,7 @@
         }
 
         /* -------------------------------------------------------------------
-         * Basic diff preview modal
+         * Pre-export review modal
          * ------------------------------------------------------------------- */
         .diff-modal-overlay {
             position: fixed;
@@ -434,15 +434,90 @@
             padding: 12px 16px;
             border-bottom: 1px solid var(--border-color);
         }
-        .diff-modal-body {
-            margin: 0;
-            padding: 16px;
+        /* Validation errors block (danger-tinted) */
+        .diff-validation-errors {
+            margin: 12px 16px 0;
+            padding: 12px 14px;
+            border: 1px solid rgba(239, 68, 68, .35);
+            border-left: 4px solid var(--danger);
+            border-radius: 8px;
+            background: rgba(239, 68, 68, .1);
+            color: var(--danger);
+            font-size: .85rem;
+        }
+        .diff-validation-errors ul {
+            margin: 8px 0 0;
+            padding-left: 20px;
+        }
+        .diff-validation-errors li { margin: 2px 0; }
+        /* Scrollable list of per-file collapsible diffs */
+        .diff-file-list {
+            flex: 1 1 auto;
+            min-height: 0;
             overflow: auto;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .diff-file {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--bg-primary);
+        }
+        .diff-file > summary {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+            list-style: none;
+            user-select: none;
+        }
+        .diff-file > summary::-webkit-details-marker { display: none; }
+        .diff-file > summary:hover { background: var(--bg-tertiary); }
+        .diff-file-path {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: .82rem;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+        .diff-chip {
+            flex: 0 0 auto;
+            padding: 2px 9px;
+            border-radius: 999px;
+            font-size: .72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .02em;
+            border: 1px solid transparent;
+        }
+        .diff-chip-new { background: rgba(34, 197, 94, .14); color: var(--success); border-color: rgba(34, 197, 94, .35); }
+        .diff-chip-mod { background: rgba(245, 158, 11, .14); color: var(--warning); border-color: rgba(245, 158, 11, .35); }
+        .diff-chip-del { background: rgba(239, 68, 68, .14); color: var(--danger); border-color: rgba(239, 68, 68, .35); }
+        .diff-body {
+            margin: 0;
+            padding: 12px 14px;
+            overflow: auto;
+            max-height: 50vh;
             background: var(--bg-tertiary);
+            border-top: 1px solid var(--border-color);
             font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             font-size: .8rem;
             line-height: 1.45;
             white-space: pre;
             color: var(--text-primary);
+        }
+        .diff-body .diff-add { color: #15803d; background: rgba(34, 197, 94, .12); display: block; }
+        .diff-body .diff-del { color: #b91c1c; background: rgba(239, 68, 68, .12); display: block; }
+        .diff-body .diff-hunk { color: var(--accent-secondary); }
+        .diff-body .diff-hdr { color: var(--text-secondary); }
+        .diff-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-color);
         }
 

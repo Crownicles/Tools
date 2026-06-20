@@ -1491,7 +1491,69 @@
         return n;
     }
 
+    // Collect human-readable French validation errors that must block an export.
+    // Two categories:
+    //  a. Invalid advanced JSON still pending in the DOM (never committed to state).
+    //  b. Structural problems in state.textsData (real choice without outcomes,
+    //     or an event with no possibility at all).
+    function collectValidationErrors() {
+        const errors = [];
+
+        // a. Advanced JSON errors currently displayed in the DOM. editAdvanced()
+        // toggles the sibling .json-error to display:block on parse failure and
+        // back to display:none on success, so an inline display:block flags an
+        // uncommitted invalid value living only in the textarea.
+        Array.from(document.querySelectorAll(".json-error"))
+            .filter(el => el.style.display === "block")
+            .forEach(el => {
+                const details = el.closest("details");
+                const ta = details && details.querySelector("textarea");
+                const label = ta && ta.getAttribute("aria-label");
+                const ctx = label ? ` (${label})` : "";
+                errors.push(`JSON avancé invalide${ctx} — corrigez ou videz le champ avant d'exporter.`);
+            });
+
+        // b. Structural checks over the text data.
+        if (state.textsData) {
+            Object.keys(state.textsData).forEach(id => {
+                const ev = state.textsData[id];
+                const poss = ev && ev.possibilities;
+                if (!poss || Object.keys(poss).length === 0) {
+                    errors.push(`Event #${id} : aucune possibilité.`);
+                    return;
+                }
+                Object.keys(poss).forEach(name => {
+                    const p = poss[name];
+                    // Only real choices (with a button text) require outcomes;
+                    // a default possibility has no text and is exempt.
+                    if (p && typeof p.text === "string" && p.text !== "") {
+                        const outcomes = p.outcomes;
+                        if (!outcomes || Object.keys(outcomes).length === 0) {
+                            errors.push(`Event #${id} · choix « ${name} » : aucune sortie définie.`);
+                        }
+                    }
+                });
+            });
+        }
+
+        return errors;
+    }
+
+    // Alias used by export paths; returns the blocking validation errors (if any).
+    function validateBeforeExport() {
+        return collectValidationErrors();
+    }
+
     function exportPatch() {
+        // Block export on validation errors (covers both the action-bar Export
+        // button and the modal download button, since the latter re-enters here).
+        const errors = validateBeforeExport();
+        if (errors.length) {
+            showDiffPreview();
+            setStatus("⚠️ Export bloqué : corrigez les erreurs de validation.", "error");
+            return;
+        }
+
         const parts = buildPatchParts();
 
         if (!parts.length) {
@@ -1553,27 +1615,95 @@
         if (exportBtn) exportBtn.disabled = noFiles;
     }
 
-    // Basic but real diff preview overlay. The text shown MUST equal what
-    // exportPatch() downloads (both go through the same buildPatch* helpers).
+    // Parse a single per-file unified-diff part into { path, status, chipClass }.
+    // The path comes from the `diff --git a/PATH b/PATH` header; the status is
+    // derived from the creation/deletion markers emitted by fileCreateDiff /
+    // fileDeleteDiff (otherwise it is a plain modification).
+    function diffFileMeta(part) {
+        const firstLine = part.split("\n", 1)[0];
+        const m = firstLine.match(/^diff --git a\/(.+?) b\/(.+)$/);
+        const path = m ? m[2] : firstLine.replace(/^diff --git\s*/, "");
+        if (/\nnew file mode/.test(part) || /\n--- \/dev\/null/.test(part)) {
+            return { path, status: "créé", chipClass: "diff-chip-new" };
+        }
+        if (/\ndeleted file mode/.test(part) || /\n\+\+\+ \/dev\/null/.test(part)) {
+            return { path, status: "supprimé", chipClass: "diff-chip-del" };
+        }
+        return { path, status: "modifié", chipClass: "diff-chip-mod" };
+    }
+
+    // Escape a diff part and wrap each line in a class span for coloring. The
+    // textual content is left untouched (no reformatting), so the concatenation
+    // of every body equals buildPatchString() byte-for-byte. The `---`/`+++`
+    // header lines are treated as headers, never as del/add.
+    function colorizeDiff(part) {
+        return part.split("\n").map(line => {
+            let cls = "";
+            if (line.startsWith("diff --git") || line.startsWith("index ")
+                || line.startsWith("new file mode") || line.startsWith("deleted file mode")
+                || line.startsWith("--- ") || line.startsWith("+++ ")
+                || line.startsWith("\\ ")) {
+                cls = "diff-hdr";
+            } else if (line.startsWith("@@")) {
+                cls = "diff-hunk";
+            } else if (line.startsWith("+")) {
+                cls = "diff-add";
+            } else if (line.startsWith("-")) {
+                cls = "diff-del";
+            }
+            const esc = escapeHtml(line);
+            return cls ? `<span class="${cls}">${esc}</span>` : esc;
+        }).join("\n");
+    }
+
+    // Structured pre-export review modal. The per-file diff bodies reproduce the
+    // exact part strings from buildPatchParts(); concatenated they equal
+    // buildPatchString() (== the downloaded patch). Validation errors disable the
+    // download button so export is blocked from the modal too.
     function showDiffPreview() {
-        const patch = buildPatchString();
-        if (!patch) {
+        const parts = buildPatchParts();
+        if (!parts.length) {
             setStatus("ℹ️ Aucune modification à prévisualiser.", "loading");
             return;
         }
 
+        const errors = validateBeforeExport();
+
         const existing = document.querySelector(".diff-modal-overlay");
         if (existing) existing.remove();
+
+        const filesHtml = parts.map(part => {
+            const { path, status, chipClass } = diffFileMeta(part);
+            return `<details class="diff-file">
+                    <summary>
+                        <span class="diff-chip ${chipClass}">${status}</span>
+                        <span class="diff-file-path">${escapeHtml(path)}</span>
+                    </summary>
+                    <pre class="diff-body">${colorizeDiff(part)}</pre>
+                </details>`;
+        }).join("");
+
+        const errorsHtml = errors.length
+            ? `<div class="diff-validation-errors" role="alert">
+                    <strong>⚠️ ${errors.length} erreur(s) bloquante(s) — export désactivé :</strong>
+                    <ul>${errors.map(e => `<li>${escapeHtml(e)}</li>`).join("")}</ul>
+                </div>`
+            : "";
 
         const overlay = document.createElement("div");
         overlay.className = "diff-modal-overlay";
         overlay.innerHTML = `
-            <div class="diff-modal" role="dialog" aria-modal="true" aria-label="Aperçu du diff">
+            <div class="diff-modal" role="dialog" aria-modal="true" aria-label="Aperçu du patch">
                 <div class="diff-modal-header">
-                    <strong>👁️ Aperçu du diff</strong>
+                    <strong>👁️ Aperçu du patch</strong>
                     <button class="btn-mini diff-modal-close" type="button" aria-label="Fermer">✕</button>
                 </div>
-                <pre class="diff-modal-body">${escapeHtml(patch)}</pre>
+                ${errorsHtml}
+                <div class="diff-file-list">${filesHtml}</div>
+                <div class="diff-modal-footer">
+                    <button class="btn btn-export diff-modal-download" type="button" ${errors.length ? "disabled" : ""}>💾 Télécharger le .patch</button>
+                    <button class="btn btn-ghost diff-modal-close" type="button">Fermer</button>
+                </div>
             </div>`;
 
         function close() {
@@ -1584,10 +1714,19 @@
             if (e.key === "Escape") close();
         }
         overlay.addEventListener("click", e => { if (e.target === overlay) close(); });
-        overlay.querySelector(".diff-modal-close").addEventListener("click", close);
+        overlay.querySelectorAll(".diff-modal-close").forEach(b => b.addEventListener("click", close));
+        const downloadBtn = overlay.querySelector(".diff-modal-download");
+        if (downloadBtn) {
+            downloadBtn.addEventListener("click", () => { close(); exportPatch(); });
+        }
         document.addEventListener("keydown", onKey);
 
         document.body.appendChild(overlay);
+
+        const focusTarget = (downloadBtn && !downloadBtn.disabled)
+            ? downloadBtn
+            : overlay.querySelector(".diff-modal-close");
+        if (focusTarget) focusTarget.focus();
     }
 
 

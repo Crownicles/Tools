@@ -60,10 +60,10 @@
 ## PHASE 2 — P1 : Ergonomie & prévention d'erreurs
 
 ### 2.1 Aperçu du diff avant export (Nielsen #1, #2)
-- [ ] 2.1.1 — Modale « Aperçu du patch » : liste des fichiers (créé / modifié / supprimé) + diff unifié repliable par fichier.
-- [ ] 2.1.2 — Réutiliser la logique `exportPatch` existante pour générer le contenu (le preview = exactement le patch téléchargé).
-- [ ] 2.1.3 — Bloquer l'export si une validation échoue (JSON avancé invalide, champ requis manquant) ; afficher les erreurs.
-- [ ] 2.1.4 — Vérif : preview == fichier `.patch` (mêmes fichiers, mêmes hunks, créations/suppressions correctes).
+- [x] 2.1.1 — Modale « Aperçu du patch » : liste des fichiers (créé / modifié / supprimé) + diff unifié repliable par fichier.
+- [x] 2.1.2 — Réutiliser la logique `exportPatch` existante pour générer le contenu (le preview = exactement le patch téléchargé).
+- [x] 2.1.3 — Bloquer l'export si une validation échoue (JSON avancé invalide, champ requis manquant) ; afficher les erreurs.
+- [x] 2.1.4 — Vérif : preview == fichier `.patch` (mêmes fichiers, mêmes hunks, créations/suppressions correctes).
 
 ### 2.2 Layout des sorties scalable (Nielsen #8)
 - [ ] 2.2.1 — Remplacer le scroll horizontal `flex:0 0 340px` par une **grille verticale responsive** (`grid` auto-fit `minmax(320px,1fr)`).
