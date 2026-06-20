@@ -806,6 +806,12 @@
                     onchange="editScalar('${id}','${name}','${key}','oneshot',this.checked)">
                 <label for="os-${id}-${name}-${key}">💀 One-shot (mort)</label>
             </div>`;
+            // forceStayInCity
+            html += `<div class="mini-field checkbox">
+                <input type="checkbox" id="fsc-${id}-${name}-${key}" ${outcome.forceStayInCity ? "checked" : ""}
+                    onchange="editScalar('${id}','${name}','${key}','forceStayInCity',this.checked)">
+                <label for="fsc-${id}-${name}-${key}">🏙️ Rester en ville (forcé)</label>
+            </div>`;
             html += `</div>`;
 
             // advanced JSON
@@ -843,6 +849,7 @@
         if (o.randomPet) add("special", "🐾 Familier aléatoire");
         if (o.givePet) add("special", `🐾 Familier ${(o.givePet.petIds || []).join(", ")}`);
         if (o.oneshot) add("neg", "💀 Mort");
+        if (o.forceStayInCity) add("special", "🏙️ Reste en ville");
         if (o.nextEvent != null) add("special", `➡️ Event ${o.nextEvent}`);
         if (o.bonusExperience) add("pos", `✨ XP ${fmtSigned(o.bonusExperience)}`);
         if (o.bonusPoints) add("pos", `🏆 Pts ${fmtSigned(o.bonusPoints)}`);
@@ -899,6 +906,8 @@
 
         if (field === "oneshot") {
             if (rawValue) outcome.oneshot = true; else delete outcome.oneshot;
+        } else if (field === "forceStayInCity") {
+            if (rawValue) outcome.forceStayInCity = true; else delete outcome.forceStayInCity;
         } else if (field === "effect") {
             if (rawValue) outcome.effect = rawValue; else delete outcome.effect;
         } else {
