@@ -171,22 +171,57 @@
 
         .choice-text-edit { margin-bottom: 16px; }
 
-        .outcomes-scroll { overflow-x: auto; padding-bottom: 6px; }
-        .outcomes { display: flex; gap: 14px; align-items: stretch; min-width: min-content; }
+        .outcomes-scroll { padding-bottom: 6px; }
+        .outcomes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 14px;
+            align-items: start;
+        }
         .outcome-card {
-            flex: 0 0 340px;
             border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 14px;
             background: var(--bg-primary);
             display: flex; flex-direction: column; gap: 10px;
         }
-        .outcome-head { display: flex; align-items: center; justify-content: space-between; }
+        .outcome-head {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 8px; cursor: pointer;
+        }
+        .outcome-head:focus-visible { outline: 2px solid var(--accent-secondary); outline-offset: 2px; border-radius: 6px; }
+        .outcome-toggle { color: var(--text-secondary); font-size: .85rem; transition: transform .2s ease; }
+        .outcome-card:not(.open) .outcome-toggle { transform: rotate(-90deg); }
         .outcome-tag {
             background: var(--accent-secondary); color: white;
             border-radius: 6px; padding: 2px 10px; font-size: .78rem; font-weight: 700;
         }
         .outcome-emoji { font-size: 1.2rem; }
+
+        /* Collapsible body + collapsed summary line */
+        .outcome-body { display: flex; flex-direction: column; gap: 10px; }
+        .outcome-card:not(.open) .outcome-body { display: none; }
+        .outcome-summary {
+            display: flex; align-items: center; gap: 8px; min-width: 0;
+            font-size: .82rem; color: var(--text-secondary);
+        }
+        .outcome-card.open .outcome-summary { display: none; }
+        .outcome-summary-emoji { font-size: 1.05rem; flex: 0 0 auto; }
+        .outcome-summary-text {
+            flex: 1 1 auto; min-width: 0;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .outcome-summary-pills { display: flex; flex-wrap: wrap; gap: 4px; flex: 0 0 auto; }
+
+        /* Comparison mode: side-by-side horizontal layout (opt-in) */
+        .compare-mode .outcomes {
+            display: flex; gap: 14px; align-items: stretch;
+            overflow-x: auto; min-width: min-content; padding-bottom: 6px;
+        }
+        .compare-mode .outcome-card { flex: 0 0 340px; }
+        #compareToggle[aria-pressed="true"] {
+            background: var(--accent-secondary); color: #fff; border-color: var(--accent-secondary);
+        }
 
         .conseq { display: flex; flex-direction: column; gap: 8px; }
         .conseq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

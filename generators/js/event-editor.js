@@ -26,6 +26,9 @@
         deletedEffects: new Set()   // effect files removed via event deletion (export as deleted file)
     };
 
+    // Session-only presentation toggle: side-by-side comparison of outcomes (default = responsive grid).
+    let compareMode = false;
+
     // French labels for effects (from Lib/src/types/Effect.ts)
     const EFFECTS = {
         "": "Aucun (none)",
@@ -379,6 +382,9 @@
                     onchange="editTriggers('${id}', this.value)">
             </div>
             <button class="btn-mini" onclick="addChoice('${id}')">➕ Ajouter un choix</button>
+            <button class="btn-mini" id="compareToggle" aria-pressed="${compareMode ? "true" : "false"}"
+                title="Afficher les sorties côte à côte pour les comparer"
+                onclick="toggleCompareMode()">↔️ Comparaison</button>
             <button class="btn-mini btn-mini-danger" onclick="deleteEvent('${id}')">🗑️ Supprimer l'event</button>
         </div>`;
 
@@ -394,6 +400,8 @@
         html += `</div>`;
 
         panel.innerHTML = html;
+        // Re-apply the session comparison mode after every re-render.
+        panel.classList.toggle("compare-mode", compareMode);
     }
 
     // ---------------------------------------------------------------------------
@@ -533,16 +541,28 @@
         const outcome = effEv.possibilities?.[name]?.outcomes?.[key] || {};
         const outEmoji = (emojiInfo && emojiInfo.type === "object" && emojiInfo.outcomes[key]) ? emojiInfo.outcomes[key].value : null;
 
-        let html = `<div class="outcome-card">`;
-        html += `<div class="outcome-head">
+        let html = `<div class="outcome-card open">`;
+        html += `<div class="outcome-head" role="button" tabindex="0" aria-expanded="true"
+            onclick="onOutcomeHeadClick(event, this)" onkeydown="onOutcomeHeadKey(event, this)">
+            <span class="outcome-toggle" aria-hidden="true">▼</span>
             <span class="outcome-tag">Sortie ${key}</span>
             <div class="outcome-head-right">
                 ${outEmoji !== null ? `<input class="emoji-input" value="${escapeHtml(outEmoji)}" aria-label="Emoji de la sortie ${key}" onchange="editEmoji('${id}','${name}','${key}',this.value)">` : ""}
                 <button class="btn-mini btn-mini-danger" title="Supprimer la sortie"
-                    onclick="deleteOutcome('${id}','${name}','${key}')">🗑️</button>
+                    onclick="event.stopPropagation(); deleteOutcome('${id}','${name}','${key}')">🗑️</button>
             </div>
         </div>`;
 
+        // Collapsed one-line summary: emoji + text snippet + key-effect pills.
+        const snippetRaw = (text == null ? "" : String(text)).replace(/\s+/g, " ").trim();
+        const snippet = snippetRaw.length > 40 ? `${snippetRaw.slice(0, 40)}…` : snippetRaw;
+        html += `<div class="outcome-summary">
+            ${outEmoji ? `<span class="outcome-summary-emoji">${escapeHtml(outEmoji)}</span>` : ""}
+            <span class="outcome-summary-text">${escapeHtml(snippet) || "(vide)"}</span>
+            <span class="outcome-summary-pills">${summaryPills(outcome)}</span>
+        </div>`;
+
+        html += `<div class="outcome-body">`;
         html += `<div>
             <div class="field-label">Texte du résultat</div>
             <textarea rows="4" aria-label="Texte de la sortie ${key}" oninput="editOutcomeText('${id}','${name}','${key}',this.value)">${escapeHtml(text == null ? "" : text)}</textarea>
@@ -610,7 +630,8 @@
             html += `<div class="hint">Effets non chargés pour cet event.</div>`;
         }
 
-        html += `</div>`;
+        html += `</div>`; // .outcome-body
+        html += `</div>`; // .outcome-card
         return html;
     }
 
@@ -650,6 +671,34 @@
             e.preventDefault();
             toggleChoice(el);
         }
+    }
+
+    function toggleOutcome(headEl) {
+        const card = headEl.closest(".outcome-card");
+        if (!card) return;
+        const isOpen = card.classList.toggle("open");
+        headEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+
+    function onOutcomeHeadClick(e, el) {
+        // Clicks on the emoji input or the delete button must edit, not collapse.
+        if (e.target.closest("input, button, .emoji-input")) return;
+        toggleOutcome(el);
+    }
+
+    function onOutcomeHeadKey(e, el) {
+        if ((e.key === "Enter" || e.key === " ") && e.target === el) {
+            e.preventDefault();
+            toggleOutcome(el);
+        }
+    }
+
+    function toggleCompareMode() {
+        compareMode = !compareMode;
+        const panel = document.getElementById("eventPanel");
+        if (panel) panel.classList.toggle("compare-mode", compareMode);
+        const btn = document.getElementById("compareToggle");
+        if (btn) btn.setAttribute("aria-pressed", compareMode ? "true" : "false");
     }
 
     // ---------------------------------------------------------------------------

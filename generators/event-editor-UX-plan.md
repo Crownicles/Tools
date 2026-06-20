@@ -66,11 +66,11 @@
 - [x] 2.1.4 — Vérif : preview == fichier `.patch` (mêmes fichiers, mêmes hunks, créations/suppressions correctes).
 
 ### 2.2 Layout des sorties scalable (Nielsen #8)
-- [ ] 2.2.1 — Remplacer le scroll horizontal `flex:0 0 340px` par une **grille verticale responsive** (`grid` auto-fit `minmax(320px,1fr)`).
-- [ ] 2.2.2 — Mode « comparaison » optionnel (toggle) qui rétablit l'affichage côte à côte si souhaité.
-- [ ] 2.2.3 — Sorties repliables avec **résumé** (emoji + début de texte + effets clés) ; clic → édition complète.
-- [ ] 2.2.4 — Préserver et afficher l'**ordre** des sorties (l'index est signifiant côté jeu).
-- [ ] 2.2.5 — Vérif : 14 sorties de l'event #13 lisibles sans scroll horizontal ; ordre conservé à l'export.
+- [x] 2.2.1 — Remplacer le scroll horizontal `flex:0 0 340px` par une **grille verticale responsive** (`grid` auto-fit `minmax(320px,1fr)`).
+- [x] 2.2.2 — Mode « comparaison » optionnel (toggle) qui rétablit l'affichage côte à côte si souhaité.
+- [x] 2.2.3 — Sorties repliables avec **résumé** (emoji + début de texte + effets clés) ; clic → édition complète.
+- [x] 2.2.4 — Préserver et afficher l'**ordre** des sorties (l'index est signifiant côté jeu).
+- [x] 2.2.5 — Vérif : 14 sorties de l'event #13 lisibles sans scroll horizontal ; ordre conservé à l'export.
 
 ### 2.3 Modales custom + validation (remplacer prompt/confirm)
 - [ ] 2.3.1 — Composant modale réutilisable (focus trap, `Esc`, overlay, bouton Annuler) avec tokens existants.
