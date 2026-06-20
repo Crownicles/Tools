@@ -181,6 +181,14 @@
         state.deletedEffects = new Set();
     }
 
+    // ---------------------------------------------------------------------------
+    // Unique id generator (used to link <label for> to inputs)
+    // ---------------------------------------------------------------------------
+    let __uidCounter = 0;
+    function genId(prefix) {
+        return (prefix || "f") + "-" + (++__uidCounter);
+    }
+
     function ingestTexts(raw) {
         state.textsRaw = raw;
         state.textsData = JSON.parse(raw);

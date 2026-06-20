@@ -15,9 +15,9 @@
 ## PHASE 0 — Garde-fous & socle (préparation)
 **But : pouvoir vérifier la non‑régression à chaque commit.**
 
-- [ ] 0.1 — Inventaire de référence : capturer l'état actuel (nb events chargés, nb choix/sorties event #13, génération d'un `.patch` témoin) pour comparaison après chaque lot.
-- [ ] 0.2 — Helper interne `genId()` (id uniques pour liaisons label/champ) + helper `el(tag, attrs, children)` léger si utile (sans sur-ingénierie).
-- [ ] 0.3 — Mettre en place un petit harnais de smoke test manuel documenté (séquence Chrome MCP : load master → select 13 → toggle review → export).
+- [x] 0.1 — Inventaire de référence : capturer l'état actuel (nb events chargés, nb choix/sorties event #13, génération d'un `.patch` témoin) pour comparaison après chaque lot.
+- [x] 0.2 — Helper interne `genId()` (id uniques pour liaisons label/champ) + helper `el(tag, attrs, children)` léger si utile (sans sur-ingénierie).
+- [x] 0.3 — Mettre en place un petit harnais de smoke test manuel documenté (séquence Chrome MCP : load master → select 13 → toggle review → export).
 
 ---
 
