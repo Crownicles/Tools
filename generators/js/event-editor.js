@@ -321,6 +321,10 @@
     const comboState = { open: false, options: [], active: -1, wired: false };
     const COMBO_LIMIT = 50;
 
+    // Session-only filter: when ON, the combobox list shows only modified events
+    // (AND-combined with the current text query). Toggled via #filterModifiedOnly.
+    let modifiedOnly = false;
+
     // Strip emote tokens and build the human label shared by the select and the combobox.
     function buildEventLabel(id) {
         const ev = state.textsData && state.textsData[id];
@@ -404,7 +408,9 @@
         if (!list || !state.textsData) return;
         const q = (query || "").toLowerCase().trim();
         const ids = state.textsOrder.length ? state.textsOrder : Object.keys(state.textsData);
-        const matches = ids.filter(id => state.textsData[id] && comboEventMatches(id, q));
+        const matches = ids.filter(id => state.textsData[id]
+            && comboEventMatches(id, q)
+            && (!modifiedOnly || isEventModified(id)));
         list.innerHTML = "";
         comboState.options = [];
         comboState.active = -1;
@@ -528,6 +534,23 @@
         const input = document.getElementById("eventCombo");
         if (!input) return;
         comboState.wired = true;
+
+        // Inject the "modifiés uniquement" filter toggle once, next to the combobox.
+        const comboWrapper = input.closest(".combo-wrapper");
+        if (comboWrapper && !document.getElementById("filterModifiedOnly")) {
+            const toggle = document.createElement("label");
+            toggle.className = "modified-filter-toggle";
+            toggle.setAttribute("title", "N'afficher que les events modifiés dans la recherche");
+            toggle.innerHTML = `<input type="checkbox" id="filterModifiedOnly"
+                aria-label="N'afficher que les events modifiés"> <span>✎ Modifiés uniquement</span>`;
+            comboWrapper.insertAdjacentElement("afterend", toggle);
+            const cb = toggle.querySelector("#filterModifiedOnly");
+            cb.addEventListener("change", () => {
+                modifiedOnly = cb.checked;
+                renderComboList(input.value);
+                openCombo();
+            });
+        }
 
         input.addEventListener("input", () => { renderComboList(input.value); openCombo(); });
         input.addEventListener("focus", () => { input.select(); renderComboList(input.value); openCombo(); });
@@ -714,11 +737,53 @@
 
     function renderModifiedBadges() {
         const parts = [];
-        if (state.modified.texts) parts.push(`<span class="badge modified">✎ events.json</span>`);
-        if (state.modified.icons) parts.push(`<span class="badge modified">✎ CrowniclesIcons.ts</span>`);
-        state.modified.effects.forEach(id => parts.push(`<span class="badge modified">✎ events/${id}.json</span>`));
+        if (state.modified.texts) parts.push(modifiedBadgeHtml("texts", "", "✎ events.json", "Aller à la section des textes (events.json)"));
+        if (state.modified.icons) parts.push(modifiedBadgeHtml("icons", "", "✎ CrowniclesIcons.ts", "Aller à la section des emojis (CrowniclesIcons.ts)"));
+        state.modified.effects.forEach(id => parts.push(modifiedBadgeHtml("effect", id, `✎ events/${id}.json`, `Aller à l'event modifié #${id}`)));
         return parts.join("");
     }
+
+    // Build a clickable/keyboard-activatable "modified" badge. Activation is handled
+    // by a single delegated listener (see goToModifiedSection wiring at init).
+    function modifiedBadgeHtml(target, id, label, aria) {
+        const idAttr = id ? ` data-badge-id="${escapeHtml(id)}"` : "";
+        return `<span class="badge modified" role="button" tabindex="0" data-badge-target="${target}"${idAttr}`
+            + ` aria-label="${escapeHtml(aria)}" title="${escapeHtml(aria)}">${escapeHtml(label)}</span>`;
+    }
+
+    // Reveal the source section behind a "modified" badge: scroll it into view and flash it.
+    function goToModifiedSection(target, id) {
+        let el = null;
+        if (target === "texts") {
+            el = document.getElementById("box-texts");
+        } else if (target === "icons") {
+            el = document.getElementById("box-icons");
+        } else if (target === "effect") {
+            // Navigate to the modified event first if it is not the selected one.
+            if (id && id !== state.selected) selectComboOption(id);
+            el = document.getElementById("eventPanel");
+        }
+        if (!el) return;
+        requestAnimationFrame(() => {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+            el.classList.add("flash-highlight");
+            setTimeout(() => el.classList.remove("flash-highlight"), 1200);
+        });
+    }
+
+    // Single delegated handler for both click and keyboard (Enter/Space) activation.
+    function handleModifiedBadgeActivation(e) {
+        const badge = e.target.closest && e.target.closest(".badge.modified[data-badge-target]");
+        if (!badge) return;
+        if (e.type === "keydown") {
+            if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+            e.preventDefault();
+        }
+        goToModifiedSection(badge.dataset.badgeTarget, badge.dataset.badgeId || "");
+    }
+    // Bound exactly once (top-level init), so repeated refreshBadges/redraws never duplicate it.
+    document.addEventListener("click", handleModifiedBadgeActivation);
+    document.addEventListener("keydown", handleModifiedBadgeActivation);
 
     function emojiFor(icons, name) {
         const info = icons[name];

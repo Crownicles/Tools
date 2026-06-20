@@ -102,7 +102,7 @@
 ## PHASE 3 — P2 : Finition & confort
 
 - [x] 3.1 — Regrouper les 12 champs d'effets en `fieldset/legend` (Ressources / Navigation / Flags) ; replier les effets à zéro par défaut.
-- [ ] 3.2 — Badges « modifié » **cliquables** (scroll vers la section) + filtre « modifiés uniquement ».
+- [x] 3.2 — Badges « modifié » **cliquables** (scroll vers la section) + filtre « modifiés uniquement ».
 - [ ] 3.3 — Rehausser le contraste `--text-secondary` (≈ `#475569`) pour hints/sous-titres/labels secondaires (WCAG 1.4.3).
 - [ ] 3.4 — Responsive mobile : largeurs fluides (`min()`/`%`), supprimer les largeurs fixes 340/360px, toolbar repliée.
 - [ ] 3.5 — Ajouter un favicon (supprime le 404, finition perçue).

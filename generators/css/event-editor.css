@@ -118,6 +118,32 @@
             border-radius: 999px; padding: 4px 12px; font-size: .82rem; color: var(--text-secondary);
         }
         .badge.modified { background: rgba(245,158,11,.16); color: #b45309; border-color: rgba(245,158,11,.4); }
+        /* Clickable "modified" badges: scroll to / reveal the related source section. */
+        .badge.modified[role="button"] { cursor: pointer; transition: background .15s ease, border-color .15s ease, transform .1s ease; }
+        .badge.modified[role="button"]:hover { background: rgba(245,158,11,.28); border-color: rgba(245,158,11,.7); }
+        .badge.modified[role="button"]:active { transform: translateY(1px); }
+        .badge.modified[role="button"]:focus-visible { outline: 2px solid var(--accent-secondary); outline-offset: 2px; }
+
+        /* Transient pulse applied to a section after navigating to it from a badge. */
+        @keyframes flash-highlight-pulse {
+            0%   { box-shadow: 0 0 0 0 rgba(99,102,241,.55); outline-color: var(--accent-secondary); }
+            60%  { box-shadow: 0 0 0 6px rgba(99,102,241,.12); }
+            100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); outline-color: transparent; }
+        }
+        .flash-highlight {
+            animation: flash-highlight-pulse 1.2s ease-out;
+            outline: 2px solid var(--accent-secondary);
+            outline-offset: 3px;
+            border-radius: 10px;
+        }
+
+        /* "Modifiés uniquement" filter toggle, placed next to the event combobox. */
+        .modified-filter-toggle {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 8px;
+            font-size: .85rem; color: var(--text-secondary); cursor: pointer; user-select: none;
+        }
+        .modified-filter-toggle input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent-primary); }
+        .modified-filter-toggle:hover { color: var(--accent-primary); }
 
         textarea, .edit-text {
             width: 100%;
