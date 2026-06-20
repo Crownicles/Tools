@@ -87,10 +87,10 @@
 - [x] 2.4.5 — Vérif : retrouver l'event #45 par titre et par mapId ; sélection au clavier.
 
 ### 2.5 Palette emoji + défauts de chargement
-- [ ] 2.5.1 — **Picker emoji** branché sur les icônes chargées depuis `CrowniclesIcons.ts` (recherche par nom, aperçu, insertion).
-- [ ] 2.5.2 — Alerte si l'emoji saisi n'existe pas dans les icônes exportables.
-- [ ] 2.5.3 — Branche par défaut = `master` (ou autodétection de la branche par défaut via l'API GitHub).
-- [ ] 2.5.4 — Vérif : insertion d'un emoji via picker ; chargement direct sans corriger la branche.
+- [x] 2.5.1 — **Picker emoji** branché sur les icônes chargées depuis `CrowniclesIcons.ts` (recherche par nom, aperçu, insertion).
+- [x] 2.5.2 — Alerte si l'emoji saisi n'existe pas dans les icônes exportables.
+- [x] 2.5.3 — Branche par défaut = `master` (ou autodétection de la branche par défaut via l'API GitHub).
+- [x] 2.5.4 — Vérif : insertion d'un emoji via picker ; chargement direct sans corriger la branche.
 
 ### 2.6 Raccourcis clavier (Nielsen #7)
 - [ ] 2.6.1 — `Cmd/Ctrl+S` = Exporter (ou ouvrir l'aperçu) ; `Cmd/Ctrl+F` = focus recherche event ; `Esc` = ferme modale/toast.

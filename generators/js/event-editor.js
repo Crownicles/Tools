@@ -13,6 +13,7 @@
         textsData: null,            // parsed object
         textsOrder: [],             // original root key order
         iconsRaw: null,             // raw string of CrowniclesIcons.ts
+        iconRegistry: null,         // cached [{ path, name, emoji }] parsed from iconsRaw (lazy)
         iconsEvents: {},            // id -> { order:[names], possibilities:{name:entry}, tailWs }
         iconsOrder: [],             // event id order inside the events: {} block
         iconsBlock: null,           // { start, end, tailWs } span of the events: {} block in iconsRaw
@@ -262,6 +263,7 @@
         state.iconsEvents = parsed.events;
         state.iconsOrder = parsed.order;
         state.iconsBlock = parsed.block;
+        state.iconRegistry = null; // invalidate; rebuilt lazily on first picker open
         state.modified.icons = false;
     }
 
@@ -720,9 +722,15 @@
 
         let emojiControl;
         if (emojiInfo && emojiInfo.type === "string") {
-            emojiControl = `<input class="emoji-input" value="${escapeHtml(emoji || "")}" title="Emoji du choix"
-                aria-label="Emoji du choix ${escapeHtml(name)}"
-                onchange="editEmoji('${id}','${name}',null,this.value)">`;
+            const emoInputId = genId("emo");
+            emojiControl = `<span class="emoji-field">
+                <input id="${emoInputId}" class="emoji-input" value="${escapeHtml(emoji || "")}" title="Emoji du choix"
+                    aria-label="Emoji du choix ${escapeHtml(name)}"
+                    onchange="editEmoji('${id}','${name}',null,this.value)">
+                <button type="button" class="emoji-pick-btn" title="Choisir un emoji"
+                    aria-label="Ouvrir le sélecteur d'emoji pour le choix ${escapeHtml(name)}"
+                    onclick="event.stopPropagation(); openEmojiPicker('${emoInputId}','${id}','${name}',null)">😀</button>
+            </span>`;
         } else {
             emojiControl = `<div class="choice-emoji">${escapeHtml(emoji || "❓")}</div>`;
         }
@@ -759,13 +767,24 @@
         const outcome = effEv.possibilities?.[name]?.outcomes?.[key] || {};
         const outEmoji = (emojiInfo && emojiInfo.type === "object" && emojiInfo.outcomes[key]) ? emojiInfo.outcomes[key].value : null;
 
+        let emojiControl = "";
+        if (outEmoji !== null) {
+            const emoInputId = genId("emo");
+            emojiControl = `<span class="emoji-field">
+                <input id="${emoInputId}" class="emoji-input" value="${escapeHtml(outEmoji)}" aria-label="Emoji de la sortie ${key}" onchange="editEmoji('${id}','${name}','${key}',this.value)">
+                <button type="button" class="emoji-pick-btn" title="Choisir un emoji"
+                    aria-label="Ouvrir le sélecteur d'emoji pour la sortie ${key}"
+                    onclick="event.stopPropagation(); openEmojiPicker('${emoInputId}','${id}','${name}','${key}')">😀</button>
+            </span>`;
+        }
+
         let html = `<div class="outcome-card open">`;
         html += `<div class="outcome-head" role="button" tabindex="0" aria-expanded="true"
             onclick="onOutcomeHeadClick(event, this)" onkeydown="onOutcomeHeadKey(event, this)">
             <span class="outcome-toggle" aria-hidden="true">▼</span>
             <span class="outcome-tag">Sortie ${key}</span>
             <div class="outcome-head-right">
-                ${outEmoji !== null ? `<input class="emoji-input" value="${escapeHtml(outEmoji)}" aria-label="Emoji de la sortie ${key}" onchange="editEmoji('${id}','${name}','${key}',this.value)">` : ""}
+                ${emojiControl}
                 <button class="btn-mini btn-mini-danger" title="Supprimer la sortie"
                     onclick="event.stopPropagation(); deleteOutcome('${id}','${name}','${key}')">🗑️</button>
             </div>
@@ -1021,6 +1040,220 @@
             info.outcomes[outcomeKey].value = value;
         }
         markIcons();
+        warnIfUnknownEmoji(value);
+    }
+
+    // ---------------------------------------------------------------------------
+    // Emoji icon registry (parsed from CrowniclesIcons.ts) + picker
+    // ---------------------------------------------------------------------------
+
+    // A value counts as "emoji-like" if it is a Discord custom-emoji token,
+    // or contains at least one non-ASCII codepoint above U+2000 (which excludes
+    // plain ASCII text, paths and config strings while catching unicode emoji,
+    // surrogate-pair emoji, regional indicators and misc symbols).
+    const DISCORD_EMOJI_RE = /^<a?:\w+:\d+>$/;
+    function isEmojiLike(value) {
+        if (typeof value !== "string" || value === "") return false;
+        if (DISCORD_EMOJI_RE.test(value)) return true;
+        for (const ch of value) {
+            if (ch.codePointAt(0) > 0x2000) return true;
+        }
+        return false;
+    }
+
+    // Parse state.iconsRaw into an array of { path, name, emoji } entries.
+    // Defensive: returns [] when iconsRaw is null/empty. Result is cached on
+    // state.iconRegistry and rebuilt when icons are (re)loaded (see ingestIcons).
+    function buildIconRegistry() {
+        const raw = state.iconsRaw;
+        const registry = [];
+        if (!raw) {
+            state.iconRegistry = registry;
+            return registry;
+        }
+        const seen = new Set(); // dedupe by emoji value (keep first name)
+        const re = /(\w+)\s*:\s*"([^"]+)"/g;
+        let m;
+        while ((m = re.exec(raw)) !== null) {
+            const name = m[1];
+            const emoji = m[2];
+            if (!isEmojiLike(emoji)) continue;
+            if (seen.has(emoji)) continue;
+            seen.add(emoji);
+            registry.push({ path: name, name, emoji });
+        }
+        state.iconRegistry = registry;
+        return registry;
+    }
+
+    // Lazily return the cached registry (building it on first access).
+    function getIconRegistry() {
+        if (!state.iconRegistry) buildIconRegistry();
+        return state.iconRegistry;
+    }
+
+    // Existence check: returns the registry entry whose emoji equals `value`.
+    function findIcon(emoji) {
+        if (!emoji) return undefined;
+        return getIconRegistry().find(e => e.emoji === emoji);
+    }
+
+    // Non-blocking hint when an emoji input holds a value that is neither a
+    // known CrowniclesIcons entry nor a recognizable emoji token. Stays silent
+    // for empty values and for valid/registered emojis (no false positives).
+    function warnIfUnknownEmoji(value) {
+        const v = (value == null ? "" : String(value)).trim();
+        if (v === "") return;
+        if (!state.iconsRaw) return; // registry unavailable -> no spurious hint
+        if (findIcon(v)) return;
+        if (isEmojiLike(v)) return;
+        setStatus(`⚠️ Emoji « ${v} » introuvable dans CrowniclesIcons.ts — il pourrait ne pas s'afficher en jeu.`, "error");
+    }
+
+    // ---- Emoji picker overlay ----
+    let __emojiPickerKeydownHandler = null;
+    let __emojiPickerPreviousFocus = null;
+
+    function closeEmojiPicker() {
+        const overlay = document.querySelector(".emoji-picker-overlay");
+        if (!overlay) return;
+        if (__emojiPickerKeydownHandler) {
+            document.removeEventListener("keydown", __emojiPickerKeydownHandler);
+            __emojiPickerKeydownHandler = null;
+        }
+        overlay.remove();
+        if (__emojiPickerPreviousFocus && typeof __emojiPickerPreviousFocus.focus === "function") {
+            __emojiPickerPreviousFocus.focus();
+        }
+        __emojiPickerPreviousFocus = null;
+    }
+
+    const EMOJI_PICKER_LIMIT = 120;
+
+    // Open a picker bound to the emoji input identified by targetInputId.
+    // Selection writes back through the input's change event (so the existing
+    // inline editEmoji handler runs); id/name/outcomeKey are a fallback used
+    // only when the input element is no longer in the DOM.
+    function openEmojiPicker(targetInputId, id, name, outcomeKey) {
+        closeEmojiPicker();
+        __emojiPickerPreviousFocus = document.activeElement;
+
+        const registry = getIconRegistry();
+        const titleId = "emoji-picker-title-" + Math.random().toString(36).slice(2, 8);
+
+        const overlay = document.createElement("div");
+        overlay.className = "emoji-picker-overlay";
+
+        const card = document.createElement("div");
+        card.className = "emoji-picker";
+        card.setAttribute("role", "dialog");
+        card.setAttribute("aria-modal", "true");
+        card.setAttribute("aria-labelledby", titleId);
+
+        const titleEl = document.createElement("h2");
+        titleEl.className = "emoji-picker-title";
+        titleEl.id = titleId;
+        titleEl.textContent = "😀 Choisir un emoji";
+        card.appendChild(titleEl);
+
+        const search = document.createElement("input");
+        search.type = "text";
+        search.className = "emoji-picker-search";
+        search.placeholder = "Rechercher une icône par nom...";
+        search.setAttribute("aria-label", "Rechercher une icône par nom");
+        card.appendChild(search);
+
+        const note = document.createElement("div");
+        note.className = "emoji-picker-note";
+        card.appendChild(note);
+
+        const grid = document.createElement("div");
+        grid.className = "emoji-picker-grid";
+        grid.setAttribute("role", "list");
+        card.appendChild(grid);
+
+        function writeBack(emoji) {
+            const input = document.getElementById(targetInputId);
+            if (input) {
+                input.value = emoji;
+                input.dispatchEvent(new Event("change", { bubbles: true }));
+            } else if (id != null && name != null) {
+                // Fallback: still goes through markIcons via editEmoji.
+                editEmoji(id, name, outcomeKey == null ? null : outcomeKey, emoji);
+            }
+        }
+
+        function renderResults(filter) {
+            grid.innerHTML = "";
+            if (registry.length === 0) {
+                note.textContent = "Aucune icône chargée (chargez CrowniclesIcons.ts).";
+                return;
+            }
+            const q = (filter || "").trim().toLowerCase();
+            const matches = q
+                ? registry.filter(e => e.name.toLowerCase().includes(q))
+                : registry;
+            const shown = matches.slice(0, EMOJI_PICKER_LIMIT);
+            if (matches.length === 0) {
+                note.textContent = "Aucun résultat.";
+            } else if (matches.length > shown.length) {
+                note.textContent = `${shown.length} sur ${matches.length} icônes (affinez la recherche).`;
+            } else {
+                note.textContent = `${matches.length} icône${matches.length > 1 ? "s" : ""}.`;
+            }
+            for (const entry of shown) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "emoji-picker-item";
+                btn.setAttribute("role", "listitem");
+                btn.setAttribute("aria-label", entry.name);
+                btn.title = entry.name;
+                const glyph = document.createElement("span");
+                glyph.className = "emoji-picker-item-glyph";
+                glyph.textContent = entry.emoji;
+                const label = document.createElement("span");
+                label.className = "emoji-picker-item-name";
+                label.textContent = entry.name;
+                btn.appendChild(glyph);
+                btn.appendChild(label);
+                btn.addEventListener("click", () => {
+                    writeBack(entry.emoji);
+                    closeEmojiPicker();
+                });
+                grid.appendChild(btn);
+            }
+        }
+
+        search.addEventListener("input", () => renderResults(search.value));
+
+        overlay.appendChild(card);
+
+        // Backdrop click closes.
+        overlay.addEventListener("mousedown", e => { if (e.target === overlay) closeEmojiPicker(); });
+
+        // Escape closes; arrow/Enter navigation moves through result buttons.
+        __emojiPickerKeydownHandler = function (e) {
+            if (e.key === "Escape") {
+                e.preventDefault();
+                closeEmojiPicker();
+                return;
+            }
+            if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                const items = Array.from(grid.querySelectorAll(".emoji-picker-item"));
+                if (items.length === 0) return;
+                e.preventDefault();
+                const idx = items.indexOf(document.activeElement);
+                let next;
+                if (e.key === "ArrowDown") next = idx < 0 ? 0 : Math.min(idx + 1, items.length - 1);
+                else next = idx <= 0 ? 0 : idx - 1;
+                items[next].focus();
+            }
+        };
+        document.addEventListener("keydown", __emojiPickerKeydownHandler);
+
+        document.body.appendChild(overlay);
+        renderResults("");
+        search.focus();
     }
 
     // ---------------------------------------------------------------------------
