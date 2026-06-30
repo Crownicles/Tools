@@ -756,7 +756,34 @@
                 name: 'Guilde',
                 icon: '🏰',
                 color: '#6d28d9',
-                keywords: ['guild', 'guildDaily', 'guildDailyFromSomeoneElse', 'guildHasPoints', 'guildLevel', 'joinGuild']
+                keywords: ['guild', 'guildDaily', 'guildDailyFromSomeoneElse', 'guildHasPoints', 'guildLevel', 'joinGuild', 'joinGuildHouse', 'depositGuildTreasury', 'buyGuildPetFood']
+            },
+            // City missions (PR #4331 / #4334) — declared before progression/economy
+            // so the greedy `includes('level')`/`includes('item')` matches don't
+            // hijack upgradeHomeLevel / upgradeEpicItemLevel5 / upgradeItem.
+            home: {
+                name: 'Maison',
+                icon: '🏠',
+                color: '#7c2d12',
+                keywords: ['buyHome', 'depositChestItem', 'upgradeHomeLevel', 'buyApartment', 'buyAllApartments', 'collectRent']
+            },
+            inn: {
+                name: 'Auberge',
+                icon: '🛏️',
+                color: '#0369a1',
+                keywords: ['sleepInInn', 'healInBed', 'innMeal']
+            },
+            blacksmith: {
+                name: 'Forge',
+                icon: '🔨',
+                color: '#57534e',
+                keywords: ['upgradeItem', 'upgradeEpicItemLevel5', 'enchantItem']
+            },
+            garden: {
+                name: 'Jardin & Cuisine',
+                icon: '🌿',
+                color: '#4d7c0f',
+                keywords: ['cultivatePlants', 'cultivateAncestralTrees', 'haveGardenTalisman', 'cookRecipes', 'collectMaterials']
             },
             pet: {
                 name: 'Familier',
@@ -792,7 +819,7 @@
                 name: 'PNJ',
                 icon: '👤',
                 color: '#c2410c',
-                keywords: ['meet', 'meetDifferentPlayers', 'meetGruffo', 'meetHermit', 'meetSirRowan', 'meetTalvar', 'meetVelanna', 'showCloneToTalvar']
+                keywords: ['meet', 'meetDifferentPlayers', 'meetGruffo', 'meetHermit', 'meetSirRowan', 'meetTalvar', 'meetVelanna', 'showCloneToTalvar', 'visitCityNpc']
             },
             tokens: {
                 name: 'Jetons',
