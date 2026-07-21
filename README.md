@@ -24,3 +24,7 @@ Ce repo présente différents outils pour travailler sur Crownicles
 
 - [Crowdin](https://translate.crownicles.com) - Site pour les traductions du bot
 - [Feedbacks](https://feedback.crownicles.com) - Site pour les suggestions du bot
+
+## Scripts
+
+- [Translation Review](scripts/translation-review/) - Relit les traductions Crowdin depuis la source française avec des contrôles déterministes et un LLM local, puis produit des rapports et files d'actions sans écrire dans Crowdin.

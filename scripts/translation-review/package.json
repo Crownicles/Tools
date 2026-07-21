@@ -1,0 +1,13 @@
+{
+  "name": "crownicles-translation-review",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "finalize": "node src/finalize-actions.mjs",
+    "test": "node --test",
+    "sample:en": "node src/cli.mjs --language en --sample 25"
+  }
+}

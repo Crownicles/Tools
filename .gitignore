@@ -1,2 +1,5 @@
 generators/material-explorer.html
 generators/moderation-scanner.html
+
+# Local translation review cache and reports
+.translation-review/
