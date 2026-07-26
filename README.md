@@ -9,6 +9,7 @@ Ce repo présente différents outils pour travailler sur Crownicles
 - [Monstres](https://crownicles.github.io/Tools/generators/monsters.html) - Permet de générer les JSONs pour les monstres
 - [Pet Food Simulator](https://crownicles.github.io/Tools/generators/pet-food-simulator.html) - Simulateur de courbe de probabilité de recherche de nourriture pour familiers
 - [Pet Expedition Simulator](https://crownicles.github.io/Tools/generators/expedition-simulator.html) - Simulateur d'expéditions pour familiers
+- [Biomes d'expédition](https://crownicles.github.io/Tools/generators/expedition-biome-visualizer/) - Couverture des biomes par zone, détection des mappings/loots manquants et redirections forcées des événements depuis GitHub
 - [Events](https://crownicles.github.io/Tools/generators/events.html)  - Permet de générer les JSONs pour les évents
 - [Event Editor](https://crownicles.github.io/Tools/generators/event-editor.html) - Visualise et édite les big events (texte, choix, conséquences) depuis GitHub et exporte un fichier `.patch` appliquable sur la codebase
 - [Events Balance](https://crownicles.github.io/Tools/generators/events-balance.html) - Analyse d'équilibrage des big events : valeur du meilleur choix, détection des events trop rentables/punitifs et rentabilité des routes/localisations

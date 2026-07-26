@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biomes d'expédition · Crownicles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand-block">
+        <a class="back-link" href="../../index.html" aria-label="Retour aux outils">←</a>
+        <div>
+            <p class="eyebrow">Crownicles · équilibrage</p>
+            <h1>Biomes d'expédition</h1>
+        </div>
+    </div>
+    <form id="loadForm" class="source-controls">
+        <label>Référence Crownicles
+            <input id="branchInput" name="branch" value="develop" autocomplete="off" spellcheck="false">
+        </label>
+        <label>Référence Tools
+            <input id="toolsBranchInput" name="toolsBranch" value="master" autocomplete="off" spellcheck="false">
+        </label>
+        <button id="loadButton" type="submit">Charger GitHub</button>
+    </form>
+</header>
+
+<div id="status" class="status" role="status">Prêt à charger les données.</div>
+<nav id="zoneTabs" class="zone-tabs" aria-label="Zones géographiques"></nav>
+
+<main>
+    <section class="summary-band" aria-labelledby="zoneTitle">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Zone analysée</p>
+                <h2 id="zoneTitle">Zone</h2>
+            </div>
+            <p id="zoneScope" class="section-copy"></p>
+        </div>
+        <div id="summaryStats" class="summary-stats" aria-live="polite"></div>
+    </section>
+
+    <section class="workspace" aria-labelledby="mapTitle">
+        <div class="map-column">
+            <div id="pageTabs" class="page-tabs" aria-label="Sous-cartes"></div>
+            <div class="section-heading compact">
+                <div>
+                    <p class="eyebrow">Répartition géographique</p>
+                    <h2 id="mapTitle">Carte des biomes</h2>
+                </div>
+                <div class="map-actions">
+                    <div class="segmented" aria-label="Mode de résolution du biome">
+                        <button class="segment active" type="button" data-mode="effective">Effectif</button>
+                        <button class="segment" type="button" data-mode="derived">Map type seul</button>
+                    </div>
+                    <label class="check-control"><input id="showLabels" type="checkbox"> Noms</label>
+                    <label class="check-control"><input id="showDirections" type="checkbox" checked> Redirections</label>
+                    <select id="eventFilter" aria-label="Filtrer les redirections par événement"><option value="all">Tous les events</option></select>
+                </div>
+            </div>
+            <div id="mapShell" class="map-shell">
+                <img id="mapImage" alt="Carte du continent principal de Crownicles">
+                <div id="mapOverlay" class="map-overlay"></div>
+                <div id="mapEmpty" class="map-empty" hidden>Le fond de carte n'a pas pu être chargé.</div>
+            </div>
+            <div id="mapLegend" class="legend" aria-label="Légende des biomes"></div>
+            <p id="missingCoords" class="subtle-line"></p>
+        </div>
+
+        <aside id="selectionPanel" class="selection-panel" aria-live="polite">
+            <p class="eyebrow">Inspecteur</p>
+            <h2>Sélectionne un lieu</h2>
+            <p class="muted">Clique sur un marqueur pour voir tout ce que son type de carte influence.</p>
+        </aside>
+    </section>
+
+    <section class="analysis-band" aria-labelledby="distributionTitle">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Balance</p>
+                <h2 id="distributionTitle">Homogénéité de la zone</h2>
+            </div>
+            <p class="section-copy">Compare la part de chaque biome et vérifie qu'il possède une loot table. « Sans override » montre la répartition issue des seuls map types.</p>
+        </div>
+        <div id="biomeDistribution" class="biome-distribution"></div>
+    </section>
+
+    <section class="diagnostics-band" aria-labelledby="diagnosticsTitle">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Points d'attention</p>
+                <h2 id="diagnosticsTitle">Oublis et incohérences</h2>
+            </div>
+        </div>
+        <div id="diagnostics" class="diagnostics-grid"></div>
+    </section>
+
+    <section class="table-band" aria-labelledby="locationsTitle">
+        <div class="section-heading table-heading">
+            <div>
+                <p class="eyebrow">Détail</p>
+                <h2 id="locationsTitle">Lieux et impacts</h2>
+            </div>
+            <div class="table-filters">
+                <input id="searchInput" type="search" placeholder="Rechercher un lieu ou un type…">
+                <label class="check-control"><input id="issuesOnly" type="checkbox"> Problèmes uniquement</label>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Lieu</th>
+                    <th>Map type</th>
+                    <th>Biome effectif</th>
+                    <th>Mapping du type</th>
+                    <th>Loot table</th>
+                    <th>Sous-carte</th>
+                </tr>
+                </thead>
+                <tbody id="locationsBody"></tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+<template id="statTemplate">
+    <article class="summary-stat"><span class="stat-value"></span><span class="stat-label"></span></article>
+</template>
+
+<script src="app.js"></script>
+</body>
+</html>

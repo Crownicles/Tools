@@ -70,6 +70,16 @@ const toolsConfig = [
         status: 'active'
     },
     {
+        id: 'expedition-biome-visualizer',
+        title: 'Biomes d\'expédition',
+        description: 'Compare la couverture des biomes par zone, détecte les mappings et loots manquants, et visualise les redirections forcées des événements.',
+        path: 'generators/expedition-biome-visualizer/index.html',
+        category: 'Développement',
+        tags: ['Expéditions', 'Biomes', 'Carte', 'Équilibrage', 'GitHub'],
+        icon: '🧭',
+        status: 'active'
+    },
+    {
         id: 'pet-preferences-visualizer',
         title: 'Préférences des Familiers',
         description: 'Visualise les lieux aimés et détestés par chaque familier pour les expéditions.',
