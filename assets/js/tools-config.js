@@ -220,6 +220,16 @@ const toolsConfig = [
         status: 'active'
     },
     {
+        id: 'cooking-slot-explorer',
+        title: 'Explorateur des Slots de Cuisine',
+        description: 'Rejoue l\'algorithme de rotation du four : slots proposés jour par jour, couverture des recettes, grades, XP et constantes d\'équilibrage éditables.',
+        path: 'generators/cooking-slot-explorer.html',
+        category: 'Développement',
+        tags: ['Cuisine', 'Slots', 'Équilibrage', 'Rotation', 'Simulation'],
+        icon: '🔥',
+        status: 'active'
+    },
+    {
         id: 'material-explorer',
         title: 'Explorateur de Matériaux',
         description: 'Visualise, compare et analyse les matériaux : utilisation en recettes, sources (compost/craft), et détail des upgrades d\'items.',

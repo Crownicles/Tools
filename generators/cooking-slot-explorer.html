@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crownicles — Explorateur des Slots de Cuisine</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<style>
+:root{
+    --bg-primary:#f6f7fb; --bg-secondary:#fff; --bg-tertiary:#f1f5f9;
+    --text-primary:#1e293b; --text-secondary:#64748b; --text-muted:#94a3b8;
+    --accent:#e94560; --accent-2:#6366f1;
+    --border:#e2e8f0; --success:#22c55e; --warning:#f59e0b; --danger:#ef4444; --info:#3b82f6;
+    --potion:#7e22ce; --petfood:#be185d; --material:#047857;
+    --shadow:rgba(0,0,0,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg-primary);color:var(--text-primary);padding:18px}
+.container{max-width:1700px;margin:0 auto}
+.card{background:var(--bg-secondary);border:1px solid var(--border);border-radius:14px;box-shadow:0 2px 10px var(--shadow)}
+header{text-align:center;padding:20px;margin-bottom:18px}
+header h1{color:var(--accent);font-size:2rem;margin-bottom:6px}
+header .subtitle{color:var(--text-secondary)}
+.hidden{display:none !important}
+
+/* loader */
+.loader{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:flex-end;padding:18px;margin-bottom:18px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{color:var(--text-secondary);font-size:.8rem;font-weight:600}
+.fg input,.fg select{padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-tertiary);color:var(--text-primary);font-size:.92rem;min-width:150px}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--accent)}
+.btn{padding:11px 22px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.95rem;transition:.2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 5px 18px rgba(99,102,241,.35)}
+.btn-ghost{background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border)}
+.btn-ghost:hover{background:#e6ebf2}
+.btn-sm{padding:6px 12px;font-size:.82rem}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.spinner{width:17px;height:17px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.status{width:100%;text-align:center;padding:9px;border-radius:8px;font-size:.9rem;display:none}
+.status.error{background:rgba(239,68,68,.13);color:var(--danger);display:block}
+.status.success{background:rgba(34,197,94,.13);color:#15803d;display:block}
+.status.loading{background:rgba(59,130,246,.13);color:var(--info);display:block}
+.status.warn{background:rgba(245,158,11,.15);color:#b45309;display:block}
+
+/* profile panel */
+.profile{padding:16px 18px;margin-bottom:18px}
+.profile h3{font-size:1rem;margin-bottom:12px;color:var(--accent-2);display:flex;align-items:center;gap:8px}
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.pf{display:flex;flex-direction:column;gap:4px}
+.pf label{font-size:.76rem;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.pf input,.pf select{padding:8px 10px;border:1px solid var(--border);border-radius:7px;background:var(--bg-tertiary);font-size:.9rem;width:100%}
+.pf .hint{font-size:.74rem;color:var(--text-muted)}
+.pf-row{display:flex;gap:6px;align-items:center}
+.pf-row input{flex:1}
+.check{display:flex;align-items:center;gap:8px;font-size:.88rem;padding-top:18px}
+.check input{width:auto}
+.profile-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:.75rem;font-weight:700}
+.badge-grade{background:rgba(99,102,241,.14);color:#4338ca}
+
+/* stats */
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.stat{flex:1;min-width:130px;padding:12px 16px;text-align:center}
+.stat .v{font-size:1.5rem;font-weight:800;color:var(--accent)}
+.stat .l{font-size:.78rem;color:var(--text-secondary);margin-top:2px}
+
+/* tabs */
+.tabs{display:flex;gap:6px;padding:6px;margin-bottom:18px;flex-wrap:wrap}
+.tab-btn{flex:1;min-width:150px;padding:11px 14px;border:none;background:transparent;color:var(--text-secondary);border-radius:8px;cursor:pointer;font-weight:600;font-size:.92rem;transition:.2s}
+.tab-btn:hover{background:var(--bg-tertiary);color:var(--text-primary)}
+.tab-btn.active{background:var(--accent);color:#fff}
+.tab{display:none}
+.tab.active{display:block}
+
+.section{padding:16px 18px;margin-bottom:16px}
+.section h2{font-size:1.05rem;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section .desc{color:var(--text-secondary);font-size:.86rem;margin-bottom:12px}
+.note{background:rgba(245,158,11,.1);border-left:3px solid var(--warning);padding:10px 12px;border-radius:6px;font-size:.84rem;color:#92400e;margin-bottom:12px}
+.note.info{background:rgba(59,130,246,.09);border-left-color:var(--info);color:#1e40af}
+
+/* slot cards */
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.slot{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--bg-secondary)}
+.slot-head{padding:10px 13px;background:var(--bg-tertiary);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.slot-head .t{font-weight:800}
+.slot-head .c{font-size:.76rem;color:var(--text-secondary)}
+.slot-body{padding:12px 13px}
+.slot.empty{opacity:.65}
+.slot.locked{opacity:.45;filter:grayscale(.6)}
+.recipe-name{font-weight:700;font-size:1rem;margin-bottom:4px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{padding:2px 8px;border-radius:20px;font-size:.74rem;font-weight:700;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border)}
+.chip.potion{background:rgba(126,34,206,.12);color:var(--potion);border-color:rgba(126,34,206,.25)}
+.chip.petFood{background:rgba(190,24,93,.12);color:var(--petfood);border-color:rgba(190,24,93,.25)}
+.chip.material{background:rgba(4,120,87,.12);color:var(--material);border-color:rgba(4,120,87,.25)}
+.chip.secret{background:rgba(245,158,11,.16);color:#b45309;border-color:rgba(245,158,11,.35)}
+.chip.guaranteed{background:rgba(34,197,94,.14);color:#15803d;border-color:rgba(34,197,94,.3)}
+.chip.danger{background:rgba(239,68,68,.13);color:var(--danger);border-color:rgba(239,68,68,.3)}
+.cycle{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.cyc{padding:2px 7px;border-radius:6px;font-size:.72rem;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-muted)}
+.cyc.start{border-color:var(--accent-2);color:var(--accent-2);font-weight:700}
+.cyc.used{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.4);color:#15803d;font-weight:700}
+.cyc.skipped{text-decoration:line-through;opacity:.55}
+.sub{font-size:.78rem;color:var(--text-muted);margin-top:8px}
+.ingr{font-size:.8rem;color:var(--text-secondary);margin-top:6px;line-height:1.6}
+
+/* tables */
+.table-wrap{overflow:auto;max-height:640px;border:1px solid var(--border);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+th{position:sticky;top:0;background:var(--bg-tertiary);padding:9px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap;z-index:2}
+th.sortable{cursor:pointer;user-select:none}
+th.sortable:hover{color:var(--accent)}
+td{padding:7px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr:hover{background:var(--bg-tertiary)}
+tr.zero td{background:rgba(239,68,68,.06)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem}
+
+/* matrix */
+.matrix{overflow:auto;max-height:700px;border:1px solid var(--border);border-radius:10px}
+.matrix table{font-size:.76rem}
+.matrix td{padding:4px 7px;border-right:1px solid var(--border)}
+.cell{display:block;padding:2px 5px;border-radius:5px;font-weight:600;max-width:210px;overflow:hidden;text-overflow:ellipsis}
+.cell.potion{background:rgba(126,34,206,.13);color:var(--potion)}
+.cell.petFood{background:rgba(190,24,93,.13);color:var(--petfood)}
+.cell.material{background:rgba(4,120,87,.13);color:var(--material)}
+.cell.none{background:rgba(148,163,184,.15);color:var(--text-muted);font-style:italic}
+.cell .s{opacity:.75}
+
+/* bars */
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar-row{display:grid;grid-template-columns:190px 1fr 90px;gap:10px;align-items:center;font-size:.82rem}
+.bar-track{background:var(--bg-tertiary);border-radius:6px;height:16px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#6366f1,#8b5cf6)}
+.bar-val{text-align:right;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+
+/* heatmap */
+.heat td{text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* constants editor */
+.const-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.const-box{display:flex;flex-direction:column;gap:6px}
+.const-box label{font-weight:700;font-size:.85rem}
+.const-box textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem;padding:9px;border:1px solid var(--border);border-radius:8px;background:var(--bg-tertiary);min-height:150px;resize:vertical;line-height:1.45}
+.const-box textarea.invalid{border-color:var(--danger);background:rgba(239,68,68,.05)}
+.const-box .err{font-size:.76rem;color:var(--danger);min-height:14px}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-muted)}
+.empty-state .i{font-size:3.4rem;margin-bottom:12px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.legend .li{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--text-secondary)}
+.legend .sw{width:14px;height:14px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="card">
+        <h1>🔥 Explorateur des Slots de Cuisine</h1>
+        <p class="subtitle">Rejoue l'algorithme de rotation du four (<span class="mono">CookingSlotRotation</span>) pour équilibrer les slots, la couverture des recettes et les grades</p>
+    </header>
+
+    <div class="loader card">
+        <div class="fg"><label for="repoOwner">👤 Propriétaire</label><input type="text" id="repoOwner" value="Crownicles"></div>
+        <div class="fg"><label for="repoName">📁 Repository</label><input type="text" id="repoName" value="Crownicles"></div>
+        <div class="fg"><label for="branchName">🌿 Branche</label><input type="text" id="branchName" value="master"></div>
+        <button class="btn btn-primary" id="loadBtn"><span class="spinner" id="spinner"></span><span id="loadBtnText">🚀 Charger depuis GitHub</span></button>
+        <button class="btn btn-ghost" id="clearCacheBtn" title="Force un rechargement complet depuis le dépôt">🗑️ Vider le cache</button>
+        <div class="status" id="status"></div>
+        <div class="status warn" id="constStatus" style="display:none"></div>
+    </div>
+
+    <div id="main" class="hidden">
+        <!-- PROFILE -->
+        <div class="profile card">
+            <h3>🧑‍🍳 Profil simulé <span class="badge badge-grade" id="gradeBadge">—</span></h3>
+            <div class="profile-grid">
+                <div class="pf"><label for="pCookingLevel">Niveau de cuisine</label><input type="number" id="pCookingLevel" min="0" max="150" value="15"><span class="hint" id="gradeHint"></span></div>
+                <div class="pf"><label for="pHomeLevel">Niveau de maison</label>
+                    <select id="pHomeLevel">
+                        <option value="1">1 — 0 slot</option><option value="2">2 — 1 slot</option>
+                        <option value="3">3 — 2 slots</option><option value="4">4 — 3 slots</option>
+                        <option value="5">5 — 4 slots</option><option value="6" selected>6 — 5 slots</option>
+                        <option value="7">7 — 5 slots</option><option value="8">8 — 5 slots</option>
+                    </select><span class="hint" id="slotsHint"></span></div>
+                <div class="pf"><label for="pFurnace">Position du four</label>
+                    <div class="pf-row">
+                        <button class="btn btn-ghost btn-sm" id="furnaceMinus">−</button>
+                        <input type="number" id="pFurnace" min="0" value="0">
+                        <button class="btn btn-ghost btn-sm" id="furnacePlus">+</button>
+                    </div><span class="hint">+1 à chaque cuisson</span></div>
+                <div class="pf"><label for="pDate">Jour simulé</label>
+                    <div class="pf-row">
+                        <button class="btn btn-ghost btn-sm" id="dayMinus">−</button>
+                        <input type="date" id="pDate">
+                        <button class="btn btn-ghost btn-sm" id="dayPlus">+</button>
+                    </div><span class="hint" id="daySeedHint"></span></div>
+                <div class="pf"><label for="pPlayerLevel">Niveau du joueur</label><input type="number" id="pPlayerLevel" min="1" max="200" value="40"><span class="hint" id="playerLevelHint"></span></div>
+                <div class="pf"><label for="pCampaign">Missions de campagne</label><input type="number" id="pCampaign" min="0" max="200" value="45"><span class="hint" id="campaignHint"></span></div>
+                <div class="pf"><label for="pGaspard">Recettes Gaspard &amp; Jo</label><input type="number" id="pGaspard" min="0" value="0"><span class="hint" id="gaspardHint"></span></div>
+                <div class="pf"><label for="pFarmer">Recettes Fermier</label><input type="number" id="pFarmer" min="0" value="0"><span class="hint" id="farmerHint"></span></div>
+                <div class="pf"><label for="pBoss">Recettes Boss d'île</label><input type="number" id="pBoss" min="0" value="0"><span class="hint" id="bossHint"></span></div>
+                <div class="pf"><label for="pWitch">Recettes Sorcière</label><input type="number" id="pWitch" min="0" value="0"><span class="hint" id="witchHint"></span></div>
+                <div class="pf"><label for="pOrder">Ordre de lecture des recettes</label>
+                    <select id="pOrder">
+                        <option value="alpha">Alphabétique (listing GitHub)</option>
+                        <option value="alphaDesc">Alphabétique inversé</option>
+                    </select><span class="hint">Le jeu lit le dossier via readdirSync</span></div>
+                <div class="check"><input type="checkbox" id="pGuild" checked><label for="pGuild">Membre d'une guilde <span class="hint">(débloque les recettes de nourriture)</span></label></div>
+            </div>
+            <div class="profile-actions">
+                <button class="btn btn-ghost btn-sm" id="discAll">📖 Tout découvrir</button>
+                <button class="btn btn-ghost btn-sm" id="discNone">🔒 Recettes de base uniquement</button>
+                <button class="btn btn-ghost btn-sm" id="todayBtn">📅 Aujourd'hui</button>
+                <span class="hint" id="discoveredHint"></span>
+            </div>
+        </div>
+
+        <div class="stats" id="stats"></div>
+
+        <div class="tabs card">
+            <button class="tab-btn active" data-tab="today">🔥 Slots du jour</button>
+            <button class="tab-btn" data-tab="rotation">🔄 Rotation</button>
+            <button class="tab-btn" data-tab="coverage">📊 Couverture &amp; équilibrage</button>
+            <button class="tab-btn" data-tab="grades">🎓 Grades &amp; XP</button>
+            <button class="tab-btn" data-tab="constants">⚙️ Constantes</button>
+        </div>
+
+        <!-- TAB TODAY -->
+        <div class="tab active" id="tab-today">
+            <div class="section card">
+                <h2>🔥 État du four</h2>
+                <p class="desc">Recettes proposées pour ce jour, cette position de four et ce profil. La trace montre pourquoi chaque type de recette du cycle a été retenu ou écarté.</p>
+                <div class="slots" id="slotsContainer"></div>
+            </div>
+        </div>
+
+        <!-- TAB ROTATION -->
+        <div class="tab" id="tab-rotation">
+            <div class="section card">
+                <h2>🔄 Matrice de rotation</h2>
+                <div class="profile-grid" style="margin-bottom:14px">
+                    <div class="pf"><label for="rotAxis">Axe des lignes</label>
+                        <select id="rotAxis"><option value="furnace">Position du four</option><option value="day">Jour</option></select></div>
+                    <div class="pf"><label for="rotCount">Nombre de lignes</label><input type="number" id="rotCount" min="1" max="200" value="30"></div>
+                    <div class="pf"><label for="rotStart">Départ (offset)</label><input type="number" id="rotStart" min="0" value="0"></div>
+                </div>
+                <div class="legend">
+                    <div class="li"><span class="sw" style="background:rgba(126,34,206,.5)"></span>Potion</div>
+                    <div class="li"><span class="sw" style="background:rgba(190,24,93,.5)"></span>Nourriture</div>
+                    <div class="li"><span class="sw" style="background:rgba(4,120,87,.5)"></span>Matériau</div>
+                    <div class="li">🔒 recette secrète · ⭐ garantie « niveau joueur »</div>
+                </div>
+                <div class="matrix" id="rotationMatrix"></div>
+            </div>
+        </div>
+
+        <!-- TAB COVERAGE -->
+        <div class="tab" id="tab-coverage">
+            <div class="section card">
+                <h2>📊 Simulation de couverture</h2>
+                <p class="desc">Balaye une fenêtre de jours × positions de four et compte les apparitions de chaque recette. Sert à repérer les recettes jamais proposées et les déséquilibres de fréquence.</p>
+                <div class="profile-grid" style="margin-bottom:12px">
+                    <div class="pf"><label for="covDays">Nombre de jours</label><input type="number" id="covDays" min="1" max="365" value="60"></div>
+                    <div class="pf"><label for="covPos">Positions de four / jour</label><input type="number" id="covPos" min="1" max="200" value="20"></div>
+                    <div class="pf" style="justify-content:flex-end"><button class="btn btn-primary btn-sm" id="runCoverage">▶️ Lancer la simulation</button></div>
+                </div>
+                <div id="coverageStats" class="stats"></div>
+                <div id="coverageCharts"></div>
+            </div>
+            <div class="section card">
+                <h2>🚫 Recettes jamais proposées</h2>
+                <div id="neverShown"></div>
+            </div>
+            <div class="section card">
+                <h2>📋 Fréquence par recette</h2>
+                <div class="table-wrap" id="coverageTable"></div>
+            </div>
+        </div>
+
+        <!-- TAB GRADES -->
+        <div class="tab" id="tab-grades">
+            <div class="section card">
+                <h2>🎓 Grades de cuisine</h2>
+                <div class="table-wrap" id="gradesTable"></div>
+            </div>
+            <div class="section card">
+                <h2>💥 Taux d'échec effectif (grade × niveau de recette)</h2>
+                <p class="desc">Taux d'échec = échec de base + pénalité × (niveau recette − niveau max sans malus). Une case <b>grisée</b> signifie qu'aucune XP n'est gagnée (écart ≥ seuil).</p>
+                <div class="table-wrap heat" id="failureMatrix"></div>
+            </div>
+            <div class="section card">
+                <h2>⭐ XP par recette et courbe de niveaux</h2>
+                <div class="profile-grid" style="margin-bottom:12px">
+                    <div class="pf"><label for="xpMaxLevel">Niveaux affichés</label><input type="number" id="xpMaxLevel" min="5" max="120" value="40"></div>
+                </div>
+                <div id="xpCurve"></div>
+                <div class="table-wrap" style="margin-top:14px" id="xpTable"></div>
+            </div>
+        </div>
+
+        <!-- TAB CONSTANTS -->
+        <div class="tab" id="tab-constants">
+            <div class="section card">
+                <h2>⚙️ Constantes d'équilibrage</h2>
+                <p class="desc">Valeurs lues depuis la codebase. Modifiez-les et appliquez pour voir l'impact sur toutes les simulations, sans toucher au code.</p>
+                <div class="profile-actions" style="margin-top:0;margin-bottom:14px">
+                    <button class="btn btn-primary btn-sm" id="applyConst">✅ Appliquer</button>
+                    <button class="btn btn-ghost btn-sm" id="resetConst">↩️ Réinitialiser</button>
+                    <button class="btn btn-ghost btn-sm" id="exportConst">💾 Exporter en JSON</button>
+                </div>
+                <div class="const-grid" id="constGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="noData" class="card empty-state">
+        <div class="i">🍳</div>
+        <p>Chargez les données depuis GitHub pour démarrer l'exploration</p>
+    </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   ÉTAT
+   ============================================================ */
+let recipesRaw = [];       // recettes dans l'ordre de listing GitHub (alphabétique)
+let recipes = [];          // recettes dans l'ordre de lecture choisi
+let recipesById = new Map();
+let materials = {};        // id -> {rarity,type}
+let translations = {};
+let C = null;              // constantes actives (éditables)
+let C_LOADED = null;       // constantes telles que lues dans le dépôt
+let coverageResult = null;
+let coverageSort = { key: "count", dir: -1 };
+
+/* ============================================================
+   CONSTANTES DE REPLI (miroir de la codebase)
+   ============================================================ */
+const FALLBACK_CONSTANTS = {
+    SLOT_CONFIGS: [
+        { minLevel: 1, maxLevel: 3, potionsOnly: false, eligibleTypes: ["POTION_HEALTH","POTION_ENERGY","POTION_TIME_SPEEDUP","POTION_DEFENSE","POTION_ATTACK","POTION_SPEED","PETFOOD_SALAD","PETFOOD_CANDY","PETFOOD_MEAT"] },
+        { minLevel: 1, maxLevel: 5, potionsOnly: false, eligibleTypes: ["POTION_HEALTH","POTION_ENERGY","POTION_TIME_SPEEDUP","POTION_DEFENSE","POTION_ATTACK","POTION_SPEED","PETFOOD_SALAD","PETFOOD_CANDY","PETFOOD_MEAT","PETFOOD_ULTIMATE"] },
+        { minLevel: 1, maxLevel: 8, potionsOnly: false, eligibleTypes: ["POTION_HEALTH","POTION_ENERGY","POTION_TIME_SPEEDUP","POTION_DEFENSE","POTION_ATTACK","POTION_SPEED","PETFOOD_SALAD","PETFOOD_CANDY","PETFOOD_MEAT","PETFOOD_ULTIMATE","MATERIAL_CRAFT"] },
+        { minLevel: 3, maxLevel: 8, potionsOnly: true, eligibleTypes: ["POTION_HEALTH","POTION_ENERGY","POTION_TIME_SPEEDUP","POTION_DEFENSE","POTION_ATTACK","POTION_SPEED"] },
+        { minLevel: 4, maxLevel: 8, potionsOnly: false, eligibleTypes: ["POTION_HEALTH","POTION_ENERGY","POTION_TIME_SPEEDUP","POTION_DEFENSE","POTION_ATTACK","POTION_SPEED","PETFOOD_SALAD","PETFOOD_CANDY","PETFOOD_MEAT","PETFOOD_ULTIMATE","MATERIAL_CRAFT"] }
+    ],
+    SLOT_SEED_OFFSETS: [0, 7919, 15881, 23857, 31847],
+    COOKING_GRADES: [
+        { id:"kitchenHelper",  minLevel:0,  maxLevel:10,       failureRate:.10,  secretRecipeRate:.20,  maxRecipeLevelWithoutPenalty:2, materialSaveChance:0,   woodSaveChance:0,   bonusOutputChance:0 },
+        { id:"scullion",       minLevel:11, maxLevel:20,       failureRate:.08,  secretRecipeRate:.10,  maxRecipeLevelWithoutPenalty:3, materialSaveChance:.02, woodSaveChance:.01, bonusOutputChance:.01 },
+        { id:"cook",           minLevel:21, maxLevel:30,       failureRate:.07,  secretRecipeRate:.10,  maxRecipeLevelWithoutPenalty:4, materialSaveChance:.05, woodSaveChance:.02, bonusOutputChance:.02 },
+        { id:"roaster",        minLevel:31, maxLevel:40,       failureRate:.06,  secretRecipeRate:.05,  maxRecipeLevelWithoutPenalty:5, materialSaveChance:.08, woodSaveChance:.04, bonusOutputChance:.03 },
+        { id:"saucier",        minLevel:41, maxLevel:50,       failureRate:.05,  secretRecipeRate:.05,  maxRecipeLevelWithoutPenalty:5, materialSaveChance:.11, woodSaveChance:.06, bonusOutputChance:.04 },
+        { id:"steward",        minLevel:51, maxLevel:60,       failureRate:.04,  secretRecipeRate:.05,  maxRecipeLevelWithoutPenalty:6, materialSaveChance:.14, woodSaveChance:.08, bonusOutputChance:.05 },
+        { id:"tableChef",      minLevel:61, maxLevel:70,       failureRate:.03,  secretRecipeRate:.05,  maxRecipeLevelWithoutPenalty:7, materialSaveChance:.17, woodSaveChance:.10, bonusOutputChance:.06 },
+        { id:"stoveChef",      minLevel:71, maxLevel:80,       failureRate:.02,  secretRecipeRate:.05,  maxRecipeLevelWithoutPenalty:7, materialSaveChance:.20, woodSaveChance:.12, bonusOutputChance:.07 },
+        { id:"kitchenMaster",  minLevel:81, maxLevel:90,       failureRate:.015, secretRecipeRate:.05,  maxRecipeLevelWithoutPenalty:8, materialSaveChance:.22, woodSaveChance:.13, bonusOutputChance:.08 },
+        { id:"royalGrandChef", minLevel:91, maxLevel:Infinity, failureRate:.01,  secretRecipeRate:.005, maxRecipeLevelWithoutPenalty:8, materialSaveChance:.25, woodSaveChance:.15, bonusOutputChance:.10 }
+    ],
+    MIN_GUARANTEED_PLAYER_LEVEL_RECIPES: 2,
+    FAILURE_RATE_PER_EXTRA_LEVEL: 0.15,
+    NO_XP_LEVEL_THRESHOLD: 3,
+    PLANT_COOKING_XP: { 1:40, 2:120, 3:160, 4:360, 5:560, 6:800, 7:1120, 8:1440, 9:1840, 10:2320 },
+    MATERIAL_RARITY_COOKING_XP: { 1:60, 2:160, 3:320 },
+    CookingXpConstants: { PLANT_WEIGHT: 0.8, MATERIAL_WEIGHT: 0.2, FAILURE_XP_PER_LEVEL: 60 },
+    PLAYER_LEVEL_RECIPE_MILESTONES: [10,20,30,40,50,60,70,80,90,100],
+    CAMPAIGN_RECIPE_MILESTONES: [15,30,45,60,75,90,105,120,135,149],
+    CANDIDATE_INDEX_PRIMES: { DAY: 7, FURNACE: 13, SLOT: 97 },
+    SECRET_SEED_PRIMES: { DAY: 11, FURNACE: 23, SLOT: 131 },
+    LCG: { MULTIPLIER: 1103515245, INCREMENT: 12345, MAX_VALUE: 0x7fffffff },
+    XP: { BASE_VALUE: 325, COEFFICIENT: 1.041, MINUS: 188 }
+};
+
+const HOME_COOKING_SLOTS = { 1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 7:5, 8:5 };
+
+const RECIPE_TYPE_INFO = {
+    POTION_HEALTH:       { emoji:"❤️",  label:"Potion Santé",     output:"potion" },
+    POTION_ENERGY:       { emoji:"⚡",  label:"Potion Énergie",   output:"potion" },
+    POTION_TIME_SPEEDUP: { emoji:"⏩",  label:"Potion Célérité",  output:"potion" },
+    POTION_DEFENSE:      { emoji:"🛡️",  label:"Potion Défense",   output:"potion" },
+    POTION_ATTACK:       { emoji:"⚔️",  label:"Potion Force",     output:"potion" },
+    POTION_SPEED:        { emoji:"💨",  label:"Potion Vélocité",  output:"potion" },
+    PETFOOD_SALAD:       { emoji:"🥗",  label:"Salade",           output:"petFood" },
+    PETFOOD_CANDY:       { emoji:"🍬",  label:"Friandise",        output:"petFood" },
+    PETFOOD_MEAT:        { emoji:"🍖",  label:"Viande",           output:"petFood" },
+    PETFOOD_ULTIMATE:    { emoji:"🍲",  label:"Soupe ultime",     output:"petFood" },
+    MATERIAL_CRAFT:      { emoji:"⚒️",  label:"Craft matériau",   output:"material" }
+};
+
+const OUTPUT_INFO = {
+    potion:   { emoji:"🧪", label:"Potion" },
+    petFood:  { emoji:"🍖", label:"Nourriture" },
+    material: { emoji:"⚒️", label:"Matériau" }
+};
+
+const SOURCE_INFO = {
+    DEFAULT:                { emoji:"📖", label:"Par défaut" },
+    ISLAND_BOSS:            { emoji:"🐉", label:"Boss d'île" },
+    CAMPAIGN_MILESTONE:     { emoji:"🏰", label:"Campagne" },
+    PLAYER_LEVEL_MILESTONE: { emoji:"📈", label:"Niveau joueur" },
+    GASPARD_JO:             { emoji:"🧙", label:"Gaspard & Jo" },
+    FARMER:                 { emoji:"🌾", label:"Fermier" },
+    COOKING_LEVEL:          { emoji:"👨‍🍳", label:"Niveau cuisine" },
+    WITCH:                  { emoji:"🧹", label:"Sorcière" }
+};
+
+const PLANT_FALLBACK_NAMES = {
+    1:"Herbe commune", 2:"Trèfle doré", 3:"Mousse lunaire", 4:"Racine de fer", 5:"Champignon nocturne",
+    6:"Feuille venimeuse", 7:"Bulbe de feu", 8:"Plante carnivore", 9:"Fleur de cristal", 10:"Arbre ancestral"
+};
+
+const ENUM_TABLES = {
+    RecipeType: null, // identité : RecipeType.X -> "X"
+    PlantId: { COMMON_HERB:1, GOLDEN_CLOVER:2, LUNAR_MOSS:3, IRON_ROOT:4, NIGHT_MUSHROOM:5, VENOMOUS_LEAF:6, FIRE_BULB:7, MEAT_PLANT:8, CRYSTAL_FLOWER:9, ANCIENT_TREE:10 },
+    MaterialRarity: { COMMON:1, UNCOMMON:2, RARE:3 }
+};
+
+/* ============================================================
+   PARSEUR DE LITTÉRAUX TYPESCRIPT (sans eval)
+   ============================================================ */
+function createTsLiteralReader(source) {
+    const memo = new Map();
+    const resolving = new Set();
+
+    function skip(i) {
+        while (i < source.length) {
+            const c = source[i];
+            if (c === " " || c === "\t" || c === "\n" || c === "\r") { i++; continue; }
+            if (c === "/" && source[i + 1] === "/") { while (i < source.length && source[i] !== "\n") i++; continue; }
+            if (c === "/" && source[i + 1] === "*") { i += 2; while (i < source.length && !(source[i] === "*" && source[i + 1] === "/")) i++; i += 2; continue; }
+            break;
+        }
+        return i;
+    }
+
+    function parseString(i) {
+        const quote = source[i];
+        let out = "";
+        i++;
+        while (i < source.length && source[i] !== quote) {
+            if (source[i] === "\\") { out += source[i + 1]; i += 2; }
+            else { out += source[i]; i++; }
+        }
+        return { value: out, next: i + 1 };
+    }
+
+    function parseIdentifier(i) {
+        const start = i;
+        while (i < source.length && /[A-Za-z0-9_$.]/.test(source[i])) i++;
+        return { path: source.slice(start, i), next: i };
+    }
+
+    function resolvePath(path) {
+        if (path === "Infinity") return Infinity;
+        if (path === "true") return true;
+        if (path === "false") return false;
+        if (path === "null") return null;
+        if (path === "undefined") return undefined;
+        const dot = path.indexOf(".");
+        if (dot === -1) return readConst(path);
+        const holder = path.slice(0, dot);
+        const member = path.slice(dot + 1);
+        if (holder in ENUM_TABLES) {
+            const table = ENUM_TABLES[holder];
+            return table === null ? member : (member in table ? table[member] : member);
+        }
+        return path;
+    }
+
+    function parseValue(i) {
+        i = skip(i);
+        const c = source[i];
+        if (c === '"' || c === "'" || c === "`") {
+            const r = parseString(i);
+            return { value: r.value, next: r.next };
+        }
+        if (c === "[") return parseArray(i);
+        if (c === "{") return parseObject(i);
+        if (/[-0-9]/.test(c)) {
+            const start = i;
+            if (c === "-") i++;
+            while (i < source.length && /[0-9a-fA-FxX._+-]/.test(source[i])) {
+                if ((source[i] === "+" || source[i] === "-") && !/[eE]/.test(source[i - 1])) break;
+                i++;
+            }
+            return { value: Number(source.slice(start, i).replace(/_/g, "")), next: i };
+        }
+        const id = parseIdentifier(i);
+        if (!id.path) throw new Error("Valeur inattendue à l'offset " + i);
+        return { value: resolvePath(id.path), next: id.next };
+    }
+
+    function parseArray(i) {
+        const out = [];
+        i = skip(i + 1);
+        while (i < source.length && source[i] !== "]") {
+            if (source[i] === ",") { i = skip(i + 1); continue; }
+            if (source.startsWith("...", i)) {
+                const id = parseIdentifier(skip(i + 3));
+                const spread = resolvePath(id.path);
+                if (Array.isArray(spread)) out.push(...spread);
+                i = skip(id.next);
+                continue;
+            }
+            const r = parseValue(i);
+            out.push(r.value);
+            i = skip(r.next);
+        }
+        return { value: out, next: i + 1 };
+    }
+
+    function parseObject(i) {
+        const out = {};
+        i = skip(i + 1);
+        while (i < source.length && source[i] !== "}") {
+            if (source[i] === ",") { i = skip(i + 1); continue; }
+            let key;
+            if (source[i] === "[") {
+                const r = parseValue(i + 1);
+                key = String(r.value);
+                i = skip(r.next);
+                if (source[i] === "]") i = skip(i + 1);
+            } else if (source[i] === '"' || source[i] === "'") {
+                const r = parseString(i);
+                key = r.value;
+                i = skip(r.next);
+            } else if (source.startsWith("...", i)) {
+                const id = parseIdentifier(skip(i + 3));
+                Object.assign(out, resolvePath(id.path) || {});
+                i = skip(id.next);
+                continue;
+            } else {
+                const id = parseIdentifier(i);
+                key = id.path;
+                i = skip(id.next);
+            }
+            if (source[i] !== ":") throw new Error("':' attendu après la clé " + key);
+            const val = parseValue(i + 1);
+            out[key] = val.value;
+            i = skip(val.next);
+        }
+        return { value: out, next: i + 1 };
+    }
+
+    function readConst(name) {
+        if (memo.has(name)) return memo.get(name);
+        if (resolving.has(name)) throw new Error("Référence circulaire sur " + name);
+        const re = new RegExp("(?:export\\s+)?(?:const|let|static\\s+readonly)\\s+" + name + "\\s*(?::[^=]+?)?=\\s*");
+        const match = re.exec(source);
+        if (!match) return undefined;
+        resolving.add(name);
+        try {
+            const parsed = parseValue(match.index + match[0].length);
+            memo.set(name, parsed.value);
+            return parsed.value;
+        } finally {
+            resolving.delete(name);
+        }
+    }
+
+    return readConst;
+}
+
+function extractConstantsFromSources(sources) {
+    const warnings = [];
+    const result = JSON.parse(JSON.stringify(FALLBACK_CONSTANTS, (k, v) => (v === Infinity ? "Infinity" : v)));
+    result.COOKING_GRADES.forEach(g => { if (g.maxLevel === "Infinity") g.maxLevel = Infinity; });
+
+    const readers = {};
+    for (const [file, src] of Object.entries(sources)) {
+        try { readers[file] = createTsLiteralReader(src); }
+        catch (e) { warnings.push(file + " : " + e.message); }
+    }
+
+    const wanted = [
+        ["cookingConstants", "SLOT_CONFIGS"], ["cookingConstants", "SLOT_SEED_OFFSETS"],
+        ["cookingConstants", "COOKING_GRADES"], ["cookingConstants", "MIN_GUARANTEED_PLAYER_LEVEL_RECIPES"],
+        ["cookingConstants", "FAILURE_RATE_PER_EXTRA_LEVEL"], ["cookingConstants", "NO_XP_LEVEL_THRESHOLD"],
+        ["cookingConstants", "PLANT_COOKING_XP"], ["cookingConstants", "MATERIAL_RARITY_COOKING_XP"],
+        ["cookingConstants", "CookingXpConstants"], ["cookingConstants", "PLAYER_LEVEL_RECIPE_MILESTONES"],
+        ["cookingConstants", "CAMPAIGN_RECIPE_MILESTONES"],
+        ["slotRotation", "CANDIDATE_INDEX_PRIMES"], ["slotRotation", "SECRET_SEED_PRIMES"], ["slotRotation", "LCG"],
+        ["constants", "XP"]
+    ];
+
+    for (const [file, name] of wanted) {
+        const reader = readers[file];
+        if (!reader) continue;
+        try {
+            const value = reader(name);
+            if (value === undefined) { warnings.push(name + " introuvable, valeur de repli utilisée"); continue; }
+            result[name] = value;
+        } catch (e) {
+            warnings.push(name + " : " + e.message + " (repli utilisé)");
+        }
+    }
+    return { constants: result, warnings };
+}
+
+/* ============================================================
+   PORT DE L'ALGORITHME (Core/src/core/cooking/CookingSlotRotation.ts)
+   Les expressions arithmétiques sont recopiées telles quelles pour
+   reproduire exactement les pertes de précision du moteur.
+   ============================================================ */
+function deterministicShuffle(array, seed) {
+    const result = [...array];
+    let lcgState = seed >>> 0;
+    if (lcgState === 0) lcgState = 1;
+    for (let i = result.length - 1; i > 0; i--) {
+        lcgState = (lcgState * 1103515245 + 12345) >>> 0;
+        const j = lcgState % (i + 1);
+        const tmp = result[i]; result[i] = result[j]; result[j] = tmp;
+    }
+    return result;
+}
+
+function getSlotCycle(slotIndex, daySeed) {
+    const config = C.SLOT_CONFIGS[slotIndex];
+    const slotSeed = daySeed + C.SLOT_SEED_OFFSETS[slotIndex];
+    return deterministicShuffle([...config.eligibleTypes], slotSeed);
+}
+
+function getBaseCandidateIndex(slotIndex, furnacePosition, daySeed, candidatesLength) {
+    const p = C.CANDIDATE_INDEX_PRIMES;
+    const tierSeed = daySeed * p.DAY + furnacePosition * p.FURNACE + slotIndex * p.SLOT;
+    return Math.abs(tierSeed) % candidatesLength;
+}
+
+function isRecipeSecret(slotIndex, furnacePosition, daySeed, secretRate) {
+    const p = C.SECRET_SEED_PRIMES;
+    const secretSeed = daySeed * p.DAY + furnacePosition * p.FURNACE + slotIndex * p.SLOT;
+    const pseudoRandom = ((secretSeed * C.LCG.MULTIPLIER + C.LCG.INCREMENT) & C.LCG.MAX_VALUE) / C.LCG.MAX_VALUE;
+    return pseudoRandom < secretRate;
+}
+
+/** Contexte de simulation : évite de refiltrer les candidats à chaque appel */
+function createSimulationContext(profile) {
+    const discovered = computeDiscoveredIds(profile);
+    const byType = new Map();
+    for (const r of recipes) {
+        if (!byType.has(r.recipeType)) byType.set(r.recipeType, []);
+        byType.get(r.recipeType).push(r);
+    }
+    const cache = new Map();
+    const grade = getCookingGrade(profile.cookingLevel);
+
+    function candidates(slotIndex, recipeType, maxLevelOverride) {
+        const key = slotIndex + "|" + recipeType + "|" + (maxLevelOverride === undefined ? "-" : maxLevelOverride);
+        if (cache.has(key)) return cache.get(key);
+        const slotConfig = C.SLOT_CONFIGS[slotIndex];
+        const effectiveMaxLevel = maxLevelOverride !== undefined ? Math.min(maxLevelOverride, slotConfig.maxLevel) : slotConfig.maxLevel;
+        const list = (byType.get(recipeType) || []).filter(r =>
+            r.level >= slotConfig.minLevel && r.level <= effectiveMaxLevel
+            && (r.discoveredByDefault || discovered.has(r.id))
+            && (profile.hasGuild || r.outputType !== "petFood"));
+        cache.set(key, list);
+        return list;
+    }
+
+    return { profile, discovered, grade, candidates };
+}
+
+function getCookingGrade(cookingLevel) {
+    for (const grade of C.COOKING_GRADES) {
+        if (cookingLevel >= grade.minLevel && cookingLevel <= grade.maxLevel) return grade;
+    }
+    return C.COOKING_GRADES[C.COOKING_GRADES.length - 1];
+}
+
+/** Réplique getRecipeForSlotExcluding en gardant la trace du parcours du cycle */
+function selectRecipeForSlot(ctx, slotIndex, furnacePosition, daySeed, excluded, maxRecipeLevel) {
+    const cycle = getSlotCycle(slotIndex, daySeed);
+    const startTypeIndex = furnacePosition % cycle.length;
+    const trace = [];
+    for (let offset = 0; offset < cycle.length; offset++) {
+        const recipeType = cycle[(startTypeIndex + offset) % cycle.length];
+        const pool = ctx.candidates(slotIndex, recipeType, maxRecipeLevel);
+        if (pool.length === 0) {
+            trace.push({ recipeType, reason: "aucun candidat", poolSize: 0 });
+            continue;
+        }
+        const baseIndex = getBaseCandidateIndex(slotIndex, furnacePosition, daySeed, pool.length);
+        for (let k = 0; k < pool.length; k++) {
+            const candidate = pool[(baseIndex + k) % pool.length];
+            if (!excluded.has(candidate.id)) {
+                trace.push({ recipeType, reason: "retenu", poolSize: pool.length, baseIndex, picked: candidate.id });
+                return { recipe: candidate, recipeType, cycle, startTypeIndex, poolSize: pool.length, baseIndex, trace };
+            }
+        }
+        trace.push({ recipeType, reason: "tous les candidats déjà utilisés", poolSize: pool.length, baseIndex });
+    }
+    return { recipe: null, recipeType: null, cycle, startTypeIndex, poolSize: 0, baseIndex: 0, trace };
+}
+
+/** Réplique getUniqueRecipesForSlots (passe 1 « garanties », puis passe 2) */
+function getSlotsForFurnace(ctx, furnacePosition, daySeed) {
+    const slotCount = Math.min(ctx.profile.cookingSlots, C.SLOT_CONFIGS.length);
+    const slots = new Array(slotCount).fill(null);
+    const used = new Set();
+    const maxNoPenalty = ctx.grade.maxRecipeLevelWithoutPenalty;
+
+    let guaranteed = 0;
+    for (let i = 0; i < slotCount && guaranteed < C.MIN_GUARANTEED_PLAYER_LEVEL_RECIPES; i++) {
+        if (C.SLOT_CONFIGS[i].minLevel > maxNoPenalty) continue;
+        const sel = selectRecipeForSlot(ctx, i, furnacePosition, daySeed, used, maxNoPenalty);
+        if (sel.recipe) {
+            slots[i] = Object.assign(sel, { guaranteed: true });
+            used.add(sel.recipe.id);
+            guaranteed++;
+        }
+    }
+
+    for (let i = 0; i < slotCount; i++) {
+        if (slots[i] !== null) continue;
+        const sel = selectRecipeForSlot(ctx, i, furnacePosition, daySeed, used, undefined);
+        slots[i] = Object.assign(sel, { guaranteed: false });
+        if (sel.recipe) used.add(sel.recipe.id);
+    }
+
+    for (let i = 0; i < slotCount; i++) {
+        slots[i].slotIndex = i;
+        slots[i].isSecret = slots[i].recipe ? isRecipeSecret(i, furnacePosition, daySeed, ctx.grade.secretRecipeRate) : false;
+    }
+    return slots;
+}
+
+/* ============================================================
+   MODÈLE DE DÉCOUVERTE DES RECETTES
+   ============================================================ */
+function sortedBySource(source) {
+    return recipes
+        .filter(r => !r.discoveredByDefault && r.discoverySource === source)
+        .sort((a, b) => a.level - b.level || a.id.localeCompare(b.id));
+}
+
+function computeDiscoveredIds(profile) {
+    const set = new Set();
+    for (const r of recipes) if (r.discoveredByDefault) set.add(r.id);
+
+    const progression = (source, milestones, progress) => {
+        const list = sortedBySource(source);
+        for (let i = 0; i < list.length && i < milestones.length; i++) {
+            if (progress >= milestones[i]) set.add(list[i].id);
+        }
+    };
+    progression("PLAYER_LEVEL_MILESTONE", C.PLAYER_LEVEL_RECIPE_MILESTONES, profile.playerLevel);
+    progression("CAMPAIGN_MILESTONE", C.CAMPAIGN_RECIPE_MILESTONES, profile.campaignMissions);
+
+    for (const r of sortedBySource("COOKING_LEVEL")) {
+        if (r.level <= profile.cookingLevel) set.add(r.id);
+    }
+    const counted = { GASPARD_JO: profile.gaspardJo, FARMER: profile.farmer, ISLAND_BOSS: profile.islandBoss, WITCH: profile.witch };
+    for (const [source, count] of Object.entries(counted)) {
+        sortedBySource(source).slice(0, count).forEach(r => set.add(r.id));
+    }
+    return set;
+}
+
+/* ============================================================
+   XP
+   ============================================================ */
+function calculateCookingXp(recipe) {
+    let plantXp = 0;
+    for (const p of recipe.plants || []) plantXp += (C.PLANT_COOKING_XP[p.plantId] || 0) * p.quantity;
+    let materialXp = 0;
+    for (const m of recipe.materials || []) {
+        const data = materials[m.materialId];
+        if (data) materialXp += (C.MATERIAL_RARITY_COOKING_XP[data.rarity] || 0) * m.quantity;
+    }
+    return Math.round(plantXp * C.CookingXpConstants.PLANT_WEIGHT + materialXp * C.CookingXpConstants.MATERIAL_WEIGHT);
+}
+
+function getFailureRate(grade, recipeLevel) {
+    if (recipeLevel <= grade.maxRecipeLevelWithoutPenalty) return grade.failureRate;
+    return grade.failureRate + C.FAILURE_RATE_PER_EXTRA_LEVEL * (recipeLevel - grade.maxRecipeLevelWithoutPenalty);
+}
+
+function getXpNeededForLevel(level) {
+    return Math.round(C.XP.BASE_VALUE * Math.pow(C.XP.COEFFICIENT, level + 1)) - C.XP.MINUS;
+}
+
+/* ============================================================
+   CHARGEMENT DES DONNÉES
+   Source principale : CDN jsDelivr (listing complet en une requête, pas de
+   quota agressif). Repli : API GitHub + raw.githubusercontent.
+   ============================================================ */
+const CACHE_PREFIX = "crownicles-cooking-slots-v1:";
+const CACHE_TTL_MS = 24 * 3600 * 1000;
+const RECIPES_DIR = "Core/resources/cooking/recipes";
+const MATERIALS_DIR = "Core/resources/materials";
+const TRANSLATIONS_PATH = "Lang/fr/models.json";
+const CONSTANT_FILES = {
+    cookingConstants: "Lib/src/constants/CookingConstants.ts",
+    slotRotation: "Core/src/core/cooking/CookingSlotRotation.ts",
+    constants: "Lib/src/constants/Constants.ts"
+};
+
+function setStatus(msg, type) {
+    const el = document.getElementById("status");
+    el.textContent = msg;
+    el.className = "status " + type;
+}
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+async function fetchWithRetry(url, attempts = 4) {
+    let delay = 500;
+    let lastStatus = 0;
+    for (let i = 0; i < attempts; i++) {
+        const resp = await fetch(url);
+        if (resp.ok) return resp;
+        lastStatus = resp.status;
+        if (resp.status !== 429 && resp.status !== 502 && resp.status !== 503) break;
+        await sleep(delay);
+        delay *= 2;
+    }
+    throw new Error(`${url.split("/").pop()} : HTTP ${lastStatus}`);
+}
+
+/** Charge une liste de chemins avec un pool de requêtes concurrentes */
+async function fetchMany(paths, urlOf, parse, onProgress, concurrency = 10) {
+    const results = new Array(paths.length).fill(null);
+    let next = 0, done = 0;
+    async function worker() {
+        while (next < paths.length) {
+            const index = next++;
+            try {
+                const resp = await fetchWithRetry(urlOf(paths[index]));
+                results[index] = await parse(resp, paths[index]);
+            } catch (e) { /* fichier ignoré */ }
+            done++;
+            if (done % 10 === 0 || done === paths.length) onProgress(done, paths.length);
+        }
+    }
+    await Promise.all(Array.from({ length: Math.min(concurrency, paths.length) }, worker));
+    return results.filter(Boolean);
+}
+
+async function createJsDelivrSource(owner, repo, branch) {
+    const listing = await (await fetchWithRetry(
+        `https://data.jsdelivr.com/v1/packages/gh/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}@${encodeURIComponent(branch)}?structure=flat`)).json();
+    const files = (listing.files || []).map(f => f.name);
+    if (files.length === 0) throw new Error("listing jsDelivr vide");
+    return {
+        label: "jsDelivr",
+        listJson: dir => files.filter(p => p.startsWith("/" + dir + "/") && p.endsWith(".json"))
+            .map(p => p.slice(dir.length + 2)).sort(),
+        url: path => `https://cdn.jsdelivr.net/gh/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}@${encodeURIComponent(branch)}/${path}`
+    };
+}
+
+async function createGithubSource(owner, repo, branch) {
+    const listings = {};
+    for (const dir of [RECIPES_DIR, MATERIALS_DIR]) {
+        const resp = await fetchWithRetry(
+            `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${dir}?ref=${encodeURIComponent(branch)}`);
+        const entries = await resp.json();
+        listings[dir] = entries.filter(e => e.type === "file" && e.name.endsWith(".json")).map(e => e.name).sort();
+    }
+    return {
+        label: "GitHub",
+        listJson: dir => listings[dir] || [],
+        url: path => `https://raw.githubusercontent.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${encodeURIComponent(branch)}/${path}`
+    };
+}
+
+function cacheKey(owner, repo, branch) { return `${CACHE_PREFIX}${owner}/${repo}@${branch}`; }
+
+function readCache(owner, repo, branch) {
+    try {
+        const raw = localStorage.getItem(cacheKey(owner, repo, branch));
+        if (!raw) return null;
+        const payload = JSON.parse(raw);
+        if (Date.now() - payload.savedAt > CACHE_TTL_MS) return null;
+        return payload;
+    } catch (e) { return null; }
+}
+
+function writeCache(owner, repo, branch, payload) {
+    try { localStorage.setItem(cacheKey(owner, repo, branch), JSON.stringify(Object.assign({ savedAt: Date.now() }, payload))); }
+    catch (e) { /* quota dépassé : le cache est optionnel */ }
+}
+
+function clearCache() {
+    for (const key of Object.keys(localStorage)) {
+        if (key.startsWith(CACHE_PREFIX)) localStorage.removeItem(key);
+    }
+    setStatus("🗑️ Cache local vidé", "success");
+}
+
+async function downloadRepositoryData(owner, repo, branch) {
+    let source;
+    try { source = await createJsDelivrSource(owner, repo, branch); }
+    catch (e) { source = await createGithubSource(owner, repo, branch); }
+
+    setStatus(`📡 [${source.label}] Chargement des recettes...`, "loading");
+    const recipeFiles = source.listJson(RECIPES_DIR);
+    if (recipeFiles.length === 0) throw new Error("aucune recette trouvée sur cette branche");
+    const loadedRecipes = await fetchMany(recipeFiles,
+        name => source.url(`${RECIPES_DIR}/${name}`),
+        async (resp, name) => Object.assign({ id: name.replace(/\.json$/, "") }, await resp.json()),
+        (done, total) => setStatus(`📡 Recettes : ${done}/${total}...`, "loading"));
+
+    setStatus("📡 Chargement des matériaux...", "loading");
+    const loadedMaterials = await fetchMany(source.listJson(MATERIALS_DIR),
+        name => source.url(`${MATERIALS_DIR}/${name}`),
+        async (resp, name) => Object.assign({ id: parseInt(name, 10) }, await resp.json()),
+        (done, total) => setStatus(`📡 Matériaux : ${done}/${total}...`, "loading"));
+
+    setStatus("📡 Traductions et constantes d'équilibrage...", "loading");
+    const loadedTranslations = await (await fetchWithRetry(source.url(TRANSLATIONS_PATH))).json();
+    const constantSources = {};
+    for (const [key, path] of Object.entries(CONSTANT_FILES)) {
+        try { constantSources[key] = await (await fetchWithRetry(source.url(path))).text(); }
+        catch (e) { /* repli sur les constantes intégrées */ }
+    }
+
+    return {
+        recipes: loadedRecipes,
+        materials: loadedMaterials,
+        translations: loadedTranslations,
+        constantSources
+    };
+}
+
+function applyRepositoryData(payload) {
+    recipesRaw = payload.recipes;
+    recipesById = new Map(recipesRaw.map(r => [r.id, r]));
+    materials = {};
+    for (const m of payload.materials) materials[m.id] = { rarity: m.rarity, type: m.type };
+    translations = payload.translations;
+
+    const extracted = extractConstantsFromSources(payload.constantSources);
+    C_LOADED = extracted.constants;
+    C = JSON.parse(JSON.stringify(C_LOADED, replacerInfinity), reviverInfinity);
+
+    const constStatus = document.getElementById("constStatus");
+    if (extracted.warnings.length > 0) {
+        constStatus.textContent = "⚠️ Constantes partiellement lues : " + extracted.warnings.join(" · ");
+        constStatus.style.display = "block";
+    } else {
+        constStatus.style.display = "none";
+    }
+
+    document.getElementById("main").classList.remove("hidden");
+    document.getElementById("noData").classList.add("hidden");
+    initProfileBounds();
+    buildConstantsEditor();
+    applyRecipeOrder();
+    renderAll();
+}
+
+async function loadFromGithub() {
+    const owner = document.getElementById("repoOwner").value.trim();
+    const repo = document.getElementById("repoName").value.trim();
+    const branch = document.getElementById("branchName").value.trim();
+    if (!owner || !repo || !branch) { setStatus("⚠️ Remplissez tous les champs", "error"); return; }
+
+    const btn = document.getElementById("loadBtn");
+    const spinner = document.getElementById("spinner");
+    const btnText = document.getElementById("loadBtnText");
+    btn.disabled = true; spinner.style.display = "block"; btnText.textContent = "Chargement...";
+
+    try {
+        const cached = readCache(owner, repo, branch);
+        let payload = cached;
+        if (payload) {
+            setStatus("💾 Données restaurées depuis le cache local", "loading");
+        } else {
+            payload = await downloadRepositoryData(owner, repo, branch);
+            writeCache(owner, repo, branch, payload);
+        }
+        applyRepositoryData(payload);
+        setStatus(`✅ ${recipesRaw.length} recettes, ${Object.keys(materials).length} matériaux, ${C.COOKING_GRADES.length} grades`
+            + (cached ? " (cache local, videz-le pour rafraîchir)" : ""), "success");
+    } catch (err) {
+        setStatus("❌ Erreur : " + err.message, "error");
+    } finally {
+        btn.disabled = false; spinner.style.display = "none"; btnText.textContent = "🚀 Charger depuis GitHub";
+    }
+}
+
+const replacerInfinity = (k, v) => (v === Infinity ? "__Infinity__" : v);
+const reviverInfinity = (k, v) => (v === "__Infinity__" ? Infinity : v);
+
+/* ============================================================
+   HELPERS D'AFFICHAGE
+   ============================================================ */
+function esc(str) {
+    return String(str).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function recipeName(recipe) {
+    return (translations.cooking && translations.cooking.recipes && translations.cooking.recipes[recipe.id]) || recipe.id;
+}
+function gradeName(grade) {
+    return (translations.cooking && translations.cooking.grades && translations.cooking.grades[grade.id]) || grade.id;
+}
+function plantName(id) {
+    return (translations.plants && translations.plants[String(id)]) || PLANT_FALLBACK_NAMES[id] || ("Plante #" + id);
+}
+function materialName(id) {
+    return (translations.materials && translations.materials[String(id)]) || ("Matériau #" + id);
+}
+function typeInfo(type) {
+    return RECIPE_TYPE_INFO[type] || { emoji: "❓", label: type, output: "potion" };
+}
+function sourceInfo(recipe) {
+    return SOURCE_INFO[recipe.discoveredByDefault ? "DEFAULT" : (recipe.discoverySource || "DEFAULT")] || SOURCE_INFO.DEFAULT;
+}
+function pct(v, digits = 1) { return (v * 100).toFixed(digits) + " %"; }
+function num(v) { return v.toLocaleString("fr-FR"); }
+
+/* ============================================================
+   PROFIL
+   ============================================================ */
+function readProfile() {
+    const homeLevel = parseInt(document.getElementById("pHomeLevel").value, 10);
+    return {
+        cookingLevel: parseInt(document.getElementById("pCookingLevel").value, 10) || 0,
+        cookingSlots: HOME_COOKING_SLOTS[homeLevel] || 0,
+        homeLevel,
+        furnacePosition: parseInt(document.getElementById("pFurnace").value, 10) || 0,
+        daySeed: dateToDaySeed(document.getElementById("pDate").value),
+        playerLevel: parseInt(document.getElementById("pPlayerLevel").value, 10) || 1,
+        campaignMissions: parseInt(document.getElementById("pCampaign").value, 10) || 0,
+        gaspardJo: parseInt(document.getElementById("pGaspard").value, 10) || 0,
+        farmer: parseInt(document.getElementById("pFarmer").value, 10) || 0,
+        islandBoss: parseInt(document.getElementById("pBoss").value, 10) || 0,
+        witch: parseInt(document.getElementById("pWitch").value, 10) || 0,
+        hasGuild: document.getElementById("pGuild").checked
+    };
+}
+
+function dateToDaySeed(value) {
+    const ms = value ? new Date(value + "T12:00:00Z").valueOf() : Date.now();
+    return Math.floor(ms / 86400000);
+}
+
+function daySeedToDate(seed) {
+    return new Date(seed * 86400000 + 43200000).toISOString().slice(0, 10);
+}
+
+function shiftDay(delta) {
+    const input = document.getElementById("pDate");
+    input.value = daySeedToDate(dateToDaySeed(input.value) + delta);
+    renderAll();
+}
+
+function initProfileBounds() {
+    document.getElementById("pDate").value = new Date().toISOString().slice(0, 10);
+    const setMax = (id, source) => {
+        const max = sortedBySource(source).length;
+        document.getElementById(id).max = String(max);
+    };
+    recipes = recipesRaw;
+    setMax("pGaspard", "GASPARD_JO");
+    setMax("pFarmer", "FARMER");
+    setMax("pBoss", "ISLAND_BOSS");
+    setMax("pWitch", "WITCH");
+}
+
+function applyRecipeOrder() {
+    const order = document.getElementById("pOrder").value;
+    recipes = [...recipesRaw].sort((a, b) => a.id.localeCompare(b.id));
+    if (order === "alphaDesc") recipes.reverse();
+}
+
+function setDiscoveryToMax(max) {
+    const setters = [
+        ["pPlayerLevel", max ? 200 : 1],
+        ["pCampaign", max ? 200 : 0],
+        ["pGaspard", max ? sortedBySource("GASPARD_JO").length : 0],
+        ["pFarmer", max ? sortedBySource("FARMER").length : 0],
+        ["pBoss", max ? sortedBySource("ISLAND_BOSS").length : 0],
+        ["pWitch", max ? sortedBySource("WITCH").length : 0]
+    ];
+    for (const [id, value] of setters) document.getElementById(id).value = String(value);
+    renderAll();
+}
+
+/* ============================================================
+   RENDU GLOBAL
+   ============================================================ */
+function renderAll() {
+    applyRecipeOrder();
+    const profile = readProfile();
+    const ctx = createSimulationContext(profile);
+    renderProfileHints(profile, ctx);
+    renderStats(profile, ctx);
+    renderToday(profile, ctx);
+    renderRotation(profile, ctx);
+    renderGrades(profile, ctx);
+    if (coverageResult) renderCoverage(coverageResult);
+}
+
+function renderProfileHints(profile, ctx) {
+    document.getElementById("gradeBadge").textContent = gradeName(ctx.grade) + " (niv. " + profile.cookingLevel + ")";
+    document.getElementById("gradeHint").textContent =
+        `échec ${pct(ctx.grade.failureRate)} · secret ${pct(ctx.grade.secretRecipeRate)} · recettes niv. ≤ ${ctx.grade.maxRecipeLevelWithoutPenalty} sans malus`;
+    document.getElementById("slotsHint").textContent = profile.cookingSlots + " slot(s) de cuisson";
+    document.getElementById("daySeedHint").textContent = "daySeed = " + profile.daySeed;
+    document.getElementById("discoveredHint").textContent =
+        `${ctx.discovered.size} / ${recipes.length} recettes connues`;
+
+    const hint = (id, source, milestones) => {
+        const total = sortedBySource(source).length;
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = milestones
+            ? `paliers : ${milestones.slice(0, total).join(", ")}`
+            : `max ${total}`;
+    };
+    hint("playerLevelHint", "PLAYER_LEVEL_MILESTONE", C.PLAYER_LEVEL_RECIPE_MILESTONES);
+    hint("campaignHint", "CAMPAIGN_MILESTONE", C.CAMPAIGN_RECIPE_MILESTONES);
+    hint("gaspardHint", "GASPARD_JO", null);
+    hint("farmerHint", "FARMER", null);
+    hint("bossHint", "ISLAND_BOSS", null);
+    hint("witchHint", "WITCH", null);
+}
+
+function renderStats(profile, ctx) {
+    const eligibleForSomeSlot = recipes.filter(r => C.SLOT_CONFIGS.some(cfg =>
+        cfg.eligibleTypes.includes(r.recipeType) && r.level >= cfg.minLevel && r.level <= cfg.maxLevel)).length;
+    const reachableNow = recipes.filter(r => ctx.discovered.has(r.id)
+        && (profile.hasGuild || r.outputType !== "petFood")
+        && C.SLOT_CONFIGS.slice(0, profile.cookingSlots).some(cfg =>
+            cfg.eligibleTypes.includes(r.recipeType) && r.level >= cfg.minLevel && r.level <= cfg.maxLevel)).length;
+
+    const cards = [
+        { v: recipes.length, l: "Recettes" },
+        { v: ctx.discovered.size, l: "Découvertes" },
+        { v: reachableNow, l: "Atteignables ici" },
+        { v: eligibleForSomeSlot, l: "Éligibles à un slot" },
+        { v: profile.cookingSlots, l: "Slots ouverts" },
+        { v: pct(ctx.grade.secretRecipeRate, 1), l: "Taux de secret" }
+    ];
+    document.getElementById("stats").innerHTML = cards
+        .map(c => `<div class="stat card"><div class="v">${esc(c.v)}</div><div class="l">${esc(c.l)}</div></div>`)
+        .join("");
+}
+
+/* ---------- Onglet : slots du jour ---------- */
+function renderToday(profile, ctx) {
+    const container = document.getElementById("slotsContainer");
+    if (profile.cookingSlots === 0) {
+        container.innerHTML = `<div class="note">Ce niveau de maison n'ouvre aucun slot de cuisson.</div>`;
+        return;
+    }
+    const slots = getSlotsForFurnace(ctx, profile.furnacePosition, profile.daySeed);
+    let html = "";
+    for (let i = 0; i < C.SLOT_CONFIGS.length; i++) {
+        const cfg = C.SLOT_CONFIGS[i];
+        const sel = slots[i];
+        if (!sel) {
+            html += `<div class="slot locked">
+                <div class="slot-head"><span class="t">Slot ${i + 1}</span><span class="c">verrouillé</span></div>
+                <div class="slot-body"><div class="sub">Nécessite un niveau de maison supérieur.</div>
+                <div class="sub">Niveaux de recette ${cfg.minLevel}–${cfg.maxLevel}${cfg.potionsOnly ? " · potions uniquement" : ""}</div></div></div>`;
+            continue;
+        }
+        html += buildSlotCard(i, cfg, sel, ctx);
+    }
+    container.innerHTML = html;
+}
+
+function buildSlotCard(index, cfg, sel, ctx) {
+    const recipe = sel.recipe;
+    const cycleHtml = sel.cycle.map((t, k) => {
+        const info = typeInfo(t);
+        const isStart = k === sel.startTypeIndex;
+        const used = recipe && t === sel.recipeType;
+        const traceEntry = sel.trace.find(e => e.recipeType === t);
+        const skipped = traceEntry && traceEntry.reason !== "retenu";
+        const classes = ["cyc", isStart ? "start" : "", used ? "used" : "", skipped && !used ? "skipped" : ""].filter(Boolean).join(" ");
+        const title = traceEntry ? `${info.label} — ${traceEntry.reason} (${traceEntry.poolSize} candidat(s))` : info.label;
+        return `<span class="${classes}" title="${esc(title)}">${k === sel.startTypeIndex ? "▶ " : ""}${info.emoji}</span>`;
+    }).join("");
+
+    if (!recipe) {
+        return `<div class="slot empty">
+            <div class="slot-head"><span class="t">Slot ${index + 1}</span><span class="c">niv. ${cfg.minLevel}–${cfg.maxLevel}${cfg.potionsOnly ? " · potions" : ""}</span></div>
+            <div class="slot-body">
+                <div class="recipe-name">Aucune recette disponible</div>
+                <div class="sub">Tous les types du cycle sont sans candidat pour ce profil.</div>
+                <div class="cycle">${cycleHtml}</div>
+            </div></div>`;
+    }
+
+    const info = typeInfo(recipe.recipeType);
+    const plants = (recipe.plants || []).map(p => `${p.quantity}× ${esc(plantName(p.plantId))}`).join(", ") || "—";
+    const mats = (recipe.materials || []).map(m => `${m.quantity}× ${esc(materialName(m.materialId))}`).join(", ") || "—";
+    const failure = getFailureRate(ctx.grade, recipe.level);
+    const levelDiff = recipe.level - ctx.grade.maxRecipeLevelWithoutPenalty;
+    const noXp = levelDiff >= C.NO_XP_LEVEL_THRESHOLD;
+    const src = sourceInfo(recipe);
+
+    return `<div class="slot">
+        <div class="slot-head">
+            <span class="t">Slot ${index + 1} ${info.emoji}</span>
+            <span class="c">niv. ${cfg.minLevel}–${cfg.maxLevel}${cfg.potionsOnly ? " · potions" : ""}</span>
+        </div>
+        <div class="slot-body">
+            <div class="recipe-name">${sel.isSecret ? "❓ ???" : esc(recipeName(recipe))}</div>
+            <div class="sub mono">${esc(recipe.id)}</div>
+            <div class="meta">
+                <span class="chip ${recipe.outputType}">${OUTPUT_INFO[recipe.outputType].emoji} ${OUTPUT_INFO[recipe.outputType].label}</span>
+                <span class="chip">Niv. ${recipe.level}</span>
+                <span class="chip">${info.emoji} ${esc(info.label)}</span>
+                <span class="chip">${src.emoji} ${esc(src.label)}</span>
+                ${sel.isSecret ? '<span class="chip secret">🔒 Secrète</span>' : ""}
+                ${sel.guaranteed ? '<span class="chip guaranteed">⭐ Garantie niveau joueur</span>' : ""}
+                <span class="chip ${failure > 0.3 ? "danger" : ""}">💥 ${pct(failure)}</span>
+                ${noXp ? '<span class="chip danger">0 XP</span>' : `<span class="chip">⭐ ${num(calculateCookingXp(recipe))} XP</span>`}
+            </div>
+            <div class="ingr">🌿 ${plants}<br>⚒️ ${mats}</div>
+            <div class="sub">Pool du type retenu : ${sel.poolSize} recette(s) · index de départ ${sel.baseIndex}</div>
+            <div class="cycle">${cycleHtml}</div>
+        </div>
+    </div>`;
+}
+
+/* ---------- Onglet : rotation ---------- */
+function renderRotation(profile, ctx) {
+    const axis = document.getElementById("rotAxis").value;
+    const count = Math.max(1, parseInt(document.getElementById("rotCount").value, 10) || 30);
+    const start = Math.max(0, parseInt(document.getElementById("rotStart").value, 10) || 0);
+    const slotCount = profile.cookingSlots;
+    const container = document.getElementById("rotationMatrix");
+
+    if (slotCount === 0) { container.innerHTML = `<div class="note">Aucun slot ouvert à ce niveau de maison.</div>`; return; }
+
+    let head = `<tr><th>${axis === "furnace" ? "Position four" : "Jour"}</th>`;
+    for (let s = 0; s < slotCount; s++) head += `<th>Slot ${s + 1}</th>`;
+    head += "</tr>";
+
+    let body = "";
+    for (let i = 0; i < count; i++) {
+        const furnace = axis === "furnace" ? start + i : profile.furnacePosition;
+        const daySeed = axis === "day" ? profile.daySeed + start + i : profile.daySeed;
+        const slots = getSlotsForFurnace(ctx, furnace, daySeed);
+        const label = axis === "furnace" ? `#${furnace}` : daySeedToDate(daySeed);
+        body += `<tr><td class="mono">${esc(label)}</td>`;
+        for (let s = 0; s < slotCount; s++) {
+            const sel = slots[s];
+            if (!sel || !sel.recipe) { body += `<td><span class="cell none">—</span></td>`; continue; }
+            const r = sel.recipe;
+            const marks = (sel.isSecret ? "🔒" : "") + (sel.guaranteed ? "⭐" : "");
+            body += `<td><span class="cell ${r.outputType}" title="${esc(r.id)}">${typeInfo(r.recipeType).emoji} ${esc(recipeName(r))} <span class="s">(${r.level})${marks}</span></span></td>`;
+        }
+        body += "</tr>";
+    }
+    container.innerHTML = `<table><thead>${head}</thead><tbody>${body}</tbody></table>`;
+}
+
+/* ---------- Onglet : couverture ---------- */
+function runCoverage() {
+    const profile = readProfile();
+    const ctx = createSimulationContext(profile);
+    const days = Math.max(1, parseInt(document.getElementById("covDays").value, 10) || 60);
+    const positions = Math.max(1, parseInt(document.getElementById("covPos").value, 10) || 20);
+
+    const counts = new Map();     // recipeId -> { total, perSlot[], secret }
+    let totalSlots = 0, filledSlots = 0, secretSlots = 0, guaranteedSlots = 0, levelSum = 0;
+    const perOutput = { potion: 0, petFood: 0, material: 0 };
+    const perType = {};
+    const distinctPerFurnace = [];
+
+    for (let d = 0; d < days; d++) {
+        for (let p = 0; p < positions; p++) {
+            const slots = getSlotsForFurnace(ctx, p, profile.daySeed + d);
+            const distinct = new Set();
+            for (const sel of slots) {
+                totalSlots++;
+                if (!sel || !sel.recipe) continue;
+                filledSlots++;
+                if (sel.isSecret) secretSlots++;
+                if (sel.guaranteed) guaranteedSlots++;
+                const r = sel.recipe;
+                levelSum += r.level;
+                perOutput[r.outputType] = (perOutput[r.outputType] || 0) + 1;
+                perType[r.recipeType] = (perType[r.recipeType] || 0) + 1;
+                distinct.add(r.id);
+                let entry = counts.get(r.id);
+                if (!entry) { entry = { total: 0, perSlot: new Array(C.SLOT_CONFIGS.length).fill(0), secret: 0 }; counts.set(r.id, entry); }
+                entry.total++;
+                entry.perSlot[sel.slotIndex]++;
+                if (sel.isSecret) entry.secret++;
+            }
+            distinctPerFurnace.push(distinct.size);
+        }
+    }
+
+    coverageResult = {
+        profile, ctx, days, positions, counts, totalSlots, filledSlots, secretSlots,
+        guaranteedSlots, levelSum, perOutput, perType,
+        avgDistinct: distinctPerFurnace.reduce((a, b) => a + b, 0) / Math.max(1, distinctPerFurnace.length)
+    };
+    renderCoverage(coverageResult);
+}
+
+function renderCoverage(res) {
+    const { counts, totalSlots, filledSlots, secretSlots, guaranteedSlots, levelSum, perOutput, perType, ctx, profile } = res;
+
+    const shown = counts.size;
+    const cards = [
+        { v: num(res.days * res.positions), l: "Fours simulés" },
+        { v: num(filledSlots), l: "Slots remplis" },
+        { v: `${shown} / ${ctx.discovered.size}`, l: "Recettes vues / connues" },
+        { v: pct(filledSlots ? secretSlots / filledSlots : 0), l: "Slots secrets" },
+        { v: pct(filledSlots ? guaranteedSlots / filledSlots : 0), l: "Slots garantis ⭐" },
+        { v: (filledSlots ? levelSum / filledSlots : 0).toFixed(2), l: "Niveau moyen proposé" },
+        { v: res.avgDistinct.toFixed(2), l: "Recettes distinctes / four" },
+        { v: pct(totalSlots ? 1 - filledSlots / totalSlots : 0), l: "Slots vides" }
+    ];
+    document.getElementById("coverageStats").innerHTML = cards
+        .map(c => `<div class="stat card"><div class="v">${esc(c.v)}</div><div class="l">${esc(c.l)}</div></div>`).join("");
+
+    // Répartitions
+    const outputBars = Object.entries(perOutput).filter(([, v]) => v > 0)
+        .sort((a, b) => b[1] - a[1])
+        .map(([k, v]) => barRow(`${OUTPUT_INFO[k].emoji} ${OUTPUT_INFO[k].label}`, v, filledSlots));
+    const typeBars = Object.entries(perType).sort((a, b) => b[1] - a[1])
+        .map(([k, v]) => barRow(`${typeInfo(k).emoji} ${typeInfo(k).label}`, v, filledSlots));
+    document.getElementById("coverageCharts").innerHTML = `
+        <h3 style="font-size:.95rem;margin:14px 0 8px">Répartition par nature de production</h3>
+        <div class="bars">${outputBars.join("")}</div>
+        <h3 style="font-size:.95rem;margin:18px 0 8px">Répartition par type de recette</h3>
+        <div class="bars">${typeBars.join("")}</div>`;
+
+    // Jamais proposées
+    const never = recipes.filter(r => !counts.has(r.id));
+    document.getElementById("neverShown").innerHTML = never.length === 0
+        ? `<div class="note info">✅ Toutes les recettes ont été proposées au moins une fois sur la fenêtre simulée.</div>`
+        : `<div class="note">${never.length} recette(s) jamais proposée(s) sur ${res.days} jour(s) × ${res.positions} position(s).</div>
+           <div class="table-wrap"><table><thead><tr>
+             <th>Recette</th><th>ID</th><th>Niv.</th><th>Type</th><th>Production</th><th>Source</th><th>Raison</th>
+           </tr></thead><tbody>${never.map(r => {
+                const reason = neverShownReason(r, ctx, profile);
+                return `<tr class="zero"><td>${esc(recipeName(r))}</td><td class="mono">${esc(r.id)}</td>
+                    <td class="num">${r.level}</td><td>${typeInfo(r.recipeType).emoji} ${esc(typeInfo(r.recipeType).label)}</td>
+                    <td>${OUTPUT_INFO[r.outputType].emoji} ${OUTPUT_INFO[r.outputType].label}</td>
+                    <td>${sourceInfo(r).emoji} ${esc(sourceInfo(r).label)}</td><td>${esc(reason)}</td></tr>`;
+             }).join("")}</tbody></table></div>`;
+
+    renderCoverageTable(res);
+}
+
+function neverShownReason(recipe, ctx, profile) {
+    if (!ctx.discovered.has(recipe.id)) return "non découverte par ce profil";
+    if (!profile.hasGuild && recipe.outputType === "petFood") return "nourriture bloquée (pas de guilde)";
+    const openSlots = C.SLOT_CONFIGS.slice(0, profile.cookingSlots);
+    const eligible = openSlots.some(cfg => cfg.eligibleTypes.includes(recipe.recipeType)
+        && recipe.level >= cfg.minLevel && recipe.level <= cfg.maxLevel);
+    if (!eligible) {
+        const anySlot = C.SLOT_CONFIGS.some(cfg => cfg.eligibleTypes.includes(recipe.recipeType)
+            && recipe.level >= cfg.minLevel && recipe.level <= cfg.maxLevel);
+        return anySlot ? "aucun slot ouvert ne l'accepte" : "niveau hors plage de tous les slots";
+    }
+    return "jamais tirée (concurrence dans le pool)";
+}
+
+function barRow(label, value, total) {
+    const ratio = total ? value / total : 0;
+    return `<div class="bar-row"><div>${esc(label)}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(ratio * 100).toFixed(2)}%"></div></div>
+        <div class="bar-val">${num(value)} · ${pct(ratio)}</div></div>`;
+}
+
+function renderCoverageTable(res) {
+    const slotCount = res.profile.cookingSlots;
+    const rows = recipes.map(r => {
+        const entry = res.counts.get(r.id) || { total: 0, perSlot: new Array(C.SLOT_CONFIGS.length).fill(0), secret: 0 };
+        return {
+            recipe: r, name: recipeName(r), count: entry.total,
+            share: res.filledSlots ? entry.total / res.filledSlots : 0,
+            secret: entry.total ? entry.secret / entry.total : 0,
+            perSlot: entry.perSlot
+        };
+    });
+
+    const key = coverageSort.key, dir = coverageSort.dir;
+    rows.sort((a, b) => {
+        let va, vb;
+        if (key === "name") { va = a.name; vb = b.name; return dir * va.localeCompare(vb); }
+        if (key === "level") { va = a.recipe.level; vb = b.recipe.level; }
+        else if (key === "type") { return dir * a.recipe.recipeType.localeCompare(b.recipe.recipeType); }
+        else if (key === "secret") { va = a.secret; vb = b.secret; }
+        else { va = a.count; vb = b.count; }
+        return dir * (va - vb);
+    });
+
+    const th = (label, k, cls) => `<th class="sortable ${cls || ""}" data-sort="${k}">${label}${coverageSort.key === k ? (coverageSort.dir > 0 ? " ▲" : " ▼") : ""}</th>`;
+    let head = `<tr>${th("Recette", "name")}${th("Niv.", "level", "num")}${th("Type", "type")}<th>Production</th><th>Source</th>${th("Apparitions", "count", "num")}<th class="num">Part</th>${th("% secret", "secret", "num")}`;
+    for (let s = 0; s < slotCount; s++) head += `<th class="num">S${s + 1}</th>`;
+    head += "</tr>";
+
+    const body = rows.map(row => {
+        const r = row.recipe;
+        let cells = `<tr class="${row.count === 0 ? "zero" : ""}">
+            <td>${esc(row.name)}</td><td class="num">${r.level}</td>
+            <td>${typeInfo(r.recipeType).emoji} ${esc(typeInfo(r.recipeType).label)}</td>
+            <td>${OUTPUT_INFO[r.outputType].emoji} ${OUTPUT_INFO[r.outputType].label}</td>
+            <td>${sourceInfo(r).emoji} ${esc(sourceInfo(r).label)}</td>
+            <td class="num">${num(row.count)}</td><td class="num">${pct(row.share, 2)}</td>
+            <td class="num">${row.count ? pct(row.secret, 0) : "—"}</td>`;
+        for (let s = 0; s < slotCount; s++) cells += `<td class="num">${row.perSlot[s] ? num(row.perSlot[s]) : "·"}</td>`;
+        return cells + "</tr>";
+    }).join("");
+
+    const container = document.getElementById("coverageTable");
+    container.innerHTML = `<table><thead>${head}</thead><tbody>${body}</tbody></table>`;
+    container.querySelectorAll("th.sortable").forEach(el => {
+        el.addEventListener("click", () => {
+            const k = el.dataset.sort;
+            coverageSort = { key: k, dir: coverageSort.key === k ? -coverageSort.dir : (k === "name" || k === "type" ? 1 : -1) };
+            renderCoverageTable(res);
+        });
+    });
+}
+
+/* ---------- Onglet : grades & XP ---------- */
+function renderGrades(profile, ctx) {
+    const head = `<tr><th>Grade</th><th class="num">Niveaux</th><th class="num">Échec</th><th class="num">Secret</th>
+        <th class="num">Niv. max sans malus</th><th class="num">Éco. matériau</th><th class="num">Éco. bois</th><th class="num">Bonus production</th></tr>`;
+    const body = C.COOKING_GRADES.map(g => {
+        const isCurrent = g.id === ctx.grade.id;
+        return `<tr style="${isCurrent ? "background:rgba(99,102,241,.09);font-weight:700" : ""}">
+            <td>${esc(gradeName(g))}${isCurrent ? " 👈" : ""}</td>
+            <td class="num">${g.minLevel}–${g.maxLevel === Infinity ? "∞" : g.maxLevel}</td>
+            <td class="num">${pct(g.failureRate)}</td><td class="num">${pct(g.secretRecipeRate)}</td>
+            <td class="num">${g.maxRecipeLevelWithoutPenalty}</td><td class="num">${pct(g.materialSaveChance)}</td>
+            <td class="num">${pct(g.woodSaveChance)}</td><td class="num">${pct(g.bonusOutputChance)}</td></tr>`;
+    }).join("");
+    document.getElementById("gradesTable").innerHTML = `<table><thead>${head}</thead><tbody>${body}</tbody></table>`;
+
+    const maxRecipeLevel = Math.max(...recipes.map(r => r.level), 8);
+    let mHead = "<tr><th>Grade</th>";
+    for (let lvl = 1; lvl <= maxRecipeLevel; lvl++) mHead += `<th class="num">Niv. ${lvl}</th>`;
+    mHead += "</tr>";
+    const mBody = C.COOKING_GRADES.map(g => {
+        let row = `<tr><td style="text-align:left">${esc(gradeName(g))}</td>`;
+        for (let lvl = 1; lvl <= maxRecipeLevel; lvl++) {
+            const rate = Math.min(getFailureRate(g, lvl), 1);
+            const noXp = lvl - g.maxRecipeLevelWithoutPenalty >= C.NO_XP_LEVEL_THRESHOLD;
+            const alpha = Math.min(rate * 1.4, 0.85);
+            const bg = noXp ? "background:rgba(100,116,139,.28);color:#334155" : `background:rgba(239,68,68,${alpha.toFixed(3)});color:${rate > 0.45 ? "#fff" : "#7f1d1d"}`;
+            row += `<td style="${bg}" title="${noXp ? "Aucune XP gagnée" : ""}">${(rate * 100).toFixed(1)}</td>`;
+        }
+        return row + "</tr>";
+    }).join("");
+    document.getElementById("failureMatrix").innerHTML = `<table><thead>${mHead}</thead><tbody>${mBody}</tbody></table>`;
+
+    renderXp(profile, ctx);
+}
+
+function renderXp(profile, ctx) {
+    const maxLevel = Math.max(5, parseInt(document.getElementById("xpMaxLevel").value, 10) || 40);
+    const xpValues = [];
+    let cumulative = 0;
+    for (let lvl = 0; lvl < maxLevel; lvl++) {
+        const needed = getXpNeededForLevel(lvl);
+        cumulative += needed;
+        xpValues.push({ level: lvl, needed, cumulative });
+    }
+    const maxNeeded = Math.max(...xpValues.map(v => v.needed));
+
+    const craftable = recipes
+        .filter(r => ctx.discovered.has(r.id) && (profile.hasGuild || r.outputType !== "petFood")
+            && r.level - ctx.grade.maxRecipeLevelWithoutPenalty < C.NO_XP_LEVEL_THRESHOLD)
+        .map(r => calculateCookingXp(r) * (1 - Math.min(getFailureRate(ctx.grade, r.level), 1))
+            + C.CookingXpConstants.FAILURE_XP_PER_LEVEL * r.level * Math.min(getFailureRate(ctx.grade, r.level), 1));
+    const avgXp = craftable.length ? craftable.reduce((a, b) => a + b, 0) / craftable.length : 0;
+
+    document.getElementById("xpCurve").innerHTML = `
+        <div class="note info">XP moyenne par cuisson pour ce profil (échecs pondérés, hors bonus de production) : <b>${avgXp.toFixed(0)} XP</b>.
+        Le nombre de cuissons est estimé avec cette moyenne.</div>
+        <div class="bars">${xpValues.map(v => `
+            <div class="bar-row"><div>Niveau ${v.level} → ${v.level + 1}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${(v.needed / maxNeeded * 100).toFixed(2)}%"></div></div>
+            <div class="bar-val">${num(v.needed)}</div></div>`).join("")}</div>`;
+
+    const head = `<tr><th>Niveau</th><th class="num">XP requise</th><th class="num">XP cumulée</th><th class="num">Cuissons estimées</th><th>Grade atteint</th></tr>`;
+    const body = xpValues.map(v => `<tr>
+        <td class="num">${v.level}</td><td class="num">${num(v.needed)}</td><td class="num">${num(v.cumulative)}</td>
+        <td class="num">${avgXp > 0 ? num(Math.ceil(v.needed / avgXp)) : "—"}</td>
+        <td>${esc(gradeName(getCookingGrade(v.level)))}</td></tr>`).join("");
+
+    const recipeXpHead = `<tr><th>Recette</th><th class="num">Niv.</th><th>Type</th><th class="num">XP réussite</th><th class="num">XP échec</th><th class="num">Échec (profil)</th><th class="num">XP moyenne</th></tr>`;
+    const recipeXpBody = recipes
+        .map(r => {
+            const rate = Math.min(getFailureRate(ctx.grade, r.level), 1);
+            const noXp = r.level - ctx.grade.maxRecipeLevelWithoutPenalty >= C.NO_XP_LEVEL_THRESHOLD;
+            const success = calculateCookingXp(r);
+            const fail = C.CookingXpConstants.FAILURE_XP_PER_LEVEL * r.level;
+            const avg = noXp ? 0 : success * (1 - rate) + fail * rate;
+            return { r, rate, noXp, success, fail, avg };
+        })
+        .sort((a, b) => b.avg - a.avg)
+        .map(e => `<tr class="${e.noXp ? "zero" : ""}">
+            <td>${esc(recipeName(e.r))}</td><td class="num">${e.r.level}</td>
+            <td>${typeInfo(e.r.recipeType).emoji} ${esc(typeInfo(e.r.recipeType).label)}</td>
+            <td class="num">${e.noXp ? "0" : num(e.success)}</td><td class="num">${e.noXp ? "0" : num(e.fail)}</td>
+            <td class="num">${pct(e.rate)}</td><td class="num">${e.avg.toFixed(0)}</td></tr>`).join("");
+
+    document.getElementById("xpTable").innerHTML =
+        `<table><thead>${head}</thead><tbody>${body}</tbody></table>
+         <table style="margin-top:0"><thead>${recipeXpHead}</thead><tbody>${recipeXpBody}</tbody></table>`;
+}
+
+/* ---------- Onglet : constantes ---------- */
+const EDITABLE_CONSTANTS = [
+    "SLOT_CONFIGS", "SLOT_SEED_OFFSETS", "COOKING_GRADES", "MIN_GUARANTEED_PLAYER_LEVEL_RECIPES",
+    "FAILURE_RATE_PER_EXTRA_LEVEL", "NO_XP_LEVEL_THRESHOLD", "CANDIDATE_INDEX_PRIMES", "SECRET_SEED_PRIMES",
+    "LCG", "PLANT_COOKING_XP", "MATERIAL_RARITY_COOKING_XP", "CookingXpConstants",
+    "PLAYER_LEVEL_RECIPE_MILESTONES", "CAMPAIGN_RECIPE_MILESTONES", "XP"
+];
+
+function buildConstantsEditor() {
+    document.getElementById("constGrid").innerHTML = EDITABLE_CONSTANTS.map(name => `
+        <div class="const-box">
+            <label for="const-${name}">${name}</label>
+            <textarea id="const-${name}" data-const="${name}" spellcheck="false">${esc(JSON.stringify(C[name], replacerInfinity, 1))}</textarea>
+            <div class="err" id="err-${name}"></div>
+        </div>`).join("");
+}
+
+function applyConstants() {
+    let ok = true;
+    const next = JSON.parse(JSON.stringify(C, replacerInfinity), reviverInfinity);
+    for (const name of EDITABLE_CONSTANTS) {
+        const area = document.getElementById("const-" + name);
+        const err = document.getElementById("err-" + name);
+        try {
+            next[name] = JSON.parse(area.value, reviverInfinity);
+            area.classList.remove("invalid");
+            err.textContent = "";
+        } catch (e) {
+            area.classList.add("invalid");
+            err.textContent = "JSON invalide : " + e.message;
+            ok = false;
+        }
+    }
+    if (!ok) return;
+    C = next;
+    coverageResult = null;
+    document.getElementById("coverageStats").innerHTML = "";
+    document.getElementById("coverageCharts").innerHTML = "";
+    document.getElementById("neverShown").innerHTML = "";
+    document.getElementById("coverageTable").innerHTML = "";
+    renderAll();
+    setStatus("✅ Constantes appliquées — relancez la simulation de couverture", "success");
+}
+
+function resetConstants() {
+    C = JSON.parse(JSON.stringify(C_LOADED, replacerInfinity), reviverInfinity);
+    buildConstantsEditor();
+    coverageResult = null;
+    renderAll();
+    setStatus("↩️ Constantes réinitialisées aux valeurs du dépôt", "success");
+}
+
+function exportConstants() {
+    const blob = new Blob([JSON.stringify(C, replacerInfinity, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "cooking-constants.json";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+/* ============================================================
+   ÉVÉNEMENTS
+   ============================================================ */
+function switchTab(name) {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+    document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.id === "tab-" + name));
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("loadBtn").addEventListener("click", loadFromGithub);
+    document.getElementById("clearCacheBtn").addEventListener("click", clearCache);
+    document.querySelectorAll(".tab-btn").forEach(b => b.addEventListener("click", () => switchTab(b.dataset.tab)));
+
+    const rerenderIds = ["pCookingLevel", "pHomeLevel", "pFurnace", "pDate", "pPlayerLevel", "pCampaign",
+        "pGaspard", "pFarmer", "pBoss", "pWitch", "pGuild", "pOrder", "rotAxis", "rotCount", "rotStart", "xpMaxLevel"];
+    for (const id of rerenderIds) {
+        const el = document.getElementById(id);
+        el.addEventListener("change", renderAll);
+        if (el.type === "number") el.addEventListener("input", renderAll);
+    }
+
+    const step = (id, delta) => {
+        const el = document.getElementById(id);
+        el.value = String(Math.max(0, (parseInt(el.value, 10) || 0) + delta));
+        renderAll();
+    };
+    document.getElementById("furnaceMinus").addEventListener("click", () => step("pFurnace", -1));
+    document.getElementById("furnacePlus").addEventListener("click", () => step("pFurnace", 1));
+    document.getElementById("dayMinus").addEventListener("click", () => shiftDay(-1));
+    document.getElementById("dayPlus").addEventListener("click", () => shiftDay(1));
+    document.getElementById("todayBtn").addEventListener("click", () => {
+        document.getElementById("pDate").value = new Date().toISOString().slice(0, 10);
+        renderAll();
+    });
+    document.getElementById("discAll").addEventListener("click", () => setDiscoveryToMax(true));
+    document.getElementById("discNone").addEventListener("click", () => setDiscoveryToMax(false));
+    document.getElementById("runCoverage").addEventListener("click", runCoverage);
+    document.getElementById("applyConst").addEventListener("click", applyConstants);
+    document.getElementById("resetConst").addEventListener("click", resetConstants);
+    document.getElementById("exportConst").addEventListener("click", exportConstants);
+});
+</script>
+</body>
+</html>
