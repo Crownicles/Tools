@@ -375,6 +375,13 @@
         lumberjack: '🪓'
     };
 
+    const SERVICE_INFO = {
+        blacksmith:    { icon: '⚒️', label: 'Forgeron' },
+        royalBlacksmith: { icon: '👑', label: 'Forgeron royal' },
+        scrapDealer:   { icon: '🗑️', label: 'Ferrailleur' },
+        bossArchivist: { icon: '📜', label: 'Archiviste des boss' }
+    };
+
     let cities = {};       // cityId → city JSON data
     let shopTranslations = {};  // shopId → {label, description}
     let innTranslations = {};   // {names, stories, meals, rooms, roomsStories}
@@ -475,8 +482,12 @@
         return raw.replace(/\{emote:[^}]+\}/g, '').trim();
     }
 
-    function hasBlacksmith(cityData) {
-        return cityData.hasBlacksmith !== false;
+    function hasService(cityData, serviceId) {
+        return (cityData.services || []).includes(serviceId);
+    }
+
+    function getServiceInfo(serviceId) {
+        return SERVICE_INFO[serviceId] || { icon: '🏘️', label: serviceId };
     }
 
     function ratio(value, price) {
@@ -501,6 +512,7 @@
         let totalMeals = 0;
         let totalRooms = 0;
         let withBlacksmith = 0;
+        let withRoyalBlacksmith = 0;
 
         for (const [id, city] of Object.entries(cities)) {
             (city.shops || []).forEach(s => totalShops.add(s));
@@ -509,7 +521,8 @@
                 totalMeals += inn.meals.length;
                 totalRooms += inn.rooms.length;
             });
-            if (hasBlacksmith(city)) withBlacksmith++;
+            if (hasService(city, 'blacksmith')) withBlacksmith++;
+            if (hasService(city, 'royalBlacksmith')) withRoyalBlacksmith++;
         }
 
         document.getElementById('statsBar').innerHTML = [
@@ -518,7 +531,8 @@
             { v: totalInns.size, l: 'Auberges' },
             { v: totalMeals, l: 'Repas total' },
             { v: totalRooms, l: 'Chambres total' },
-            { v: withBlacksmith, l: 'Avec forgeron' }
+            { v: withBlacksmith, l: 'Avec forgeron' },
+            { v: withRoyalBlacksmith, l: 'Avec forgeron royal' }
         ].map(s => `<div class="stat-card"><div class="stat-value">${s.v}</div><div class="stat-label">${s.l}</div></div>`).join('');
     }
 
@@ -535,7 +549,7 @@
     function renderCityCard(cityId, city) {
         const name = getCityName(cityId);
         const desc = getCityDescription(cityId);
-        const blacksmith = hasBlacksmith(city);
+        const services = city.services || [];
         const shops = city.shops || [];
         const inn = city.inns[0]; // Each city has 1 inn
 
@@ -549,7 +563,9 @@
         // Services summary badges
         html += `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
             <span class="badge badge-blue">🛒 ${shops.length} boutique${shops.length > 1 ? 's' : ''}</span>
-            <span class="badge ${blacksmith ? 'badge-green' : 'badge-red'}">⚒️ Forgeron ${blacksmith ? '✓' : '✗'}</span>
+            ${services.length > 0
+                ? services.map(s => `<span class="badge badge-green">${getServiceInfo(s).icon} ${getServiceInfo(s).label}</span>`).join('')
+                : '<span class="badge badge-red">⚒️ Aucun service</span>'}
             <span class="badge badge-amber">🍽️ ${inn.meals.length} plat${inn.meals.length > 1 ? 's' : ''}</span>
             <span class="badge badge-green">🛏️ ${inn.rooms.length} chambre${inn.rooms.length > 1 ? 's' : ''}</span>
         </div>`;
@@ -777,19 +793,26 @@
         }
         html += '</div>';
 
-        // Blacksmith section
+        // Services section
         html += `<div style="margin-top:20px;">
             <div class="inn-full-card">
-                <h3 style="margin-bottom:10px;">⚒️ Forgeron</h3>
+                <h3 style="margin-bottom:10px;">⚒️ Services</h3>
                 <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:12px;">
-                    Le forgeron permet d'améliorer vos équipements. Toutes les villes en ont un sauf indication contraire.
+                    Chaque ville déclare ses services dans son fichier de ressources.
                 </p>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                    ${CITY_FILES.map(id => {
-                        const has = hasBlacksmith(cities[id]);
-                        return `<span class="badge ${has ? 'badge-green' : 'badge-red'}">${getCityName(id)} ${has ? '✓' : '✗'}</span>`;
-                    }).join('')}
-                </div>
+                ${Object.keys(SERVICE_INFO).map(serviceId => {
+                    const info = getServiceInfo(serviceId);
+                    const citiesWith = CITY_FILES.filter(id => hasService(cities[id], serviceId));
+                    return `<div style="margin-bottom:10px;">
+                        <div style="font-size:0.9rem;font-weight:600;margin-bottom:4px;">${info.icon} ${info.label} (${citiesWith.length})</div>
+                        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                            ${CITY_FILES.map(id => {
+                                const has = hasService(cities[id], serviceId);
+                                return `<span class="badge ${has ? 'badge-green' : 'badge-red'}">${getCityName(id)} ${has ? '✓' : '✗'}</span>`;
+                            }).join('')}
+                        </div>
+                    </div>`;
+                }).join('')}
             </div>
         </div>`;
 
