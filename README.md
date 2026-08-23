@@ -5,8 +5,8 @@ Ce repo présente différents outils pour travailler sur Crownicles
 
 ## Documents
 
-- [Brief d'illustration de Crownicles (HTML)](https://crownicles.github.io/Tools/documents/brief-illustrations-crownicles.html) - Catalogue des écrans, personnages, monstres et budgets d'illustration
-- [Brief d'illustration de Crownicles (PDF)](https://crownicles.github.io/Tools/documents/brief-illustrations-crownicles.pdf) - Version PDF téléchargeable pour le graphiste
+- [Brief artistique de Crownicles - édition 2 (HTML)](https://crownicles.github.io/Tools/documents/brief-illustrations-crownicles.html) - Guide visuel des personnages, monstres, lieux, événements et écrans
+- [Brief artistique de Crownicles - édition 2 (PDF)](https://crownicles.github.io/Tools/documents/brief-illustrations-crownicles.pdf) - Version imprimable destinée au graphiste
 
 ## Générateurs
 

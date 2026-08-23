@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crownicles - Brief illustration du jeu</title>
+<title>Crownicles - Brief artistique du jeu - Edition 2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
@@ -18,12 +18,9 @@
     --line: #e6e6e8;
     --terracotta: #b95e4b;
     --gold: #c8963c;
-    --teal: #227c7a;
     --blue: #2f6fd0;
     --green: #3f9a5c;
-    --violet: #6c56c8;
     --red: #d2504b;
-    --white: #ffffff;
     --radius: 14px;
   }
   * { box-sizing: border-box; }
@@ -34,110 +31,93 @@
     background: var(--wash);
     font-family: Inter, "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 9pt;
-    line-height: 1.42;
+    line-height: 1.43;
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 { margin: 0 0 0.45em; line-height: 1.08; }
-  h1 { font-size: 27pt; font-weight: 800; letter-spacing: 0; }
-  h2 { font-size: 18pt; font-weight: 700; color: var(--ink); padding: 0; border: 0; }
-  h3 { font-size: 12.5pt; font-weight: 700; color: var(--ink); margin-top: 1.1em; }
-  h4 { font-size: 10.5pt; font-weight: 700; color: var(--ink); margin-top: .9em; }
+  h1, h2, h3, h4 { margin: 0 0 .45em; line-height: 1.1; }
+  h1 { font-size: 28pt; font-weight: 800; letter-spacing: 0; }
+  h2 { font-size: 19pt; font-weight: 700; }
+  h3 { font-size: 13pt; font-weight: 700; margin-top: 1.05em; }
+  h4 { font-size: 10.5pt; font-weight: 700; margin-top: .8em; }
   p { margin: .35em 0 .75em; }
-  ul, ol { margin: .35em 0 .8em 1.2em; padding: 0; }
+  ul, ol { margin: .35em 0 .8em 1.15em; padding: 0; }
   li { margin: .2em 0; }
-  code, .asset-id { font-family: "SFMono-Regular", Consolas, monospace; font-size: .88em; }
-  code { background: var(--wash); padding: 1px 4px; border-radius: 4px; }
+  strong { font-weight: 700; }
+  code { font-family: "SFMono-Regular", Consolas, monospace; font-size: .88em; background: var(--wash); padding: 1px 4px; border-radius: 4px; }
+  .page { page-break-before: always; }
+  .page:first-of-type { page-break-before: auto; }
   .cover {
     min-height: 249mm;
-    margin: 0;
     padding: 18mm 17mm;
-    position: relative;
-    overflow: hidden;
-    color: var(--ink);
-    background: var(--paper);
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    background: var(--paper);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     page-break-after: always;
   }
-  .cover:before, .cover:after {
-    content: none;
+  .cover-kicker, .eyebrow {
+    color: var(--muted);
+    font-size: 7.5pt;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
   }
-  .cover > * { position: relative; z-index: 1; }
-  .cover-kicker { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; font-size: 8pt; }
-  .cover h1 { max-width: 150mm; margin-top: 15mm; }
-  .cover-subtitle { max-width: 125mm; color: var(--muted); font-size: 14pt; line-height: 1.35; }
-  .cover-rule { width: 28mm; height: 4px; background: var(--terracotta); margin: 11mm 0; border-radius: 99px; }
+  .cover h1 { margin-top: 17mm; max-width: 155mm; }
+  .cover-rule { width: 28mm; height: 4px; margin: 11mm 0; border-radius: 99px; background: var(--terracotta); }
+  .cover-subtitle { max-width: 135mm; color: var(--muted); font-size: 14pt; line-height: 1.35; }
+  .cover-bottom { display: flex; align-items: end; justify-content: space-between; gap: 14mm; border-top: 1px solid var(--line); padding-top: 9mm; }
   .cover-meta { color: var(--muted); font-size: 8.5pt; }
-  .cover-bottom { display: flex; justify-content: space-between; gap: 15mm; align-items: end; border-top: 1px solid var(--line); padding-top: 9mm; }
-  .cover-stamp { border: 0; border-radius: 99px; background: var(--wash); color: var(--ink); padding: 7px 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; font-size: 7.5pt; }
-  .page { page-break-before: always; }
-  .page:first-of-type { page-break-before: auto; }
-  .eyebrow { text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-size: 7.5pt; font-weight: 600; margin-bottom: 5px; }
-  .lead { font-size: 11.5pt; line-height: 1.4; max-width: 175mm; color: var(--muted); }
-  .muted { color: var(--muted); }
-  .small { font-size: 8pt; color: var(--muted); }
-  .callout { border-left: 4px solid var(--terracotta); border-radius: var(--radius); background: var(--wash); padding: 10px 12px; margin: 10px 0 14px; }
-  .callout.teal { border-color: var(--teal); background: var(--wash); }
-  .callout.gold { border-color: var(--gold); background: var(--wash); }
-  .callout.red { border-color: var(--red); background: var(--wash); }
-  .metric-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin: 12px 0 15px; }
-  .metric { border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); padding: 10px 9px; min-height: 47px; }
-  .metric:nth-child(2) strong { color: var(--gold); }
-  .metric:nth-child(3) strong { color: var(--teal); }
-  .metric:nth-child(4) strong { color: var(--blue); }
-  .metric:nth-child(5) strong { color: var(--violet); }
-  .metric strong { display: block; font-size: 18pt; line-height: 1; }
-  .metric span { display: block; color: var(--muted); font-size: 7.5pt; margin-top: 4px; }
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
-  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); padding: 10px 11px; margin: 7px 0 11px; }
+  .pill { border: 1px solid var(--line); border-radius: 99px; padding: 7px 11px; font-size: 7.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+  .lead { max-width: 178mm; color: var(--muted); font-size: 11.5pt; line-height: 1.4; }
+  .section-intro { max-width: 175mm; color: var(--muted); }
+  .callout { margin: 10px 0 14px; padding: 10px 12px; border-left: 4px solid var(--terracotta); border-radius: var(--radius); background: var(--paper); }
+  .callout.gold { border-color: var(--gold); }
+  .callout.blue { border-color: var(--blue); }
+  .callout.green { border-color: var(--green); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+  .panel { margin: 8px 0 12px; padding: 11px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
   .panel h3, .panel h4 { margin-top: 0; }
-  .profile-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; background: var(--white); min-height: 92px; }
-  .profile-card.minimum { border-top: 3px solid var(--muted); }
-  .profile-card.recommended { border-top: 3px solid var(--terracotta); }
-  .profile-card.ideal { border-top: 3px solid var(--gold); }
-  .profile-card .count { font-size: 20pt; font-weight: 800; color: var(--ink); }
-  .profile-card .label { font-size: 8pt; color: var(--muted); }
-  .profile-card ul { font-size: 8.4pt; }
-  .asset-list { columns: 2; column-gap: 20px; }
-  .asset-list li { break-inside: avoid; }
-  .tag { display: inline-block; border-radius: 99px; background: var(--wash); border: 1px solid var(--line); padding: 2px 7px; font-size: 7.4pt; font-weight: 600; margin: 1px 2px 1px 0; }
-  .tag.red { background: var(--wash); border-color: var(--line); color: var(--red); }
-  .tag.teal { background: var(--wash); border-color: var(--line); color: var(--teal); }
-  .tag.gold { background: var(--wash); border-color: var(--line); color: var(--gold); }
-  .tag.blue { background: var(--wash); border-color: var(--line); color: var(--blue); }
-  .tag.violet { background: var(--wash); border-color: var(--line); color: var(--violet); }
-  table { width: 100%; border-collapse: collapse; margin: 7px 0 14px; font-size: 8.05pt; }
-  th { text-align: left; color: var(--muted); background: var(--wash); border-bottom: 1px solid var(--line); padding: 6px; font-size: 7.6pt; line-height: 1.15; }
-  td { vertical-align: top; border: 1px solid var(--line); padding: 5px 6px; line-height: 1.3; background: var(--paper); }
-  tr:nth-child(even) td { background: var(--paper); }
+  .rule-card { min-height: 86px; padding: 11px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
+  .rule-card h3 { margin-bottom: 7px; }
+  .rule-card p { color: var(--muted); }
+  .look-card { padding: 11px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); break-inside: avoid; }
+  .look-card h3 { margin-top: 0; color: var(--ink); }
+  .look-card h3 span { color: var(--terracotta); }
+  .look-card p { margin-bottom: 6px; }
+  .label { display: inline-block; min-width: 24mm; color: var(--muted); font-size: 7.8pt; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; vertical-align: top; }
+  .value { display: inline; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 8pt; }
+  th { padding: 6px; border-bottom: 1px solid var(--ink); color: var(--ink); background: var(--paper); text-align: left; font-size: 7.6pt; line-height: 1.15; }
+  td { padding: 5px 6px; border: 1px solid var(--line); background: var(--paper); vertical-align: top; line-height: 1.32; }
   tr { break-inside: avoid; }
-  .nowrap { white-space: nowrap; }
-  .asset-id { color: var(--blue); font-weight: 700; white-space: nowrap; }
-  .checklist { list-style: none; margin-left: 0; padding-left: 0; }
-  .checklist li { padding-left: 19px; position: relative; }
+  .place { width: 31mm; font-weight: 700; }
+  .mini-name { width: 39mm; font-weight: 700; }
+  .monster-name { width: 34mm; font-weight: 700; }
+  .monster-place { width: 33mm; color: var(--muted); }
+  .monster-table { margin-top: 6px; font-size: 7.5pt; }
+  .monster-table th { padding: 4px; font-size: 7.1pt; }
+  .monster-table td { padding: 3px 4px; line-height: 1.22; }
+  .screen-name { width: 42mm; font-weight: 700; }
+  .screen-group { color: var(--muted); font-weight: 700; }
+  .small { color: var(--muted); font-size: 8pt; }
+  .muted { color: var(--muted); }
+  .checklist { list-style: none; margin-left: 0; }
+  .checklist li { position: relative; padding-left: 18px; }
   .checklist li:before { content: "□"; position: absolute; left: 0; color: var(--terracotta); font-weight: 700; }
-  .diagram { border: 1px solid var(--line); border-radius: var(--radius); background: var(--wash); color: var(--ink); padding: 12px; margin: 9px 0 13px; font-family: "SFMono-Regular", Consolas, monospace; font-size: 8pt; line-height: 1.65; }
-  .diagram .accent { color: var(--terracotta); }
-  .diagram .accent2 { color: var(--blue); }
-  .avoid { border: 1px solid var(--line); border-left: 4px solid var(--red); border-radius: var(--radius); background: var(--wash); padding: 9px 11px; }
-  .do { border: 1px solid var(--line); border-left: 4px solid var(--green); border-radius: var(--radius); background: var(--wash); padding: 9px 11px; }
-  .section-note { margin-top: -5px; color: var(--muted); font-size: 8.5pt; }
-  .footer-note { border-top: 1px solid var(--line); padding-top: 7px; margin-top: 15px; color: var(--muted); font-size: 7.5pt; }
-  .screen-table { font-size: 7.5pt; }
-  .screen-table td:first-child { width: 25mm; font-weight: 700; }
-  .screen-table td:nth-child(2) { width: 25mm; color: var(--muted); }
-  .screen-table td:nth-child(3), .screen-table td:nth-child(4), .screen-table td:nth-child(5) { width: 44mm; }
-  .mini-table td:first-child, .monster-table td:first-child { width: 16mm; }
-  .mini-table td:nth-child(2) { width: 34mm; font-weight: 700; }
-  .monster-table td:nth-child(2) { width: 35mm; font-weight: 700; }
-  .character-table td:first-child { width: 17mm; }
-  .character-table td:nth-child(2) { width: 38mm; font-weight: 700; }
-  .compact td, .compact th { padding: 4px 5px; }
-  .page-break-after { page-break-after: always; }
+  .swatch-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin: 9px 0 13px; }
+  .swatch { padding: 9px 8px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
+  .swatch b { display: block; font-size: 12pt; }
+  .swatch span { color: var(--muted); font-size: 7.5pt; }
+  .swatch.terra b { color: var(--terracotta); }
+  .swatch.gold b { color: var(--gold); }
+  .swatch.blue b { color: var(--blue); }
+  .swatch.green b { color: var(--green); }
+  .swatch.red b { color: var(--red); }
+  .footer-note { margin-top: 16px; padding-top: 7px; border-top: 1px solid var(--line); color: var(--muted); font-size: 7.5pt; }
+  .page-number { float: right; color: var(--faint); font-size: 7.5pt; }
   @media print {
     :root {
       --ink: #000000;
@@ -148,666 +128,499 @@
       --line: #aaaaaa;
       --terracotta: #000000;
       --gold: #000000;
-      --teal: #000000;
       --blue: #000000;
       --green: #000000;
-      --violet: #000000;
       --red: #000000;
-      --white: #ffffff;
     }
     html, body { background: #ffffff; }
+    .cover, .panel, .rule-card, .look-card, .callout, .swatch, th, td, code { background: #ffffff; }
     .cover { border-color: #000000; }
-    .cover-stamp { border: 1px solid #000000; background: #ffffff; }
-    th { color: #000000; background: #ffffff; border-top: 1px solid #000000; border-bottom-color: #000000; }
-    td, .panel, .metric, .profile-card, .callout, .diagram, .avoid, .do, code, .tag { background: #ffffff; }
-    .asset-id, .diagram .accent, .diagram .accent2 { color: #000000; }
-    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    a { color: inherit; text-decoration: none; }
   }
 </style>
 </head>
 <body>
 <section class="cover">
   <div>
-    <div class="cover-kicker">Crownicles / direction artistique</div>
-    <h1>Brief illustration<br>du jeu</h1>
+    <div class="cover-kicker">Crownicles / dossier de direction artistique</div>
+    <h1>Illustrer le monde<br>de Crownicles</h1>
     <div class="cover-rule"></div>
-    <div class="cover-subtitle">Un catalogue de production pensé pour illustrer tous les écrans sans demander une scène unique par écran.</div>
+    <div class="cover-subtitle">Un guide visuel pour comprendre le jeu, dessiner ses personnages et donner une illustration cohérente à chaque écran.</div>
   </div>
   <div class="cover-bottom">
-    <div class="cover-meta">Version 1.0 · 23 août 2026<br>Document de travail pour le graphiste</div>
-    <div class="cover-stamp">Objectif : zéro écran vide</div>
+    <div class="cover-meta">Édition 2 · 23 août 2026<br>Document de référence pour l'artiste</div>
+    <div class="pill">Personnages · lieux · scènes</div>
   </div>
 </section>
 
 <section class="page">
-  <div class="eyebrow">01 · décision de production</div>
-  <h2>Résumé exécutif</h2>
-  <p class="lead">Le jeu contient beaucoup plus de situations que d'écrans. La bonne stratégie consiste à produire une bibliothèque d'assets composables : fonds, personnages, monstres, accessoires, effets et états d'interface.</p>
-  <div class="metric-grid">
-    <div class="metric"><strong>76</strong><span>écrans cibles dans la maquette mobile</span></div>
-    <div class="metric"><strong>44</strong><span>mini-événements distincts</span></div>
-    <div class="metric"><strong>88</strong><span>grands événements narratifs</span></div>
-    <div class="metric"><strong>19</strong><span>monstres avec fiche propre</span></div>
-    <div class="metric"><strong>55</strong><span>familles de collecteurs interactifs</span></div>
-  </div>
-  <div class="callout gold"><strong>Choix recommandé :</strong> le profil <strong>Quantité / qualité</strong>, soit <strong>118 illustrations principales</strong>. Il couvre tous les écrans et donne une identité aux personnages récurrents sans dépasser une charge de production raisonnable.</div>
+  <div class="eyebrow">Le jeu en une page</div>
+  <h2>Bienvenue dans Crownicles</h2>
+  <p class="lead">Crownicles est un jeu d'aventure textuel dans un univers fantasy. Le joueur incarne un aventurier qui voyage entre des villages, des villes, des forêts, des montagnes, des déserts et des îles mystérieuses.</p>
   <div class="two-col">
     <div class="panel">
-      <h3>Ce qui doit être unique</h3>
+      <h3>Ce que fait le joueur</h3>
       <ul>
-        <li>Les <strong>19 monstres</strong>, car ils sont au centre du combat et de l'identité des îles.</li>
-        <li>Les <strong>44 mini-événements</strong>, car chacun doit avoir son propre signal visuel.</li>
-        <li>Les personnages récurrents importants à partir du profil recommandé.</li>
+        <li>Choisir une destination et voyager sur les routes.</li>
+        <li>Rencontrer des personnages, des animaux et des situations imprévues.</li>
+        <li>Prendre des décisions qui peuvent aider ou mettre en danger l'aventurier.</li>
+        <li>Combattre d'autres aventuriers ou des monstres.</li>
+        <li>Gérer son équipement, son familier, sa maison et sa guilde.</li>
+        <li>Progresser dans une compétition liée à la princesse du royaume.</li>
       </ul>
     </div>
     <div class="panel">
-      <h3>Ce qui doit être réutilisé</h3>
+      <h3>Le ton à viser</h3>
       <ul>
-        <li>Les fonds de lieux par famille visuelle plutôt que par carte individuelle.</li>
-        <li>Les personnages détourés sur plusieurs fonds.</li>
-        <li>Les états de succès, d'échec, de chargement et d'erreur.</li>
-        <li>Les accessoires, effets et icônes d'objets.</li>
+        <li>Une aventure fantasy lisible et expressive.</li>
+        <li>Un monde chaleureux dans les villages, plus inquiétant dans les forêts et les lieux hantés.</li>
+        <li>Des personnages légèrement théâtraux, immédiatement reconnaissables.</li>
+        <li>De l'humour dans les rencontres ordinaires, de la majesté pour les boss et la cour royale.</li>
+        <li>Du danger réel, mais pas une fantasy uniformément sombre.</li>
       </ul>
     </div>
   </div>
-  <p class="small">Les chiffres de ce brief ont été recalculés depuis les ressources du dépôt et la maquette <code>App/mockups/mobile.html</code>. Les 76 écrans représentent la cible fonctionnelle de l'application ; l'implémentation mobile actuelle est encore partielle.</p>
-</section>
-
-<section class="page">
-  <div class="eyebrow">02 · périmètre</div>
-  <h2>Règle de couverture</h2>
-  <p>Un écran est considéré comme illustré dès qu'il possède un visuel principal identifiable. Ce visuel peut être une scène complète, un fond, un personnage détouré, une créature, une illustration d'état ou une illustration de catégorie.</p>
-  <div class="diagram"><span class="accent">ÉCRAN</span> = <span class="accent2">FOND</span> + PERSONNAGE / CRÉATURE + ACCESSOIRE / EFFET + ÉTAT UI<br><br><span class="accent">Exemple :</span> B05 Route marécageuse + P01 Gruffo + alambic + U14 récompense<br><span class="accent">Exemple :</span> B15 Île glacée + M11 Crocodile + aucun texte intégré à l'image</div>
-  <div class="callout teal"><strong>Important pour le graphiste :</strong> une illustration ne doit jamais contenir de texte, de chiffre, de bouton, d'émoji ou de libellé de langue. Le texte est rendu par l'application et doit rester traduisible.</div>
-  <h3>Les trois niveaux d'asset</h3>
-  <table>
-    <thead><tr><th>Niveau</th><th>Contenu</th><th>Usage</th><th>Règle de partage</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Scène</strong></td><td>Composition complète avec action narrative.</td><td>Mini-événement ou moment de campagne.</td><td>Réutilisée seulement quand l'action reste lisible.</td></tr>
-      <tr><td><strong>Fond</strong></td><td>Lieu sans personnage ni texte.</td><td>Grands événements, rapports, villes, menus.</td><td>Un fond couvre plusieurs cartes proches visuellement.</td></tr>
-      <tr><td><strong>Élément</strong></td><td>Personnage, monstre, animal, objet ou effet détouré.</td><td>Composition dynamique et collecteurs.</td><td>Positionnable sur plusieurs fonds et états.</td></tr>
-    </tbody>
-  </table>
-  <h3>Ce qui n'est pas compté comme illustration principale</h3>
-  <div class="two-col">
-    <div class="avoid"><strong>À ne pas produire dans ce budget :</strong><br>103 fiches plein écran pour les types de familiers, 90 illustrations d'objets ou de matériaux, une image par badge ou par ligue, une scène différente pour chaque joueur rencontré.</div>
-    <div class="do"><strong>Solution :</strong><br>les familiers, objets, matériaux, potions, badges et ligues utilisent les icônes déjà prévues par le jeu, complétées par U02, U03, U04 ou U09 quand un écran a besoin d'une illustration de contexte.</div>
-  </div>
-</section>
-
-<section class="page">
-  <div class="eyebrow">03 · système visuel</div>
-  <h2>Spécifications de livraison</h2>
-  <div class="two-col">
-    <div class="panel">
-      <h3>Formats maîtres</h3>
-      <ul>
-        <li><strong>Scènes et fonds portrait :</strong> minimum 2048 × 2732 px, composition 3:4.</li>
-        <li><strong>Personnages et monstres :</strong> PNG transparent, hauteur utile minimum 1800 px.</li>
-        <li><strong>Icônes et petits éléments :</strong> PNG transparent, 1024 × 1024 px.</li>
-        <li><strong>Couleur :</strong> sRGB, sans profil exotique.</li>
-        <li><strong>Source :</strong> fichier calque PSD, KRA, CLIP ou équivalent.</li>
-      </ul>
-    </div>
-    <div class="panel">
-      <h3>Exports attendus</h3>
-      <ul>
-        <li>PNG transparent pour les personnages, monstres, accessoires et effets.</li>
-        <li>JPG ou WebP pour les fonds et scènes opaques.</li>
-        <li>Un export mobile optimisé et un export maître non compressé.</li>
-        <li>Une planche de prévisualisation avec l'identifiant de chaque asset.</li>
-        <li>Une fiche indiquant le crédit et la licence de chaque ressource externe.</li>
-      </ul>
-    </div>
-  </div>
-  <h3>Contraintes de composition</h3>
-  <ul class="checklist">
-    <li>Garder une zone de sécurité centrale : aucun visage, objet important ou élément narratif critique dans les 10 % extérieurs.</li>
-    <li>Prévoir un recadrage portrait mobile et une réduction en vignette carrée.</li>
-    <li>Ne pas placer d'élément important derrière une future zone de texte ou de boutons.</li>
-    <li>Prévoir une version lisible sur fond clair et sur fond sombre pour les personnages détourés.</li>
-    <li>Éviter les détails trop fins dans les fonds : l'illustration doit rester lisible à environ 320 px de large.</li>
-    <li>Ne pas dessiner les émojis du jeu dans les scènes : l'application les rend avec son propre système d'icônes.</li>
-  </ul>
-  <h3>Convention de nommage</h3>
-  <div class="diagram"><span class="accent">CROWNICLES_</span>&lt;famille&gt;_&lt;ID&gt;_&lt;nom-court&gt;_v01.ext<br><br>Exemples :<br><span class="accent2">CROWNICLES_MONSTER_M06_TITAN_MAGMA_v01.png</span><br><span class="accent2">CROWNICLES_BACKGROUND_B05_ROUTE_MARECAGEUSE_v01.jpg</span><br><span class="accent2">CROWNICLES_CHARACTER_P01_GRUFFO_v01.png</span><br><span class="accent2">CROWNICLES_SMALL_EVENT_S24_GOBELETS_v01.jpg</span></div>
-  <p class="small">Les identifiants du brief sont stables : ils doivent être repris dans les noms de fichiers, les planches et les échanges avec le développement.</p>
-</section>
-
-<section class="page">
-  <div class="eyebrow">04 · profils</div>
-  <h2>Les trois profils de production</h2>
+  <div class="callout gold"><strong>Fil conducteur visuel :</strong> chaque écran doit donner l'impression que l'aventurier vient d'entrer dans un endroit précis ou de croiser quelqu'un. Même un écran de gestion doit avoir une ambiance : maison, forge, refuge, taverne, salle de guilde ou paysage.</div>
+  <h3>Les grands axes du monde</h3>
   <div class="three-col">
-    <div class="profile-card minimum"><div class="eyebrow">Profil 1</div><div class="count">90</div><div class="label">illustrations principales</div><h3>Grand minimum</h3><ul><li>19 monstres</li><li>44 mini-événements</li><li>16 fonds génériques</li><li>11 assets système</li></ul><p class="small">Tous les écrans ont un visuel, mais les lieux et services partagent beaucoup d'assets.</p></div>
-    <div class="profile-card recommended"><div class="eyebrow">Profil 2</div><div class="count">118</div><div class="label">illustrations principales</div><h3>Quantité / qualité</h3><ul><li>Tout le profil 1</li><li>8 fonds de lieux précis</li><li>14 PNJ récurrents</li><li>6 états UI dédiés</li></ul><p class="small">Le meilleur équilibre : les personnages deviennent reconnaissables et les écrans restent variés.</p></div>
-    <div class="profile-card ideal"><div class="eyebrow">Profil 3</div><div class="count">140</div><div class="label">illustrations principales</div><h3>Proposition idéale</h3><ul><li>Tout le profil 2</li><li>6 lieux spécialisés</li><li>10 rôles secondaires</li><li>6 scènes narratives fortes</li></ul><p class="small">Meilleur résultat narratif sous la limite de 150 assets principaux.</p></div>
+    <div class="rule-card"><h3>Le continent</h3><p>Routes habitées, villages, commerces, magie quotidienne et compétition royale.</p></div>
+    <div class="rule-card"><h3>Les îles</h3><p>Expéditions dangereuses, environnements extrêmes et monstres qui dominent leur territoire.</p></div>
+    <div class="rule-card"><h3>La vie de l'aventurier</h3><p>Familier, maison, cuisine, équipement, guilde, ligue et progression personnelle.</p></div>
   </div>
-  <div class="callout"><strong>Recommendation :</strong> commander le profil 2 comme base contractuelle, mais demander les fichiers sources et les personnages détourés de façon à pouvoir atteindre le profil 3 sans refaire le travail.</div>
-  <table class="compact">
-    <thead><tr><th>Profil</th><th>Base</th><th>Ajouts</th><th>Total</th><th>Couverture</th></tr></thead>
-    <tbody>
-      <tr><td>Grand minimum</td><td>M01-M19, S01-S44, B01-B16, U01-U11</td><td>-</td><td><strong>90</strong></td><td>76 écrans + contenus + états transversaux, avec forte réutilisation.</td></tr>
-      <tr><td>Quantité / qualité</td><td>Profil 1</td><td>B17-B24, P01-P14, U12-U17</td><td><strong>118</strong></td><td>76 écrans, PNJ principaux, états d'échec et de réussite lisibles.</td></tr>
-      <tr><td>Idéal</td><td>Profil 2</td><td>B25-B30, P15-P24, E01-E06</td><td><strong>140</strong></td><td>76 écrans, lieux spécialisés et six scènes narratives majeures.</td></tr>
-    </tbody>
-  </table>
-  <p class="small">Si la carte existante et le logo existant sont conservés sans nouvelle illustration, le nombre de nouveaux fichiers à produire est respectivement de 88, 116 et 138.</p>
 </section>
 
 <section class="page">
-  <div class="eyebrow">05 · profil 1</div>
-  <h2>Catalogue commun : fonds B01-B16</h2>
-  <p class="section-note">Ces 16 fonds forment le socle du profil 1 et restent utilisés dans les deux profils supérieurs.</p>
-  <div id="background-base"></div>
-  <h3>Assets système U01-U11</h3>
-  <div id="system-base"></div>
-</section>
-
-<section class="page">
-  <div class="eyebrow">06 · profil 1</div>
-  <h2>Catalogue commun : mini-événements S01-S44</h2>
-  <p>Chaque mini-événement reçoit une illustration dédiée. Les variantes de texte, de récompense et de choix utilisent la même illustration, avec les effets et l'interface par-dessus.</p>
-  <div id="mini-events"></div>
-</section>
-
-<section class="page">
-  <div class="eyebrow">07 · profil 1</div>
-  <h2>Catalogue commun : monstres M01-M19</h2>
-  <p>Chaque monstre reçoit un asset dédié. Le livrable recommandé est un personnage détouré ou semi-détouré, accompagné d'une version composée dans son île pour les présentations de combat.</p>
-  <div id="monsters"></div>
-</section>
-
-<section class="page">
-  <div class="eyebrow">08 · profil 2</div>
-  <h2>Ajouts : fonds B17-B24</h2>
-  <p>Ces fonds rendent les lieux continentaux reconnaissables et évitent qu'un service ou un événement urbain donne l'impression de se dérouler partout au même endroit.</p>
-  <div id="background-profile2"></div>
-  <h2>Ajouts : personnages P01-P14</h2>
-  <p class="section-note">Un portrait détouré par personnage. Prévoir au minimum une pose de rencontre ; les scènes complètes restent séparées dans le profil 3.</p>
-  <div id="characters-profile2"></div>
-</section>
-
-<section class="page">
-  <div class="eyebrow">09 · profil 2</div>
-  <h2>Ajouts : états U12-U17</h2>
-  <div id="states-profile2"></div>
-  <div class="callout teal"><strong>Pourquoi ces six assets sont importants :</strong> les écrans interactifs ne sont pas toujours des réussites. Sans états dédiés, les refus, erreurs, expirations et prérequis manquants retombent sur le même écran neutre et donnent une impression de produit inachevé.</div>
-  <h3>Profil 2 : contrôle de couverture</h3>
+  <div class="eyebrow">Règles de lecture</div>
+  <h2>Une illustration qui reste réutilisable</h2>
+  <p class="section-intro">Le même personnage peut réapparaître dans plusieurs histoires. Le même lieu peut accueillir plusieurs événements. L'illustration doit donc raconter une situation sans enfermer le dessin dans une seule phrase.</p>
+  <div class="three-col">
+    <div class="rule-card"><h3>Fond</h3><p>Un décor reconnaissable, avec une zone calme où l'interface peut se poser. Il doit fonctionner seul et avec plusieurs personnages.</p></div>
+    <div class="rule-card"><h3>Personnage</h3><p>Une silhouette détourée ou isolable, identifiable en petit format et réutilisable sur plusieurs décors.</p></div>
+    <div class="rule-card"><h3>Situation</h3><p>Un accessoire ou un geste qui explique l'événement : chaudron, charrette, autel, coffre, lettre, arme ou nourriture.</p></div>
+  </div>
+  <h3>Composition mobile</h3>
   <ul class="checklist">
-    <li>Les 36 écrans d'aventure ont un fond, une scène de mini-événement ou un asset système.</li>
-    <li>Les 14 écrans de profil utilisent U02, U09, U14, U15 ou U17.</li>
-    <li>Les 8 écrans de familier utilisent U03 et les fonds d'île pour les expéditions.</li>
-    <li>Les 11 écrans de guilde utilisent U04, U09, U12 et B30 lorsque disponible.</li>
-    <li>Les 7 écrans de combat utilisent U05, M01-M19 et U14/U15.</li>
-    <li>Les overlays de collecteur héritent du visuel du domaine courant et possèdent un fallback U10/U11.</li>
+    <li>Prévoir une lecture immédiate dans un cadre vertical étroit.</li>
+    <li>Garder le sujet principal dans la zone centrale et éviter les détails indispensables sur les bords.</li>
+    <li>Laisser une zone relativement calme pour les textes et les choix de l'interface.</li>
+    <li>Prévoir un recadrage possible en portrait, en vignette carrée et en bandeau.</li>
+    <li>Les personnages doivent rester lisibles par leur silhouette avant même que l'on voie les détails du visage.</li>
+    <li>Aucun texte, nom, chiffre, bouton, logo ou émoji ne doit être dessiné dans l'illustration.</li>
   </ul>
+  <h3>Direction générale</h3>
+  <div class="swatch-row">
+    <div class="swatch terra"><b>Terre cuite</b><span>Monde habité, aventure quotidienne</span></div>
+    <div class="swatch gold"><b>Or</b><span>Roi, trésor, bénédiction, rareté</span></div>
+    <div class="swatch blue"><b>Bleu</b><span>Glace, eau, ciel, magie</span></div>
+    <div class="swatch green"><b>Vert</b><span>Nature, soin, familiers, récoltes</span></div>
+    <div class="swatch red"><b>Rouge</b><span>Danger, magma, blessure, menace</span></div>
+  </div>
+  <p class="small">La couleur sert à distinguer les familles de lieux et d'émotions. Elle ne doit pas remplacer la lisibilité de la silhouette ou de l'action.</p>
+  <div class="callout blue"><strong>La carte du continent existe déjà.</strong> Elle doit être réutilisée telle quelle. Il n'est pas nécessaire de redessiner une carte du continent pour ce projet.</div>
 </section>
 
 <section class="page">
-  <div class="eyebrow">10 · profil 3</div>
-  <h2>Ajouts idéaux : lieux B25-B30</h2>
-  <div id="background-profile3"></div>
-  <h2>Ajouts idéaux : rôles P15-P24</h2>
-  <div id="characters-profile3"></div>
-  <h2>Ajouts idéaux : scènes E01-E06</h2>
-  <div id="hero-scenes"></div>
+  <div class="eyebrow">Personnages récurrents</div>
+  <h2>Les figures que le joueur doit reconnaître</h2>
+  <p class="section-intro">Ces personnages reviennent dans plusieurs rencontres. Leur apparence doit être stable d'une illustration à l'autre, même si leur pose, leur expression ou leur décor changent.</p>
+  <div class="look-card"><h3><span>01</span> Gruffo</h3><p><span class="label">Silhouette</span><span class="value">Homme âgé, petit et tassé, silhouette rabougrie. Donner une impression de corps habitué à vivre parmi les fioles et les expériences.</span></p><p><span class="label">Visage</span><span class="value">Visage marqué par les années, regard vif et soupçonneux. Il doit pouvoir sembler à la fois savant passionné et charlatan douteux.</span></p><p><span class="label">Vêtements</span><span class="value">Vêtements de voyage usés, tablier ou manteau taché par les manipulations alchimiques. Éviter le costume de mage noble : Gruffo travaille dans une tente et dans une hutte.</span></p><p><span class="label">Objets</span><span class="value">Alambic, paillasse, fioles de plusieurs couleurs, chaudron, couvertures et petite tente. Une fiole doit souvent être proche de sa main.</span></p><p><span class="label">Attitude</span><span class="value">Gestes rapides, sourire ambigu, curiosité scientifique. Il peut tendre une potion avec enthousiasme ou se montrer impatient et méfiant.</span></p><p><span class="label">Rencontres</span><span class="value">Plage Sentinelle et Route Marécageuse. La même silhouette doit fonctionner dans une tente sur une dune et dans une hutte humide.</span></p></div>
+  <div class="look-card"><h3><span>02</span> Xetrix</h3><p><span class="label">Silhouette</span><span class="value">Ermite forestier, homme mince et solitaire, habitué à marcher et à cueillir dans les bois.</span></p><p><span class="label">Visage</span><span class="value">Traits marqués par la vie isolée. Regard difficile à lire : il peut être accueillant ou cacher une ruse.</span></p><p><span class="label">Vêtements</span><span class="value">Tenue simple, usée et pratique pour la forêt ; cape ou capuche possible, sans donner une allure de sorcier officiel.</span></p><p><span class="label">Objets</span><span class="value">Panier de cueillette, plantes, champignons, couteau de récolte et petite maison isolée.</span></p><p><span class="label">Attitude</span><span class="value">Personnage calme au premier regard, mais dont le sourire peut devenir trompeur. Il doit donner envie de s'approcher tout en inspirant une légère prudence.</span></p><p><span class="label">Rencontre</span><span class="value">Forêt Célestrum dans l'événement de l'Ermite.</span></p></div>
+  <div class="look-card"><h3><span>03</span> Xirtex</h3><p><span class="label">Silhouette</span><span class="value">Vieil homme barbu, silhouette sèche mais encore robuste, visage largement caché par une capuche.</span></p><p><span class="label">Vêtements</span><span class="value">Grande cape ou robe de voyage poussiéreuse, capuche large, vêtements adaptés à une vie dans le désert.</span></p><p><span class="label">Objets</span><span class="value">Tente qui lui sert de maison, feu de camp, théière, bols, coffres à bijoux et objets précieux.</span></p><p><span class="label">Attitude</span><span class="value">Rire surprenant, gestes familiers, hospitalité qui peut devenir inquiétante. Il peut tendre une tasse, tirer le joueur par le bras ou cacher une dague.</span></p><p><span class="label">Rencontre</span><span class="value">Oasis de la Vallée des Rois.</span></p></div>
+  <div class="look-card"><h3><span>04</span> Velanna</h3><p><span class="label">Silhouette</span><span class="value">Guerrière adulte, posture droite et silencieuse, mouvements très maîtrisés.</span></p><p><span class="label">Visage</span><span class="value">Visage nettement balafré. Le regard est direct, critique et peu impressionné par le joueur.</span></p><p><span class="label">Vêtements</span><span class="value">Armure de cuir usée, marquée par des dizaines de combats. Pas d'armure brillante : elle voyage, se bat et entretient elle-même son équipement.</span></p><p><span class="label">Objets</span><span class="value">Dague à lame noircie avec le nom Velanna gravé dessus, sacoche, talisman de pierre noire veinée d'or.</span></p><p><span class="label">Attitude</span><span class="value">Elle apparaît sans bruit, nettoie sa dague, croise les bras ou pose une main ferme sur l'épaule du joueur. Son autorité vient de son expérience, pas de son rang.</span></p><p><span class="label">Rencontre</span><span class="value">Routes du continent, lors des rencontres liées au talisman et aux expéditions.</span></p></div>
 </section>
 
 <section class="page">
-  <div class="eyebrow">11 · grands événements</div>
-  <h2>Mapping exact des 88 grands événements</h2>
-  <p>Un grand événement ne reçoit pas nécessairement une illustration complète. Il reçoit au minimum le fond de son lieu de déclenchement ; les personnages et accessoires peuvent être ajoutés selon le profil.</p>
-  <div id="big-event-map"></div>
-  <div class="callout gold"><strong>Règle de production :</strong> si un événement a plusieurs choix, l'image représente la situation initiale. Les conséquences restent dans le texte, les effets UI et les assets d'état U09-U17.</div>
+  <div class="eyebrow">Personnages récurrents</div>
+  <h2>Talvar, Rowan, Mylène et Théobald</h2>
+  <div class="look-card"><h3><span>05</span> Talvar</h3><p><span class="label">Silhouette</span><span class="value">Vieux nain trapu, voûté, parfois légèrement boiteux. Malgré son âge, il reste vif lorsqu'un familier attire son attention.</span></p><p><span class="label">Visage</span><span class="value">Cheveux argentés, barbe interminable ; dans certains textes elle est tressée de fils d'or. Yeux verts, visage ridé et regard bienveillant ou sévère.</span></p><p><span class="label">Vêtements</span><span class="value">Vêtements rustiques de voyage, solides et usés. Il doit avoir l'air de vivre dehors, au pied de la montagne, plutôt que dans une ville.</span></p><p><span class="label">Objets</span><span class="value">Besace en cuir remplie de graines et de remèdes pour animaux. Des papillons peuvent l'accompagner.</span></p><p><span class="label">Attitude</span><span class="value">Protecteur des bêtes, très expressif face aux familiers. Il peut s'illuminer de joie, sermonner un joueur ou examiner un animal avec une gravité presque sacrée.</span></p><p><span class="label">Rencontre</span><span class="value">Routes autour du Mont Célestrum, de la Forêt Célestrum et du Village Coco.</span></p></div>
+  <div class="look-card"><h3><span>06</span> Sir Rowan</h3><p><span class="label">Silhouette</span><span class="value">Chevalier vieillissant, carrure encore solide, démarche d'ancien militaire.</span></p><p><span class="label">Visage</span><span class="value">Cheveux grisonnants ou argentés, visage buriné, yeux perçants mais souvent bienveillants.</span></p><p><span class="label">Vêtements</span><span class="value">Armure patinée, impeccablement entretenue, portant les cicatrices de nombreux combats. Elle doit montrer la discipline et l'expérience.</span></p><p><span class="label">Objets</span><span class="value">Épée tenue près du corps, fourreau, éventuellement carnet ou geste de démonstration martiale.</span></p><p><span class="label">Attitude</span><span class="value">Posture droite, regard qui jauge les appuis du joueur, geste de professeur. Il explique, observe et corrige plus qu'il ne menace.</span></p><p><span class="label">Rencontre</span><span class="value">Routes du continent, pendant les conseils sur le combat.</span></p></div>
+  <div class="look-card"><h3><span>07</span> Mylène</h3><p><span class="label">Silhouette</span><span class="value">Fermière robuste, active, habituée à porter des paniers et à travailler la terre.</span></p><p><span class="label">Visage</span><span class="value">Joues rougies par le soleil, sourire large et franc. Regard chaleureux, énergie directe.</span></p><p><span class="label">Vêtements</span><span class="value">Vêtements de travail simples, tablier ou manches retroussées, chapeau de paille cabossé possible.</span></p><p><span class="label">Objets</span><span class="value">Mains terreuses, fourche, brouette débordante de légumes, paniers, champ verdoyant ou potager.</span></p><p><span class="label">Attitude</span><span class="value">Elle interpelle le voyageur depuis sa parcelle, insiste pour partager sa récolte et refuse qu'il reparte les mains vides.</span></p><p><span class="label">Rencontre</span><span class="value">Routes qui touchent des plaines, notamment autour du Berceau et de l'Étendue.</span></p></div>
+  <div class="look-card"><h3><span>08</span> Théobald</h3><p><span class="label">Silhouette</span><span class="value">Vieil homme aux mains calleuses, souvent agenouillé ou penché sur ses plants.</span></p><p><span class="label">Visage</span><span class="value">Visage buriné par le soleil, expression joyeuse et attentive lorsqu'il parle d'une plante.</span></p><p><span class="label">Vêtements</span><span class="value">Tablier terreux, chapeau fleuri, tenue de jardinier itinérant.</span></p><p><span class="label">Objets</span><span class="value">Arrosoir, graines, petits semis, plante en pot, outils de jardinage et petit lopin de terre installé au bord du chemin.</span></p><p><span class="label">Attitude</span><span class="value">Il connaît chaque plante par son nom et aime partager son savoir. Son énergie est calme, patiente et légèrement malicieuse.</span></p><p><span class="label">Rencontre</span><span class="value">Routes qui touchent une forêt : Forêt du Vieillard, Bois Hurlant ou Forêt Célestrum.</span></p></div>
 </section>
 
 <section class="page">
-  <div class="eyebrow">12 · écrans</div>
-  <h2>Matrice écran par écran</h2>
-  <p>Le tableau ci-dessous vérifie que chaque écran de la maquette possède un asset principal dans le profil 1. Les colonnes suivantes montrent les enrichissements des profils 2 et 3.</p>
-  <div id="screen-matrix"></div>
+  <div class="eyebrow">Personnages récurrents</div>
+  <h2>Aldéric, Gaspard-Jo, Gorim et la sorcière</h2>
+  <div class="look-card"><h3><span>09</span> Aldéric l'antiquaire</h3><p><span class="label">Silhouette</span><span class="value">Homme d'âge mûr, distingué, chaleureux, silhouette de marchand qui a beaucoup voyagé.</span></p><p><span class="label">Visage</span><span class="value">Sourire amical, regard curieux, expression de conteur qui connaît l'histoire de chaque objet.</span></p><p><span class="label">Vêtements</span><span class="value">Tenue vintage et pittoresque, mélange de tissus anciens et d'accessoires mystérieux. Il doit être plus élégant qu'un marchand ordinaire.</span></p><p><span class="label">Objets</span><span class="value">Charrette en bois remplie d'antiquités, objets emballés, coffrets, curiosités et étiquettes sans texte lisible.</span></p><p><span class="label">Attitude</span><span class="value">Il présente un objet avec soin, incline son chapeau et raconte son histoire. Sa charrette ressemble à un petit musée ambulant.</span></p><p><span class="label">Rencontre</span><span class="value">Routes du continent, avec une affinité visuelle particulière pour la Route des Merveilles.</span></p></div>
+  <div class="look-card"><h3><span>10</span> Gaspard-Jo</h3><p><span class="label">Silhouette</span><span class="value">Marchand de soupe sympathique, silhouette généreuse et accueillante.</span></p><p><span class="label">Vêtements</span><span class="value">Tenue de cuisinier-marchand, tablier, vêtements de voyage et accessoires pratiques.</span></p><p><span class="label">Objets</span><span class="value">Roulotte avec cheminée, marmite, bols, paniers de victuailles et vieux grimoire de recettes.</span></p><p><span class="label">Attitude</span><span class="value">Sourire complice, geste de généreux bienfaiteur, toujours prêt à tendre une soupe ou une recette au joueur.</span></p><p><span class="label">Rencontre</span><span class="value">Routes du continent.</span></p></div>
+  <div class="look-card"><h3><span>11</span> Gorim le Brise-Fer</h3><p><span class="label">Silhouette</span><span class="value">Responsable du recyclage des équipements. Proposition visuelle : homme solide, épaules larges, posture de travailleur habitué au métal.</span></p><p><span class="label">Vêtements</span><span class="value">Tablier épais, gants, vêtements renforcés, traces de poussière métallique. Éviter le forgeron noble ou flamboyant.</span></p><p><span class="label">Objets</span><span class="value">Tas d'équipements démontés, marteau, pinces, enclume basse, caisses de matériaux et pièces de métal.</span></p><p><span class="label">Attitude</span><span class="value">Concentré, efficace, peu bavard. Il évalue un équipement en le retournant et en cherche immédiatement les parties récupérables.</span></p><p><span class="label">Rencontre</span><span class="value">Service du ferrailleur à Ville Forte.</span></p></div>
+  <div class="look-card"><h3><span>12</span> La sorcière</h3><p><span class="label">Silhouette</span><span class="value">Vieille femme très fine, voûtée et squelettique, gestes parfois maladroits.</span></p><p><span class="label">Visage</span><span class="value">Nez long et fin, peau presque grise, regard malicieux. Elle est souvent silencieuse et semble abîmée par les années.</span></p><p><span class="label">Vêtements</span><span class="value">Lambeaux de tissus ternes, sales et presque poussiéreux. Ils tombent en morceaux sans devenir une caricature de sorcière à grand chapeau.</span></p><p><span class="label">Objets</span><span class="value">Énorme chaudron, fumée, fioles, ingrédients étranges : os, araignée, serpent, œil, rose fanée, cristal de glace, écaille de dragon.</span></p><p><span class="label">Attitude</span><span class="value">Elle veut être aidée mais ne maîtrise pas toujours ce qu'elle prépare. Ses maladresses doivent être visibles dans la posture, la fumée et les éclaboussures.</span></p><p><span class="label">Rencontre</span><span class="value">Routes du continent, maison hantée et château royal.</span></p></div>
 </section>
 
 <section class="page">
-  <div class="eyebrow">13 · collecteurs</div>
-  <h2>Couverture des interactions</h2>
-  <p>Les collecteurs sont des overlays : ils peuvent apparaître au-dessus de l'onglet courant. Ils ne nécessitent pas 55 illustrations supplémentaires, mais chaque famille doit être reliée à un groupe de visuels et à un fallback.</p>
-  <div id="collector-groups"></div>
-  <h3>Fallback obligatoire</h3>
+  <div class="eyebrow">Oracles et figures royales</div>
+  <h2>Magie, soin et pouvoir</h2>
+  <div class="look-card"><h3><span>13</span> L'oracle de l'autel</h3><p><span class="label">Silhouette</span><span class="value">Personnage immobile, presque comme une statue, placé devant un autel.</span></p><p><span class="label">Visage</span><span class="value">Visage entièrement ou largement dissimulé sous un voile de lin sombre. Les yeux peuvent être à peine visibles.</span></p><p><span class="label">Vêtements</span><span class="value">Vêtement long et sobre, silhouette verticale, présence rituelle plutôt que guerrière.</span></p><p><span class="label">Objets</span><span class="value">Autel de pierre, runes anciennes, lueur dorée, cagnotte symbolisée par des pièces ou une lumière absorbée par la pierre.</span></p><p><span class="label">Attitude</span><span class="value">Mains ouvertes vers le ciel, gestes lents, patience et gravité. Il recueille les offrandes et veille sur les bénédictions.</span></p><p><span class="label">Rencontre</span><span class="value">Continent, sur un sentier noyé de brume ou dans une clairière calme.</span></p></div>
+  <div class="look-card"><h3><span>14</span> L'oracle astronome</h3><p><span class="label">Silhouette</span><span class="value">Homme mystérieux et itinérant. Donner une allure d'observateur du ciel, différente de l'oracle de l'autel.</span></p><p><span class="label">Vêtements</span><span class="value">Manteau de voyage, étoffes pratiques, quelques détails célestes très discrets ; pas de costume de mage de combat.</span></p><p><span class="label">Objets</span><span class="value">Lunette astronomique, carnet, carte du ciel sans texte lisible, petit instrument posé au sol.</span></p><p><span class="label">Attitude</span><span class="value">Il lève la tête, s'allonge parfois au sol ou observe longuement avant de répondre. L'impression doit être contemplative et légèrement étrange.</span></p><p><span class="label">Rencontre</span><span class="value">Routes du continent.</span></p></div>
+  <div class="look-card"><h3><span>15</span> Hilda la guérisseuse</h3><p><span class="label">Silhouette</span><span class="value">Jeune femme vive et rassurante. Son apparence précise est libre, mais elle doit être immédiatement associée au soin.</span></p><p><span class="label">Vêtements</span><span class="value">Tenue de voyage claire, tablier ou manteau de soigneuse, détails verts ou bleus.</span></p><p><span class="label">Objets</span><span class="value">Sacoche, fioles, petit remède présenté au joueur.</span></p><p><span class="label">Attitude</span><span class="value">Sourire ouvert, geste de proposer ou d'appliquer un remède. Elle doit être l'opposé visuel de la sorcière : propre, optimiste et rassurante.</span></p><p><span class="label">Rencontre</span><span class="value">Routes du continent, dans les rencontres de récupération d'énergie.</span></p></div>
+  <div class="look-card"><h3><span>16</span> Le roi</h3><p><span class="label">Silhouette</span><span class="value">Souverain reconnaissable par sa posture, sa cape et son entourage plus que par un costume surchargé.</span></p><p><span class="label">Vêtements</span><span class="value">Vêtements royaux, couronne ou manteau de cérémonie. Dans les scènes extérieures, il peut être à cheval sur un grand cheval blanc.</span></p><p><span class="label">Objets</span><span class="value">Carrosse royal, sceau, lettre, cheval blanc, escorte de soldats.</span></p><p><span class="label">Attitude</span><span class="value">Autorité calme, regard qui évalue l'aventurier, gestes mesurés. Il ne doit pas ressembler à un tyran ou à un roi de guerre.</span></p><p><span class="label">Rencontre</span><span class="value">Château, cour royale, cortèges et événements sur les routes royales.</span></p></div>
+  <div class="look-card"><h3><span>17</span> La princesse</h3><p><span class="label">Silhouette</span><span class="value">Personnage rarement accessible directement. Son identité doit être lisible depuis un carrosse protégé ou une apparition très brève.</span></p><p><span class="label">Vêtements</span><span class="value">Tenue de cour élégante, couleurs claires ou détails précieux, sans surcharge qui empêcherait de la reconnaître dans le carrosse.</span></p><p><span class="label">Objets</span><span class="value">Carrosse riche, rideaux, escorte de chevaliers. Dans un texte, le joueur peut seulement apercevoir ses doigts fins saluant la foule.</span></p><p><span class="label">Attitude</span><span class="value">Présence distante et protégée. Elle est un horizon romantique et politique de l'aventure, pas une vendeuse ou une combattante ordinaire.</span></p><p><span class="label">Rencontre</span><span class="value">Cortèges, château et scènes de voyage.</span></p></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">Rôles secondaires</div>
+  <h2>Les silhouettes anonymes</h2>
+  <p class="section-intro">Ces rôles apparaissent dans les événements, mais ne nécessitent pas chacun un personnage entièrement nouveau. Ils doivent former une petite famille de silhouettes cohérentes avec des accessoires qui racontent leur métier.</p>
   <table>
-    <thead><tr><th>Situation</th><th>Asset utilisé</th><th>Résultat attendu</th></tr></thead>
+    <thead><tr><th>Rôle</th><th>Apparence et accessoires</th><th>Attitude</th><th>Lieux</th></tr></thead>
     <tbody>
-      <tr><td>Type de collecteur connu</td><td>Visuel de son domaine + fond courant</td><td>L'overlay paraît faire partie de la scène.</td></tr>
-      <tr><td>Choix de refus ou d'échec</td><td>U15 en profil 2, U10 en profil 1</td><td>Le résultat est visuellement distinct d'un écran vide.</td></tr>
-      <tr><td>Temps expiré</td><td>U16 en profil 2, U10 en profil 1</td><td>Le timeout a une identité visuelle claire.</td></tr>
-      <tr><td>Erreur, reconnexion ou asset distant indisponible</td><td>U11, livré localement</td><td>L'application reste illustrée même hors réseau.</td></tr>
-      <tr><td>Collecteur inconnu du client</td><td>U10 ou U11</td><td>Aucune interface blanche ou état silencieux.</td></tr>
+      <tr><td class="place">Garde royal / chevalier</td><td>Armure entretenue, casque ou heaume, lance, épée, bouclier, cape aux couleurs de la couronne.</td><td>Discipliné, en formation, protecteur du carrosse ou arrêtant un suspect.</td><td>Château, cour, routes royales.</td></tr>
+      <tr><td class="place">Bailli</td><td>Officier de justice, vêtement de cour, registre ou sceptre de fonction, estrade de jugement.</td><td>Autorité froide, écoute limitée, posture de décision.</td><td>Salle de justice du château.</td></tr>
+      <tr><td class="place">Bandit / assassin</td><td>Silhouette masquée ou encapuchonnée, cuir sombre, lame courte, arc ou arbalète.</td><td>Furtif, menaçant, prêt à fuir entre les arbres ou les toits.</td><td>Bois Hurlant, routes, château.</td></tr>
+      <tr><td class="place">Capitaine / marin</td><td>Vêtement de marin, manteau, longue-vue, corde, emblème royal possible, pont de navire.</td><td>Gestes larges, habitude de donner des ordres, sourire de recruteur.</td><td>Bateau, embarcadère, départ vers les îles.</td></tr>
+      <tr><td class="place">Aubergiste</td><td>Tablier, comptoir, clé, chope, tonneaux, marmite et linge de service.</td><td>Accueillant ou fatigué, occupé par les voyageurs et les repas.</td><td>Auberges, villages et villes.</td></tr>
+      <tr><td class="place">Marchand ambulant</td><td>Charrette, balance, caisses, tissus, petits objets et vêtements de voyage.</td><td>Présente un produit, négocie, sourit ou devient méfiant face à un voleur.</td><td>Routes, marchés et villages.</td></tr>
+      <tr><td class="place">Artisan / forgeron</td><td>Tablier épais, gants, enclume, marteau, métal et établi.</td><td>Concentré sur son ouvrage, examine une arme ou frappe le métal.</td><td>Villes, forge et ateliers.</td></tr>
+      <tr><td class="place">Vétérinaire / soigneur</td><td>Sacoche, bandages, instruments simples, plantes et présence d'un familier.</td><td>Rassurant, attentif à l'animal, gestes calmes.</td><td>Mergagnan, Claire de Ville et routes.</td></tr>
+      <tr><td class="place">Paysan / villageois</td><td>Vêtements de travail, panier, outils, enfants ou animaux domestiques.</td><td>Curieux, serviable, inquiet ou impressionné par les exploits du joueur.</td><td>Plaines, villages et routes.</td></tr>
+      <tr><td class="place">Moine / prêtre</td><td>Robe simple, pendentif, bougie, livre ou gestes de prière.</td><td>Calme, contemplatif, tourné vers la bénédiction ou la guérison.</td><td>Routes et événements de soin.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Une même base de silhouette peut changer de métier avec un tablier, une arme, une sacoche ou un accessoire. Ce qui doit varier, c'est le geste et l'objet en main.</p>
+</section>
+
+<section class="page">
+  <div class="eyebrow">Les monstres</div>
+  <h2>Les créatures des îles</h2>
+  <p class="section-intro">Chaque monstre doit avoir une illustration propre. Les monstres sont les figures les plus importantes des îles : leur silhouette doit être lisible en combat et leur environnement doit renforcer leur identité.</p>
+  <table class="monster-table">
+    <thead><tr><th class="monster-name">Monstre</th><th class="monster-place">Lieu</th><th>Silhouette, textures et signes distinctifs</th></tr></thead>
+    <tbody>
+      <tr><td class="monster-name">Troll de la forêt</td><td class="monster-place">Forêt de la pénombre</td><td>Très grand corps massif, peau rugueuse tachée de suie volcanique, épaules lourdes, yeux rougeoyants. Faire sentir une force primitive et une agressivité immédiate.</td></tr>
+      <tr><td class="monster-name">Mutant Vaseux</td><td class="monster-place">Forêt de la pénombre</td><td>Masse gélatineuse vert sombre, contours instables. Son visage, ses vêtements et ses armes peuvent reprendre l'apparence du joueur comme un reflet déformé.</td></tr>
+      <tr><td class="monster-name">Squelette</td><td class="monster-place">Village en ruines</td><td>Restes d'un ancien guerrier, os visibles, armure et arme usées. Il doit sembler presque fragile au premier regard, mais sa posture et son regard vide doivent annoncer le danger.</td></tr>
+      <tr><td class="monster-name">Araignée</td><td class="monster-place">Mine brumeuse</td><td>Araignée gigantesque et très poilue, abdomen lourd, pattes longues, crochets et fils de toile. De petites araignées et un nid peuvent apparaître autour d'elle.</td></tr>
+      <tr><td class="monster-name">Golem de pierre</td><td class="monster-place">Chemin escarpé</td><td>Colosse fait de blocs de roche assemblés, très large et très lourd. Fissures, poussière et morceaux de montagne dans le corps ; il avance lentement mais semble impossible à arrêter.</td></tr>
+      <tr><td class="monster-name">Titan de magma</td><td class="monster-place">Volcan grondant</td><td>Colosse de lave, roche et magma, avec des fissures lumineuses dans tout le corps. La chaleur doit déformer l'air autour de lui et donner une impression de puissance finale.</td></tr>
+      <tr><td class="monster-name">Loup blanc</td><td class="monster-place">Toundra</td><td>Grand prédateur arctique, fourrure blanche presque confondue avec la neige, yeux bleus et crocs nets. Posture basse, prête à bondir, avec une intelligence sauvage dans le regard.</td></tr>
+      <tr><td class="monster-name">Élémentaire brillant</td><td class="monster-place">Caverne de cristal</td><td>Humanoïde composé de cristaux, environ deux fois plus grand que le joueur. La lumière traverse son corps et se décompose en couleurs d'arc-en-ciel ; la beauté doit rester menaçante.</td></tr>
+      <tr><td class="monster-name">Gardien céleste</td><td class="monster-place">Portes sacrées</td><td>Statue gigantesque qui vient de s'animer. Pierre froide, inscriptions anciennes, marteau divin disproportionné et posture de gardien qui interdit le passage.</td></tr>
+      <tr><td class="monster-name">Seigneur des glaces</td><td class="monster-place">Pic enneigé</td><td>Dragon de glace colossal aux écailles cristallines. Ailes puissantes, souffle qui transforme l'air en brouillard glacé, yeux bleu arctique et présence de seigneur des sommets.</td></tr>
+      <tr><td class="monster-name">Crocodile</td><td class="monster-place">Lac souterrain</td><td>Crocodile géant adapté au froid, peau épaisse et écailleuse portant des traces de combats, crocs préhistoriques et yeux jaunes. Il émerge d'une eau sombre et glaciale.</td></tr>
+      <tr><td class="monster-name">Yuki-Onna</td><td class="monster-place">Village dévasté</td><td>Femme-esprit en kimono blanc immaculé, longs cheveux noirs, peau d'albâtre et lueur spectrale. Sa beauté doit basculer dans l'horreur avec des yeux semblables à des puits de glace.</td></tr>
+      <tr><td class="monster-name">Reine des glaces</td><td class="monster-place">Nid glacé</td><td>Dragonne gigantesque aux écailles irisées comme des diamants. Ailes repliées dans une caverne, œuf nacré derrière elle, regard bleu profond et fureur maternelle.</td></tr>
+      <tr><td class="monster-name">Tortue Géante</td><td class="monster-place">Creux du Lagon</td><td>Tortue millénaire de la taille d'un petit navire. Carapace-forteresse couverte de corne, d'algues et de lichen ; yeux sages ; jets d'eau très puissants quand elle se sent menacée.</td></tr>
+      <tr><td class="monster-name">Esprit des mers</td><td class="monster-place">Caverne Maritime</td><td>Entité translucide faite de brume et d'eau, yeux bleu abyssal. Le corps peut se dissoudre et réapparaître derrière le joueur, comme une vague qui aurait pris forme humaine.</td></tr>
+      <tr><td class="monster-name">Capitaine Crow</td><td class="monster-place">Crique du Revenant</td><td>Spectre humanoïde du pirate le plus redouté des mers. Brume autour du corps, yeux comme des braises rouges, sabre parcouru d'énergie maudite et silhouette de capitaine défunt.</td></tr>
+      <tr><td class="monster-name">Sirène</td><td class="monster-place">Cave des murmures</td><td>Créature mi-femme mi-poisson assise sur un rocher. Beauté hypnotique, yeux envoûtants, griffes acérées et bassin turquoise. Le chant doit être visible par les vibrations de la caverne.</td></tr>
+      <tr><td class="monster-name">Kraken</td><td class="monster-place">Gouffre des Profondeurs</td><td>Tentacules massifs sortant d'une eau noire, ventouses capables de broyer la roche, yeux jaunes et intelligence malveillante. Un jet d'encre ou un début de maelström donne l'échelle.</td></tr>
+      <tr><td class="monster-name">Léviathan</td><td class="monster-place">Ravin des Abysses</td><td>Bête primordiale immense dans une eau presque sans lumière. Pupilles bleu électrique, éclairs entre les crocs, eau qui tourne en maelström et présence qui dépasse le cadre.</td></tr>
     </tbody>
   </table>
 </section>
 
 <section class="page">
-  <div class="eyebrow">14 · personnages dynamiques</div>
-  <h2>Personnages à ne pas transformer en portraits fixes</h2>
-  <div class="two-col">
-    <div class="panel">
-      <h3>Marchands ambulants</h3>
-      <p>Utiliser P22 dans le profil 3 ou un rôle générique en profil 1. Les noms sont des données, pas des personnages graphiques différents.</p>
-      <p class="small">Terry, Marco, Didier, Bernard, Georges, Louis, Kilton, Kikolou, Araj, Lavio, Bugri, Faras, Finn, Russel, Ullure, Vivian, Belethor, Karine, Cremia, Fouyaya, Ember, Embry, Emirel, Fressah.</p>
-    </div>
-    <div class="panel">
-      <h3>Oracles à nom variable</h3>
-      <p>Utiliser P13 pour l'autel et P14 pour l'astronome. Le nom s'affiche dans le texte de l'application.</p>
-      <p class="small">Claude, Pierre Alphonse, Friedrich, Wilhelm, Nicolas, Clyde, Tycho, Giordano, Johannes, Jean-Dominique, Isaac, Edwin, Albert.</p>
-    </div>
+  <div class="eyebrow">Les décors des îles</div>
+  <h2>Trois mondes extrêmes</h2>
+  <div class="three-col">
+    <div class="look-card"><h3>Île volcanique</h3><p><strong>Atmosphère :</strong> chaleur, cendres, visibilité réduite, sol noir et rougeurs de lave.</p><p><strong>Formes :</strong> arbres noircis, rochers coupants, fumée, fissures et reliefs qui semblent encore actifs.</p><p><strong>Monstres :</strong> troll, mutant vaseux, squelette, araignée, golem et titan de magma.</p></div>
+    <div class="look-card"><h3>Île glacée</h3><p><strong>Atmosphère :</strong> vent permanent, neige, silence, lumière blanche et bleue.</p><p><strong>Formes :</strong> marches glacées, cristaux, ruines, pics, murs de glace et lac souterrain.</p><p><strong>Monstres :</strong> loup blanc, élémentaire brillant, gardien céleste, dragons, crocodile et Yuki-Onna.</p></div>
+    <div class="look-card"><h3>Île maritime</h3><p><strong>Atmosphère :</strong> lagons turquoise, grottes à marée basse, eaux noires et profondeur abyssale.</p><p><strong>Formes :</strong> corail, coquillages, récifs, épaves, rochers mouillés, rayons de lumière sous l'eau.</p><p><strong>Monstres :</strong> tortue géante, esprit des mers, Capitaine Crow, sirène, Kraken et Léviathan.</p></div>
   </div>
-  <h3>Autres groupes dynamiques</h3>
-  <table class="compact">
-    <thead><tr><th>Groupe</th><th>Visuel</th><th>Décision</th></tr></thead>
-    <tbody>
-      <tr><td>Joueurs rencontrés</td><td>U02 ou scène S27</td><td>Pas de portrait par joueur ; le nom, la classe et le familier sont des données.</td></tr>
-      <tr><td>Membres du staff</td><td>S37 + silhouette de barde ou personnage U02</td><td>Pas de portrait par nom de staff.</td></tr>
-      <tr><td>Familiers</td><td>U03 + icône de l'espèce</td><td>Les 103 types de familiers restent représentés par le système d'icônes.</td></tr>
-      <tr><td>Items, matériaux et potions</td><td>U09 + icônes</td><td>Pas d'illustration plein écran par objet.</td></tr>
-      <tr><td>Rôles anonymes</td><td>P17-P24 dans le profil 3</td><td>Marchand, garde, aubergiste, artisan et soigneur réutilisables.</td></tr>
-    </tbody>
-  </table>
-  <h3>Roster de la rencontre staff</h3>
-  <p class="small">Ces noms sont des descriptions de joueurs/personnages de données. Ils utilisent tous le même visuel S37 : Aiko, Asemerald, BananePlantain, DeadAngelV6, Doctor, Draft, Eagle, GabrieLre, Greninja_san, Hitori, Ines, Izuku, KirIcare, Kyusaki, LePourfendeur, Max, Ntalcme, Nysvaa, Oscar, Pagotortoise, Pietagorh, QQtin, Ravenclaw, Royal, SuperBananeNinja, Thero1st, Voltou, aureochocob0n, nwcubeok, romain22222, symsym.</p>
+  <h3>Le bateau</h3>
+  <div class="panel"><p>Le bateau est le passage entre le continent et les îles. Il peut être vieux mais entretenu, avec des cordages, un pont humide, une longue-vue, des caisses et un équipage. Il doit donner envie de partir tout en rappelant que le voyage vers l'île est une prise de risque.</p></div>
+  <h3>Les lieux hantés</h3>
+  <div class="panel"><p>La Maison hantée et les scènes associées utilisent une brume épaisse, des fenêtres fissurées, un plancher qui craque, des couloirs trop longs et une présence jamais complètement visible. La peur vient de ce qui manque dans l'image autant que de ce qui y apparaît.</p></div>
 </section>
 
 <section class="page">
-  <div class="eyebrow">15 · direction artistique</div>
-  <h2>Principes visuels à transmettre</h2>
-  <div class="two-col">
-    <div class="do">
-      <h3>À rechercher</h3>
-      <ul>
-        <li>Des silhouettes lisibles immédiatement sur petit écran.</li>
-        <li>Des lieux avec une forme ou une couleur dominante identifiable.</li>
-        <li>Des personnages qui restent reconnaissables de face, de trois-quarts et en vignette.</li>
-        <li>Des accessoires narratifs forts : alambic, autel, charrette, chaudron, parchemin, gobelets.</li>
-        <li>Des espaces laissés volontairement calmes pour le texte de l'application.</li>
-        <li>Une différence nette entre continent, château, île volcanique, île glacée et île marine.</li>
-      </ul>
-    </div>
-    <div class="avoid">
-      <h3>À éviter</h3>
-      <ul>
-        <li>Une illustration générique de fantasy réutilisée sans accessoire distinctif.</li>
-        <li>Des fonds surchargés qui deviennent illisibles sous le texte.</li>
-        <li>Des personnages cadrés trop près pour être réutilisés.</li>
-        <li>Du texte intégré, même pour un nom de lieu ou une pancarte.</li>
-        <li>Un personnage différent pour chaque nom de joueur ou chaque nom de marchand.</li>
-        <li>Des poses qui ne permettent pas de comprendre l'action du mini-événement.</li>
-      </ul>
-    </div>
+  <div class="eyebrow">Les lieux du continent</div>
+  <h2>Les fonds réutilisables</h2>
+  <p class="section-intro">La carte du continent est déjà disponible. Les illustrations à créer sont des décors de scènes, de rapports et de menus, pas une nouvelle carte.</p>
+  <table>
+    <thead><tr><th class="place">Décor</th><th>Ce que l'on doit voir</th><th>Personnages et situations associés</th></tr></thead>
+    <tbody>
+      <tr><td class="place">Route de campagne</td><td>Chemin, herbes, bornes, talus, arbres éloignés et horizon ouvert.</td><td>Voyage, rencontres ordinaires, coursier, joueur, marchand et incidents de route.</td></tr>
+      <tr><td class="place">Plaine et champ</td><td>Champ cultivé, terre fraîche, paniers, clôture et lumière généreuse.</td><td>Mylène, villageois, récoltes, animaux et événements de campagne.</td></tr>
+      <tr><td class="place">Forêt ancienne</td><td>Troncs hauts, sentier couvert de feuilles, racines, clairière et lumière filtrée.</td><td>Théobald, Xetrix, animaux, chasseurs, voyageurs perdus et bandits.</td></tr>
+      <tr><td class="place">Bois mal famé</td><td>Forêt plus serrée, chemin encaissé, traces de camp, cordes, armes ou silhouettes lointaines.</td><td>Bandits, assassins, embuscades et événements de danger.</td></tr>
+      <tr><td class="place">Route marécageuse</td><td>Boue, flaques, eau stagnante, végétation épaisse, passerelle abîmée et brume basse.</td><td>Gruffo, voyageurs épuisés, raccourcis dangereux et événements de perte de temps.</td></tr>
+      <tr><td class="place">Rivière et lac</td><td>Rive, pont, courant, rochers mouillés, roseaux et reflets de ciel.</td><td>Pêcheurs, ponts fragiles, voyageurs, récoltes et événements de baignade.</td></tr>
+      <tr><td class="place">Désert et oasis</td><td>Sable chaud, petite étendue d'eau, palmiers, rochers, ombre rare et ciel immense.</td><td>Xirtex, voyageurs assoiffés, voleurs, rencontres de repos et dangers du désert.</td></tr>
+      <tr><td class="place">Montagne</td><td>Pente, pierres, vent, vue dégagée, sentier étroit et falaises.</td><td>Sir Rowan, Talvar, grimpeurs, chevaliers et événements de hauteur.</td></tr>
+      <tr><td class="place">Village rural</td><td>Maisons basses, puits, étals simples, chemin de terre et habitants.</td><td>Marchands, paysans, aubergistes, enfants, guérisseurs et événements de village.</td></tr>
+      <tr><td class="place">Grande ville</td><td>Rue pavée, façades rapprochées, enseignes sans texte lisible, foule et place commerçante.</td><td>Boutiques, artisans, Bourse, vétérinaire, joueurs et événements urbains.</td></tr>
+      <tr><td class="place">Marché</td><td>Étals, tissus, caisses, charrettes, foule et objets colorés.</td><td>Aldéric, marchands, voleurs, jeux, spectacles et événements de commerce.</td></tr>
+      <tr><td class="place">Château et cour</td><td>Pierre claire, murailles, esplanade, portes monumentales, carrosse et bannières.</td><td>Roi, princesse, garde royale, bailli, nobles, prison et justice.</td></tr>
+      <tr><td class="place">Auberge et taverne</td><td>Comptoir, feu, tables, tonneaux, chambres, plats et voyageurs.</td><td>Repos, repas, rumeurs, personnages de passage et scènes de nuit.</td></tr>
+      <tr><td class="place">Maison hantée</td><td>Demeure délabrée, brume, couloirs sombres, ombres derrière les fenêtres.</td><td>Sorcière, spectre, présence invisible et événements inquiétants.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page">
+  <div class="eyebrow">Les mini-événements</div>
+  <h2>Une image pour chaque rencontre courte</h2>
+  <p class="section-intro">Les mini-événements sont des rencontres qui interrompent le voyage. Ils doivent être immédiatement compréhensibles, même si le texte ou la récompense varie.</p>
+  <table>
+    <thead><tr><th class="mini-name">Mini-événement</th><th>Ce que l'illustration doit montrer</th><th>Décor ou personnage à réutiliser</th></tr></thead>
+    <tbody>
+      <tr><td class="mini-name">Avance sur la route</td><td>Aventurier qui se met à courir, avec mouvement lisible et chemin qui s'étire derrière lui.</td><td>Route de campagne, silhouette du joueur.</td></tr>
+      <tr><td class="mini-name">Autel des bénédictions</td><td>Oracle voilé, autel de pierre, runes dorées et brume légère.</td><td>Oracle de l'autel, clairière calme.</td></tr>
+      <tr><td class="mini-name">Familier difficile</td><td>Familier qui tire sur sa laisse ou refuse d'avancer, joueur dépassé.</td><td>Familier et propriétaire.</td></tr>
+      <tr><td class="mini-name">Mésaventure</td><td>Aventurier surpris par un incident de route : chute, branche, animal ou bourse perdue.</td><td>Route de campagne, accessoires interchangeables.</td></tr>
+      <tr><td class="mini-name">Conseil de l'équipage</td><td>Marin sur le pont, vent dans les voiles, horizon marin et geste de conseil.</td><td>Bateau.</td></tr>
+      <tr><td class="mini-name">Bonus de guilde sur l'île</td><td>Groupe d'aventuriers réunis dans un environnement hostile, entraide visible.</td><td>Décor de l'île et salle de guilde.</td></tr>
+      <tr><td class="mini-name">Missive royale</td><td>Coursier essoufflé tendant une lettre scellée, ou lettre portée par un oiseau.</td><td>Route ou village, sceau royal.</td></tr>
+      <tr><td class="mini-name">Charrette de transport</td><td>Conducteur louche faisant signe depuis une charrette brinquebalante.</td><td>Route de campagne, marchand générique.</td></tr>
+      <tr><td class="mini-name">Rencontre de classe</td><td>Ancien aventurier ou marchand présentant une arme, une armure ou une potion.</td><td>Route, personnage secondaire.</td></tr>
+      <tr><td class="mini-name">Aucun incident</td><td>Route calme, paysage ouvert, aucun personnage au premier plan.</td><td>Route de campagne.</td></tr>
+      <tr><td class="mini-name">Talvar et un familier</td><td>Talvar penché vers un animal, émerveillé ou sévère selon l'état du familier.</td><td>Talvar, Forêt Célestrum.</td></tr>
+      <tr><td class="mini-name">Aldéric l'antiquaire</td><td>Aldéric ouvre une caisse ou présente un objet depuis sa charrette-musée.</td><td>Aldéric, marché ou route.</td></tr>
+      <tr><td class="mini-name">Velanna et le talisman</td><td>Velanna tient le talisman de pierre noire veinée d'or, un familier près du joueur.</td><td>Velanna, route de montagne ou forêt.</td></tr>
+      <tr><td class="mini-name">Mylène la fermière</td><td>Mylène sort d'un champ avec un panier de légumes, mains terreuses et sourire large.</td><td>Mylène, champ.</td></tr>
+      <tr><td class="mini-name">Animal agressif</td><td>Aventurier face à une bête qui grogne ou bondit, posture de combat improvisée.</td><td>Forêt ou route, animal générique.</td></tr>
+      <tr><td class="mini-name">Objet trouvé</td><td>Aventurier ramassant un objet brillant au bord du chemin.</td><td>Route, gros plan sur l'objet.</td></tr>
+      <tr><td class="mini-name">Collecte de matériaux</td><td>Aventurier qui extrait, coupe ou ramasse une ressource naturelle.</td><td>Forêt, plaine ou montagne.</td></tr>
+      <tr><td class="mini-name">Collecte sur l'île</td><td>Ressource ramassée dans un environnement volcanique, glacé ou marin.</td><td>Décor de l'île.</td></tr>
+      <tr><td class="mini-name">Mission apportée</td><td>Coursier, panneau de missions ou parchemin présenté au joueur.</td><td>Route ou village.</td></tr>
+      <tr><td class="mini-name">Familier découvert</td><td>Petit animal seul dans les herbes ou près d'un chemin, regard tourné vers le joueur.</td><td>Nature et familier générique.</td></tr>
+      <tr><td class="mini-name">Fiole trouvée</td><td>Fiole brillante posée dans l'herbe, la boue ou près d'une pierre.</td><td>Route, lumière ciblée.</td></tr>
+      <tr><td class="mini-name">Théobald le jardinier</td><td>Théobald au bord d'un petit jardin avec arrosoir, semis et chapeau fleuri.</td><td>Théobald, forêt ou lisière.</td></tr>
+      <tr><td class="mini-name">Départ vers l'île</td><td>Capitaine faisant signe près d'un bateau prêt à partir.</td><td>Bateau et embarcadère.</td></tr>
+      <tr><td class="mini-name">Jeu des gobelets</td><td>Escroc derrière une table aux quatre gobelets, joueur coincé devant le jeu.</td><td>Marché ou route, accessoires de jeu.</td></tr>
+      <tr><td class="mini-name">Présence hantée</td><td>Maison délabrée dans la brume, silhouette indistincte derrière une fenêtre.</td><td>Maison hantée.</td></tr>
+      <tr><td class="mini-name">Sir Rowan</td><td>Rowan observe la posture du joueur et montre une technique avec son épée.</td><td>Sir Rowan, route.</td></tr>
+      <tr><td class="mini-name">Rencontre d'un joueur</td><td>Deux aventuriers se croisent, l'un pouvant être blessé, perdu, célèbre ou accompagné.</td><td>Route de campagne, silhouettes variables.</td></tr>
+      <tr><td class="mini-name">Message de ligue</td><td>Oiseau ou coursier apporte un message lié au classement.</td><td>Route, parchemin sans texte lisible.</td></tr>
+      <tr><td class="mini-name">Voyageur de Limoges</td><td>Étranger encapuchonné racontant une cité lointaine et ses fours sacrés.</td><td>Route, petite touche d'architecture lumineuse dans son récit.</td></tr>
+      <tr><td class="mini-name">Loterie</td><td>Organisateur devant une table de jeu, gestes de bonimenteur et lots visibles.</td><td>Marché ou route.</td></tr>
+      <tr><td class="mini-name">Familier en promenade</td><td>Animal fouillant les hautes herbes pendant que son propriétaire le regarde.</td><td>Nature et familier.</td></tr>
+      <tr><td class="mini-name">Familier porteur de jeton</td><td>Animal d'un autre joueur laisse tomber un objet brillant de sa gueule.</td><td>Route et deux familiers si possible.</td></tr>
+      <tr><td class="mini-name">Familier qui renifle</td><td>Animal immobile, oreilles dressées, reniflant un taillis sombre.</td><td>Lisière ou forêt.</td></tr>
+      <tr><td class="mini-name">Marchand ambulant</td><td>Marchand ou marchande présente un objet depuis une charrette.</td><td>Marchand générique, route.</td></tr>
+      <tr><td class="mini-name">Incident mineur</td><td>Aventurier confronté à un petit problème : sac déchiré, racine, branche ou fatigue.</td><td>Route de campagne.</td></tr>
+      <tr><td class="mini-name">Oracle astronome</td><td>Oracle avec lunette, ciel nocturne et posture d'observation prolongée.</td><td>Route, ciel étoilé.</td></tr>
+      <tr><td class="mini-name">Histoire d'un héros</td><td>Barde, conteur, affiche ou livre racontant l'histoire d'un aventurier célèbre.</td><td>Route, village ou auberge.</td></tr>
+      <tr><td class="mini-name">Gaspard-Jo</td><td>Gaspard-Jo tend une soupe depuis sa roulotte fumante.</td><td>Gaspard-Jo, route.</td></tr>
+      <tr><td class="mini-name">Hilda la guérisseuse</td><td>Hilda propose un petit flacon ou applique son remède à l'aventurier.</td><td>Hilda, route.</td></tr>
+      <tr><td class="mini-name">Repos sur l'île</td><td>Aventurier assis sur un banc ou un rocher dans un décor insulaire.</td><td>Île volcanique, glacée ou maritime.</td></tr>
+      <tr><td class="mini-name">Renommée de guilde</td><td>Groupe d'aventuriers reconnaît une guilde et s'incline ou salue.</td><td>Route, silhouettes de joueurs.</td></tr>
+      <tr><td class="mini-name">Fruits et provisions</td><td>Aventurier sous un arbre fruitier ou recevant des provisions.</td><td>Plaine, arbre reconnaissable.</td></tr>
+      <tr><td class="mini-name">Victoire contre une bête</td><td>Aventurier essoufflé, arme abaissée et animal qui fuit au second plan.</td><td>Forêt ou route.</td></tr>
+      <tr><td class="mini-name">Sorcière et chaudron</td><td>Sorcière devant le chaudron, fumée colorée et ingrédients autour d'elle.</td><td>Sorcière, cabane ou brume.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page">
+  <div class="eyebrow">Les grands événements</div>
+  <h2>Les situations par décor</h2>
+  <p class="section-intro">Les grands événements sont plus longs et proposent plusieurs choix. L'image doit montrer la situation de départ : ce que le joueur découvre avant de décider. Les conséquences peuvent changer, mais le décor et la situation initiale restent les mêmes.</p>
+  <table>
+    <thead><tr><th class="place">Lieu</th><th>Nombre de situations</th><th>Ce que le joueur peut découvrir</th><th>Personnages et accessoires à prévoir</th></tr></thead>
+    <tbody>
+      <tr><td class="place">Plage Sentinelle</td><td>3</td><td>Plage, baignade, crustacés et tente de Gruffo au coucher du soleil.</td><td>Gruffo, tente, alambic, mer, mouettes et objets abandonnés.</td></tr>
+      <tr><td class="place">Voie champêtre</td><td>2</td><td>Route simple entre ville et campagne, arbre tombé ou obstacle.</td><td>Aventurier, arbre, charrette ou outil.</td></tr>
+      <tr><td class="place">Le Berceau</td><td>2</td><td>Grande plaine ouverte, champs et traces de passage.</td><td>Paysans, animaux, ressources et route lointaine.</td></tr>
+      <tr><td class="place">Forêt du Vieillard</td><td>3</td><td>Forêt profonde, maison isolée, cueillette et chemins qui se perdent.</td><td>Xetrix, panier, champignons, maison et silhouettes entre les arbres.</td></tr>
+      <tr><td class="place">Chemin du Dédale</td><td>3</td><td>Chemin naturel compliqué, ruines, chasseurs et pièges.</td><td>Voyageur, chasseur, animaux, rochers et embranchements.</td></tr>
+      <tr><td class="place">Boug-Coton</td><td>5</td><td>Village paisible, auberge, habitants et scènes de marché local.</td><td>Aubergiste, villageois, enfants, charrettes et plats.</td></tr>
+      <tr><td class="place">Vallée des Rois</td><td>3</td><td>Désert, oasis, campement et rencontres avec un vieil ermite.</td><td>Xirtex, tente, feu, eau, sable et coffre.</td></tr>
+      <tr><td class="place">Croisement des Destins</td><td>2</td><td>Grand carrefour, voyageurs qui se croisent et décisions de route.</td><td>Charrettes, panneaux sans texte, aventuriers et animaux de bât.</td></tr>
+      <tr><td class="place">Grande Rue</td><td>2</td><td>Ancienne route commerciale, vieux pavés et traces d'un passé plus animé.</td><td>Marchand, charrette, ruines et objet perdu.</td></tr>
+      <tr><td class="place">Ville Forte</td><td>3</td><td>Ville partiellement détruite, fortifications, maisons et habitants méfiants.</td><td>Gardes, paysans, bandits, maisons en ruines.</td></tr>
+      <tr><td class="place">Grand Axe</td><td>2</td><td>Route très empruntée, convois et risques d'embuscade.</td><td>Convoi, brigands, chevaux, armes et voyageurs pressés.</td></tr>
+      <tr><td class="place">L'Étendue</td><td>2</td><td>Grande plaine nordique, horizon vide et ressources dispersées.</td><td>Voyageurs isolés, herbes, vent et animal lointain.</td></tr>
+      <tr><td class="place">Route Marécageuse</td><td>2</td><td>Raccourci dangereux, pont délabré et chemin vers l'alchimiste.</td><td>Gruffo, femme au carrefour, eau boueuse, pont et potion.</td></tr>
+      <tr><td class="place">Lac Mirage</td><td>3</td><td>Lac calme, brume, cabane, plantes et reflets trompeurs.</td><td>Pêcheur, cabane, lac miroir et présences indistinctes.</td></tr>
+      <tr><td class="place">Mont Célestrum</td><td>3</td><td>Sentiers de montagne, hauteurs, ponts et légendes anciennes.</td><td>Talvar, pèlerins, rochers, vent et relief monumental.</td></tr>
+      <tr><td class="place">Chemin aux Loups</td><td>2</td><td>Petit chemin dangereux au bord d'une rivière.</td><td>Animal, voyageur, eau rapide et chemin étroit.</td></tr>
+      <tr><td class="place">Village Coco</td><td>4</td><td>Village-oasis, stands, animaux, habitants et étendue d'eau.</td><td>Marchands, villageois, palmiers, fruits et Xirtex selon la scène.</td></tr>
+      <tr><td class="place">Rivière Vacarme</td><td>2</td><td>Courant bruyant, pont, traversée et dangers de l'eau.</td><td>Voyageur, pont, cordes, eau blanche et rochers.</td></tr>
+      <tr><td class="place">La Dune</td><td>2</td><td>Sable mouvant, plage et repos dans un environnement aride.</td><td>Aventurier, eau, corde, soleil dur et relief de dune.</td></tr>
+      <tr><td class="place">Route des Merveilles</td><td>3</td><td>Marché temporaire, échoppes abandonnées et spectacle de rue.</td><td>Aldéric, marchands, étals, objets, foule et charrettes.</td></tr>
+      <tr><td class="place">Bois Hurlant</td><td>2</td><td>Forêt de bandits, passage clandestin, piège et menace invisible.</td><td>Bandits masqués, armes, feu de camp et traces de passage.</td></tr>
+      <tr><td class="place">Claire de Ville</td><td>6</td><td>Grande ville marchande, fêtes, rues, gardes et activités de la population.</td><td>Marchands, artisans, garde, foule, carrosses et enseignes sans texte.</td></tr>
+      <tr><td class="place">Route Grimpante</td><td>4</td><td>Escarpements, tour, falaise, cordes et chemin difficile.</td><td>Grimpeur, archers, aventurier, rochers et tour isolée.</td></tr>
+      <tr><td class="place">Rivière aux Crabes</td><td>3</td><td>Pêche, crabes, quai, concours et objets remontés des filets.</td><td>Pêcheurs, seau, ligne, crabe noir, quai et public.</td></tr>
+      <tr><td class="place">Mergagnan</td><td>4</td><td>Ville paisible, plage, ateliers, rues et activités des habitants.</td><td>Vétérinaire, marchands, pêcheurs, maisons et plage.</td></tr>
+      <tr><td class="place">Forêt Célestrum</td><td>4</td><td>Forêt au pied de la montagne, brouillard, animaux et chemins secrets.</td><td>Talvar, Théobald, gardes, bandits, campements et végétation dense.</td></tr>
+      <tr><td class="place">Portes du château</td><td>1</td><td>Fissure dans la muraille et accès interdit à la cité royale.</td><td>Garde, muraille, ouverture, outils de fortune.</td></tr>
+      <tr><td class="place">Salle de réception</td><td>1</td><td>Grande salle d'apparat, nobles et événement mondain.</td><td>Nobles, serviteurs, œuvres d'art, chandelles et architecture royale.</td></tr>
+      <tr><td class="place">Maison hantée</td><td>1</td><td>Demeure impossible à situer, couloirs, cave et présence surnaturelle.</td><td>Sorcière, chauves-souris, spectre, poussière et brume.</td></tr>
+      <tr><td class="place">Cour du Château</td><td>3</td><td>Passage de la garde, carrosse royal, tentative d'assassinat et justice.</td><td>Roi, princesse, garde royale, chevaliers, foule, arbalète et carrosse.</td></tr>
+      <tr><td class="place">Bateau pour quitter l'île</td><td>1</td><td>Vieux bateau réparé, départ et retour du joueur sur le continent.</td><td>Marins, cordages, caisses, embruns et horizon ouvert.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Les lieux ci-dessus couvrent l'ensemble des grands événements du jeu. Plusieurs événements utilisent le même décor avec un personnage ou un accessoire différent.</p>
+</section>
+
+<section class="page">
+  <div class="eyebrow">Les écrans d'aventure</div>
+  <h2>Chaque rapport doit avoir une ambiance</h2>
+  <table>
+    <thead><tr><th class="screen-name">Écran</th><th>Visuel principal</th><th>Ce qui doit être lisible</th></tr></thead>
+    <tbody>
+      <tr><td class="screen-name">Aventure</td><td>Lieu courant du joueur : ville, route, île ou événement.</td><td>L'aventurier est quelque part, jamais dans un vide abstrait.</td></tr>
+      <tr><td class="screen-name">Voyage en cours</td><td>Route avec départ et arrivée, aventurier en mouvement.</td><td>Le trajet et la progression.</td></tr>
+      <tr><td class="screen-name">Choix de destination</td><td>Carrefour ou panneau de routes.</td><td>Plusieurs directions possibles.</td></tr>
+      <tr><td class="screen-name">Carte</td><td>Carte du continent existante, réutilisée telle quelle.</td><td>Ne pas produire une nouvelle carte.</td></tr>
+      <tr><td class="screen-name">Mini-événement</td><td>Illustration dédiée du mini-événement choisi.</td><td>Le personnage ou l'action qui interrompt le voyage.</td></tr>
+      <tr><td class="screen-name">Événement</td><td>Fond du lieu et situation de départ.</td><td>Le problème auquel le joueur doit répondre.</td></tr>
+      <tr><td class="screen-name">Altérations d'état</td><td>Aventurier affecté par une brume, un froid, une blessure ou un état visible.</td><td>La différence entre être normal, malade, confus, endormi ou blessé.</td></tr>
+      <tr><td class="screen-name">Île mystérieuse</td><td>Fond de l'île avec chemin et point de repère.</td><td>Isolement, progression et danger.</td></tr>
+      <tr><td class="screen-name">Réapparition</td><td>Aventurier à terre ou revenant dans une lumière douce.</td><td>Retour au jeu après la mort.</td></tr>
+      <tr><td class="screen-name">Soin d'altération</td><td>Comptoir de soin, fiole ou guérisseur.</td><td>Le joueur cherche à se remettre en état.</td></tr>
+      <tr><td class="screen-name">Marchand de jetons</td><td>Petit comptoir de voyage avec jetons et sacoche.</td><td>Avancer le voyage et sortir d'un état bloquant.</td></tr>
+      <tr><td class="screen-name">Combat de monstre</td><td>Monstre concerné dans son environnement.</td><td>La créature et la menace qu'elle représente.</td></tr>
+    </tbody>
+  </table>
+  <h3>Écrans de ville et de maison</h3>
+  <table>
+    <thead><tr><th class="screen-name">Écrans concernés</th><th>Illustration commune</th><th>Variations à prévoir</th></tr></thead>
+    <tbody>
+      <tr><td class="screen-name">Ville, Notaire, Logis</td><td>Rue ou place de ville avec architecture identifiable.</td><td>Façade, notaire, clés, plans de maison.</td></tr>
+      <tr><td class="screen-name">Forgeron, Forgeron royal, Ferrailleur, Enchanteur</td><td>Atelier avec brasier, établis et outils.</td><td>Forgeron au travail, Gorim parmi les pièces démontées, effets magiques.</td></tr>
+      <tr><td class="screen-name">Auberge, Ravitaillement, Boutique générale, Marchand de matériaux</td><td>Comptoir, étal ou salle d'auberge.</td><td>Repas, caisses, nourriture, marchand et clients.</td></tr>
+      <tr><td class="screen-name">Tanneur, Herboriste, Bûcheron, Vétérinaire, Bourse</td><td>Échoppe spécialisée dans la ville concernée.</td><td>Cuirs et sacs, plantes, bois, animal soigné, balance et registres.</td></tr>
+      <tr><td class="screen-name">Marché royal</td><td>Étal royal dans un décor de château.</td><td>Or, gemmes, sceau et objets du roi.</td></tr>
+      <tr><td class="screen-name">Maison, Lit, Coffre, Jardin, Cuisine, Station d'amélioration, Logis</td><td>Intérieur chaleureux de l'aventurier.</td><td>Lit, coffre, plants, fourneaux, établi et pièces de stockage.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page">
+  <div class="eyebrow">Les écrans personnels</div>
+  <h2>Profil, familier et guilde</h2>
+  <table>
+    <thead><tr><th class="screen-name">Écrans concernés</th><th>Visuel principal</th><th>Objets ou personnages visibles</th></tr></thead>
+    <tbody>
+      <tr><td class="screen-name">Profil, Classes, Informations sur les classes</td><td>Aventurier en pied ou buste, carnet et signes de classe.</td><td>Arme, posture de classe, statistiques représentées par l'équipement.</td></tr>
+      <tr><td class="screen-name">Inventaire, Équiper, Vendre, Boire une potion</td><td>Aventurier devant coffre ou table d'équipement.</td><td>Armes, armures, potions et objets présentés sans texte intégré.</td></tr>
+      <tr><td class="screen-name">Bonus journalier, Badges, Missions, Raretés</td><td>Parchemin, coffre ouvert et récompenses.</td><td>Objets, badges, cartes de mission et niveaux de rareté.</td></tr>
+      <tr><td class="screen-name">Bénédictions</td><td>Autel ou oracle dans une lumière dorée.</td><td>Oracle, runes, pièces et lumière collective.</td></tr>
+      <tr><td class="screen-name">Notifications, Services utilitaires</td><td>Aventurier avec messager, cloche ou carnet.</td><td>Courriers, alertes, aide et objets de communication.</td></tr>
+      <tr><td class="screen-name">Familier</td><td>Aventurier assis ou debout avec son animal.</td><td>L'espèce varie grâce aux icônes et aux noms, mais la relation doit rester visible.</td></tr>
+      <tr><td class="screen-name">Expéditions</td><td>Familier devant un paysage lointain, ou déjà parti sur une route.</td><td>Carte d'île ou de biome, sac de provisions et talisman.</td></tr>
+      <tr><td class="screen-name">Nourrir, Renommer, Vendre, Transférer, Libérer</td><td>Familier et propriétaire dans une scène simple.</td><td>Nourriture, plume, refuge, porte ouverte ou geste d'adieu.</td></tr>
+      <tr><td class="screen-name">Pouvoirs des familiers</td><td>Galerie de familiers en action.</td><td>Quelques espèces emblématiques, effets de soin, défense ou attaque.</td></tr>
+      <tr><td class="screen-name">Guilde, Gestion, Créer une guilde</td><td>Salle commune avec grande bannière.</td><td>Membres, table, registre, invitation et hiérarchie.</td></tr>
+      <tr><td class="screen-name">Bonus de guilde, Refuge, Entrepôt</td><td>Domaine avec réserve et animaux.</td><td>Coffres de nourriture, familiers hébergés et récompenses.</td></tr>
+      <tr><td class="screen-name">Domaine, Boutique, Refuge du domaine, Entrepôt du domaine, Ménagerie</td><td>Ensemble fortifié du domaine de guilde.</td><td>Bâtiments, boutique, enclos, stocks et entraînement animal.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout green"><strong>Le familier est une relation, pas seulement un animal.</strong> Dans les écrans personnels, montrer régulièrement le joueur et son compagnon ensemble : regard partagé, main posée sur la tête, nourriture donnée ou départ vers une expédition.</div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">Les écrans de combat</div>
+  <h2>Arène, duel et victoire</h2>
+  <table>
+    <thead><tr><th class="screen-name">Écran</th><th>Visuel principal</th><th>Variations</th></tr></thead>
+    <tbody>
+      <tr><td class="screen-name">Arène</td><td>Arène sobre, deux espaces opposés et silhouettes de combattants.</td><td>Pas de foule obligatoire ; l'écran doit rester lisible et concentré sur le duel.</td></tr>
+      <tr><td class="screen-name">Recherche de combat</td><td>Deux silhouettes ou deux portraits face à face, avant le début du duel.</td><td>Classes, armes et familiers peuvent changer.</td></tr>
+      <tr><td class="screen-name">Combat en cours</td><td>Deux combattants séparés par un espace de confrontation.</td><td>Monstre, joueur, familier, action magique, attaque, défense et attente.</td></tr>
+      <tr><td class="screen-name">Résultat du combat</td><td>Victoire : adversaire à terre et lumière de récompense. Défaite : aventurier épuisé ou à terre.</td><td>Deux états clairement différents, mais dans la même arène.</td></tr>
+      <tr><td class="screen-name">Historique des combats</td><td>Parchemin ou mur de trophées, avec traces de duels.</td><td>Épées croisées, bouclier, victoire, défaite et nul.</td></tr>
+      <tr><td class="screen-name">Ligue</td><td>Arène et emblèmes de classement.</td><td>Échelons, trophée, récompense de saison.</td></tr>
+      <tr><td class="screen-name">Classements</td><td>Tableau de tournoi ou galerie de champions.</td><td>Joueurs et guildes peuvent être représentés par des silhouettes ou portraits réutilisés.</td></tr>
+    </tbody>
+  </table>
+  <h3>Gestes de combat à rendre lisibles</h3>
+  <div class="three-col">
+    <div class="rule-card"><h3>Physique</h3><p>Arme, bouclier, charge, projection, coup de massue, morsure ou coup de queue.</p></div>
+    <div class="rule-card"><h3>Magique</h3><p>Lumière, ombre, feu, glace, foudre, poison, bénédiction ou pétrification.</p></div>
+    <div class="rule-card"><h3>État</h3><p>Personnage ralenti, endormi, gelé, confus, protégé, blessé ou en train de récupérer.</p></div>
   </div>
-  <h3>Palette de repères, pas une contrainte absolue</h3>
-  <table class="compact">
-    <thead><tr><th>Famille</th><th>Repère chromatique</th><th>Intention</th></tr></thead>
-    <tbody>
-      <tr><td>Continent et villes</td><td>Terre cuite, or, verts désaturés</td><td>Monde habité, aventure quotidienne.</td></tr>
-      <tr><td>Magie et bénédictions</td><td>Or lumineux, cyan, ivoire</td><td>Ancien, rare, surnaturel.</td></tr>
-      <tr><td>Île volcanique</td><td>Basaltes, cendre, rouge magma</td><td>Danger et chaleur.</td></tr>
-      <tr><td>Île glacée</td><td>Bleu froid, blanc, cristal</td><td>Isolement et majesté.</td></tr>
-      <tr><td>Île marine</td><td>Bleu profond, turquoise, noir abyssal</td><td>Profondeur et créatures primordiales.</td></tr>
-      <tr><td>États UI</td><td>Rouge perte, vert gain, bleu information, gris indisponible</td><td>Compréhension immédiate, sans dépendre du texte.</td></tr>
-    </tbody>
-  </table>
 </section>
 
 <section class="page">
-  <div class="eyebrow">16 · production</div>
-  <h2>Ordre de fabrication conseillé</h2>
-  <ol>
-    <li><strong>Test de direction :</strong> produire M06, M10, M16, B02, B15, P01 et S24. Ces assets testent monstre, lieu, personnage, scène et lecture mobile.</li>
-    <li><strong>Socle de couverture :</strong> produire les 16 fonds B01-B16, les 19 monstres M01-M19 et les 11 assets U01-U11.</li>
-    <li><strong>Mini-événements :</strong> produire S01-S44 en conservant une composition comparable et une zone de texte stable.</li>
-    <li><strong>Profil recommandé :</strong> produire B17-B24, P01-P14 et U12-U17.</li>
-    <li><strong>Polissage idéal :</strong> produire B25-B30, P15-P24 et E01-E06 si le budget le permet.</li>
-  </ol>
-  <h3>Critères d'acceptation</h3>
+  <div class="eyebrow">Personnages dynamiques</div>
+  <h2>Ce qui change sans demander de nouveau portrait</h2>
+  <div class="two-col">
+    <div class="panel"><h3>Les joueurs rencontrés</h3><p>Le joueur peut croiser un autre aventurier réel. Le nom, la classe, le niveau, la guilde et le familier changent, mais l'illustration peut utiliser deux silhouettes d'aventuriers, un portrait générique et quelques équipements interchangeables.</p></div>
+    <div class="panel"><h3>Les marchands ambulants</h3><p>Plusieurs noms sont utilisés pour les marchands, mais ils partagent le même rôle : charrette, étal, caisses et objet présenté. Un homme et une femme de base suffisent pour les variantes de texte.</p></div>
+    <div class="panel"><h3>Les oracles nommés</h3><p>L'oracle astronome peut porter des noms différents. Garder le même observateur du ciel. L'oracle de l'autel doit rester une figure distincte, plus rituelle et plus immobile.</p></div>
+    <div class="panel"><h3>Les familiers</h3><p>Le jeu possède de nombreuses espèces. Les illustrations de menu peuvent utiliser quelques animaux représentatifs ; les autres espèces restent identifiables par leurs icônes et leurs petits portraits.</p></div>
+  </div>
+  <h3>Roster de la rencontre du staff</h3>
+  <p class="small">Aiko, Asemerald, BananePlantain, DeadAngelV6, Doctor, Draft, Eagle, GabrieLre, Greninja_san, Hitori, Ines, Izuku, KirIcare, Kyusaki, LePourfendeur, Max, Ntalcme, Nysvaa, Oscar, Pagotortoise, Pietagorh, QQtin, Ravenclaw, Royal, SuperBananeNinja, Thero1st, Voltou, aureochocob0n, nwcubeok, romain22222 et symsym sont des joueurs ou figures racontées par le jeu. Ils n'ont pas besoin d'un portrait chacun : utiliser la scène du barde/conteur et laisser le nom dans le texte.</p>
+  <h3>Ce qui peut rester une icône</h3>
   <ul class="checklist">
-    <li>Les 90 assets du profil 1 existent et sont exportés avec leur identifiant.</li>
-    <li>Chaque monstre peut être utilisé seul dans un écran de combat.</li>
-    <li>Chaque mini-événement possède une image associée sans texte intégré.</li>
-    <li>Les 88 grands événements ont un mapping vers B01-B13 ou un asset spécialisé.</li>
-    <li>Les 76 écrans de la matrice ont au moins un asset principal.</li>
-    <li>Les états de chargement, erreur, reconnexion, vide, succès, échec et expiration ont un fallback.</li>
-    <li>Les sources calques sont livrées avec les PNG/JPG/WebP.</li>
-    <li>Les licences et crédits des éléments externes sont documentés.</li>
-    <li>Les tests de recadrage sont validés sur un mobile étroit et un écran plus large.</li>
+    <li>Les objets, matériaux, potions, badges et niveaux de rareté.</li>
+    <li>Les différentes espèces de familiers hors scènes importantes.</li>
+    <li>Les ligues, le score, l'expérience, l'argent et les gemmes.</li>
+    <li>Les états simples comme une notification ou un emplacement vide, lorsqu'un fond de catégorie existe déjà.</li>
   </ul>
-  <div class="callout gold"><strong>Décision à prendre :</strong> valider le profil 2 comme périmètre initial, puis conserver les personnages et fonds en couches séparées pour rendre les 22 assets du profil 3 ajoutables sans refaire le catalogue.</div>
-  <div class="footer-note">Sources de vérification : <code>App/mockups/mobile.html</code>, <code>Core/resources/monsters</code>, <code>Core/resources/smallEvents</code>, <code>Core/resources/events</code>, <code>Lib/src/packets/interaction</code>, <code>Lang/fr/models.json</code>, <code>Lang/fr/smallEvents.json</code>, <code>Lang/fr/events.json</code>. Document préparé le 23 août 2026.</div>
 </section>
 
-<script>
-const backgroundsBase = [
-  ["B01", "Carte du continent", "Carte principale avec position et liaisons", "Écran map, choix de destination et navigation générale"],
-  ["B02", "Route continentale", "Route polyvalente, suffisamment neutre pour les trajets", "Événements de route et événements globaux"],
-  ["B03", "Plaine, campagne et plage continentale", "Espace ouvert, champ, horizon et bord de mer", "Le Berceau, l'Étendue et Plage Sentinelle"],
-  ["B04", "Forêt continentale", "Sous-bois, arbres anciens, sentier couvert", "Forêt du Vieillard, Bois Hurlant et Forêt Célestrum"],
-  ["B05", "Route marécageuse", "Boue, eau stagnante, végétation dense", "Route Marécageuse"],
-  ["B06", "Eau, rivière, lac et littoral", "Rive, pont, eau calme ou courant", "Lacs, rivières, Rivière aux Crabes et scènes aquatiques"],
-  ["B07", "Désert et oasis", "Sable, chaleur, petite oasis, ciel vaste", "Vallée des Rois et La Dune"],
-  ["B08", "Montagne et chemin rocheux", "Pente, rochers, vent, relief", "Mont Célestrum et chemins escarpés"],
-  ["B09", "Ville ou village continental", "Rue habitée, façades, place, commerces", "Six villes, services, maison et menus urbains"],
-  ["B10", "Marché et échoppes", "Étal, charrette, foule et marchandises", "Route des Merveilles et événements de marché"],
-  ["B11", "Château royal", "Muraille, pierre claire, architecture de cour", "Portes du château, réception et cour royale"],
-  ["B12", "Maison hantée et brume", "Demeure délabrée, brouillard, fenêtres fissurées", "Maison hantée et événements surnaturels"],
-  ["B13", "Bateau et embarcadère", "Pont du navire, quai ou départ vers une île", "Embarquement et événements liés au bateau"],
-  ["B14", "Île volcanique", "Cendre, roche noire, lueurs de lave", "Île volcanique et monstres M01-M06"],
-  ["B15", "Île glacée", "Neige, glace, vent, cristal", "Île glacée et monstres M07-M13"],
-  ["B16", "Île maritime", "Lagons, cavernes marines, abysses", "Île maritime et monstres M14-M19"]
-];
+<section class="page">
+  <div class="eyebrow">Réutilisation</div>
+  <h2>Les associations à préparer</h2>
+  <p class="section-intro">Pour que les mêmes dessins puissent servir dans plusieurs écrans, voici les associations les plus importantes à prévoir dès le départ.</p>
+  <table>
+    <thead><tr><th>Personnage ou élément</th><th>Décors à prévoir</th><th>Gestes ou accessoires</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Gruffo</strong></td><td>Plage, route marécageuse, hutte.</td><td>Présenter une fiole, travailler à l'alambic, tendre du thé, chasser le joueur de la tente.</td></tr>
+      <tr><td><strong>Talvar</strong></td><td>Montagne, forêt, clairière.</td><td>Observer un familier, gronder, s'émerveiller, ouvrir sa besace.</td></tr>
+      <tr><td><strong>Velanna</strong></td><td>Route, forêt, montagne.</td><td>Nettoyer sa dague, tenir le talisman, examiner un familier, donner un conseil.</td></tr>
+      <tr><td><strong>Sir Rowan</strong></td><td>Route, pierre, espace d'entraînement.</td><td>Montrer une manœuvre, dégainer, observer la posture du joueur.</td></tr>
+      <tr><td><strong>Sorcière</strong></td><td>Cabane, forêt, maison hantée, salle de justice.</td><td>Mélanger un chaudron, tenir une fiole, subir une explosion, être escortée par des gardes.</td></tr>
+      <tr><td><strong>Aldéric</strong></td><td>Route, marché, Route des Merveilles.</td><td>Ouvrir une caisse, montrer une antiquité, incliner son chapeau.</td></tr>
+      <tr><td><strong>Gaspard-Jo</strong></td><td>Route, village, auberge.</td><td>Servir une soupe, sortir un grimoire, cuisiner dans sa roulotte.</td></tr>
+      <tr><td><strong>Oracle</strong></td><td>Autel, route brumeuse, ciel étoilé.</td><td>Tracer une rune, observer le ciel, lever les mains, accueillir une offrande.</td></tr>
+      <tr><td><strong>Familiers</strong></td><td>Maison, route, forêt, île, refuge.</td><td>Renifler, manger, dormir, combattre, suivre le joueur, partir en expédition.</td></tr>
+      <tr><td><strong>Roi et princesse</strong></td><td>Cour, château, route royale, carrosse.</td><td>Défiler, saluer, observer depuis le carrosse, récompenser l'aventurier.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>La reconnaissance vient de trois choses :</strong> la silhouette, un accessoire constant et une manière de se tenir. Une nouvelle pose ne doit pas changer la personne.</div>
+</section>
 
-const systemBase = [
-  ["U01", "Identité et connexion", "Couronne, aventurier, accueil ou connexion", "Login, splash et première arrivée"],
-  ["U02", "Aventurier et fiche", "Personnage avec parchemin, carnet ou silhouette", "Profil, classes, inventaire, maison et écrans personnels"],
-  ["U03", "Familier et propriétaire", "Aventurier accompagné d'un animal", "Les huit écrans de familier et les états de compagnon"],
-  ["U04", "Salle de guilde", "Bannière, table, membres et emblème", "Les onze écrans de guilde"],
-  ["U05", "Arène et duel", "Deux silhouettes en opposition, espace lisible", "Les sept écrans de combat"],
-  ["U06", "Mort et réapparition", "Aventurier à terre, silhouette ou retour de lumière", "Mort, réapparition et fin de combat négative"],
-  ["U07", "Altération d'état", "Aventurier entouré d'un effet lisible", "Sommeil, froid, maladie, confusion, blessure et autres altérations"],
-  ["U08", "Comptoir de service", "Comptoir, outil ou artisan générique", "Notaire, boutiques, soins, forge et services"],
-  ["U09", "Récompense et butin", "Objet, coffre, nourriture, gemmes ou lumière de gain", "Succès, récompense, inventaire, bonus et loot"],
-  ["U10", "État neutre ou indisponible", "Illustration calme avec espace vide", "Absence de données, verrouillage, refus et collecteur inconnu"],
-  ["U11", "Chargement, erreur et reconnexion", "Signal visuel de continuité technique", "Asset update, erreur réseau, reconnexion et état d'attente"]
-];
+<section class="page">
+  <div class="eyebrow">Règles de création</div>
+  <h2>Ce qu'il faut préserver dans chaque dessin</h2>
+  <div class="two-col">
+    <div class="panel">
+      <h3>À faire</h3>
+      <ul class="checklist">
+        <li>Rendre l'action compréhensible sans lire le texte.</li>
+        <li>Donner une silhouette forte aux personnages et monstres.</li>
+        <li>Utiliser les accessoires comme des signes narratifs.</li>
+        <li>Garder des espaces calmes pour la mise en page de l'application.</li>
+        <li>Prévoir des personnages isolables sur fond transparent quand ils doivent voyager d'une scène à l'autre.</li>
+        <li>Faire sentir la différence entre le continent, le château et les trois îles.</li>
+        <li>Garder les expressions assez lisibles pour un affichage mobile.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>À éviter</h3>
+      <ul class="checklist">
+        <li>Un personnage générique de fantasy sans accessoire ni attitude.</li>
+        <li>Une scène tellement liée à une phrase qu'elle ne peut pas être réutilisée.</li>
+        <li>Des visages ou objets importants placés dans les zones de recadrage.</li>
+        <li>Des fonds uniformément sombres, même pour les événements dangereux.</li>
+        <li>Des textes, noms, chiffres ou signes graphiques qui seraient impossibles à traduire.</li>
+        <li>Un portrait différent pour chaque nom de joueur ou de marchand.</li>
+        <li>Une carte du continent redessinée alors que la carte actuelle existe déjà.</li>
+      </ul>
+    </div>
+  </div>
+  <h3>Éléments à fournir avec les dessins</h3>
+  <p>Pour les personnages, monstres et accessoires réutilisables, garder une version isolée en plus de la composition complète. Pour les décors, garder une version sans personnage. Pour les scènes, conserver une zone libre destinée au texte de l'application.</p>
+  <p>Les fichiers originaux en calques sont utiles pour ajuster un cadrage ou une pose plus tard, mais l'essentiel est que chaque dessin puisse être compris et réutilisé sans être modifié lourdement.</p>
+</section>
 
-const miniEvents = [
-  ["S01", "advanceTime", "Course et avance", "Aventurier courant sur une route", "Route continentale"],
-  ["S02", "altar", "Autel des bénédictions", "Oracle voilé devant autel et runes", "Continent, sentier brumeux"],
-  ["S03", "badPet", "Familier difficile", "Familier agité avec propriétaire dépassé", "Continent"],
-  ["S04", "bigBad", "Mésaventure", "Aventurier surpris par un incident", "Continent"],
-  ["S05", "boatAdvice", "Conseil de l'équipage", "Membre d'équipage sur le pont", "Bateau"],
-  ["S06", "bonusGuildPVEIsland", "Bonus de guilde sur île", "Groupe de guilde dans un environnement hostile", "Île mystérieuse"],
-  ["S07", "botFacts", "Missive royale", "Messager avec lettre et sceau", "Route ou village"],
-  ["S08", "cart", "Charrette de transport", "Conducteur louche et charrette", "Route continentale"],
-  ["S09", "class", "Rencontre de classe", "Ancien aventurier avec équipement ou potion", "Route continentale"],
-  ["S10", "doNothing", "Route calme", "Paysage vide, calme et respirant", "Route continentale"],
-  ["S11", "dwarfPetFan", "Talvar et un familier", "Vieux nain observant un animal", "Mont Célestrum"],
-  ["S12", "epicItemShop", "Aldéric l'antiquaire", "Marchand et charrette d'antiquités", "Route continentale, Route des Merveilles"],
-  ["S13", "expeditionAdvice", "Velanna et le talisman", "Guerrière balafrée, talisman et familier", "Continent"],
-  ["S14", "farmer", "Mylène la fermière", "Fermière robuste dans un champ", "Plaines"],
-  ["S15", "fightPet", "Animal agressif", "Aventurier face à une bête", "Continent"],
-  ["S16", "findItem", "Objet trouvé", "Objet brillant au bord du chemin", "Route continentale"],
-  ["S17", "findMaterial", "Collecte de matériaux", "Aventurier récoltant une ressource", "Continent"],
-  ["S18", "findMaterialOnIsland", "Collecte sur île", "Ressource dans un décor insulaire", "Île mystérieuse"],
-  ["S19", "findMission", "Mission apportée", "Coursier, lettre ou tableau de missions", "Continent"],
-  ["S20", "findPet", "Familier découvert", "Animal seul dans la nature", "Continent"],
-  ["S21", "findPotion", "Fiole trouvée", "Fiole lumineuse sur le chemin", "Route continentale"],
-  ["S22", "gardener", "Théobald le jardinier", "Vieil homme, tablier, plants et arrosoir", "Routes touchant une forêt"],
-  ["S23", "goToPVEIsland", "Départ vers l'île", "Capitaine devant bateau ou embarcadère", "Continent / embarquement"],
-  ["S24", "gobletsGame", "Jeu des gobelets", "Escroc, table et quatre gobelets", "Continent"],
-  ["S25", "haunted", "Présence hantée", "Maison délabrée, brume et silhouette", "Lieux hantés"],
-  ["S26", "infoFight", "Sir Rowan", "Chevalier âgé donnant un conseil", "Continent"],
-  ["S27", "interactOtherPlayers", "Rencontre d'un joueur", "Deux aventuriers sur une route", "Continent"],
-  ["S28", "leagueReward", "Message de ligue", "Oiseau ou courrier de classement", "Continent"],
-  ["S29", "limoges", "Voyageur de Limoges", "Étranger encapuchonné racontant une cité", "Continent"],
-  ["S30", "lottery", "Loterie", "Organisateur devant une table de jeu", "Continent"],
-  ["S31", "pet", "Familier en promenade", "Familier dans les hautes herbes", "Continent"],
-  ["S32", "petDropToken", "Familier porteur de jeton", "Animal d'un autre joueur et objet brillant", "Continent"],
-  ["S33", "petFood", "Familier qui renifle", "Animal devant un taillis odorant", "Continent"],
-  ["S34", "shop", "Marchand ambulant", "Marchand nommé et charrette", "Route continentale"],
-  ["S35", "smallBad", "Incident mineur", "Aventurier en difficulté", "Route continentale"],
-  ["S36", "space", "Oracle astronome", "Oracle avec lunette et ciel étoilé", "Continent"],
-  ["S37", "staffMember", "Histoire d'un héros", "Barde, affiche ou conteur", "Continent"],
-  ["S38", "ultimateFoodMerchant", "Gaspard-Jo", "Marchand de soupe et roulotte", "Route continentale"],
-  ["S39", "winEnergy", "Hilda la guérisseuse", "Jeune guérisseuse avec remède", "Continent"],
-  ["S40", "winEnergyOnIsland", "Repos sur île", "Aventurier assis dans un décor insulaire", "Île mystérieuse"],
-  ["S41", "winGuildXP", "Renommée de guilde", "Groupe d'aventuriers reconnaissant une guilde", "Continent"],
-  ["S42", "winHealth", "Fruits et provisions", "Aventurier près d'un arbre fruitier", "Continent"],
-  ["S43", "winPersonalXP", "Victoire contre une bête", "Aventurier après une rencontre animale", "Continent"],
-  ["S44", "witch", "Sorcière et chaudron", "Vieille sorcière devant une potion", "Continent / maison hantée"]
-];
-
-const monsters = [
-  ["M01", "Troll de la forêt", "Forêt de la pénombre", "Grand, massif, peau rugueuse couverte de suie, yeux rougeoyants, menace primitive."],
-  ["M02", "Mutant Vaseux", "Forêt de la pénombre", "Masse verte gélatineuse qui copie le joueur, ses vêtements et ses armes."],
-  ["M03", "Squelette", "Village en ruines", "Ancien guerrier armé, silhouette faible en apparence mais dangereuse et prête à surprendre."],
-  ["M04", "Araignée", "Mine brumeuse", "Araignée gigantesque, poilue, venimeuse, entourée de toiles et de petites araignées."],
-  ["M05", "Golem de pierre", "Chemin escarpé", "Colosse rocheux très lent, visage minéral, masse imposante et attaques dévastatrices."],
-  ["M06", "Titan de magma", "Volcan grondant", "Colosse formé de lave, de magma et de roche, silhouette brûlante et puissance ultime."],
-  ["M07", "Loup blanc", "Toundra", "Prédateur arctique majestueux, fourrure immaculée, yeux bleus et crocs acérés."],
-  ["M08", "Élémentaire brillant", "Caverne de cristal", "Humanoïde de cristaux, lumière décomposée en arc-en-ciel, pouvoirs élémentaires."],
-  ["M09", "Gardien céleste", "Portes sacrées", "Statue gigantesque animée, marteau divin, inscriptions anciennes et posture de gardien."],
-  ["M10", "Seigneur des glaces", "Pic enneigé", "Dragon de glace colossal, écailles cristallines, souffle glacé, regard millénaire."],
-  ["M11", "Crocodile", "Lac souterrain", "Crocodile géant adapté au froid, peau épaisse, crocs préhistoriques et yeux jaunes."],
-  ["M12", "Yuki-Onna", "Village dévasté", "Esprit féminin en kimono blanc, cheveux noirs, peau spectrale et beauté inquiétante."],
-  ["M13", "Reine des glaces", "Nid glacé", "Dragonne protectrice, écailles irisées, œuf gigantesque, fureur maternelle."],
-  ["M14", "Tortue Géante", "Creux du Lagon", "Tortue millénaire de taille navire, carapace de corne et de lichen, jets d'eau."],
-  ["M15", "Esprit des mers", "Caverne Maritime", "Entité translucide de brume et d'eau, apparition instantanée et souffle glacial."],
-  ["M16", "Capitaine Crow", "Crique du Revenant", "Spectre de pirate, yeux comme des braises, sabre maudit et rire sinistre."],
-  ["M17", "Sirène", "Cave des murmures", "Créature mi-femme mi-poisson, chant hypnotique, griffes et séduction glaciale."],
-  ["M18", "Kraken", "Gouffre des Profondeurs", "Tentacules massifs, encre noire, ventouses puissantes et maelström abyssal."],
-  ["M19", "Léviathan", "Ravin des Abysses", "Bête primordiale, crocs, foudre céleste, déluges et maelström dévastateur."]
-];
-
-const backgrounds2 = [
-  ["B17", "Forêt du Vieillard", "Sous-bois ancien, plus dense et plus sombre que le fond forestier générique.", "Événements forestiers et présence de Xetrix."],
-  ["B18", "Bois Hurlant", "Forêt mal famée, traces de bandits, chemin creux et abri clandestin.", "Événements de brigands et de danger social."],
-  ["B19", "Forêt Célestrum", "Forêt au pied de la montagne, lumière froide et relief visible.", "Talvar, Théobald et événements de la zone de Célestrum."],
-  ["B20", "Claire de Ville", "Grande ville marchande, rue pavée, commerces et circulation.", "Services urbains, Bourse et événements de ville."],
-  ["B21", "Mergagnan", "Ville paisible au bord de la plage, façades claires et air maritime.", "Tanneur, vétérinaire et événements de Mergagnan."],
-  ["B22", "Ville Forte", "Ancienne cité fortifiée, murailles et maisons rescapées.", "Marchand de matériaux, ferrailleur et événements de Ville Forte."],
-  ["B23", "Boug-Coton", "Village rural et auberge chaleureuse.", "Auberge et événements de Boug-Coton."],
-  ["B24", "Village Coco", "Village oasis, palmiers, source et chaleur du désert.", "Herboriste, bûcheron, Xirtex et événements du Village Coco."]
-];
-
-const characters2 = [
-  ["P01", "Gruffo", "Alchimiste, tente, alambic, potions expérimentales ; silhouette rabougrie, énergie de charlatan mais savoir réel.", "Plage Sentinelle et Route Marécageuse", "Grands événements 56 et 58 ; scène E01 en profil 3."],
-  ["P02", "Xetrix", "Ermite forestier, cueilleur, propriétaire d'une maison isolée ; peut conseiller, tromper ou accueillir.", "Forêt Célestrum / décor forestier", "Grand événement 40."],
-  ["P03", "Xirtex", "Vieil ermite barbu, capuche large, tente près d'une oasis ; généreux, louche ou violent.", "Vallée des Rois", "Grand événement 71."],
-  ["P04", "Velanna", "Guerrière balafrée en armure de cuir usée, dague, experte des expéditions et du talisman.", "Routes du continent", "Mini-événement S13."],
-  ["P05", "Talvar", "Vieux nain aux cheveux argentés et à la longue barbe ; protecteur, soigneur et connaisseur des animaux.", "Routes touchant le Mont Célestrum", "Mini-événement S11."],
-  ["P06", "Sir Rowan", "Chevalier vieillissant, ancien capitaine de la garde royale, maître d'armes et pédagogue tactique.", "Routes du continent", "Mini-événement S26."],
-  ["P07", "Mylène", "Fermière robuste, mains terreuses, chapeau de paille, champs et paniers de récolte.", "Routes touchant des plaines", "Mini-événement S14."],
-  ["P08", "Théobald", "Jardinier itinérant âgé, tablier terreux, arrosoir, plants et savoir botanique.", "Routes touchant des forêts", "Mini-événement S22."],
-  ["P09", "Aldéric l'antiquaire", "Homme d'âge mûr, tenue vintage, charrette d'antiquités, marchand chaleureux et conteur d'objets.", "Routes du continent et Route des Merveilles", "Mini-événement S12."],
-  ["P10", "Gaspard-Jo", "Marchand de soupe généreux, roulotte avec cheminée, distribue nourriture et recettes.", "Routes du continent", "Mini-événement S38."],
-  ["P11", "Gorim le Brise-Fer", "Responsable du ferrailleur, démonte les équipements de réserve pour récupérer des matériaux.", "Ville Forte", "Écran scrapDealer."],
-  ["P12", "La sorcière", "Vieille femme frêle, voûtée, peau grise, vêtements en lambeaux, maladroite, chaudron et potions.", "Continent, lieux hantés et château", "Mini-événement S44 et grand événement 83."],
-  ["P13", "Oracle de l'autel", "Oracle voilé devant des runes ; veille sur la cagnotte et les bénédictions.", "Continent", "Mini-événement S02 et écran blessing."],
-  ["P14", "Oracle astronome", "Homme mystérieux qui observe le ciel, utilise une lunette et lit les étoiles.", "Continent", "Mini-événement S36."]
-];
-
-const states2 = [
-  ["U12", "Vide et absence de données", "Coffre vide, refuge vide, liste sans résultat, réponse sans contenu."],
-  ["U13", "Sans familier ou sans guilde", "Aventurier seul, silhouette légère, espace ouvert et non punitif."],
-  ["U14", "Succès et récompense", "Lumière de gain, coffre ouvert, objet ou ressource mise en valeur."],
-  ["U15", "Échec et perte", "Objet cassé, lumière éteinte, posture déçue ou conséquence visuelle."],
-  ["U16", "Choix expiré", "Sablier, braise qui s'éteint, porte qui se referme ou scène figée."],
-  ["U17", "Verrouillage et prérequis", "Porte, sceau ou équipement inaccessible avec signal clair de niveau requis."]
-];
-
-const backgrounds3 = [
-  ["B25", "Cour du Château", "Esplanade pavée entre Boug-Coton et les portes royales.", "Cour, garde, archiviste et accès aux appartements du roi."],
-  ["B26", "Salle de réception royale", "Grande salle d'apparat, œuvres d'art, carrosse et lumière de cour.", "Princesse, réception, nobles et événements de prestige."],
-  ["B27", "Salle de justice", "Estrade du bailli, accusée, gardes et tension judiciaire.", "Sorcière jugée et événements de justice."],
-  ["B28", "Auberge et taverne", "Comptoir, feu, tables, chambres et atmosphère de voyageurs.", "Repas, repos, Xirtex ou personnages de taverne."],
-  ["B29", "Forge et atelier", "Brasier, enclume, outils, établis et effets d'enchantement.", "Forgeron, forgeron royal, enchanteur et amélioration."],
-  ["B30", "Domaine de guilde", "Salle commune fortifiée, bannière, réserve et refuge animal.", "Guilde, boutique du domaine, refuge, entrepôt et ménagerie."]
-];
-
-const characters3 = [
-  ["P15", "Le roi", "Souverain, carrosse ou cheval blanc, entouré de la garde et lié aux lettres et récompenses royales.", "Château, cour, routes royales", "Grands événements 82, 83 et 89; marché royal."],
-  ["P16", "La princesse", "Héritière au centre de la compétition ; généralement aperçue dans un carrosse protégé.", "Château et cortèges royaux", "Grand événement 89 et textes de voyage."],
-  ["P17", "Garde royal / chevalier", "Soldat discipliné, protection de la famille royale, escorte et arrestation.", "Château, cour et routes royales", "Événements 82, 83, 89 et rôles de garde."],
-  ["P18", "Bailli", "Officier de justice du seigneur, posture d'autorité et salle d'audience.", "Salle de justice", "Grand événement 83."],
-  ["P19", "Bandit / assassin", "Silhouette masquée, arme courte ou arc, posture de menace et fuite.", "Bois Hurlant, routes, château", "Événements de danger et d'intrusion."],
-  ["P20", "Capitaine / marin", "Vêtement de marin, emblème royal possible, pont et longue-vue.", "Bateau et embarcadère", "S05, S23 et événements de bateau."],
-  ["P21", "Aubergiste", "Personne derrière un comptoir, repas, clé, tonneaux et chaleur de taverne.", "Auberges du continent", "Écrans inn et événements d'hospitalité."],
-  ["P22", "Marchand générique", "Charrette ou étal, vêtements de voyage, caisses et balance.", "Routes, marchés et villes", "Boutiques, services et événements de commerce."],
-  ["P23", "Artisan / forgeron", "Tablier, outils, métal, établi et geste professionnel.", "Villes, forge et atelier", "Forgeron, tanneur, bûcheron et améliorations."],
-  ["P24", "Vétérinaire / soigneur", "Sacoche, instrument de soin, posture rassurante et présence animale.", "Mergagnan, Claire de Ville et routes", "Vétérinaire, Hilda et soins."]
-];
-
-const heroScenes = [
-  ["E01", "Gruffo dans sa tente", "Gruffo, alambic, potions colorées, toile ouverte sur la Plage Sentinelle et lumière de fin de journée.", "Grand événement 56."],
-  ["E02", "Xetrix dans sa forêt", "Ermite cueilleur devant sa maison, panier de ressources, forêt sombre et chemin qui se perd.", "Grand événement 40."],
-  ["E03", "Xirtex à l'oasis", "Vieil homme encapuchonné près d'une oasis, tente, feu et horizon désertique.", "Grand événement 71."],
-  ["E04", "La maison hantée", "Demeure délabrée prise dans la brume, fenêtres fissurées et présence indistincte.", "Grand événement 81."],
-  ["E05", "La sorcière devant le bailli", "Sorcière reconnaissable, salle de justice, bailli, gardes et tension de procès.", "Grand événement 83."],
-  ["E06", "Le cortège royal", "Roi, princesse dans son carrosse, garde royale et foule sur les pavés de la cour.", "Grand événement 89."]
-];
-
-const bigEventMap = [
-  ["B01", "Carte du continent", "Écran map; point de repère général", "Aucun grand événement exclusif"],
-  ["B02", "Route continentale", "2, 5, 17, 19, 25, 30, 31, 33, 38, 42, 43, 55, 85 + globaux 64, 65, 74, 80"],
-  ["B03", "Plaine, campagne et plage", "9, 14, 22, 49, 56, 62, 75"],
-  ["B04", "Forêt continentale", "1, 6, 11, 23, 32, 40, 69, 76, 77"],
-  ["B05", "Route marécageuse", "28, 58"],
-  ["B06", "Eau, rivière, lac et littoral", "10, 12, 16, 44, 53, 57, 84, 86"],
-  ["B07", "Désert et oasis", "29, 48, 70, 71, 88"],
-  ["B08", "Montagne et chemin rocheux", "8, 21, 37, 51, 78, 79, 87"],
-  ["B09", "Ville ou village continental", "7, 13, 15, 18, 20, 24, 26, 27, 34, 35, 36, 39, 41, 45, 46, 47, 50, 52, 54, 63, 68, 72"],
-  ["B10", "Marché et échoppes", "3, 4, 73"],
-  ["B11", "Château royal", "60, 61, 82, 83, 89"],
-  ["B12", "Maison hantée et brume", "81"],
-  ["B13", "Bateau et embarquement", "66, 67"],
-  ["B14-B16", "Îles mystérieuses", "Pas de grand événement local : utilisés pour les écrans d'île et les combats M01-M19"]
-];
-
-const screenMatrix = [
-  ["adventure", "Aventure", "B02/B09/B14-B16 selon le rapport", "B17-B24 + P01-P14 selon le lieu", "B25-B30 + P15-P24 selon le lieu"],
-  ["travel", "Voyage en cours", "B02", "B02 + fond de zone B17-B24", "B02 + personnage de route si besoin"],
-  ["destinations", "Choix de destination", "B01", "B01", "B01"],
-  ["map", "Carte", "B01", "B01", "B01"],
-  ["smallEvent", "Mini-événement", "S01-S44", "S01-S44", "S01-S44"],
-  ["bigEvent", "Grand événement", "B02-B13", "B02-B13 + P01-P14", "B02-B13 + P15-P24 ou E01-E06"],
-  ["alteration", "Altérations", "U07", "U07 + U15/U17", "U07 + U15/U17"],
-  ["island", "Île mystérieuse", "B14/B15/B16", "B14/B15/B16", "B14/B15/B16"],
-  ["respawn", "Réapparition", "U06", "U06 + U14", "U06 + U14"],
-  ["buyHeal", "Soin d'altération", "U08", "U08 + U15", "U08 + P24 + U15"],
-  ["tokenMerchant", "Marchand de jetons", "U08", "U08 + U14/U15", "U08 + P22"],
-  ["pveFight", "Combat de monstre", "B14-B16 + M01-M19", "B14-B16 + M01-M19", "B14-B16 + M01-M19"],
-  ["city", "Ville", "B09", "B17-B24", "B17-B24 + B25-B30 selon service"],
-  ["notary", "Notaire", "B09 + U08", "B17-B24", "B29 + P23"],
-  ["blacksmith", "Forgeron", "B09 + U08", "B22/B23", "B29 + P23"],
-  ["royalBlacksmith", "Forgeron royal", "B11 + U08", "B11", "B29 + P23"],
-  ["scrapDealer", "Ferrailleur", "B09 + U08", "B22 + P11", "B22 + P11"],
-  ["enchanter", "Enchanteur", "B09 + U08", "B17-B24", "B29 + P23"],
-  ["inn", "Auberge", "B09 + U08", "B23/B24", "B28 + P21"],
-  ["bossArchivist", "Archiviste des îles", "B11 + U08", "B11", "B25 + P22"],
-  ["guildFoodShop", "Ravitaillement", "B09 + U08", "B09", "B30 + P22"],
-  ["shop", "Boutique générale", "B10 + U08", "B10", "B10 + P22"],
-  ["materialMerchant", "Marchand de matériaux", "B09 + U08", "B22", "B22 + P22"],
-  ["tanner", "Tanneur", "B09 + U08", "B21", "B29 + P23"],
-  ["herbalist", "Herboriste", "B09 + U08", "B24", "B24 + P23"],
-  ["lumberjack", "Bûcheron", "B09 + U08", "B24", "B24 + P23"],
-  ["veterinarian", "Vétérinaire", "B09 + U08", "B20/B21", "B20/B21 + P24"],
-  ["stockExchange", "Bourse", "B09 + U08", "B20", "B20 + P22"],
-  ["royalMarket", "Marché royal", "B11 + U08", "B11", "B25 + P15/P22"],
-  ["home", "Maison", "B09 + U02", "B09 + U12 si vide", "B09 + U02"],
-  ["homeBed", "Lit", "U02", "U02 + U14/U15", "U02 + U14/U15"],
-  ["homeChest", "Coffre", "U02 + U10", "U02 + U12", "U02 + U12"],
-  ["homeGarden", "Jardin", "U02", "U02 + B17-B19", "U02 + B17-B19"],
-  ["homeCooking", "Cuisine", "U02 + U09", "U02 + U14/U15", "U02 + U14/U15"],
-  ["homeUpgrade", "Station d'amélioration", "U02 + U08", "U02", "B29 + P23"],
-  ["apartment", "Logis", "B09 + U08", "B17-B24", "B17-B24"],
-  ["profile", "Profil", "U02", "U02 + U14/U15", "U02 + U14/U15"],
-  ["inventory", "Inventaire", "U02 + U09", "U02 + U12", "U02 + U12"],
-  ["equip", "Équiper", "U02 + U09", "U02 + U14/U15", "U02 + B29/P23 si besoin"],
-  ["sell", "Vendre", "U09", "U09 + U15", "U09 + P22"],
-  ["drink", "Boire une potion", "U09", "U09 + U14/U15", "U09 + U14/U15"],
-  ["dailyBonus", "Bonus journalier", "U09", "U09 + U14", "U09 + U14"],
-  ["classes", "Classes", "U02", "U02", "U02"],
-  ["classesInfo", "Infos classes", "U02", "U02", "U02"],
-  ["badges", "Badges", "U02 + U09", "U09 + U14", "U09 + U14"],
-  ["missions", "Missions", "U02 + U09", "U09 + P13 si bénédiction", "U09 + B25 si campagne royale"],
-  ["blessing", "Bénédictions", "U02", "P13", "P13 + B25"],
-  ["rarity", "Raretés", "U09", "U09", "U09"],
-  ["notifications", "Notifications", "U10", "U11 + U12", "U11 + U12"],
-  ["utilities", "Services utilitaires", "U10", "U11 + U12", "U11 + U12"],
-  ["pet", "Familier", "U03", "U03", "U03"],
-  ["petExpedition", "Expéditions", "U03", "U03 + B14-B16", "U03 + B14-B16"],
-  ["petFeed", "Nourrir", "U03 + U09", "U03 + U14/U15", "U03 + U14/U15"],
-  ["petNick", "Renommer", "U03", "U03", "U03"],
-  ["petSell", "Vendre le familier", "U03 + U09", "U03 + U15", "U03 + P22"],
-  ["petTransfer", "Transférer", "U03 + U10", "U03 + U12", "U03 + U12"],
-  ["petFree", "Libérer", "U03 + U10", "U03 + U15", "U03 + U15"],
-  ["petPowers", "Pouvoirs des familiers", "U03", "U03", "U03"],
-  ["guild", "Guilde", "U04", "U04 + B30", "B30"],
-  ["guildManage", "Gestion de guilde", "U04", "U04", "B30"],
-  ["guildCreate", "Créer une guilde", "U04 + U10", "U04 + U17", "B30 + U17"],
-  ["guildDaily", "Bonus de guilde", "U04 + U09", "U04 + U14/U15", "B30 + U14/U15"],
-  ["guildShelter", "Refuge", "U04 + U03", "U04 + U12", "B30 + U03"],
-  ["guildStorage", "Entrepôt", "U04 + U09", "U04 + U12", "B30 + U09"],
-  ["guildDomain", "Domaine de guilde", "U04", "B30", "B30"],
-  ["guildDomainShop", "Boutique du domaine", "U04 + U09", "B30", "B30 + P22"],
-  ["guildDomainShelter", "Refuge du domaine", "U04 + U03", "B30", "B30 + U03"],
-  ["guildDomainPantry", "Entrepôt du domaine", "U04 + U09", "B30", "B30 + U09"],
-  ["guildDomainTraining", "Ménagerie", "U04 + U03", "B30", "B30 + U03"],
-  ["fight", "Arène", "U05", "U05", "U05"],
-  ["fightConfirm", "Recherche de combat", "U05", "U05", "U05"],
-  ["fightBattle", "Combat en cours", "U05 + M01-M19 en PvE", "U05 + M01-M19", "U05 + M01-M19"],
-  ["fightResult", "Résultat du combat", "U05 + U09/U10", "U05 + U14/U15", "U05 + U14/U15"],
-  ["fightHistory", "Historique", "U05", "U05", "U05"],
-  ["league", "Ligue", "U05 + U09", "U05 + U14", "U05 + U14"],
-  ["top", "Classements", "U05 + U02", "U05 + U02", "U05 + U02"]
-];
-
-const collectorGroups = [
-  ["Rapport, choix et narration", "B02-B13, S01-S44, P01-P14", "ReactionCollectorAltar, ReactionCollectorBigEvent, ReactionCollectorCart, ReactionCollectorChooseDestination, ReactionCollectorGoToPVEIsland, ReactionCollectorGobletsGame, ReactionCollectorLimoges, ReactionCollectorLottery, ReactionCollectorPacket, ReactionCollectorResetTimer, ReactionCollectorStopPacket, ReactionCollectorWitch"],
-  ["Commerce et services", "U08, U09, P11, P22, P23, P24", "ReactionCollectorAnyShopSmallEvent, ReactionCollectorBuyCategorySlot, ReactionCollectorBuyHeal, ReactionCollectorCity, ReactionCollectorDailyBonus, ReactionCollectorDrink, ReactionCollectorEpicShopSmallEvent, ReactionCollectorEquip, ReactionCollectorItemAccept, ReactionCollectorItemChoice, ReactionCollectorRecipeShopSmallEvent, ReactionCollectorSell, ReactionCollectorShop, ReactionCollectorShopSmallEvent, ReactionCollectorSkipMissionShopItem, ReactionCollectorTokenMerchant, ReactionCollectorUnlock, ReactionCollectorUseTokens"],
-  ["Combat", "U05, M01-M19, S15", "ReactionCollectorFight, ReactionCollectorFightChooseAction, ReactionCollectorFightPet, ReactionCollectorInteractOtherPlayers, ReactionCollectorPveFight"],
-  ["Familiers et nature", "U03, S03, S11, S14, S22, S31-S33", "ReactionCollectorBadPetSmallEvent, ReactionCollectorGardener, ReactionCollectorPetExpedition, ReactionCollectorPetExpeditionChoice, ReactionCollectorPetExpeditionFinished, ReactionCollectorPetFeedWithGuild, ReactionCollectorPetFeedWithoutGuild, ReactionCollectorPetFoodSmallEvent, ReactionCollectorPetFree, ReactionCollectorPetSell, ReactionCollectorPetTransfer"],
-  ["Profil et progression", "U02, U09, U14, U17", "ReactionCollectorChangeClass"],
-  ["Guilde", "U04, U03, B30", "ReactionCollectorGuildCreate, ReactionCollectorGuildDescription, ReactionCollectorGuildElder, ReactionCollectorGuildElderRemove, ReactionCollectorGuildInvite, ReactionCollectorGuildKick, ReactionCollectorGuildLeave"],
-  ["Navigation maritime", "B13, U11", "ReactionCollectorJoinBoat"],
-  ["Base technique", "U10-U11", "ReactionCollectorStopPacket, ReactionCollectorPacket" ]
-];
-
-function esc(value) {
-  return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
-}
-function id(value) { return '<span class="asset-id">' + esc(value) + '</span>'; }
-function makeTable(headers, rows, className = "") {
-  return '<table class="' + className + '"><thead><tr>' + headers.map(h => '<th>' + esc(h) + '</th>').join('') + '</tr></thead><tbody>' + rows.map(row => '<tr>' + row.map(cell => '<td>' + cell + '</td>').join('') + '</tr>').join('') + '</tbody></table>';
-}
-function render() {
-  document.getElementById('background-base').innerHTML = makeTable(['ID', 'Asset', 'Direction', 'Écrans / usages'], backgroundsBase.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]));
-  document.getElementById('system-base').innerHTML = makeTable(['ID', 'Asset', 'Direction', 'Écrans / usages'], systemBase.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]));
-  document.getElementById('mini-events').innerHTML = makeTable(['ID', 'Code', 'Mini-événement', 'Illustration à produire', 'Décor recommandé'], miniEvents.map(x => [id(x[0]), '<code>' + esc(x[1]) + '</code>', '<strong>' + esc(x[2]) + '</strong>', esc(x[3]), esc(x[4])]), 'mini-table');
-  document.getElementById('monsters').innerHTML = makeTable(['ID', 'Monstre', 'Carte de rencontre', 'Direction artistique'], monsters.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]), 'monster-table');
-  document.getElementById('background-profile2').innerHTML = makeTable(['ID', 'Lieu', 'Direction', 'Usage'], backgrounds2.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]));
-  document.getElementById('characters-profile2').innerHTML = makeTable(['ID', 'Personnage', 'Caractéristiques à dessiner', 'Lieu de rencontre', 'Usage'], characters2.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3]), esc(x[4])]), 'character-table');
-  document.getElementById('states-profile2').innerHTML = makeTable(['ID', 'État', 'Brief visuel'], states2.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2])]));
-  document.getElementById('background-profile3').innerHTML = makeTable(['ID', 'Lieu spécialisé', 'Direction', 'Usage'], backgrounds3.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]));
-  document.getElementById('characters-profile3').innerHTML = makeTable(['ID', 'Rôle', 'Caractéristiques à dessiner', 'Lieu', 'Usage'], characters3.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3]), esc(x[4])]), 'character-table');
-  document.getElementById('hero-scenes').innerHTML = makeTable(['ID', 'Scène', 'Composition', 'Usage'], heroScenes.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]));
-  document.getElementById('big-event-map').innerHTML = makeTable(['Fond', 'Famille visuelle', 'Grands événements couverts'], bigEventMap.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2])]), 'compact');
-  const screenSections = [
-    { title: "Aventure", count: 36 },
-    { title: "Profil", count: 14 },
-    { title: "Familier", count: 8 },
-    { title: "Guilde", count: 11 },
-    { title: "Combat", count: 7 }
-  ];
-  let lastSection = '';
-  let sectionEnd = 0;
-  let sectionIndex = 0;
-  const screenRows = [];
-  for (const [screenIndex, x] of screenMatrix.entries()) {
-    if (screenIndex >= sectionEnd) {
-      sectionEnd += screenSections[sectionIndex].count;
-      sectionIndex++;
-    }
-    const section = screenSections[sectionIndex - 1].title;
-    if (section !== lastSection) {
-      screenRows.push(['<strong>—</strong>', '<strong>' + esc(section) + '</strong>', '', '', '']);
-      lastSection = section;
-    }
-    screenRows.push([id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3]), esc(x[4])]);
-  }
-  document.getElementById('screen-matrix').innerHTML = makeTable(['Écran', 'Fonction', 'Profil 1 : garantie', 'Profil 2 : enrichissement', 'Profil 3 : enrichissement'], screenRows, 'screen-table');
-  document.getElementById('collector-groups').innerHTML = makeTable(['Famille', 'Visuel de contexte', 'Collecteurs couverts'], collectorGroups.map(x => ['<strong>' + esc(x[0]) + '</strong>', esc(x[1]), '<span class="small">' + esc(x[2]) + '</span>']));
-}
-render();
-</script>
+<section class="page">
+  <div class="eyebrow">Checklist finale</div>
+  <h2>Le jeu est-il visuellement couvert ?</h2>
+  <p class="section-intro">Cette liste permet de vérifier que chaque famille d'écran possède un décor, un personnage, une créature ou une illustration d'état. Elle ne demande pas une scène différente pour chaque écran.</p>
+  <ul class="checklist">
+    <li>Les 19 monstres ont chacun une silhouette et une illustration propre.</li>
+    <li>Les 44 mini-événements ont chacun une situation visuelle identifiable.</li>
+    <li>Les grands événements du continent utilisent les 14 familles de décors décrites dans ce document.</li>
+    <li>Gruffo, Xetrix, Xirtex, Velanna, Talvar, Sir Rowan, Mylène, Théobald, Aldéric, Gaspard-Jo, Gorim, la sorcière, les deux oracles et Hilda sont reconnaissables.</li>
+    <li>Le roi, la princesse, la garde royale, le bailli, les bandits, les marins, les aubergistes, les marchands, les artisans et les soigneurs disposent de silhouettes réutilisables.</li>
+    <li>Les trois îles ont chacune une identité visuelle très différente.</li>
+    <li>Les écrans de ville et de maison ont une ambiance d'intérieur ou de quartier, même lorsqu'ils affichent surtout des informations.</li>
+    <li>Les écrans de profil montrent l'aventurier, son équipement, son familier ou ses récompenses.</li>
+    <li>Les écrans de guilde montrent un lieu partagé, des membres, des animaux ou des réserves.</li>
+    <li>Les écrans de combat montrent toujours une opposition, une arène ou un résultat visible.</li>
+    <li>Les écrans de chargement, d'erreur, d'absence de résultat, de victoire, de défaite et de mort ont une image de contexte réutilisable.</li>
+    <li>La carte du continent existante est réutilisée, sans nouvelle illustration de carte.</li>
+  </ul>
+  <div class="callout gold"><strong>Image directrice :</strong> le joueur doit toujours savoir où il est, qui il regarde et ce qui vient de se passer avant même de commencer à lire.</div>
+  <div class="footer-note">Document préparé pour la direction artistique de Crownicles. Les descriptions de personnages et de lieux sont tirées des textes du jeu, complétées par des recommandations visuelles lorsque le jeu ne fixe pas d'apparence précise.</div>
+</section>
 </body>
 </html>
