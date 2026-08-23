@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crownicles - Brief illustration du jeu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  @page { size: A4; margin: 14mm; }
+  :root {
+    --ink: #0b0b0c;
+    --muted: #6e6e73;
+    --faint: #8a8a90;
+    --paper: #ffffff;
+    --wash: #f4f4f5;
+    --line: #e6e6e8;
+    --terracotta: #b95e4b;
+    --gold: #c8963c;
+    --teal: #227c7a;
+    --blue: #2f6fd0;
+    --green: #3f9a5c;
+    --violet: #6c56c8;
+    --red: #d2504b;
+    --white: #ffffff;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html { background: #d9d6d0; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: var(--wash);
+    font-family: Inter, "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 9pt;
+    line-height: 1.42;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { margin: 0 0 0.45em; line-height: 1.08; }
+  h1 { font-size: 27pt; font-weight: 800; letter-spacing: 0; }
+  h2 { font-size: 18pt; font-weight: 700; color: var(--ink); padding: 0; border: 0; }
+  h3 { font-size: 12.5pt; font-weight: 700; color: var(--ink); margin-top: 1.1em; }
+  h4 { font-size: 10.5pt; font-weight: 700; color: var(--ink); margin-top: .9em; }
+  p { margin: .35em 0 .75em; }
+  ul, ol { margin: .35em 0 .8em 1.2em; padding: 0; }
+  li { margin: .2em 0; }
+  code, .asset-id { font-family: "SFMono-Regular", Consolas, monospace; font-size: .88em; }
+  code { background: var(--wash); padding: 1px 4px; border-radius: 4px; }
+  .cover {
+    min-height: 249mm;
+    margin: 0;
+    padding: 18mm 17mm;
+    position: relative;
+    overflow: hidden;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+  .cover:before, .cover:after {
+    content: none;
+  }
+  .cover > * { position: relative; z-index: 1; }
+  .cover-kicker { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; font-size: 8pt; }
+  .cover h1 { max-width: 150mm; margin-top: 15mm; }
+  .cover-subtitle { max-width: 125mm; color: var(--muted); font-size: 14pt; line-height: 1.35; }
+  .cover-rule { width: 28mm; height: 4px; background: var(--terracotta); margin: 11mm 0; border-radius: 99px; }
+  .cover-meta { color: var(--muted); font-size: 8.5pt; }
+  .cover-bottom { display: flex; justify-content: space-between; gap: 15mm; align-items: end; border-top: 1px solid var(--line); padding-top: 9mm; }
+  .cover-stamp { border: 0; border-radius: 99px; background: var(--wash); color: var(--ink); padding: 7px 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; font-size: 7.5pt; }
+  .page { page-break-before: always; }
+  .page:first-of-type { page-break-before: auto; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-size: 7.5pt; font-weight: 600; margin-bottom: 5px; }
+  .lead { font-size: 11.5pt; line-height: 1.4; max-width: 175mm; color: var(--muted); }
+  .muted { color: var(--muted); }
+  .small { font-size: 8pt; color: var(--muted); }
+  .callout { border-left: 4px solid var(--terracotta); border-radius: var(--radius); background: var(--wash); padding: 10px 12px; margin: 10px 0 14px; }
+  .callout.teal { border-color: var(--teal); background: var(--wash); }
+  .callout.gold { border-color: var(--gold); background: var(--wash); }
+  .callout.red { border-color: var(--red); background: var(--wash); }
+  .metric-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin: 12px 0 15px; }
+  .metric { border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); padding: 10px 9px; min-height: 47px; }
+  .metric:nth-child(2) strong { color: var(--gold); }
+  .metric:nth-child(3) strong { color: var(--teal); }
+  .metric:nth-child(4) strong { color: var(--blue); }
+  .metric:nth-child(5) strong { color: var(--violet); }
+  .metric strong { display: block; font-size: 18pt; line-height: 1; }
+  .metric span { display: block; color: var(--muted); font-size: 7.5pt; margin-top: 4px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); padding: 10px 11px; margin: 7px 0 11px; }
+  .panel h3, .panel h4 { margin-top: 0; }
+  .profile-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; background: var(--white); min-height: 92px; }
+  .profile-card.minimum { border-top: 3px solid var(--muted); }
+  .profile-card.recommended { border-top: 3px solid var(--terracotta); }
+  .profile-card.ideal { border-top: 3px solid var(--gold); }
+  .profile-card .count { font-size: 20pt; font-weight: 800; color: var(--ink); }
+  .profile-card .label { font-size: 8pt; color: var(--muted); }
+  .profile-card ul { font-size: 8.4pt; }
+  .asset-list { columns: 2; column-gap: 20px; }
+  .asset-list li { break-inside: avoid; }
+  .tag { display: inline-block; border-radius: 99px; background: var(--wash); border: 1px solid var(--line); padding: 2px 7px; font-size: 7.4pt; font-weight: 600; margin: 1px 2px 1px 0; }
+  .tag.red { background: var(--wash); border-color: var(--line); color: var(--red); }
+  .tag.teal { background: var(--wash); border-color: var(--line); color: var(--teal); }
+  .tag.gold { background: var(--wash); border-color: var(--line); color: var(--gold); }
+  .tag.blue { background: var(--wash); border-color: var(--line); color: var(--blue); }
+  .tag.violet { background: var(--wash); border-color: var(--line); color: var(--violet); }
+  table { width: 100%; border-collapse: collapse; margin: 7px 0 14px; font-size: 8.05pt; }
+  th { text-align: left; color: var(--muted); background: var(--wash); border-bottom: 1px solid var(--line); padding: 6px; font-size: 7.6pt; line-height: 1.15; }
+  td { vertical-align: top; border: 1px solid var(--line); padding: 5px 6px; line-height: 1.3; background: var(--paper); }
+  tr:nth-child(even) td { background: var(--paper); }
+  tr { break-inside: avoid; }
+  .nowrap { white-space: nowrap; }
+  .asset-id { color: var(--blue); font-weight: 700; white-space: nowrap; }
+  .checklist { list-style: none; margin-left: 0; padding-left: 0; }
+  .checklist li { padding-left: 19px; position: relative; }
+  .checklist li:before { content: "□"; position: absolute; left: 0; color: var(--terracotta); font-weight: 700; }
+  .diagram { border: 1px solid var(--line); border-radius: var(--radius); background: var(--wash); color: var(--ink); padding: 12px; margin: 9px 0 13px; font-family: "SFMono-Regular", Consolas, monospace; font-size: 8pt; line-height: 1.65; }
+  .diagram .accent { color: var(--terracotta); }
+  .diagram .accent2 { color: var(--blue); }
+  .avoid { border: 1px solid var(--line); border-left: 4px solid var(--red); border-radius: var(--radius); background: var(--wash); padding: 9px 11px; }
+  .do { border: 1px solid var(--line); border-left: 4px solid var(--green); border-radius: var(--radius); background: var(--wash); padding: 9px 11px; }
+  .section-note { margin-top: -5px; color: var(--muted); font-size: 8.5pt; }
+  .footer-note { border-top: 1px solid var(--line); padding-top: 7px; margin-top: 15px; color: var(--muted); font-size: 7.5pt; }
+  .screen-table { font-size: 7.5pt; }
+  .screen-table td:first-child { width: 25mm; font-weight: 700; }
+  .screen-table td:nth-child(2) { width: 25mm; color: var(--muted); }
+  .screen-table td:nth-child(3), .screen-table td:nth-child(4), .screen-table td:nth-child(5) { width: 44mm; }
+  .mini-table td:first-child, .monster-table td:first-child { width: 16mm; }
+  .mini-table td:nth-child(2) { width: 34mm; font-weight: 700; }
+  .monster-table td:nth-child(2) { width: 35mm; font-weight: 700; }
+  .character-table td:first-child { width: 17mm; }
+  .character-table td:nth-child(2) { width: 38mm; font-weight: 700; }
+  .compact td, .compact th { padding: 4px 5px; }
+  .page-break-after { page-break-after: always; }
+  @media print {
+    :root {
+      --ink: #000000;
+      --muted: #444444;
+      --faint: #666666;
+      --paper: #ffffff;
+      --wash: #ffffff;
+      --line: #aaaaaa;
+      --terracotta: #000000;
+      --gold: #000000;
+      --teal: #000000;
+      --blue: #000000;
+      --green: #000000;
+      --violet: #000000;
+      --red: #000000;
+      --white: #ffffff;
+    }
+    html, body { background: #ffffff; }
+    .cover { border-color: #000000; }
+    .cover-stamp { border: 1px solid #000000; background: #ffffff; }
+    th { color: #000000; background: #ffffff; border-top: 1px solid #000000; border-bottom-color: #000000; }
+    td, .panel, .metric, .profile-card, .callout, .diagram, .avoid, .do, code, .tag { background: #ffffff; }
+    .asset-id, .diagram .accent, .diagram .accent2 { color: #000000; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<section class="cover">
+  <div>
+    <div class="cover-kicker">Crownicles / direction artistique</div>
+    <h1>Brief illustration<br>du jeu</h1>
+    <div class="cover-rule"></div>
+    <div class="cover-subtitle">Un catalogue de production pensé pour illustrer tous les écrans sans demander une scène unique par écran.</div>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-meta">Version 1.0 · 23 août 2026<br>Document de travail pour le graphiste</div>
+    <div class="cover-stamp">Objectif : zéro écran vide</div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">01 · décision de production</div>
+  <h2>Résumé exécutif</h2>
+  <p class="lead">Le jeu contient beaucoup plus de situations que d'écrans. La bonne stratégie consiste à produire une bibliothèque d'assets composables : fonds, personnages, monstres, accessoires, effets et états d'interface.</p>
+  <div class="metric-grid">
+    <div class="metric"><strong>76</strong><span>écrans cibles dans la maquette mobile</span></div>
+    <div class="metric"><strong>44</strong><span>mini-événements distincts</span></div>
+    <div class="metric"><strong>88</strong><span>grands événements narratifs</span></div>
+    <div class="metric"><strong>19</strong><span>monstres avec fiche propre</span></div>
+    <div class="metric"><strong>55</strong><span>familles de collecteurs interactifs</span></div>
+  </div>
+  <div class="callout gold"><strong>Choix recommandé :</strong> le profil <strong>Quantité / qualité</strong>, soit <strong>118 illustrations principales</strong>. Il couvre tous les écrans et donne une identité aux personnages récurrents sans dépasser une charge de production raisonnable.</div>
+  <div class="two-col">
+    <div class="panel">
+      <h3>Ce qui doit être unique</h3>
+      <ul>
+        <li>Les <strong>19 monstres</strong>, car ils sont au centre du combat et de l'identité des îles.</li>
+        <li>Les <strong>44 mini-événements</strong>, car chacun doit avoir son propre signal visuel.</li>
+        <li>Les personnages récurrents importants à partir du profil recommandé.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Ce qui doit être réutilisé</h3>
+      <ul>
+        <li>Les fonds de lieux par famille visuelle plutôt que par carte individuelle.</li>
+        <li>Les personnages détourés sur plusieurs fonds.</li>
+        <li>Les états de succès, d'échec, de chargement et d'erreur.</li>
+        <li>Les accessoires, effets et icônes d'objets.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small">Les chiffres de ce brief ont été recalculés depuis les ressources du dépôt et la maquette <code>App/mockups/mobile.html</code>. Les 76 écrans représentent la cible fonctionnelle de l'application ; l'implémentation mobile actuelle est encore partielle.</p>
+</section>
+
+<section class="page">
+  <div class="eyebrow">02 · périmètre</div>
+  <h2>Règle de couverture</h2>
+  <p>Un écran est considéré comme illustré dès qu'il possède un visuel principal identifiable. Ce visuel peut être une scène complète, un fond, un personnage détouré, une créature, une illustration d'état ou une illustration de catégorie.</p>
+  <div class="diagram"><span class="accent">ÉCRAN</span> = <span class="accent2">FOND</span> + PERSONNAGE / CRÉATURE + ACCESSOIRE / EFFET + ÉTAT UI<br><br><span class="accent">Exemple :</span> B05 Route marécageuse + P01 Gruffo + alambic + U14 récompense<br><span class="accent">Exemple :</span> B15 Île glacée + M11 Crocodile + aucun texte intégré à l'image</div>
+  <div class="callout teal"><strong>Important pour le graphiste :</strong> une illustration ne doit jamais contenir de texte, de chiffre, de bouton, d'émoji ou de libellé de langue. Le texte est rendu par l'application et doit rester traduisible.</div>
+  <h3>Les trois niveaux d'asset</h3>
+  <table>
+    <thead><tr><th>Niveau</th><th>Contenu</th><th>Usage</th><th>Règle de partage</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Scène</strong></td><td>Composition complète avec action narrative.</td><td>Mini-événement ou moment de campagne.</td><td>Réutilisée seulement quand l'action reste lisible.</td></tr>
+      <tr><td><strong>Fond</strong></td><td>Lieu sans personnage ni texte.</td><td>Grands événements, rapports, villes, menus.</td><td>Un fond couvre plusieurs cartes proches visuellement.</td></tr>
+      <tr><td><strong>Élément</strong></td><td>Personnage, monstre, animal, objet ou effet détouré.</td><td>Composition dynamique et collecteurs.</td><td>Positionnable sur plusieurs fonds et états.</td></tr>
+    </tbody>
+  </table>
+  <h3>Ce qui n'est pas compté comme illustration principale</h3>
+  <div class="two-col">
+    <div class="avoid"><strong>À ne pas produire dans ce budget :</strong><br>103 fiches plein écran pour les types de familiers, 90 illustrations d'objets ou de matériaux, une image par badge ou par ligue, une scène différente pour chaque joueur rencontré.</div>
+    <div class="do"><strong>Solution :</strong><br>les familiers, objets, matériaux, potions, badges et ligues utilisent les icônes déjà prévues par le jeu, complétées par U02, U03, U04 ou U09 quand un écran a besoin d'une illustration de contexte.</div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">03 · système visuel</div>
+  <h2>Spécifications de livraison</h2>
+  <div class="two-col">
+    <div class="panel">
+      <h3>Formats maîtres</h3>
+      <ul>
+        <li><strong>Scènes et fonds portrait :</strong> minimum 2048 × 2732 px, composition 3:4.</li>
+        <li><strong>Personnages et monstres :</strong> PNG transparent, hauteur utile minimum 1800 px.</li>
+        <li><strong>Icônes et petits éléments :</strong> PNG transparent, 1024 × 1024 px.</li>
+        <li><strong>Couleur :</strong> sRGB, sans profil exotique.</li>
+        <li><strong>Source :</strong> fichier calque PSD, KRA, CLIP ou équivalent.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Exports attendus</h3>
+      <ul>
+        <li>PNG transparent pour les personnages, monstres, accessoires et effets.</li>
+        <li>JPG ou WebP pour les fonds et scènes opaques.</li>
+        <li>Un export mobile optimisé et un export maître non compressé.</li>
+        <li>Une planche de prévisualisation avec l'identifiant de chaque asset.</li>
+        <li>Une fiche indiquant le crédit et la licence de chaque ressource externe.</li>
+      </ul>
+    </div>
+  </div>
+  <h3>Contraintes de composition</h3>
+  <ul class="checklist">
+    <li>Garder une zone de sécurité centrale : aucun visage, objet important ou élément narratif critique dans les 10 % extérieurs.</li>
+    <li>Prévoir un recadrage portrait mobile et une réduction en vignette carrée.</li>
+    <li>Ne pas placer d'élément important derrière une future zone de texte ou de boutons.</li>
+    <li>Prévoir une version lisible sur fond clair et sur fond sombre pour les personnages détourés.</li>
+    <li>Éviter les détails trop fins dans les fonds : l'illustration doit rester lisible à environ 320 px de large.</li>
+    <li>Ne pas dessiner les émojis du jeu dans les scènes : l'application les rend avec son propre système d'icônes.</li>
+  </ul>
+  <h3>Convention de nommage</h3>
+  <div class="diagram"><span class="accent">CROWNICLES_</span>&lt;famille&gt;_&lt;ID&gt;_&lt;nom-court&gt;_v01.ext<br><br>Exemples :<br><span class="accent2">CROWNICLES_MONSTER_M06_TITAN_MAGMA_v01.png</span><br><span class="accent2">CROWNICLES_BACKGROUND_B05_ROUTE_MARECAGEUSE_v01.jpg</span><br><span class="accent2">CROWNICLES_CHARACTER_P01_GRUFFO_v01.png</span><br><span class="accent2">CROWNICLES_SMALL_EVENT_S24_GOBELETS_v01.jpg</span></div>
+  <p class="small">Les identifiants du brief sont stables : ils doivent être repris dans les noms de fichiers, les planches et les échanges avec le développement.</p>
+</section>
+
+<section class="page">
+  <div class="eyebrow">04 · profils</div>
+  <h2>Les trois profils de production</h2>
+  <div class="three-col">
+    <div class="profile-card minimum"><div class="eyebrow">Profil 1</div><div class="count">90</div><div class="label">illustrations principales</div><h3>Grand minimum</h3><ul><li>19 monstres</li><li>44 mini-événements</li><li>16 fonds génériques</li><li>11 assets système</li></ul><p class="small">Tous les écrans ont un visuel, mais les lieux et services partagent beaucoup d'assets.</p></div>
+    <div class="profile-card recommended"><div class="eyebrow">Profil 2</div><div class="count">118</div><div class="label">illustrations principales</div><h3>Quantité / qualité</h3><ul><li>Tout le profil 1</li><li>8 fonds de lieux précis</li><li>14 PNJ récurrents</li><li>6 états UI dédiés</li></ul><p class="small">Le meilleur équilibre : les personnages deviennent reconnaissables et les écrans restent variés.</p></div>
+    <div class="profile-card ideal"><div class="eyebrow">Profil 3</div><div class="count">140</div><div class="label">illustrations principales</div><h3>Proposition idéale</h3><ul><li>Tout le profil 2</li><li>6 lieux spécialisés</li><li>10 rôles secondaires</li><li>6 scènes narratives fortes</li></ul><p class="small">Meilleur résultat narratif sous la limite de 150 assets principaux.</p></div>
+  </div>
+  <div class="callout"><strong>Recommendation :</strong> commander le profil 2 comme base contractuelle, mais demander les fichiers sources et les personnages détourés de façon à pouvoir atteindre le profil 3 sans refaire le travail.</div>
+  <table class="compact">
+    <thead><tr><th>Profil</th><th>Base</th><th>Ajouts</th><th>Total</th><th>Couverture</th></tr></thead>
+    <tbody>
+      <tr><td>Grand minimum</td><td>M01-M19, S01-S44, B01-B16, U01-U11</td><td>-</td><td><strong>90</strong></td><td>76 écrans + contenus + états transversaux, avec forte réutilisation.</td></tr>
+      <tr><td>Quantité / qualité</td><td>Profil 1</td><td>B17-B24, P01-P14, U12-U17</td><td><strong>118</strong></td><td>76 écrans, PNJ principaux, états d'échec et de réussite lisibles.</td></tr>
+      <tr><td>Idéal</td><td>Profil 2</td><td>B25-B30, P15-P24, E01-E06</td><td><strong>140</strong></td><td>76 écrans, lieux spécialisés et six scènes narratives majeures.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Si la carte existante et le logo existant sont conservés sans nouvelle illustration, le nombre de nouveaux fichiers à produire est respectivement de 88, 116 et 138.</p>
+</section>
+
+<section class="page">
+  <div class="eyebrow">05 · profil 1</div>
+  <h2>Catalogue commun : fonds B01-B16</h2>
+  <p class="section-note">Ces 16 fonds forment le socle du profil 1 et restent utilisés dans les deux profils supérieurs.</p>
+  <div id="background-base"></div>
+  <h3>Assets système U01-U11</h3>
+  <div id="system-base"></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">06 · profil 1</div>
+  <h2>Catalogue commun : mini-événements S01-S44</h2>
+  <p>Chaque mini-événement reçoit une illustration dédiée. Les variantes de texte, de récompense et de choix utilisent la même illustration, avec les effets et l'interface par-dessus.</p>
+  <div id="mini-events"></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">07 · profil 1</div>
+  <h2>Catalogue commun : monstres M01-M19</h2>
+  <p>Chaque monstre reçoit un asset dédié. Le livrable recommandé est un personnage détouré ou semi-détouré, accompagné d'une version composée dans son île pour les présentations de combat.</p>
+  <div id="monsters"></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">08 · profil 2</div>
+  <h2>Ajouts : fonds B17-B24</h2>
+  <p>Ces fonds rendent les lieux continentaux reconnaissables et évitent qu'un service ou un événement urbain donne l'impression de se dérouler partout au même endroit.</p>
+  <div id="background-profile2"></div>
+  <h2>Ajouts : personnages P01-P14</h2>
+  <p class="section-note">Un portrait détouré par personnage. Prévoir au minimum une pose de rencontre ; les scènes complètes restent séparées dans le profil 3.</p>
+  <div id="characters-profile2"></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">09 · profil 2</div>
+  <h2>Ajouts : états U12-U17</h2>
+  <div id="states-profile2"></div>
+  <div class="callout teal"><strong>Pourquoi ces six assets sont importants :</strong> les écrans interactifs ne sont pas toujours des réussites. Sans états dédiés, les refus, erreurs, expirations et prérequis manquants retombent sur le même écran neutre et donnent une impression de produit inachevé.</div>
+  <h3>Profil 2 : contrôle de couverture</h3>
+  <ul class="checklist">
+    <li>Les 36 écrans d'aventure ont un fond, une scène de mini-événement ou un asset système.</li>
+    <li>Les 14 écrans de profil utilisent U02, U09, U14, U15 ou U17.</li>
+    <li>Les 8 écrans de familier utilisent U03 et les fonds d'île pour les expéditions.</li>
+    <li>Les 11 écrans de guilde utilisent U04, U09, U12 et B30 lorsque disponible.</li>
+    <li>Les 7 écrans de combat utilisent U05, M01-M19 et U14/U15.</li>
+    <li>Les overlays de collecteur héritent du visuel du domaine courant et possèdent un fallback U10/U11.</li>
+  </ul>
+</section>
+
+<section class="page">
+  <div class="eyebrow">10 · profil 3</div>
+  <h2>Ajouts idéaux : lieux B25-B30</h2>
+  <div id="background-profile3"></div>
+  <h2>Ajouts idéaux : rôles P15-P24</h2>
+  <div id="characters-profile3"></div>
+  <h2>Ajouts idéaux : scènes E01-E06</h2>
+  <div id="hero-scenes"></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">11 · grands événements</div>
+  <h2>Mapping exact des 88 grands événements</h2>
+  <p>Un grand événement ne reçoit pas nécessairement une illustration complète. Il reçoit au minimum le fond de son lieu de déclenchement ; les personnages et accessoires peuvent être ajoutés selon le profil.</p>
+  <div id="big-event-map"></div>
+  <div class="callout gold"><strong>Règle de production :</strong> si un événement a plusieurs choix, l'image représente la situation initiale. Les conséquences restent dans le texte, les effets UI et les assets d'état U09-U17.</div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">12 · écrans</div>
+  <h2>Matrice écran par écran</h2>
+  <p>Le tableau ci-dessous vérifie que chaque écran de la maquette possède un asset principal dans le profil 1. Les colonnes suivantes montrent les enrichissements des profils 2 et 3.</p>
+  <div id="screen-matrix"></div>
+</section>
+
+<section class="page">
+  <div class="eyebrow">13 · collecteurs</div>
+  <h2>Couverture des interactions</h2>
+  <p>Les collecteurs sont des overlays : ils peuvent apparaître au-dessus de l'onglet courant. Ils ne nécessitent pas 55 illustrations supplémentaires, mais chaque famille doit être reliée à un groupe de visuels et à un fallback.</p>
+  <div id="collector-groups"></div>
+  <h3>Fallback obligatoire</h3>
+  <table>
+    <thead><tr><th>Situation</th><th>Asset utilisé</th><th>Résultat attendu</th></tr></thead>
+    <tbody>
+      <tr><td>Type de collecteur connu</td><td>Visuel de son domaine + fond courant</td><td>L'overlay paraît faire partie de la scène.</td></tr>
+      <tr><td>Choix de refus ou d'échec</td><td>U15 en profil 2, U10 en profil 1</td><td>Le résultat est visuellement distinct d'un écran vide.</td></tr>
+      <tr><td>Temps expiré</td><td>U16 en profil 2, U10 en profil 1</td><td>Le timeout a une identité visuelle claire.</td></tr>
+      <tr><td>Erreur, reconnexion ou asset distant indisponible</td><td>U11, livré localement</td><td>L'application reste illustrée même hors réseau.</td></tr>
+      <tr><td>Collecteur inconnu du client</td><td>U10 ou U11</td><td>Aucune interface blanche ou état silencieux.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page">
+  <div class="eyebrow">14 · personnages dynamiques</div>
+  <h2>Personnages à ne pas transformer en portraits fixes</h2>
+  <div class="two-col">
+    <div class="panel">
+      <h3>Marchands ambulants</h3>
+      <p>Utiliser P22 dans le profil 3 ou un rôle générique en profil 1. Les noms sont des données, pas des personnages graphiques différents.</p>
+      <p class="small">Terry, Marco, Didier, Bernard, Georges, Louis, Kilton, Kikolou, Araj, Lavio, Bugri, Faras, Finn, Russel, Ullure, Vivian, Belethor, Karine, Cremia, Fouyaya, Ember, Embry, Emirel, Fressah.</p>
+    </div>
+    <div class="panel">
+      <h3>Oracles à nom variable</h3>
+      <p>Utiliser P13 pour l'autel et P14 pour l'astronome. Le nom s'affiche dans le texte de l'application.</p>
+      <p class="small">Claude, Pierre Alphonse, Friedrich, Wilhelm, Nicolas, Clyde, Tycho, Giordano, Johannes, Jean-Dominique, Isaac, Edwin, Albert.</p>
+    </div>
+  </div>
+  <h3>Autres groupes dynamiques</h3>
+  <table class="compact">
+    <thead><tr><th>Groupe</th><th>Visuel</th><th>Décision</th></tr></thead>
+    <tbody>
+      <tr><td>Joueurs rencontrés</td><td>U02 ou scène S27</td><td>Pas de portrait par joueur ; le nom, la classe et le familier sont des données.</td></tr>
+      <tr><td>Membres du staff</td><td>S37 + silhouette de barde ou personnage U02</td><td>Pas de portrait par nom de staff.</td></tr>
+      <tr><td>Familiers</td><td>U03 + icône de l'espèce</td><td>Les 103 types de familiers restent représentés par le système d'icônes.</td></tr>
+      <tr><td>Items, matériaux et potions</td><td>U09 + icônes</td><td>Pas d'illustration plein écran par objet.</td></tr>
+      <tr><td>Rôles anonymes</td><td>P17-P24 dans le profil 3</td><td>Marchand, garde, aubergiste, artisan et soigneur réutilisables.</td></tr>
+    </tbody>
+  </table>
+  <h3>Roster de la rencontre staff</h3>
+  <p class="small">Ces noms sont des descriptions de joueurs/personnages de données. Ils utilisent tous le même visuel S37 : Aiko, Asemerald, BananePlantain, DeadAngelV6, Doctor, Draft, Eagle, GabrieLre, Greninja_san, Hitori, Ines, Izuku, KirIcare, Kyusaki, LePourfendeur, Max, Ntalcme, Nysvaa, Oscar, Pagotortoise, Pietagorh, QQtin, Ravenclaw, Royal, SuperBananeNinja, Thero1st, Voltou, aureochocob0n, nwcubeok, romain22222, symsym.</p>
+</section>
+
+<section class="page">
+  <div class="eyebrow">15 · direction artistique</div>
+  <h2>Principes visuels à transmettre</h2>
+  <div class="two-col">
+    <div class="do">
+      <h3>À rechercher</h3>
+      <ul>
+        <li>Des silhouettes lisibles immédiatement sur petit écran.</li>
+        <li>Des lieux avec une forme ou une couleur dominante identifiable.</li>
+        <li>Des personnages qui restent reconnaissables de face, de trois-quarts et en vignette.</li>
+        <li>Des accessoires narratifs forts : alambic, autel, charrette, chaudron, parchemin, gobelets.</li>
+        <li>Des espaces laissés volontairement calmes pour le texte de l'application.</li>
+        <li>Une différence nette entre continent, château, île volcanique, île glacée et île marine.</li>
+      </ul>
+    </div>
+    <div class="avoid">
+      <h3>À éviter</h3>
+      <ul>
+        <li>Une illustration générique de fantasy réutilisée sans accessoire distinctif.</li>
+        <li>Des fonds surchargés qui deviennent illisibles sous le texte.</li>
+        <li>Des personnages cadrés trop près pour être réutilisés.</li>
+        <li>Du texte intégré, même pour un nom de lieu ou une pancarte.</li>
+        <li>Un personnage différent pour chaque nom de joueur ou chaque nom de marchand.</li>
+        <li>Des poses qui ne permettent pas de comprendre l'action du mini-événement.</li>
+      </ul>
+    </div>
+  </div>
+  <h3>Palette de repères, pas une contrainte absolue</h3>
+  <table class="compact">
+    <thead><tr><th>Famille</th><th>Repère chromatique</th><th>Intention</th></tr></thead>
+    <tbody>
+      <tr><td>Continent et villes</td><td>Terre cuite, or, verts désaturés</td><td>Monde habité, aventure quotidienne.</td></tr>
+      <tr><td>Magie et bénédictions</td><td>Or lumineux, cyan, ivoire</td><td>Ancien, rare, surnaturel.</td></tr>
+      <tr><td>Île volcanique</td><td>Basaltes, cendre, rouge magma</td><td>Danger et chaleur.</td></tr>
+      <tr><td>Île glacée</td><td>Bleu froid, blanc, cristal</td><td>Isolement et majesté.</td></tr>
+      <tr><td>Île marine</td><td>Bleu profond, turquoise, noir abyssal</td><td>Profondeur et créatures primordiales.</td></tr>
+      <tr><td>États UI</td><td>Rouge perte, vert gain, bleu information, gris indisponible</td><td>Compréhension immédiate, sans dépendre du texte.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page">
+  <div class="eyebrow">16 · production</div>
+  <h2>Ordre de fabrication conseillé</h2>
+  <ol>
+    <li><strong>Test de direction :</strong> produire M06, M10, M16, B02, B15, P01 et S24. Ces assets testent monstre, lieu, personnage, scène et lecture mobile.</li>
+    <li><strong>Socle de couverture :</strong> produire les 16 fonds B01-B16, les 19 monstres M01-M19 et les 11 assets U01-U11.</li>
+    <li><strong>Mini-événements :</strong> produire S01-S44 en conservant une composition comparable et une zone de texte stable.</li>
+    <li><strong>Profil recommandé :</strong> produire B17-B24, P01-P14 et U12-U17.</li>
+    <li><strong>Polissage idéal :</strong> produire B25-B30, P15-P24 et E01-E06 si le budget le permet.</li>
+  </ol>
+  <h3>Critères d'acceptation</h3>
+  <ul class="checklist">
+    <li>Les 90 assets du profil 1 existent et sont exportés avec leur identifiant.</li>
+    <li>Chaque monstre peut être utilisé seul dans un écran de combat.</li>
+    <li>Chaque mini-événement possède une image associée sans texte intégré.</li>
+    <li>Les 88 grands événements ont un mapping vers B01-B13 ou un asset spécialisé.</li>
+    <li>Les 76 écrans de la matrice ont au moins un asset principal.</li>
+    <li>Les états de chargement, erreur, reconnexion, vide, succès, échec et expiration ont un fallback.</li>
+    <li>Les sources calques sont livrées avec les PNG/JPG/WebP.</li>
+    <li>Les licences et crédits des éléments externes sont documentés.</li>
+    <li>Les tests de recadrage sont validés sur un mobile étroit et un écran plus large.</li>
+  </ul>
+  <div class="callout gold"><strong>Décision à prendre :</strong> valider le profil 2 comme périmètre initial, puis conserver les personnages et fonds en couches séparées pour rendre les 22 assets du profil 3 ajoutables sans refaire le catalogue.</div>
+  <div class="footer-note">Sources de vérification : <code>App/mockups/mobile.html</code>, <code>Core/resources/monsters</code>, <code>Core/resources/smallEvents</code>, <code>Core/resources/events</code>, <code>Lib/src/packets/interaction</code>, <code>Lang/fr/models.json</code>, <code>Lang/fr/smallEvents.json</code>, <code>Lang/fr/events.json</code>. Document préparé le 23 août 2026.</div>
+</section>
+
+<script>
+const backgroundsBase = [
+  ["B01", "Carte du continent", "Carte principale avec position et liaisons", "Écran map, choix de destination et navigation générale"],
+  ["B02", "Route continentale", "Route polyvalente, suffisamment neutre pour les trajets", "Événements de route et événements globaux"],
+  ["B03", "Plaine, campagne et plage continentale", "Espace ouvert, champ, horizon et bord de mer", "Le Berceau, l'Étendue et Plage Sentinelle"],
+  ["B04", "Forêt continentale", "Sous-bois, arbres anciens, sentier couvert", "Forêt du Vieillard, Bois Hurlant et Forêt Célestrum"],
+  ["B05", "Route marécageuse", "Boue, eau stagnante, végétation dense", "Route Marécageuse"],
+  ["B06", "Eau, rivière, lac et littoral", "Rive, pont, eau calme ou courant", "Lacs, rivières, Rivière aux Crabes et scènes aquatiques"],
+  ["B07", "Désert et oasis", "Sable, chaleur, petite oasis, ciel vaste", "Vallée des Rois et La Dune"],
+  ["B08", "Montagne et chemin rocheux", "Pente, rochers, vent, relief", "Mont Célestrum et chemins escarpés"],
+  ["B09", "Ville ou village continental", "Rue habitée, façades, place, commerces", "Six villes, services, maison et menus urbains"],
+  ["B10", "Marché et échoppes", "Étal, charrette, foule et marchandises", "Route des Merveilles et événements de marché"],
+  ["B11", "Château royal", "Muraille, pierre claire, architecture de cour", "Portes du château, réception et cour royale"],
+  ["B12", "Maison hantée et brume", "Demeure délabrée, brouillard, fenêtres fissurées", "Maison hantée et événements surnaturels"],
+  ["B13", "Bateau et embarcadère", "Pont du navire, quai ou départ vers une île", "Embarquement et événements liés au bateau"],
+  ["B14", "Île volcanique", "Cendre, roche noire, lueurs de lave", "Île volcanique et monstres M01-M06"],
+  ["B15", "Île glacée", "Neige, glace, vent, cristal", "Île glacée et monstres M07-M13"],
+  ["B16", "Île maritime", "Lagons, cavernes marines, abysses", "Île maritime et monstres M14-M19"]
+];
+
+const systemBase = [
+  ["U01", "Identité et connexion", "Couronne, aventurier, accueil ou connexion", "Login, splash et première arrivée"],
+  ["U02", "Aventurier et fiche", "Personnage avec parchemin, carnet ou silhouette", "Profil, classes, inventaire, maison et écrans personnels"],
+  ["U03", "Familier et propriétaire", "Aventurier accompagné d'un animal", "Les huit écrans de familier et les états de compagnon"],
+  ["U04", "Salle de guilde", "Bannière, table, membres et emblème", "Les onze écrans de guilde"],
+  ["U05", "Arène et duel", "Deux silhouettes en opposition, espace lisible", "Les sept écrans de combat"],
+  ["U06", "Mort et réapparition", "Aventurier à terre, silhouette ou retour de lumière", "Mort, réapparition et fin de combat négative"],
+  ["U07", "Altération d'état", "Aventurier entouré d'un effet lisible", "Sommeil, froid, maladie, confusion, blessure et autres altérations"],
+  ["U08", "Comptoir de service", "Comptoir, outil ou artisan générique", "Notaire, boutiques, soins, forge et services"],
+  ["U09", "Récompense et butin", "Objet, coffre, nourriture, gemmes ou lumière de gain", "Succès, récompense, inventaire, bonus et loot"],
+  ["U10", "État neutre ou indisponible", "Illustration calme avec espace vide", "Absence de données, verrouillage, refus et collecteur inconnu"],
+  ["U11", "Chargement, erreur et reconnexion", "Signal visuel de continuité technique", "Asset update, erreur réseau, reconnexion et état d'attente"]
+];
+
+const miniEvents = [
+  ["S01", "advanceTime", "Course et avance", "Aventurier courant sur une route", "Route continentale"],
+  ["S02", "altar", "Autel des bénédictions", "Oracle voilé devant autel et runes", "Continent, sentier brumeux"],
+  ["S03", "badPet", "Familier difficile", "Familier agité avec propriétaire dépassé", "Continent"],
+  ["S04", "bigBad", "Mésaventure", "Aventurier surpris par un incident", "Continent"],
+  ["S05", "boatAdvice", "Conseil de l'équipage", "Membre d'équipage sur le pont", "Bateau"],
+  ["S06", "bonusGuildPVEIsland", "Bonus de guilde sur île", "Groupe de guilde dans un environnement hostile", "Île mystérieuse"],
+  ["S07", "botFacts", "Missive royale", "Messager avec lettre et sceau", "Route ou village"],
+  ["S08", "cart", "Charrette de transport", "Conducteur louche et charrette", "Route continentale"],
+  ["S09", "class", "Rencontre de classe", "Ancien aventurier avec équipement ou potion", "Route continentale"],
+  ["S10", "doNothing", "Route calme", "Paysage vide, calme et respirant", "Route continentale"],
+  ["S11", "dwarfPetFan", "Talvar et un familier", "Vieux nain observant un animal", "Mont Célestrum"],
+  ["S12", "epicItemShop", "Aldéric l'antiquaire", "Marchand et charrette d'antiquités", "Route continentale, Route des Merveilles"],
+  ["S13", "expeditionAdvice", "Velanna et le talisman", "Guerrière balafrée, talisman et familier", "Continent"],
+  ["S14", "farmer", "Mylène la fermière", "Fermière robuste dans un champ", "Plaines"],
+  ["S15", "fightPet", "Animal agressif", "Aventurier face à une bête", "Continent"],
+  ["S16", "findItem", "Objet trouvé", "Objet brillant au bord du chemin", "Route continentale"],
+  ["S17", "findMaterial", "Collecte de matériaux", "Aventurier récoltant une ressource", "Continent"],
+  ["S18", "findMaterialOnIsland", "Collecte sur île", "Ressource dans un décor insulaire", "Île mystérieuse"],
+  ["S19", "findMission", "Mission apportée", "Coursier, lettre ou tableau de missions", "Continent"],
+  ["S20", "findPet", "Familier découvert", "Animal seul dans la nature", "Continent"],
+  ["S21", "findPotion", "Fiole trouvée", "Fiole lumineuse sur le chemin", "Route continentale"],
+  ["S22", "gardener", "Théobald le jardinier", "Vieil homme, tablier, plants et arrosoir", "Routes touchant une forêt"],
+  ["S23", "goToPVEIsland", "Départ vers l'île", "Capitaine devant bateau ou embarcadère", "Continent / embarquement"],
+  ["S24", "gobletsGame", "Jeu des gobelets", "Escroc, table et quatre gobelets", "Continent"],
+  ["S25", "haunted", "Présence hantée", "Maison délabrée, brume et silhouette", "Lieux hantés"],
+  ["S26", "infoFight", "Sir Rowan", "Chevalier âgé donnant un conseil", "Continent"],
+  ["S27", "interactOtherPlayers", "Rencontre d'un joueur", "Deux aventuriers sur une route", "Continent"],
+  ["S28", "leagueReward", "Message de ligue", "Oiseau ou courrier de classement", "Continent"],
+  ["S29", "limoges", "Voyageur de Limoges", "Étranger encapuchonné racontant une cité", "Continent"],
+  ["S30", "lottery", "Loterie", "Organisateur devant une table de jeu", "Continent"],
+  ["S31", "pet", "Familier en promenade", "Familier dans les hautes herbes", "Continent"],
+  ["S32", "petDropToken", "Familier porteur de jeton", "Animal d'un autre joueur et objet brillant", "Continent"],
+  ["S33", "petFood", "Familier qui renifle", "Animal devant un taillis odorant", "Continent"],
+  ["S34", "shop", "Marchand ambulant", "Marchand nommé et charrette", "Route continentale"],
+  ["S35", "smallBad", "Incident mineur", "Aventurier en difficulté", "Route continentale"],
+  ["S36", "space", "Oracle astronome", "Oracle avec lunette et ciel étoilé", "Continent"],
+  ["S37", "staffMember", "Histoire d'un héros", "Barde, affiche ou conteur", "Continent"],
+  ["S38", "ultimateFoodMerchant", "Gaspard-Jo", "Marchand de soupe et roulotte", "Route continentale"],
+  ["S39", "winEnergy", "Hilda la guérisseuse", "Jeune guérisseuse avec remède", "Continent"],
+  ["S40", "winEnergyOnIsland", "Repos sur île", "Aventurier assis dans un décor insulaire", "Île mystérieuse"],
+  ["S41", "winGuildXP", "Renommée de guilde", "Groupe d'aventuriers reconnaissant une guilde", "Continent"],
+  ["S42", "winHealth", "Fruits et provisions", "Aventurier près d'un arbre fruitier", "Continent"],
+  ["S43", "winPersonalXP", "Victoire contre une bête", "Aventurier après une rencontre animale", "Continent"],
+  ["S44", "witch", "Sorcière et chaudron", "Vieille sorcière devant une potion", "Continent / maison hantée"]
+];
+
+const monsters = [
+  ["M01", "Troll de la forêt", "Forêt de la pénombre", "Grand, massif, peau rugueuse couverte de suie, yeux rougeoyants, menace primitive."],
+  ["M02", "Mutant Vaseux", "Forêt de la pénombre", "Masse verte gélatineuse qui copie le joueur, ses vêtements et ses armes."],
+  ["M03", "Squelette", "Village en ruines", "Ancien guerrier armé, silhouette faible en apparence mais dangereuse et prête à surprendre."],
+  ["M04", "Araignée", "Mine brumeuse", "Araignée gigantesque, poilue, venimeuse, entourée de toiles et de petites araignées."],
+  ["M05", "Golem de pierre", "Chemin escarpé", "Colosse rocheux très lent, visage minéral, masse imposante et attaques dévastatrices."],
+  ["M06", "Titan de magma", "Volcan grondant", "Colosse formé de lave, de magma et de roche, silhouette brûlante et puissance ultime."],
+  ["M07", "Loup blanc", "Toundra", "Prédateur arctique majestueux, fourrure immaculée, yeux bleus et crocs acérés."],
+  ["M08", "Élémentaire brillant", "Caverne de cristal", "Humanoïde de cristaux, lumière décomposée en arc-en-ciel, pouvoirs élémentaires."],
+  ["M09", "Gardien céleste", "Portes sacrées", "Statue gigantesque animée, marteau divin, inscriptions anciennes et posture de gardien."],
+  ["M10", "Seigneur des glaces", "Pic enneigé", "Dragon de glace colossal, écailles cristallines, souffle glacé, regard millénaire."],
+  ["M11", "Crocodile", "Lac souterrain", "Crocodile géant adapté au froid, peau épaisse, crocs préhistoriques et yeux jaunes."],
+  ["M12", "Yuki-Onna", "Village dévasté", "Esprit féminin en kimono blanc, cheveux noirs, peau spectrale et beauté inquiétante."],
+  ["M13", "Reine des glaces", "Nid glacé", "Dragonne protectrice, écailles irisées, œuf gigantesque, fureur maternelle."],
+  ["M14", "Tortue Géante", "Creux du Lagon", "Tortue millénaire de taille navire, carapace de corne et de lichen, jets d'eau."],
+  ["M15", "Esprit des mers", "Caverne Maritime", "Entité translucide de brume et d'eau, apparition instantanée et souffle glacial."],
+  ["M16", "Capitaine Crow", "Crique du Revenant", "Spectre de pirate, yeux comme des braises, sabre maudit et rire sinistre."],
+  ["M17", "Sirène", "Cave des murmures", "Créature mi-femme mi-poisson, chant hypnotique, griffes et séduction glaciale."],
+  ["M18", "Kraken", "Gouffre des Profondeurs", "Tentacules massifs, encre noire, ventouses puissantes et maelström abyssal."],
+  ["M19", "Léviathan", "Ravin des Abysses", "Bête primordiale, crocs, foudre céleste, déluges et maelström dévastateur."]
+];
+
+const backgrounds2 = [
+  ["B17", "Forêt du Vieillard", "Sous-bois ancien, plus dense et plus sombre que le fond forestier générique.", "Événements forestiers et présence de Xetrix."],
+  ["B18", "Bois Hurlant", "Forêt mal famée, traces de bandits, chemin creux et abri clandestin.", "Événements de brigands et de danger social."],
+  ["B19", "Forêt Célestrum", "Forêt au pied de la montagne, lumière froide et relief visible.", "Talvar, Théobald et événements de la zone de Célestrum."],
+  ["B20", "Claire de Ville", "Grande ville marchande, rue pavée, commerces et circulation.", "Services urbains, Bourse et événements de ville."],
+  ["B21", "Mergagnan", "Ville paisible au bord de la plage, façades claires et air maritime.", "Tanneur, vétérinaire et événements de Mergagnan."],
+  ["B22", "Ville Forte", "Ancienne cité fortifiée, murailles et maisons rescapées.", "Marchand de matériaux, ferrailleur et événements de Ville Forte."],
+  ["B23", "Boug-Coton", "Village rural et auberge chaleureuse.", "Auberge et événements de Boug-Coton."],
+  ["B24", "Village Coco", "Village oasis, palmiers, source et chaleur du désert.", "Herboriste, bûcheron, Xirtex et événements du Village Coco."]
+];
+
+const characters2 = [
+  ["P01", "Gruffo", "Alchimiste, tente, alambic, potions expérimentales ; silhouette rabougrie, énergie de charlatan mais savoir réel.", "Plage Sentinelle et Route Marécageuse", "Grands événements 56 et 58 ; scène E01 en profil 3."],
+  ["P02", "Xetrix", "Ermite forestier, cueilleur, propriétaire d'une maison isolée ; peut conseiller, tromper ou accueillir.", "Forêt Célestrum / décor forestier", "Grand événement 40."],
+  ["P03", "Xirtex", "Vieil ermite barbu, capuche large, tente près d'une oasis ; généreux, louche ou violent.", "Vallée des Rois", "Grand événement 71."],
+  ["P04", "Velanna", "Guerrière balafrée en armure de cuir usée, dague, experte des expéditions et du talisman.", "Routes du continent", "Mini-événement S13."],
+  ["P05", "Talvar", "Vieux nain aux cheveux argentés et à la longue barbe ; protecteur, soigneur et connaisseur des animaux.", "Routes touchant le Mont Célestrum", "Mini-événement S11."],
+  ["P06", "Sir Rowan", "Chevalier vieillissant, ancien capitaine de la garde royale, maître d'armes et pédagogue tactique.", "Routes du continent", "Mini-événement S26."],
+  ["P07", "Mylène", "Fermière robuste, mains terreuses, chapeau de paille, champs et paniers de récolte.", "Routes touchant des plaines", "Mini-événement S14."],
+  ["P08", "Théobald", "Jardinier itinérant âgé, tablier terreux, arrosoir, plants et savoir botanique.", "Routes touchant des forêts", "Mini-événement S22."],
+  ["P09", "Aldéric l'antiquaire", "Homme d'âge mûr, tenue vintage, charrette d'antiquités, marchand chaleureux et conteur d'objets.", "Routes du continent et Route des Merveilles", "Mini-événement S12."],
+  ["P10", "Gaspard-Jo", "Marchand de soupe généreux, roulotte avec cheminée, distribue nourriture et recettes.", "Routes du continent", "Mini-événement S38."],
+  ["P11", "Gorim le Brise-Fer", "Responsable du ferrailleur, démonte les équipements de réserve pour récupérer des matériaux.", "Ville Forte", "Écran scrapDealer."],
+  ["P12", "La sorcière", "Vieille femme frêle, voûtée, peau grise, vêtements en lambeaux, maladroite, chaudron et potions.", "Continent, lieux hantés et château", "Mini-événement S44 et grand événement 83."],
+  ["P13", "Oracle de l'autel", "Oracle voilé devant des runes ; veille sur la cagnotte et les bénédictions.", "Continent", "Mini-événement S02 et écran blessing."],
+  ["P14", "Oracle astronome", "Homme mystérieux qui observe le ciel, utilise une lunette et lit les étoiles.", "Continent", "Mini-événement S36."]
+];
+
+const states2 = [
+  ["U12", "Vide et absence de données", "Coffre vide, refuge vide, liste sans résultat, réponse sans contenu."],
+  ["U13", "Sans familier ou sans guilde", "Aventurier seul, silhouette légère, espace ouvert et non punitif."],
+  ["U14", "Succès et récompense", "Lumière de gain, coffre ouvert, objet ou ressource mise en valeur."],
+  ["U15", "Échec et perte", "Objet cassé, lumière éteinte, posture déçue ou conséquence visuelle."],
+  ["U16", "Choix expiré", "Sablier, braise qui s'éteint, porte qui se referme ou scène figée."],
+  ["U17", "Verrouillage et prérequis", "Porte, sceau ou équipement inaccessible avec signal clair de niveau requis."]
+];
+
+const backgrounds3 = [
+  ["B25", "Cour du Château", "Esplanade pavée entre Boug-Coton et les portes royales.", "Cour, garde, archiviste et accès aux appartements du roi."],
+  ["B26", "Salle de réception royale", "Grande salle d'apparat, œuvres d'art, carrosse et lumière de cour.", "Princesse, réception, nobles et événements de prestige."],
+  ["B27", "Salle de justice", "Estrade du bailli, accusée, gardes et tension judiciaire.", "Sorcière jugée et événements de justice."],
+  ["B28", "Auberge et taverne", "Comptoir, feu, tables, chambres et atmosphère de voyageurs.", "Repas, repos, Xirtex ou personnages de taverne."],
+  ["B29", "Forge et atelier", "Brasier, enclume, outils, établis et effets d'enchantement.", "Forgeron, forgeron royal, enchanteur et amélioration."],
+  ["B30", "Domaine de guilde", "Salle commune fortifiée, bannière, réserve et refuge animal.", "Guilde, boutique du domaine, refuge, entrepôt et ménagerie."]
+];
+
+const characters3 = [
+  ["P15", "Le roi", "Souverain, carrosse ou cheval blanc, entouré de la garde et lié aux lettres et récompenses royales.", "Château, cour, routes royales", "Grands événements 82, 83 et 89; marché royal."],
+  ["P16", "La princesse", "Héritière au centre de la compétition ; généralement aperçue dans un carrosse protégé.", "Château et cortèges royaux", "Grand événement 89 et textes de voyage."],
+  ["P17", "Garde royal / chevalier", "Soldat discipliné, protection de la famille royale, escorte et arrestation.", "Château, cour et routes royales", "Événements 82, 83, 89 et rôles de garde."],
+  ["P18", "Bailli", "Officier de justice du seigneur, posture d'autorité et salle d'audience.", "Salle de justice", "Grand événement 83."],
+  ["P19", "Bandit / assassin", "Silhouette masquée, arme courte ou arc, posture de menace et fuite.", "Bois Hurlant, routes, château", "Événements de danger et d'intrusion."],
+  ["P20", "Capitaine / marin", "Vêtement de marin, emblème royal possible, pont et longue-vue.", "Bateau et embarcadère", "S05, S23 et événements de bateau."],
+  ["P21", "Aubergiste", "Personne derrière un comptoir, repas, clé, tonneaux et chaleur de taverne.", "Auberges du continent", "Écrans inn et événements d'hospitalité."],
+  ["P22", "Marchand générique", "Charrette ou étal, vêtements de voyage, caisses et balance.", "Routes, marchés et villes", "Boutiques, services et événements de commerce."],
+  ["P23", "Artisan / forgeron", "Tablier, outils, métal, établi et geste professionnel.", "Villes, forge et atelier", "Forgeron, tanneur, bûcheron et améliorations."],
+  ["P24", "Vétérinaire / soigneur", "Sacoche, instrument de soin, posture rassurante et présence animale.", "Mergagnan, Claire de Ville et routes", "Vétérinaire, Hilda et soins."]
+];
+
+const heroScenes = [
+  ["E01", "Gruffo dans sa tente", "Gruffo, alambic, potions colorées, toile ouverte sur la Plage Sentinelle et lumière de fin de journée.", "Grand événement 56."],
+  ["E02", "Xetrix dans sa forêt", "Ermite cueilleur devant sa maison, panier de ressources, forêt sombre et chemin qui se perd.", "Grand événement 40."],
+  ["E03", "Xirtex à l'oasis", "Vieil homme encapuchonné près d'une oasis, tente, feu et horizon désertique.", "Grand événement 71."],
+  ["E04", "La maison hantée", "Demeure délabrée prise dans la brume, fenêtres fissurées et présence indistincte.", "Grand événement 81."],
+  ["E05", "La sorcière devant le bailli", "Sorcière reconnaissable, salle de justice, bailli, gardes et tension de procès.", "Grand événement 83."],
+  ["E06", "Le cortège royal", "Roi, princesse dans son carrosse, garde royale et foule sur les pavés de la cour.", "Grand événement 89."]
+];
+
+const bigEventMap = [
+  ["B01", "Carte du continent", "Écran map; point de repère général", "Aucun grand événement exclusif"],
+  ["B02", "Route continentale", "2, 5, 17, 19, 25, 30, 31, 33, 38, 42, 43, 55, 85 + globaux 64, 65, 74, 80"],
+  ["B03", "Plaine, campagne et plage", "9, 14, 22, 49, 56, 62, 75"],
+  ["B04", "Forêt continentale", "1, 6, 11, 23, 32, 40, 69, 76, 77"],
+  ["B05", "Route marécageuse", "28, 58"],
+  ["B06", "Eau, rivière, lac et littoral", "10, 12, 16, 44, 53, 57, 84, 86"],
+  ["B07", "Désert et oasis", "29, 48, 70, 71, 88"],
+  ["B08", "Montagne et chemin rocheux", "8, 21, 37, 51, 78, 79, 87"],
+  ["B09", "Ville ou village continental", "7, 13, 15, 18, 20, 24, 26, 27, 34, 35, 36, 39, 41, 45, 46, 47, 50, 52, 54, 63, 68, 72"],
+  ["B10", "Marché et échoppes", "3, 4, 73"],
+  ["B11", "Château royal", "60, 61, 82, 83, 89"],
+  ["B12", "Maison hantée et brume", "81"],
+  ["B13", "Bateau et embarquement", "66, 67"],
+  ["B14-B16", "Îles mystérieuses", "Pas de grand événement local : utilisés pour les écrans d'île et les combats M01-M19"]
+];
+
+const screenMatrix = [
+  ["adventure", "Aventure", "B02/B09/B14-B16 selon le rapport", "B17-B24 + P01-P14 selon le lieu", "B25-B30 + P15-P24 selon le lieu"],
+  ["travel", "Voyage en cours", "B02", "B02 + fond de zone B17-B24", "B02 + personnage de route si besoin"],
+  ["destinations", "Choix de destination", "B01", "B01", "B01"],
+  ["map", "Carte", "B01", "B01", "B01"],
+  ["smallEvent", "Mini-événement", "S01-S44", "S01-S44", "S01-S44"],
+  ["bigEvent", "Grand événement", "B02-B13", "B02-B13 + P01-P14", "B02-B13 + P15-P24 ou E01-E06"],
+  ["alteration", "Altérations", "U07", "U07 + U15/U17", "U07 + U15/U17"],
+  ["island", "Île mystérieuse", "B14/B15/B16", "B14/B15/B16", "B14/B15/B16"],
+  ["respawn", "Réapparition", "U06", "U06 + U14", "U06 + U14"],
+  ["buyHeal", "Soin d'altération", "U08", "U08 + U15", "U08 + P24 + U15"],
+  ["tokenMerchant", "Marchand de jetons", "U08", "U08 + U14/U15", "U08 + P22"],
+  ["pveFight", "Combat de monstre", "B14-B16 + M01-M19", "B14-B16 + M01-M19", "B14-B16 + M01-M19"],
+  ["city", "Ville", "B09", "B17-B24", "B17-B24 + B25-B30 selon service"],
+  ["notary", "Notaire", "B09 + U08", "B17-B24", "B29 + P23"],
+  ["blacksmith", "Forgeron", "B09 + U08", "B22/B23", "B29 + P23"],
+  ["royalBlacksmith", "Forgeron royal", "B11 + U08", "B11", "B29 + P23"],
+  ["scrapDealer", "Ferrailleur", "B09 + U08", "B22 + P11", "B22 + P11"],
+  ["enchanter", "Enchanteur", "B09 + U08", "B17-B24", "B29 + P23"],
+  ["inn", "Auberge", "B09 + U08", "B23/B24", "B28 + P21"],
+  ["bossArchivist", "Archiviste des îles", "B11 + U08", "B11", "B25 + P22"],
+  ["guildFoodShop", "Ravitaillement", "B09 + U08", "B09", "B30 + P22"],
+  ["shop", "Boutique générale", "B10 + U08", "B10", "B10 + P22"],
+  ["materialMerchant", "Marchand de matériaux", "B09 + U08", "B22", "B22 + P22"],
+  ["tanner", "Tanneur", "B09 + U08", "B21", "B29 + P23"],
+  ["herbalist", "Herboriste", "B09 + U08", "B24", "B24 + P23"],
+  ["lumberjack", "Bûcheron", "B09 + U08", "B24", "B24 + P23"],
+  ["veterinarian", "Vétérinaire", "B09 + U08", "B20/B21", "B20/B21 + P24"],
+  ["stockExchange", "Bourse", "B09 + U08", "B20", "B20 + P22"],
+  ["royalMarket", "Marché royal", "B11 + U08", "B11", "B25 + P15/P22"],
+  ["home", "Maison", "B09 + U02", "B09 + U12 si vide", "B09 + U02"],
+  ["homeBed", "Lit", "U02", "U02 + U14/U15", "U02 + U14/U15"],
+  ["homeChest", "Coffre", "U02 + U10", "U02 + U12", "U02 + U12"],
+  ["homeGarden", "Jardin", "U02", "U02 + B17-B19", "U02 + B17-B19"],
+  ["homeCooking", "Cuisine", "U02 + U09", "U02 + U14/U15", "U02 + U14/U15"],
+  ["homeUpgrade", "Station d'amélioration", "U02 + U08", "U02", "B29 + P23"],
+  ["apartment", "Logis", "B09 + U08", "B17-B24", "B17-B24"],
+  ["profile", "Profil", "U02", "U02 + U14/U15", "U02 + U14/U15"],
+  ["inventory", "Inventaire", "U02 + U09", "U02 + U12", "U02 + U12"],
+  ["equip", "Équiper", "U02 + U09", "U02 + U14/U15", "U02 + B29/P23 si besoin"],
+  ["sell", "Vendre", "U09", "U09 + U15", "U09 + P22"],
+  ["drink", "Boire une potion", "U09", "U09 + U14/U15", "U09 + U14/U15"],
+  ["dailyBonus", "Bonus journalier", "U09", "U09 + U14", "U09 + U14"],
+  ["classes", "Classes", "U02", "U02", "U02"],
+  ["classesInfo", "Infos classes", "U02", "U02", "U02"],
+  ["badges", "Badges", "U02 + U09", "U09 + U14", "U09 + U14"],
+  ["missions", "Missions", "U02 + U09", "U09 + P13 si bénédiction", "U09 + B25 si campagne royale"],
+  ["blessing", "Bénédictions", "U02", "P13", "P13 + B25"],
+  ["rarity", "Raretés", "U09", "U09", "U09"],
+  ["notifications", "Notifications", "U10", "U11 + U12", "U11 + U12"],
+  ["utilities", "Services utilitaires", "U10", "U11 + U12", "U11 + U12"],
+  ["pet", "Familier", "U03", "U03", "U03"],
+  ["petExpedition", "Expéditions", "U03", "U03 + B14-B16", "U03 + B14-B16"],
+  ["petFeed", "Nourrir", "U03 + U09", "U03 + U14/U15", "U03 + U14/U15"],
+  ["petNick", "Renommer", "U03", "U03", "U03"],
+  ["petSell", "Vendre le familier", "U03 + U09", "U03 + U15", "U03 + P22"],
+  ["petTransfer", "Transférer", "U03 + U10", "U03 + U12", "U03 + U12"],
+  ["petFree", "Libérer", "U03 + U10", "U03 + U15", "U03 + U15"],
+  ["petPowers", "Pouvoirs des familiers", "U03", "U03", "U03"],
+  ["guild", "Guilde", "U04", "U04 + B30", "B30"],
+  ["guildManage", "Gestion de guilde", "U04", "U04", "B30"],
+  ["guildCreate", "Créer une guilde", "U04 + U10", "U04 + U17", "B30 + U17"],
+  ["guildDaily", "Bonus de guilde", "U04 + U09", "U04 + U14/U15", "B30 + U14/U15"],
+  ["guildShelter", "Refuge", "U04 + U03", "U04 + U12", "B30 + U03"],
+  ["guildStorage", "Entrepôt", "U04 + U09", "U04 + U12", "B30 + U09"],
+  ["guildDomain", "Domaine de guilde", "U04", "B30", "B30"],
+  ["guildDomainShop", "Boutique du domaine", "U04 + U09", "B30", "B30 + P22"],
+  ["guildDomainShelter", "Refuge du domaine", "U04 + U03", "B30", "B30 + U03"],
+  ["guildDomainPantry", "Entrepôt du domaine", "U04 + U09", "B30", "B30 + U09"],
+  ["guildDomainTraining", "Ménagerie", "U04 + U03", "B30", "B30 + U03"],
+  ["fight", "Arène", "U05", "U05", "U05"],
+  ["fightConfirm", "Recherche de combat", "U05", "U05", "U05"],
+  ["fightBattle", "Combat en cours", "U05 + M01-M19 en PvE", "U05 + M01-M19", "U05 + M01-M19"],
+  ["fightResult", "Résultat du combat", "U05 + U09/U10", "U05 + U14/U15", "U05 + U14/U15"],
+  ["fightHistory", "Historique", "U05", "U05", "U05"],
+  ["league", "Ligue", "U05 + U09", "U05 + U14", "U05 + U14"],
+  ["top", "Classements", "U05 + U02", "U05 + U02", "U05 + U02"]
+];
+
+const collectorGroups = [
+  ["Rapport, choix et narration", "B02-B13, S01-S44, P01-P14", "ReactionCollectorAltar, ReactionCollectorBigEvent, ReactionCollectorCart, ReactionCollectorChooseDestination, ReactionCollectorGoToPVEIsland, ReactionCollectorGobletsGame, ReactionCollectorLimoges, ReactionCollectorLottery, ReactionCollectorPacket, ReactionCollectorResetTimer, ReactionCollectorStopPacket, ReactionCollectorWitch"],
+  ["Commerce et services", "U08, U09, P11, P22, P23, P24", "ReactionCollectorAnyShopSmallEvent, ReactionCollectorBuyCategorySlot, ReactionCollectorBuyHeal, ReactionCollectorCity, ReactionCollectorDailyBonus, ReactionCollectorDrink, ReactionCollectorEpicShopSmallEvent, ReactionCollectorEquip, ReactionCollectorItemAccept, ReactionCollectorItemChoice, ReactionCollectorRecipeShopSmallEvent, ReactionCollectorSell, ReactionCollectorShop, ReactionCollectorShopSmallEvent, ReactionCollectorSkipMissionShopItem, ReactionCollectorTokenMerchant, ReactionCollectorUnlock, ReactionCollectorUseTokens"],
+  ["Combat", "U05, M01-M19, S15", "ReactionCollectorFight, ReactionCollectorFightChooseAction, ReactionCollectorFightPet, ReactionCollectorInteractOtherPlayers, ReactionCollectorPveFight"],
+  ["Familiers et nature", "U03, S03, S11, S14, S22, S31-S33", "ReactionCollectorBadPetSmallEvent, ReactionCollectorGardener, ReactionCollectorPetExpedition, ReactionCollectorPetExpeditionChoice, ReactionCollectorPetExpeditionFinished, ReactionCollectorPetFeedWithGuild, ReactionCollectorPetFeedWithoutGuild, ReactionCollectorPetFoodSmallEvent, ReactionCollectorPetFree, ReactionCollectorPetSell, ReactionCollectorPetTransfer"],
+  ["Profil et progression", "U02, U09, U14, U17", "ReactionCollectorChangeClass"],
+  ["Guilde", "U04, U03, B30", "ReactionCollectorGuildCreate, ReactionCollectorGuildDescription, ReactionCollectorGuildElder, ReactionCollectorGuildElderRemove, ReactionCollectorGuildInvite, ReactionCollectorGuildKick, ReactionCollectorGuildLeave"],
+  ["Navigation maritime", "B13, U11", "ReactionCollectorJoinBoat"],
+  ["Base technique", "U10-U11", "ReactionCollectorStopPacket, ReactionCollectorPacket" ]
+];
+
+function esc(value) {
+  return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
+}
+function id(value) { return '<span class="asset-id">' + esc(value) + '</span>'; }
+function makeTable(headers, rows, className = "") {
+  return '<table class="' + className + '"><thead><tr>' + headers.map(h => '<th>' + esc(h) + '</th>').join('') + '</tr></thead><tbody>' + rows.map(row => '<tr>' + row.map(cell => '<td>' + cell + '</td>').join('') + '</tr>').join('') + '</tbody></table>';
+}
+function render() {
+  document.getElementById('background-base').innerHTML = makeTable(['ID', 'Asset', 'Direction', 'Écrans / usages'], backgroundsBase.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]));
+  document.getElementById('system-base').innerHTML = makeTable(['ID', 'Asset', 'Direction', 'Écrans / usages'], systemBase.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]));
+  document.getElementById('mini-events').innerHTML = makeTable(['ID', 'Code', 'Mini-événement', 'Illustration à produire', 'Décor recommandé'], miniEvents.map(x => [id(x[0]), '<code>' + esc(x[1]) + '</code>', '<strong>' + esc(x[2]) + '</strong>', esc(x[3]), esc(x[4])]), 'mini-table');
+  document.getElementById('monsters').innerHTML = makeTable(['ID', 'Monstre', 'Carte de rencontre', 'Direction artistique'], monsters.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]), 'monster-table');
+  document.getElementById('background-profile2').innerHTML = makeTable(['ID', 'Lieu', 'Direction', 'Usage'], backgrounds2.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]));
+  document.getElementById('characters-profile2').innerHTML = makeTable(['ID', 'Personnage', 'Caractéristiques à dessiner', 'Lieu de rencontre', 'Usage'], characters2.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3]), esc(x[4])]), 'character-table');
+  document.getElementById('states-profile2').innerHTML = makeTable(['ID', 'État', 'Brief visuel'], states2.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2])]));
+  document.getElementById('background-profile3').innerHTML = makeTable(['ID', 'Lieu spécialisé', 'Direction', 'Usage'], backgrounds3.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]));
+  document.getElementById('characters-profile3').innerHTML = makeTable(['ID', 'Rôle', 'Caractéristiques à dessiner', 'Lieu', 'Usage'], characters3.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3]), esc(x[4])]), 'character-table');
+  document.getElementById('hero-scenes').innerHTML = makeTable(['ID', 'Scène', 'Composition', 'Usage'], heroScenes.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3])]));
+  document.getElementById('big-event-map').innerHTML = makeTable(['Fond', 'Famille visuelle', 'Grands événements couverts'], bigEventMap.map(x => [id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2])]), 'compact');
+  const screenSections = [
+    { title: "Aventure", count: 36 },
+    { title: "Profil", count: 14 },
+    { title: "Familier", count: 8 },
+    { title: "Guilde", count: 11 },
+    { title: "Combat", count: 7 }
+  ];
+  let lastSection = '';
+  let sectionEnd = 0;
+  let sectionIndex = 0;
+  const screenRows = [];
+  for (const [screenIndex, x] of screenMatrix.entries()) {
+    if (screenIndex >= sectionEnd) {
+      sectionEnd += screenSections[sectionIndex].count;
+      sectionIndex++;
+    }
+    const section = screenSections[sectionIndex - 1].title;
+    if (section !== lastSection) {
+      screenRows.push(['<strong>—</strong>', '<strong>' + esc(section) + '</strong>', '', '', '']);
+      lastSection = section;
+    }
+    screenRows.push([id(x[0]), '<strong>' + esc(x[1]) + '</strong>', esc(x[2]), esc(x[3]), esc(x[4])]);
+  }
+  document.getElementById('screen-matrix').innerHTML = makeTable(['Écran', 'Fonction', 'Profil 1 : garantie', 'Profil 2 : enrichissement', 'Profil 3 : enrichissement'], screenRows, 'screen-table');
+  document.getElementById('collector-groups').innerHTML = makeTable(['Famille', 'Visuel de contexte', 'Collecteurs couverts'], collectorGroups.map(x => ['<strong>' + esc(x[0]) + '</strong>', esc(x[1]), '<span class="small">' + esc(x[2]) + '</span>']));
+}
+render();
+</script>
+</body>
+</html>

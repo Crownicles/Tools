@@ -3,6 +3,11 @@ Ce repo présente différents outils pour travailler sur Crownicles
 
 > 💡 **Accédez à la page d'accueil interactive (FR)** : [https://crownicles.github.io/Tools/](https://crownicles.github.io/Tools/)
 
+## Documents
+
+- [Brief d'illustration de Crownicles (HTML)](https://crownicles.github.io/Tools/documents/brief-illustrations-crownicles.html) - Catalogue des écrans, personnages, monstres et budgets d'illustration
+- [Brief d'illustration de Crownicles (PDF)](https://crownicles.github.io/Tools/documents/brief-illustrations-crownicles.pdf) - Version PDF téléchargeable pour le graphiste
+
 ## Générateurs
 
 - [Missions](https://crownicles.github.io/Tools/generators/missions.html) - Permet de générer les JSONs pour les missions

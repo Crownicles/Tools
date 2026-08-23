@@ -20,11 +20,48 @@
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="Rechercher outils, tags ou descriptions...">
             </div>
+
+            <nav class="section-nav" aria-label="Navigation de la page">
+                <a href="#documents">Documents</a>
+                <a href="#tools">Outils</a>
+            </nav>
         </div>
     </header>
 
-    <main class="container" id="tools-container">
-        <!-- Tools will be injected here by JavaScript -->
+    <main class="container">
+        <section class="site-section documents-section" id="documents" aria-labelledby="documents-title">
+            <div class="section-heading">
+                <div>
+                    <h2 class="section-title" id="documents-title">Documents</h2>
+                    <p class="section-description">Briefs et documents de référence pour travailler sur Crownicles.</p>
+                </div>
+            </div>
+
+            <article class="document-card">
+                <div class="document-icon" aria-hidden="true">🎨</div>
+                <div class="document-content">
+                    <span class="document-kicker">Brief de production</span>
+                    <h3>Illustrations de Crownicles</h3>
+                    <p>Catalogue des écrans, personnages, monstres, événements et trois budgets d'illustration pour l'application.</p>
+                    <div class="document-links">
+                        <a class="document-link document-link-primary" href="documents/brief-illustrations-crownicles.html">Lire en HTML <span aria-hidden="true">→</span></a>
+                        <a class="document-link" href="documents/brief-illustrations-crownicles.pdf" download>Télécharger le PDF <span aria-hidden="true">↓</span></a>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section class="site-section tools-section" id="tools" aria-labelledby="tools-title">
+            <div class="section-heading">
+                <div>
+                    <h2 class="section-title" id="tools-title">Outils</h2>
+                    <p class="section-description">Générateurs, simulateurs et outils d'analyse pour l'univers de Crownicles.</p>
+                </div>
+            </div>
+            <div id="tools-container">
+                <!-- Tools will be injected here by JavaScript -->
+            </div>
+        </section>
     </main>
 
     <script src="assets/js/tools-config.js"></script>
