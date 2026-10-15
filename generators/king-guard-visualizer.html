@@ -216,6 +216,8 @@ const DEFAULT_CONSTANTS = {
     LEVEL_OFFSET_MAX: 5,
     ABOVE_RECORD_PROBABILITY: 0.12,
     LOOT_ENCHANTMENT_CHANCE: 0.05,
+    ENCHANTMENT_PROBABILITY: 0.5,
+    MAX_UPGRADE_LEVEL: 5,
     PET_WEIGHT_EXPONENT: 1
 };
 const CONSTANT_LABELS = {
@@ -229,7 +231,9 @@ const CONSTANT_LABELS = {
     LEVEL_OFFSET_MIN: ["Décalage de niveau min", "PVEConstants.NON_FINAL_BOSS_MONSTER_LEVEL_RANDOM_OFFSET.MIN"],
     LEVEL_OFFSET_MAX: ["Décalage de niveau max", "PVEConstants.NON_FINAL_BOSS_MONSTER_LEVEL_RANDOM_OFFSET.MAX"],
     ABOVE_RECORD_PROBABILITY: ["Probabilité au-dessus du record", "PVEConstants.NON_FINAL_BOSS_MONSTER_LEVEL_ABOVE_RECORD_PROBABILITY"],
-    LOOT_ENCHANTMENT_CHANCE: ["Chance d'enchantement", "EnchantmentConstants.LOOT_ENCHANTMENT_CHANCE"],
+    LOOT_ENCHANTMENT_CHANCE: ["Chance d'enchantement (ancien code)", "EnchantmentConstants.LOOT_ENCHANTMENT_CHANCE, utilisée si KING_GUARD.ENCHANTMENT_PROBABILITY est absent"],
+    ENCHANTMENT_PROBABILITY: ["Probabilité d'enchantement", "KING_GUARD.ENCHANTMENT_PROBABILITY (arme et armure, chacune)"],
+    MAX_UPGRADE_LEVEL: ["Niveau d'amélioration max", "ItemConstants.MAX_UPGRADE_LEVEL (tiré uniformément de 0 à ce niveau)"],
     PET_WEIGHT_EXPONENT: ["Exposant du poids des familiers", "outil uniquement (Core : 1)"]
 };
 
@@ -238,7 +242,6 @@ const ITEMS_MAPPER = [1, 1.5, 2.1, 2.8, 3.6, 4.5, 5.5, 6.6, 6.7];
 const UPGRADE_LEVEL_STATS_MULTIPLIER = [1, 1.05, 1.1, 1.16, 1.23, 1.32];
 const RARITY_GENERATOR_VALUES = [4375, 6875, 8375, 9375, 9875, 9975, 9998, 10000];
 const RARITY_GENERATOR_MAX = 10000;
-const LOOT_LEVEL_CHANCES = { 1: 5, 2: 1 };
 const CLASS_GROUP_RANGES = [[4, 16], [16, 32], [32, 48], [48, 80]];
 const NATURE = { SPEED: 2, ATTACK: 3, DEFENSE: 4 };
 const FIGHT_NATURES = [NATURE.ATTACK, NATURE.DEFENSE, NATURE.SPEED];
@@ -306,17 +309,10 @@ function generateRandomRarity(minRarity, maxRarity) {
     return rarity;
 }
 
-function generateRandomLootLevel() {
-    const roll = Math.random() * 100;
-    if (roll < LOOT_LEVEL_CHANCES[2]) return 2;
-    if (roll < LOOT_LEVEL_CHANCES[1] + LOOT_LEVEL_CHANCES[2]) return 1;
-    return 0;
-}
-
 function generateMainItem(category, range) {
     const rarity = randInt(range.min, range.max);
     const item = pick(DATA.byRarity[category][rarity]);
-    return { item, itemLevel: generateRandomLootLevel(), enchanted: Math.random() < C.LOOT_ENCHANTMENT_CHANCE };
+    return { item, itemLevel: randInt(0, C.MAX_UPGRADE_LEVEL), enchanted: Math.random() < C.ENCHANTMENT_PROBABILITY };
 }
 
 function generateFightSupportItem(category, range) {
@@ -411,14 +407,15 @@ function computeStats(guard) {
 /* ============================================================
    CHARGEMENT DES DONNÉES (jsDelivr puis repli API GitHub)
    ============================================================ */
-const CACHE_PREFIX = "crownicles-king-guards-v1:";
+const CACHE_PREFIX = "crownicles-king-guards-v2:";
 const CACHE_TTL_MS = 24 * 3600 * 1000;
 const DIRS = { weapons: "Core/resources/weapons", armors: "Core/resources/armors", potions: "Core/resources/potions", objects: "Core/resources/objects", pets: "Core/resources/pets", classes: "Core/resources/classes" };
 const TRANSLATIONS_PATH = "Lang/fr/models.json";
 const CONSTANT_FILES = {
     fight: "Lib/src/constants/FightConstants.ts",
     pve: "Lib/src/constants/PVEConstants.ts",
-    enchantment: "Lib/src/constants/EnchantmentConstants.ts"
+    enchantment: "Lib/src/constants/EnchantmentConstants.ts",
+    item: "Lib/src/constants/ItemConstants.ts"
 };
 
 function setStatus(msg, type, id = "status") {
@@ -542,6 +539,13 @@ function extractConstants(sources) {
     read("LEVEL_OFFSET_MAX", sources.pve, /NON_FINAL_BOSS_MONSTER_LEVEL_RANDOM_OFFSET\s*=\s*\{\s*MIN:\s*-?\d+,\s*MAX:\s*(-?\d+)/);
     read("ABOVE_RECORD_PROBABILITY", sources.pve, /NON_FINAL_BOSS_MONSTER_LEVEL_ABOVE_RECORD_PROBABILITY\s*=\s*([\d.]+)/);
     read("LOOT_ENCHANTMENT_CHANCE", sources.enchantment, /LOOT_ENCHANTMENT_CHANCE\s*=\s*([\d.]+)/);
+    read("MAX_UPGRADE_LEVEL", sources.item, /MAX_UPGRADE_LEVEL\s*=\s*(\d+)/);
+    const enchantmentProbability = kingGuard.match(/ENCHANTMENT_PROBABILITY:\s*([\d.]+)/);
+    if (enchantmentProbability) constants.ENCHANTMENT_PROBABILITY = parseFloat(enchantmentProbability[1]);
+    else {
+        constants.ENCHANTMENT_PROBABILITY = constants.LOOT_ENCHANTMENT_CHANCE;
+        warnings.push("ENCHANTMENT_PROBABILITY (chance de butin utilisée)");
+    }
     return { constants, warnings: kingGuard ? warnings : ["KING_GUARD absent de cette branche : valeurs par défaut utilisées"] };
 }
 
@@ -693,7 +697,7 @@ function renderDistribution() {
     const rarities = { weapon: new Array(9).fill(0), armor: new Array(9).fill(0), object: new Array(9).fill(0), potion: new Array(9).fill(0) };
     const petForces = new Map();
     const values = { energy: [], attack: [], defense: [], speed: [] };
-    const loot = { up1: 0, up2: 0, enchanted: 0, potion: 0, capped: 0 };
+    const loot = { upgrades: new Array(C.MAX_UPGRADE_LEVEL + 1).fill(0), enchanted: 0, potion: 0, capped: 0 };
     for (let i = 0; i < input.samples; i++) {
         const guard = generateGuard(rollGuardLevel(input.baseLevel), input.forcedClassId);
         levels.set(guard.level, (levels.get(guard.level) || 0) + 1);
@@ -705,8 +709,7 @@ function renderDistribution() {
         const bucket = guard.pet.force < 5 ? "1-4" : guard.pet.force < 10 ? "5-9" : guard.pet.force < 20 ? "10-19" : "20-30";
         petForces.set(bucket, (petForces.get(bucket) || 0) + 1);
         for (const slot of [guard.equipment.weapon, guard.equipment.armor]) {
-            if (slot.itemLevel === 1) loot.up1++;
-            if (slot.itemLevel === 2) loot.up2++;
+            loot.upgrades[slot.itemLevel]++;
             if (slot.enchanted) loot.enchanted++;
         }
         const { weapon, armor } = guard.stats.items;
@@ -742,8 +745,7 @@ function renderDistribution() {
         }).join("")
     }</tbody></table></div>`;
     document.getElementById("lootTable").innerHTML = `<div class="table-wrap"><table><tbody>
-        <tr><td>Arme ou armure +1</td><td class="num">${pct(loot.up1 / (2 * n))}</td></tr>
-        <tr><td>Arme ou armure +2</td><td class="num">${pct(loot.up2 / (2 * n))}</td></tr>
+        ${loot.upgrades.map((count, level) => `<tr><td>Arme ou armure ${level === 0 ? "non améliorée" : `+${level}`}</td><td class="num">${pct(count / (2 * n))}</td></tr>`).join("")}
         <tr><td>Arme ou armure enchantée</td><td class="num">${pct(loot.enchanted / (2 * n))}</td></tr>
         <tr><td>Potion de combat</td><td class="num">${pct(loot.potion / n)}</td></tr>
     </tbody></table></div>`;
