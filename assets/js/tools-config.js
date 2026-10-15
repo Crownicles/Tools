@@ -230,6 +230,16 @@ const toolsConfig = [
         status: 'active'
     },
     {
+        id: 'king-guard-visualizer',
+        title: 'Visualiseur des Gardes du roi',
+        description: 'Rejoue la génération des gardes du roi de /fight : niveau, classe, équipement, familier, stats finales, distributions et constantes éditables.',
+        path: 'generators/king-guard-visualizer.html',
+        category: 'Simulation',
+        tags: ['Combat', 'Gardes', 'Équilibrage', 'Familiers', 'Équipement', 'Simulation'],
+        icon: '💂',
+        status: 'active'
+    },
+    {
         id: 'material-explorer',
         title: 'Explorateur de Matériaux',
         description: 'Visualise, compare et analyse les matériaux : utilisation en recettes, sources (compost/craft), et détail des upgrades d\'items.',

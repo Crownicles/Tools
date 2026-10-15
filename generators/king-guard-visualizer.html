@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crownicles — Visualiseur des Gardes du roi</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💂</text></svg>">
+<style>
+:root{
+    --bg-primary:#f6f7fb; --bg-secondary:#fff; --bg-tertiary:#f1f5f9;
+    --text-primary:#1e293b; --text-secondary:#64748b; --text-muted:#94a3b8;
+    --accent:#e94560; --accent-2:#6366f1;
+    --border:#e2e8f0; --success:#22c55e; --warning:#f59e0b; --danger:#ef4444; --info:#3b82f6;
+    --shadow:rgba(0,0,0,.08);
+    --r1:#94a3b8; --r2:#22c55e; --r3:#14b8a6; --r4:#3b82f6; --r5:#8b5cf6; --r6:#d946ef; --r7:#f59e0b; --r8:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg-primary);color:var(--text-primary);padding:18px}
+.container{max-width:1500px;margin:0 auto}
+.card{background:var(--bg-secondary);border:1px solid var(--border);border-radius:14px;box-shadow:0 2px 10px var(--shadow)}
+header{text-align:center;padding:20px;margin-bottom:18px}
+header h1{color:var(--accent);font-size:2rem;margin-bottom:6px}
+header .subtitle{color:var(--text-secondary)}
+.hidden{display:none !important}
+.loader{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:flex-end;padding:18px;margin-bottom:18px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{color:var(--text-secondary);font-size:.8rem;font-weight:600}
+.fg input,.fg select{padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-tertiary);color:var(--text-primary);font-size:.92rem;min-width:140px}
+.btn{padding:11px 22px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.95rem;transition:.2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 5px 18px rgba(99,102,241,.35)}
+.btn-ghost{background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border)}
+.btn-ghost:hover{background:#e6ebf2}
+.btn-sm{padding:6px 12px;font-size:.82rem}
+.status{width:100%;text-align:center;padding:9px;border-radius:8px;font-size:.9rem;display:none}
+.status.error{background:rgba(239,68,68,.13);color:var(--danger);display:block}
+.status.success{background:rgba(34,197,94,.13);color:#15803d;display:block}
+.status.loading{background:rgba(59,130,246,.13);color:var(--info);display:block}
+.status.warn{background:rgba(245,158,11,.15);color:#b45309;display:block}
+.controls{padding:16px 18px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+.tabs{display:flex;gap:6px;padding:6px;margin-bottom:18px;flex-wrap:wrap}
+.tab-btn{flex:1;min-width:150px;padding:11px 14px;border:none;background:transparent;color:var(--text-secondary);border-radius:8px;cursor:pointer;font-weight:600;font-size:.92rem;transition:.2s}
+.tab-btn:hover{background:var(--bg-tertiary);color:var(--text-primary)}
+.tab-btn.active{background:var(--accent);color:#fff}
+.tab{display:none}
+.tab.active{display:block}
+.section{padding:16px 18px;margin-bottom:16px}
+.section h2{font-size:1.05rem;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section .desc{color:var(--text-secondary);font-size:.86rem;margin-bottom:12px;line-height:1.5}
+.note{background:rgba(59,130,246,.09);border-left:3px solid var(--info);padding:10px 12px;border-radius:6px;font-size:.84rem;color:#1e40af;margin-bottom:12px;line-height:1.5}
+.guards{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px}
+.guard{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--bg-secondary)}
+.guard-head{padding:11px 14px;background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(233,69,96,.1));border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.guard-head .t{font-weight:800}
+.guard-head .c{font-size:.78rem;color:var(--text-secondary)}
+.guard-body{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.slot-line{display:grid;grid-template-columns:24px 1fr auto;gap:8px;align-items:center;font-size:.86rem}
+.slot-line .n{font-weight:600}
+.slot-line .s{font-size:.76rem;color:var(--text-secondary);text-align:right}
+.rar{display:inline-block;padding:1px 7px;border-radius:20px;font-size:.7rem;font-weight:700;color:#fff;margin-left:4px}
+.statbar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+.statbox{background:var(--bg-tertiary);border-radius:8px;padding:6px;text-align:center}
+.statbox .v{font-weight:800;font-size:1.05rem}
+.statbox .l{font-size:.7rem;color:var(--text-secondary)}
+.chip{padding:2px 8px;border-radius:20px;font-size:.72rem;font-weight:700;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border)}
+.chip.capped{background:rgba(239,68,68,.12);color:var(--danger);border-color:rgba(239,68,68,.3)}
+.chip.ench{background:rgba(245,158,11,.16);color:#b45309;border-color:rgba(245,158,11,.35)}
+.chip.up{background:rgba(34,197,94,.14);color:#15803d;border-color:rgba(34,197,94,.3)}
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.stat{flex:1;min-width:140px;padding:12px 16px;text-align:center}
+.stat .v{font-size:1.45rem;font-weight:800;color:var(--accent)}
+.stat .l{font-size:.78rem;color:var(--text-secondary);margin-top:2px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:16px}
+.bars{display:flex;flex-direction:column;gap:5px}
+.bar-row{display:grid;grid-template-columns:170px 1fr 70px;gap:10px;align-items:center;font-size:.8rem}
+.bar-track{background:var(--bg-tertiary);border-radius:6px;height:15px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#6366f1,#8b5cf6)}
+.bar-val{text-align:right;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.table-wrap{overflow:auto;max-height:560px;border:1px solid var(--border);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+th{position:sticky;top:0;background:var(--bg-tertiary);padding:8px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:6px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr:hover{background:var(--bg-tertiary)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+svg text{font-family:inherit}
+.const-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.const-grid .fg input{min-width:0;width:100%}
+.const-grid .hint{font-size:.74rem;color:var(--text-muted)}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-muted)}
+.empty-state .i{font-size:3.4rem;margin-bottom:12px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.8rem;color:var(--text-secondary);margin-bottom:8px}
+.legend .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="card">
+        <h1>💂 Visualiseur des Gardes du roi</h1>
+        <p class="subtitle">Rejoue la génération des gardes du roi (adversaire de <code>/fight</code> quand personne n'est disponible) : niveau, classe, équipement, familier et statistiques finales.</p>
+    </header>
+
+    <div class="card loader">
+        <div class="fg"><label for="repoOwner">👤 Propriétaire</label><input type="text" id="repoOwner" value="Crownicles"></div>
+        <div class="fg"><label for="repoName">📦 Dépôt</label><input type="text" id="repoName" value="Crownicles"></div>
+        <div class="fg"><label for="branchName">🌿 Branche</label><input type="text" id="branchName" value="feat/4931-king-guards"></div>
+        <button class="btn btn-primary" id="loadBtn">📥 Charger les données</button>
+        <button class="btn btn-ghost btn-sm" id="clearCacheBtn">🗑️ Vider le cache</button>
+        <div class="status" id="status"></div>
+    </div>
+
+    <div id="noData" class="card empty-state">
+        <div class="i">💂</div>
+        <p>Chargez une branche du dépôt pour lire les objets, familiers, classes, traductions et constantes d'équilibrage.</p>
+    </div>
+
+    <div id="main" class="hidden">
+        <div class="card controls">
+            <div class="fg"><label for="playerLevel">🧍 Niveau du joueur</label><input type="number" id="playerLevel" value="60" min="8" max="250"></div>
+            <div class="fg"><label for="historyMode">📜 Historique contre les gardes</label>
+                <select id="historyMode">
+                    <option value="none">Aucun (base = niveau du joueur)</option>
+                    <option value="win">Meilleur garde battu</option>
+                    <option value="loss">Dernier garde perdu (aucune victoire)</option>
+                </select>
+            </div>
+            <div class="fg" id="historyLevelGroup"><label for="historyLevel">🎚️ Niveau de ce garde</label><input type="number" id="historyLevel" value="60" min="1" max="300"></div>
+            <div class="fg"><label for="forcedClass">🎭 Classe du garde</label><select id="forcedClass"><option value="">Aléatoire (palier du niveau)</option></select></div>
+            <div class="fg"><label for="sampleCount">🔁 Simulations</label><input type="number" id="sampleCount" value="10000" min="100" max="200000" step="100"></div>
+        </div>
+
+        <div class="card tabs">
+            <button class="tab-btn active" data-tab="generator">🎲 Générateur</button>
+            <button class="tab-btn" data-tab="distribution">📊 Distribution</button>
+            <button class="tab-btn" data-tab="curves">📈 Par niveau</button>
+            <button class="tab-btn" data-tab="pets">🐾 Familiers</button>
+            <button class="tab-btn" data-tab="constants">⚙️ Constantes</button>
+        </div>
+
+        <div class="tab active" id="tab-generator">
+            <div class="card section">
+                <h2>🎲 Gardes générés</h2>
+                <p class="desc">Chaque clic tire de nouveaux gardes avec les règles du Core. Le badge « plafonné » indique un objet dont la stat dépasse le plafond de la classe au niveau du garde (l'excédent est perdu, comme pour un joueur). Les enchantements sont signalés mais pas appliqués aux stats affichées.</p>
+                <div style="display:flex;gap:8px;margin-bottom:14px">
+                    <button class="btn btn-primary btn-sm" id="genOneBtn">💂 Générer 1 garde</button>
+                    <button class="btn btn-ghost btn-sm" id="genSixBtn">💂×6 Générer 6 gardes</button>
+                </div>
+                <div class="guards" id="guards"></div>
+            </div>
+        </div>
+
+        <div class="tab" id="tab-distribution">
+            <div class="stats" id="distStats"></div>
+            <div class="grid2">
+                <div class="card section"><h2>🎚️ Niveau du garde</h2><p class="desc">Algorithme des boss des îles : 88 % entre base − 20 et base − 1, 12 % entre base + 1 et base + 5.</p><div class="bars" id="levelBars"></div></div>
+                <div class="card section"><h2>💎 Rareté de l'équipement</h2><div class="legend" id="rarityLegend"></div><div id="rarityTable"></div></div>
+                <div class="card section"><h2>🎭 Classes</h2><div class="bars" id="classBars"></div></div>
+                <div class="card section"><h2>📐 Statistiques finales</h2><p class="desc">Percentiles des stats de combat du garde, potion incluse, enchantements non appliqués.</p><div id="statTable"></div></div>
+                <div class="card section"><h2>🔧 Amélioration & enchantement</h2><div id="lootTable"></div></div>
+                <div class="card section"><h2>🐾 Force du familier</h2><div class="bars" id="petForceBars"></div></div>
+            </div>
+        </div>
+
+        <div class="tab" id="tab-curves">
+            <div class="card section">
+                <h2>📈 Évolution avec le niveau du garde</h2>
+                <p class="desc">Pour chaque niveau de garde (sans tirage du niveau), moyenne sur les simulations par niveau. Les pointillés montrent la stat de classe seule (sans équipement) pour comparer l'apport de l'équipement.</p>
+                <div class="legend">
+                    <span><span class="sw" style="background:#e94560"></span>Attaque</span>
+                    <span><span class="sw" style="background:#3b82f6"></span>Défense</span>
+                    <span><span class="sw" style="background:#22c55e"></span>Vitesse</span>
+                    <span><span class="sw" style="background:#f59e0b"></span>Énergie ÷ 10</span>
+                </div>
+                <div id="statsChart"></div>
+            </div>
+            <div class="card section">
+                <h2>💎 Tranche de rareté</h2>
+                <div id="rarityChart"></div>
+                <div class="table-wrap" style="margin-top:12px"><table id="curveTable"></table></div>
+            </div>
+        </div>
+
+        <div class="tab" id="tab-pets">
+            <div class="card section">
+                <h2>🐾 Probabilité de chaque familier</h2>
+                <p class="desc">Tous les familiers (sauf l'emplacement vide) peuvent tomber, avec un poids égal à <code>force^exposant</code>. Le Core utilise un exposant de 1.</p>
+                <div class="stats" id="petStats"></div>
+                <div class="table-wrap"><table id="petTable"></table></div>
+            </div>
+        </div>
+
+        <div class="tab" id="tab-constants">
+            <div class="card section">
+                <h2>⚙️ Constantes d'équilibrage</h2>
+                <p class="desc">Lues depuis la branche chargée (<code>FightConstants.KING_GUARD</code>, <code>PVEConstants</code>…). Modifiez-les pour tester un autre équilibrage : tous les onglets se recalculent.</p>
+                <div class="status" id="constStatus"></div>
+                <div class="const-grid" id="constGrid"></div>
+                <div style="margin-top:14px"><button class="btn btn-ghost btn-sm" id="resetConstBtn">↩️ Revenir aux constantes de la branche</button></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ============================================================
+   CONSTANTES (valeurs par défaut, remplacées par celles de la branche si trouvées)
+   ============================================================ */
+const DEFAULT_CONSTANTS = {
+    REQUIRED_LEVEL: 8,
+    FAILED_FIGHT_LEVEL_REDUCTION: 10,
+    AT_LEVEL_ZERO: 1,
+    LEVELS_PER_RARITY: 16,
+    SPREAD: 1,
+    FIGHT_POTION_PROBABILITY: 0.2,
+    MIN_MONSTER_LEVEL: 1,
+    LEVEL_OFFSET_MIN: -20,
+    LEVEL_OFFSET_MAX: 5,
+    ABOVE_RECORD_PROBABILITY: 0.12,
+    LOOT_ENCHANTMENT_CHANCE: 0.05,
+    PET_WEIGHT_EXPONENT: 1
+};
+const CONSTANT_LABELS = {
+    REQUIRED_LEVEL: ["Niveau minimum du garde", "FightConstants.REQUIRED_LEVEL"],
+    FAILED_FIGHT_LEVEL_REDUCTION: ["Réduction après défaite", "KING_GUARD.FAILED_FIGHT_LEVEL_REDUCTION"],
+    AT_LEVEL_ZERO: ["Rareté au niveau 0", "KING_GUARD.EQUIPMENT_RARITY.AT_LEVEL_ZERO"],
+    LEVELS_PER_RARITY: ["Niveaux par rareté", "KING_GUARD.EQUIPMENT_RARITY.LEVELS_PER_RARITY"],
+    SPREAD: ["Écart de rareté (±)", "KING_GUARD.EQUIPMENT_RARITY.SPREAD"],
+    FIGHT_POTION_PROBABILITY: ["Probabilité de potion de combat", "KING_GUARD.FIGHT_POTION_PROBABILITY"],
+    MIN_MONSTER_LEVEL: ["Niveau minimal (algo boss)", "PVEConstants.MIN_MONSTER_LEVEL"],
+    LEVEL_OFFSET_MIN: ["Décalage de niveau min", "PVEConstants.NON_FINAL_BOSS_MONSTER_LEVEL_RANDOM_OFFSET.MIN"],
+    LEVEL_OFFSET_MAX: ["Décalage de niveau max", "PVEConstants.NON_FINAL_BOSS_MONSTER_LEVEL_RANDOM_OFFSET.MAX"],
+    ABOVE_RECORD_PROBABILITY: ["Probabilité au-dessus du record", "PVEConstants.NON_FINAL_BOSS_MONSTER_LEVEL_ABOVE_RECORD_PROBABILITY"],
+    LOOT_ENCHANTMENT_CHANCE: ["Chance d'enchantement", "EnchantmentConstants.LOOT_ENCHANTMENT_CHANCE"],
+    PET_WEIGHT_EXPONENT: ["Exposant du poids des familiers", "outil uniquement (Core : 1)"]
+};
+
+// Règles moins susceptibles de bouger, reprises du Core
+const ITEMS_MAPPER = [1, 1.5, 2.1, 2.8, 3.6, 4.5, 5.5, 6.6, 6.7];
+const UPGRADE_LEVEL_STATS_MULTIPLIER = [1, 1.05, 1.1, 1.16, 1.23, 1.32];
+const RARITY_GENERATOR_VALUES = [4375, 6875, 8375, 9375, 9875, 9975, 9998, 10000];
+const RARITY_GENERATOR_MAX = 10000;
+const LOOT_LEVEL_CHANCES = { 1: 5, 2: 1 };
+const CLASS_GROUP_RANGES = [[4, 16], [16, 32], [32, 48], [48, 80]];
+const NATURE = { SPEED: 2, ATTACK: 3, DEFENSE: 4 };
+const FIGHT_NATURES = [NATURE.ATTACK, NATURE.DEFENSE, NATURE.SPEED];
+const RARITY_NAMES = ["Basique", "Commun", "Peu commun", "Exotique", "Rare", "Spécial", "Épique", "Légendaire", "Mythique"];
+const RARITY_COLORS = ["#cbd5e1", "var(--r1)", "var(--r2)", "var(--r3)", "var(--r4)", "var(--r5)", "var(--r6)", "var(--r7)", "var(--r8)"];
+const NO_POTION_ID = 0;
+
+let C = Object.assign({}, DEFAULT_CONSTANTS);
+let C_LOADED = Object.assign({}, DEFAULT_CONSTANTS);
+let DATA = null;
+
+/* ============================================================
+   ALÉATOIRE
+   ============================================================ */
+const randInt = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+const pick = values => values[Math.floor(Math.random() * values.length)];
+function weightedPick(values, weightOf) {
+    let roll = Math.random() * values.reduce((total, v) => total + weightOf(v), 0);
+    for (const v of values) {
+        roll -= weightOf(v);
+        if (roll < 0) return v;
+    }
+    return values[values.length - 1];
+}
+
+/* ============================================================
+   RÈGLES DU CORE (portage de KingGuardGenerator / KingGuardEquipment / KingGuardPet)
+   ============================================================ */
+function guardLevelBase(playerLevel, historyMode, historyLevel) {
+    if (historyMode === "win") return historyLevel;
+    if (historyMode === "loss") return historyLevel - C.FAILED_FIGHT_LEVEL_REDUCTION;
+    return playerLevel;
+}
+
+/** getPveMonsterLevel(base, seed, false) puis plancher au niveau requis */
+function rollGuardLevel(baseLevel) {
+    const seed = randInt(0, 999999);
+    const isAboveRecord = seed % 100 < C.ABOVE_RECORD_PROBABILITY * 100;
+    const offsetRange = isAboveRecord ? C.LEVEL_OFFSET_MAX : -C.LEVEL_OFFSET_MIN;
+    const offsetStart = isAboveRecord ? 1 : C.LEVEL_OFFSET_MIN;
+    const level = Math.max(C.MIN_MONSTER_LEVEL, baseLevel + offsetStart + Math.floor(seed / 100) % offsetRange);
+    return Math.max(C.REQUIRED_LEVEL, level);
+}
+
+function classGroupOf(level) {
+    const index = CLASS_GROUP_RANGES.findIndex(([min, max]) => level >= min && level < max);
+    return index >= 0 ? index : CLASS_GROUP_RANGES.length;
+}
+
+const clampRarity = rarity => Math.min(8, Math.max(1, rarity));
+
+function rarityRangeOf(level) {
+    const expected = Math.round(C.AT_LEVEL_ZERO + level / C.LEVELS_PER_RARITY);
+    return { min: clampRarity(expected - C.SPREAD), max: clampRarity(expected + C.SPREAD) };
+}
+
+/** generateRandomRarity du Core : pondéré vers les raretés basses */
+function generateRandomRarity(minRarity, maxRarity) {
+    const randomValue = randInt(
+        1 + (minRarity === 1 ? -1 : RARITY_GENERATOR_VALUES[minRarity - 2]),
+        RARITY_GENERATOR_MAX - (maxRarity === 8 ? 0 : RARITY_GENERATOR_MAX - RARITY_GENERATOR_VALUES[maxRarity - 1])
+    );
+    let rarity = 0;
+    do { rarity++; } while (randomValue > RARITY_GENERATOR_VALUES[rarity - 1]);
+    return rarity;
+}
+
+function generateRandomLootLevel() {
+    const roll = Math.random() * 100;
+    if (roll < LOOT_LEVEL_CHANCES[2]) return 2;
+    if (roll < LOOT_LEVEL_CHANCES[1] + LOOT_LEVEL_CHANCES[2]) return 1;
+    return 0;
+}
+
+function generateMainItem(category, range) {
+    const rarity = randInt(range.min, range.max);
+    const item = pick(DATA.byRarity[category][rarity]);
+    return { item, itemLevel: generateRandomLootLevel(), enchanted: Math.random() < C.LOOT_ENCHANTMENT_CHANCE };
+}
+
+function generateFightSupportItem(category, range) {
+    const nature = pick(FIGHT_NATURES);
+    const available = [];
+    for (let rarity = range.min; rarity <= range.max; rarity++) {
+        if ((DATA.byNatureRarity[category][`${nature}_${rarity}`] || []).length > 0) available.push(rarity);
+    }
+    if (available.length === 0) throw new Error(`aucun objet ${category} de nature ${nature} en rareté ${range.min}-${range.max}`);
+    let rarity;
+    do { rarity = generateRandomRarity(Math.min(...available), Math.max(...available)); } while (!available.includes(rarity));
+    return pick(DATA.byNatureRarity[category][`${nature}_${rarity}`]);
+}
+
+function generateGuardPet() {
+    return weightedPick(DATA.petPool, pet => Math.pow(pet.force, C.PET_WEIGHT_EXPONENT));
+}
+
+function generateGuard(level, forcedClassId) {
+    const guardClass = forcedClassId !== null
+        ? DATA.classes[forcedClassId]
+        : pick(DATA.classList.filter(c => c.classGroup === classGroupOf(level)));
+    const range = rarityRangeOf(level);
+    const equipment = {
+        weapon: generateMainItem("weapons", range),
+        armor: generateMainItem("armors", range),
+        potion: Math.random() < C.FIGHT_POTION_PROBABILITY ? generateFightSupportItem("potions", range) : DATA.items.potions[NO_POTION_ID],
+        object: generateFightSupportItem("objects", range)
+    };
+    const guard = { level, guardClass, range, equipment, pet: generateGuardPet() };
+    guard.stats = computeStats(guard);
+    return guard;
+}
+
+/* ============================================================
+   STATISTIQUES (portage de Weapon/Armor/SupportItem et Player.getCumulative*)
+   ============================================================ */
+const statMultiplier = itemLevel => UPGRADE_LEVEL_STATS_MULTIPLIER[Math.min(Math.max(itemLevel, 0), UPGRADE_LEVEL_STATS_MULTIPLIER.length - 1)];
+const scaled = (base, itemLevel) => (base > 0 ? Math.round(base * statMultiplier(itemLevel)) : base);
+
+function rawMainStat(item, raw) {
+    const multiplier = ITEMS_MAPPER[item.rarity];
+    return Math.round(1.15053 * Math.pow(multiplier, 2.3617) * Math.pow(1.0569 + 0.1448 / multiplier, raw ?? 0));
+}
+
+function mainItemStats(category, slot) {
+    const item = slot.item;
+    const baseAttack = category === "weapons" ? rawMainStat(item, item.rawAttack) + (item.attack ?? 0) : item.attack ?? 0;
+    const baseDefense = category === "armors" ? rawMainStat(item, item.rawDefense) + (item.defense ?? 0) : item.defense ?? 0;
+    return {
+        attack: scaled(baseAttack, slot.itemLevel),
+        defense: scaled(baseDefense, slot.itemLevel),
+        speed: scaled(item.speed ?? 0, slot.itemLevel)
+    };
+}
+
+const supportStats = item => ({
+    attack: item.nature === NATURE.ATTACK ? item.power : 0,
+    defense: item.nature === NATURE.DEFENSE ? item.power : 0,
+    speed: item.nature === NATURE.SPEED ? item.power : 0
+});
+
+const classStat = (base, level) => Math.round(base + base / 100 * level / 4 * level / 10);
+
+function cumulate(cap, weapon, armor, object, potion) {
+    return Math.round(cap
+        + Math.min(weapon, cap)
+        + Math.min(armor, cap)
+        + (object / 2 < cap ? object : cap * 2)
+        + potion);
+}
+
+function computeStats(guard) {
+    const { level, guardClass, equipment } = guard;
+    const weapon = mainItemStats("weapons", equipment.weapon);
+    const armor = mainItemStats("armors", equipment.armor);
+    const object = supportStats(equipment.object);
+    const potion = supportStats(equipment.potion);
+    const caps = {
+        attack: classStat(guardClass.attack, level),
+        defense: classStat(guardClass.defense, level),
+        speed: classStat(guardClass.speed, level)
+    };
+    const result = { caps, items: { weapon, armor, object, potion } };
+    for (const stat of ["attack", "defense", "speed"]) {
+        result[stat] = Math.max(0, cumulate(caps[stat], weapon[stat], armor[stat], object[stat], potion[stat]));
+    }
+    result.energy = Math.round(guardClass.fightPoint + (1600 / (1 + Math.exp(-0.06 * level + 2)) + 0.5 * level));
+    return result;
+}
+
+/* ============================================================
+   CHARGEMENT DES DONNÉES (jsDelivr puis repli API GitHub)
+   ============================================================ */
+const CACHE_PREFIX = "crownicles-king-guards-v1:";
+const CACHE_TTL_MS = 24 * 3600 * 1000;
+const DIRS = { weapons: "Core/resources/weapons", armors: "Core/resources/armors", potions: "Core/resources/potions", objects: "Core/resources/objects", pets: "Core/resources/pets", classes: "Core/resources/classes" };
+const TRANSLATIONS_PATH = "Lang/fr/models.json";
+const CONSTANT_FILES = {
+    fight: "Lib/src/constants/FightConstants.ts",
+    pve: "Lib/src/constants/PVEConstants.ts",
+    enchantment: "Lib/src/constants/EnchantmentConstants.ts"
+};
+
+function setStatus(msg, type, id = "status") {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.className = "status " + type;
+}
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+const encodePath = value => value.split("/").map(encodeURIComponent).join("/");
+
+async function fetchWithRetry(url, attempts = 4) {
+    let delay = 500;
+    let lastStatus = 0;
+    for (let i = 0; i < attempts; i++) {
+        const resp = await fetch(url);
+        if (resp.ok) return resp;
+        lastStatus = resp.status;
+        if (resp.status !== 429 && resp.status !== 502 && resp.status !== 503) break;
+        await sleep(delay);
+        delay *= 2;
+    }
+    throw new Error(`${url.split("/").pop()} : HTTP ${lastStatus}`);
+}
+
+async function fetchMany(paths, urlOf, onProgress, concurrency = 12) {
+    const results = new Array(paths.length).fill(null);
+    let next = 0, done = 0;
+    async function worker() {
+        while (next < paths.length) {
+            const index = next++;
+            try {
+                results[index] = Object.assign({ id: parseInt(paths[index], 10) }, await (await fetchWithRetry(urlOf(paths[index]))).json());
+            } catch (e) { /* fichier ignoré */ }
+            done++;
+            if (done % 25 === 0 || done === paths.length) onProgress(done, paths.length);
+        }
+    }
+    await Promise.all(Array.from({ length: Math.min(concurrency, paths.length) }, worker));
+    return results.filter(Boolean);
+}
+
+async function createJsDelivrSource(owner, repo, branch) {
+    const listing = await (await fetchWithRetry(
+        `https://data.jsdelivr.com/v1/packages/gh/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}@${encodePath(branch)}?structure=flat`)).json();
+    const files = (listing.files || []).map(f => f.name);
+    if (files.length === 0) throw new Error("listing jsDelivr vide");
+    return {
+        label: "jsDelivr",
+        listJson: dir => files.filter(p => p.startsWith("/" + dir + "/") && p.endsWith(".json")).map(p => p.slice(dir.length + 2)),
+        url: path => `https://cdn.jsdelivr.net/gh/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}@${encodePath(branch)}/${path}`
+    };
+}
+
+async function createGithubSource(owner, repo, branch) {
+    const listings = {};
+    for (const dir of Object.values(DIRS)) {
+        const entries = await (await fetchWithRetry(
+            `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${dir}?ref=${encodeURIComponent(branch)}`)).json();
+        listings[dir] = entries.filter(e => e.type === "file" && e.name.endsWith(".json")).map(e => e.name);
+    }
+    return {
+        label: "GitHub",
+        listJson: dir => listings[dir] || [],
+        url: path => `https://raw.githubusercontent.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${encodePath(branch)}/${path}`
+    };
+}
+
+function cacheKey(owner, repo, branch) { return `${CACHE_PREFIX}${owner}/${repo}@${branch}`; }
+
+function readCache(owner, repo, branch) {
+    try {
+        const payload = JSON.parse(localStorage.getItem(cacheKey(owner, repo, branch)));
+        return payload && Date.now() - payload.savedAt <= CACHE_TTL_MS ? payload : null;
+    } catch (e) { return null; }
+}
+
+function writeCache(owner, repo, branch, payload) {
+    try { localStorage.setItem(cacheKey(owner, repo, branch), JSON.stringify(Object.assign({ savedAt: Date.now() }, payload))); }
+    catch (e) { /* quota dépassé : le cache est optionnel */ }
+}
+
+async function downloadRepositoryData(owner, repo, branch) {
+    let source;
+    try { source = await createJsDelivrSource(owner, repo, branch); }
+    catch (e) { source = await createGithubSource(owner, repo, branch); }
+    const payload = { resources: {}, constantSources: {} };
+    for (const [key, dir] of Object.entries(DIRS)) {
+        const files = source.listJson(dir);
+        if (files.length === 0) throw new Error(`aucun fichier dans ${dir} sur cette branche`);
+        payload.resources[key] = await fetchMany(files, name => source.url(`${dir}/${name}`),
+            (done, total) => setStatus(`📡 [${source.label}] ${key} : ${done}/${total}...`, "loading"));
+    }
+    setStatus("📡 Traductions et constantes...", "loading");
+    payload.translations = await (await fetchWithRetry(source.url(TRANSLATIONS_PATH))).json();
+    for (const [key, path] of Object.entries(CONSTANT_FILES)) {
+        try { payload.constantSources[key] = await (await fetchWithRetry(source.url(path))).text(); }
+        catch (e) { /* repli sur les valeurs par défaut */ }
+    }
+    return payload;
+}
+
+/** Extrait les constantes utiles des sources TypeScript ; les absentes gardent leur valeur par défaut */
+function extractConstants(sources) {
+    const constants = Object.assign({}, DEFAULT_CONSTANTS);
+    const warnings = [];
+    const read = (key, source, regex) => {
+        const match = source && source.match(regex);
+        if (match) constants[key] = parseFloat(match[1]);
+        else warnings.push(key);
+    };
+    const kingGuard = (sources.fight || "").split("KING_GUARD = {")[1] || "";
+    read("REQUIRED_LEVEL", sources.fight, /REQUIRED_LEVEL\s*=\s*(\d+)/);
+    read("FAILED_FIGHT_LEVEL_REDUCTION", kingGuard, /FAILED_FIGHT_LEVEL_REDUCTION:\s*([\d.]+)/);
+    read("AT_LEVEL_ZERO", kingGuard, /AT_LEVEL_ZERO:\s*([\d.]+)/);
+    read("LEVELS_PER_RARITY", kingGuard, /LEVELS_PER_RARITY:\s*([\d.]+)/);
+    read("SPREAD", kingGuard, /SPREAD:\s*([\d.]+)/);
+    read("FIGHT_POTION_PROBABILITY", kingGuard, /FIGHT_POTION_PROBABILITY:\s*([\d.]+)/);
+    read("MIN_MONSTER_LEVEL", sources.pve, /MIN_MONSTER_LEVEL\s*=\s*(\d+)/);
+    read("LEVEL_OFFSET_MIN", sources.pve, /NON_FINAL_BOSS_MONSTER_LEVEL_RANDOM_OFFSET\s*=\s*\{\s*MIN:\s*(-?\d+)/);
+    read("LEVEL_OFFSET_MAX", sources.pve, /NON_FINAL_BOSS_MONSTER_LEVEL_RANDOM_OFFSET\s*=\s*\{\s*MIN:\s*-?\d+,\s*MAX:\s*(-?\d+)/);
+    read("ABOVE_RECORD_PROBABILITY", sources.pve, /NON_FINAL_BOSS_MONSTER_LEVEL_ABOVE_RECORD_PROBABILITY\s*=\s*([\d.]+)/);
+    read("LOOT_ENCHANTMENT_CHANCE", sources.enchantment, /LOOT_ENCHANTMENT_CHANCE\s*=\s*([\d.]+)/);
+    return { constants, warnings: kingGuard ? warnings : ["KING_GUARD absent de cette branche : valeurs par défaut utilisées"] };
+}
+
+function applyRepositoryData(payload) {
+    const items = {};
+    const byRarity = {};
+    const byNatureRarity = {};
+    for (const category of ["weapons", "armors", "potions", "objects"]) {
+        items[category] = {};
+        byRarity[category] = {};
+        byNatureRarity[category] = {};
+        for (const item of payload.resources[category]) {
+            item.name = payload.translations[category]?.[item.id] ?? `#${item.id}`;
+            items[category][item.id] = item;
+            (byRarity[category][item.rarity] ??= []).push(item);
+            (byNatureRarity[category][`${item.nature}_${item.rarity}`] ??= []).push(item);
+        }
+    }
+    const classes = {};
+    for (const c of payload.resources.classes) {
+        c.name = payload.translations.classes?.[c.id] ?? `Classe ${c.id}`;
+        classes[c.id] = c;
+    }
+    const pets = payload.resources.pets.map(p => Object.assign(p, {
+        name: payload.translations.pets?.[`${p.id}_male`] ?? `Familier ${p.id}`
+    }));
+    DATA = {
+        items, byRarity, byNatureRarity, classes,
+        classList: Object.values(classes).sort((a, b) => a.id - b.id),
+        petPool: pets.filter(p => p.rarity !== 0).sort((a, b) => a.id - b.id)
+    };
+
+    const extracted = extractConstants(payload.constantSources);
+    C_LOADED = extracted.constants;
+    C = Object.assign({}, C_LOADED);
+    if (extracted.warnings.length > 0) setStatus("⚠️ Constantes non trouvées (valeurs par défaut) : " + extracted.warnings.join(", "), "warn", "constStatus");
+    else document.getElementById("constStatus").style.display = "none";
+
+    const classSelect = document.getElementById("forcedClass");
+    classSelect.innerHTML = '<option value="">Aléatoire (palier du niveau)</option>'
+        + DATA.classList.map(c => `<option value="${c.id}">${c.name} (palier ${c.classGroup})</option>`).join("");
+
+    document.getElementById("main").classList.remove("hidden");
+    document.getElementById("noData").classList.add("hidden");
+    buildConstantsEditor();
+    renderAll();
+}
+
+async function loadFromGithub() {
+    const owner = document.getElementById("repoOwner").value.trim();
+    const repo = document.getElementById("repoName").value.trim();
+    const branch = document.getElementById("branchName").value.trim();
+    if (!owner || !repo || !branch) { setStatus("⚠️ Remplissez tous les champs", "error"); return; }
+    try {
+        let payload = readCache(owner, repo, branch);
+        if (!payload) {
+            payload = await downloadRepositoryData(owner, repo, branch);
+            writeCache(owner, repo, branch, payload);
+        }
+        applyRepositoryData(payload);
+        setStatus(`✅ ${owner}/${repo}@${branch} : ${DATA.classList.length} classes, ${DATA.petPool.length} familiers`, "success");
+    } catch (e) {
+        setStatus("❌ " + e.message, "error");
+    }
+}
+
+/* ============================================================
+   RENDU
+   ============================================================ */
+const fmt = (value, digits = 0) => Number(value).toLocaleString("fr-FR", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+const pct = value => fmt(100 * value, 1) + " %";
+const escapeHtml = text => String(text).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
+const rarityBadge = rarity => `<span class="rar" style="background:${RARITY_COLORS[rarity]}">${RARITY_NAMES[rarity]}</span>`;
+
+function readInputs() {
+    const playerLevel = Math.max(1, parseInt(document.getElementById("playerLevel").value, 10) || 1);
+    const historyMode = document.getElementById("historyMode").value;
+    const historyLevel = parseInt(document.getElementById("historyLevel").value, 10) || playerLevel;
+    const forced = document.getElementById("forcedClass").value;
+    return {
+        playerLevel,
+        baseLevel: guardLevelBase(playerLevel, historyMode, historyLevel),
+        forcedClassId: forced === "" ? null : parseInt(forced, 10),
+        samples: Math.min(200000, Math.max(100, parseInt(document.getElementById("sampleCount").value, 10) || 10000))
+    };
+}
+
+function statLine(stats) {
+    return [["attack", "⚔️"], ["defense", "🛡️"], ["speed", "🚀"]]
+        .filter(([stat]) => stats[stat] !== 0)
+        .map(([stat, emoji]) => `${emoji} ${stats[stat]}`)
+        .join(" ") || "—";
+}
+
+function slotHtml(icon, item, stats, extras = "") {
+    return `<div class="slot-line"><span>${icon}</span><span><span class="n">${escapeHtml(item.name)}</span>${item.rarity > 0 ? rarityBadge(item.rarity) : ""} ${extras}</span><span class="s">${statLine(stats)}</span></div>`;
+}
+
+function mainSlotExtras(slot, stats, caps) {
+    const chips = [];
+    if (slot.itemLevel > 0) chips.push(`<span class="chip up">+${slot.itemLevel}</span>`);
+    if (slot.enchanted) chips.push('<span class="chip ench">✨ enchanté</span>');
+    if (stats.attack > caps.attack || stats.defense > caps.defense || stats.speed > caps.speed) chips.push('<span class="chip capped">plafonné</span>');
+    return chips.join(" ");
+}
+
+function guardCardHtml(guard, baseLevel) {
+    const { equipment, stats } = guard;
+    const offset = guard.level - baseLevel;
+    return `<div class="guard">
+        <div class="guard-head"><span class="t">💂 Garde niv. ${guard.level} — ${escapeHtml(guard.guardClass.name)}</span>
+            <span class="c">base ${baseLevel} (${offset >= 0 ? "+" : ""}${offset}) · rareté ${RARITY_NAMES[guard.range.min]} → ${RARITY_NAMES[guard.range.max]}</span></div>
+        <div class="guard-body">
+            ${slotHtml("🗡️", equipment.weapon.item, stats.items.weapon, mainSlotExtras(equipment.weapon, stats.items.weapon, stats.caps))}
+            ${slotHtml("🛡️", equipment.armor.item, stats.items.armor, mainSlotExtras(equipment.armor, stats.items.armor, stats.caps))}
+            ${slotHtml("🧪", equipment.potion, stats.items.potion)}
+            ${slotHtml("🧿", equipment.object, stats.items.object)}
+            <div class="slot-line"><span>🐾</span><span><span class="n">${escapeHtml(guard.pet.name)}</span> <span class="chip">force ${guard.pet.force}</span> <span class="chip">rareté ${guard.pet.rarity}</span></span><span class="s">${pct(Math.pow(guard.pet.force, C.PET_WEIGHT_EXPONENT) / DATA.petWeightTotal)}</span></div>
+            <div class="statbar">
+                <div class="statbox"><div class="v">${fmt(stats.energy)}</div><div class="l">⚡ Énergie</div></div>
+                <div class="statbox"><div class="v">${fmt(stats.attack)}</div><div class="l">⚔️ Attaque (classe ${stats.caps.attack})</div></div>
+                <div class="statbox"><div class="v">${fmt(stats.defense)}</div><div class="l">🛡️ Défense (classe ${stats.caps.defense})</div></div>
+                <div class="statbox"><div class="v">${fmt(stats.speed)}</div><div class="l">🚀 Vitesse (classe ${stats.caps.speed})</div></div>
+            </div>
+        </div>
+    </div>`;
+}
+
+function generateCards(count) {
+    const input = readInputs();
+    const html = [];
+    for (let i = 0; i < count; i++) {
+        html.push(guardCardHtml(generateGuard(rollGuardLevel(input.baseLevel), input.forcedClassId), input.baseLevel));
+    }
+    document.getElementById("guards").innerHTML = html.join("");
+}
+
+function barsHtml(entries, total) {
+    const max = Math.max(...entries.map(([, count]) => count), 1);
+    return entries.map(([label, count]) => `<div class="bar-row"><span>${label}</span><div class="bar-track"><div class="bar-fill" style="width:${100 * count / max}%"></div></div><span class="bar-val">${pct(count / total)}</span></div>`).join("");
+}
+
+function percentile(sorted, q) { return sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))]; }
+
+function renderDistribution() {
+    const input = readInputs();
+    const levels = new Map();
+    const classes = new Map();
+    const rarities = { weapon: new Array(9).fill(0), armor: new Array(9).fill(0), object: new Array(9).fill(0), potion: new Array(9).fill(0) };
+    const petForces = new Map();
+    const values = { energy: [], attack: [], defense: [], speed: [] };
+    const loot = { up1: 0, up2: 0, enchanted: 0, potion: 0, capped: 0 };
+    for (let i = 0; i < input.samples; i++) {
+        const guard = generateGuard(rollGuardLevel(input.baseLevel), input.forcedClassId);
+        levels.set(guard.level, (levels.get(guard.level) || 0) + 1);
+        classes.set(guard.guardClass.name, (classes.get(guard.guardClass.name) || 0) + 1);
+        rarities.weapon[guard.equipment.weapon.item.rarity]++;
+        rarities.armor[guard.equipment.armor.item.rarity]++;
+        rarities.object[guard.equipment.object.rarity]++;
+        if (guard.equipment.potion.id !== NO_POTION_ID) { rarities.potion[guard.equipment.potion.rarity]++; loot.potion++; }
+        const bucket = guard.pet.force < 5 ? "1-4" : guard.pet.force < 10 ? "5-9" : guard.pet.force < 20 ? "10-19" : "20-30";
+        petForces.set(bucket, (petForces.get(bucket) || 0) + 1);
+        for (const slot of [guard.equipment.weapon, guard.equipment.armor]) {
+            if (slot.itemLevel === 1) loot.up1++;
+            if (slot.itemLevel === 2) loot.up2++;
+            if (slot.enchanted) loot.enchanted++;
+        }
+        const { weapon, armor } = guard.stats.items;
+        if (weapon.attack >= guard.stats.caps.attack) loot.capped++;
+        if (armor.defense >= guard.stats.caps.defense) loot.capped++;
+        for (const key of Object.keys(values)) values[key].push(guard.stats[key]);
+    }
+    const n = input.samples;
+    const mean = list => list.reduce((s, v) => s + v, 0) / list.length;
+    const levelList = [...levels.entries()].sort((a, b) => a[0] - b[0]);
+    const levelValues = levelList.flatMap(([level, count]) => new Array(count).fill(level));
+    document.getElementById("distStats").innerHTML = [
+        [fmt(input.baseLevel), "Niveau de base"],
+        [fmt(mean(levelValues), 1), "Niveau moyen du garde"],
+        [pct(levelValues.filter(l => l < input.playerLevel).length / n), "Gardes sous le niveau du joueur"],
+        [pct(loot.potion / n), "Avec potion de combat"],
+        [pct(loot.capped / (2 * n)), "Arme/armure plafonnées"],
+        [fmt(n), "Simulations"]
+    ].map(([v, l]) => `<div class="card stat"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+    document.getElementById("levelBars").innerHTML = barsHtml(levelList.map(([level, count]) => [`Niveau ${level}`, count]), n);
+    document.getElementById("classBars").innerHTML = barsHtml([...classes.entries()].sort((a, b) => b[1] - a[1]), n);
+    document.getElementById("petForceBars").innerHTML = barsHtml(["1-4", "5-9", "10-19", "20-30"].map(b => [`Force ${b}`, petForces.get(b) || 0]), n);
+    document.getElementById("rarityLegend").innerHTML = RARITY_NAMES.slice(1).map((name, i) => `<span><span class="sw" style="background:${RARITY_COLORS[i + 1]}"></span>${name}</span>`).join("");
+    document.getElementById("rarityTable").innerHTML = `<div class="table-wrap"><table><thead><tr><th>Emplacement</th>${RARITY_NAMES.slice(1).map(r => `<th class="num">${r}</th>`).join("")}</tr></thead><tbody>${
+        [["🗡️ Arme", "weapon", n], ["🛡️ Armure", "armor", n], ["🧿 Objet", "object", n], ["🧪 Potion (si présente)", "potion", Math.max(loot.potion, 1)]]
+            .map(([label, key, total]) => `<tr><td>${label}</td>${rarities[key].slice(1).map(count => `<td class="num">${count ? pct(count / total) : "·"}</td>`).join("")}</tr>`).join("")
+    }</tbody></table></div>`;
+    const statLabels = { energy: "⚡ Énergie", attack: "⚔️ Attaque", defense: "🛡️ Défense", speed: "🚀 Vitesse" };
+    document.getElementById("statTable").innerHTML = `<div class="table-wrap"><table><thead><tr><th>Stat</th><th class="num">p10</th><th class="num">p25</th><th class="num">Médiane</th><th class="num">p75</th><th class="num">p90</th><th class="num">Moyenne</th></tr></thead><tbody>${
+        Object.entries(values).map(([key, list]) => {
+            const sorted = list.slice().sort((a, b) => a - b);
+            return `<tr><td>${statLabels[key]}</td>${[0.1, 0.25, 0.5, 0.75, 0.9].map(q => `<td class="num">${fmt(percentile(sorted, q))}</td>`).join("")}<td class="num">${fmt(mean(list))}</td></tr>`;
+        }).join("")
+    }</tbody></table></div>`;
+    document.getElementById("lootTable").innerHTML = `<div class="table-wrap"><table><tbody>
+        <tr><td>Arme ou armure +1</td><td class="num">${pct(loot.up1 / (2 * n))}</td></tr>
+        <tr><td>Arme ou armure +2</td><td class="num">${pct(loot.up2 / (2 * n))}</td></tr>
+        <tr><td>Arme ou armure enchantée</td><td class="num">${pct(loot.enchanted / (2 * n))}</td></tr>
+        <tr><td>Potion de combat</td><td class="num">${pct(loot.potion / n)}</td></tr>
+    </tbody></table></div>`;
+}
+
+function lineChart(series, { width = 1200, height = 320, xLabel = "Niveau" } = {}) {
+    const pad = { l: 50, r: 16, t: 12, b: 30 };
+    const xs = series[0].points.map(p => p[0]);
+    const xMin = Math.min(...xs), xMax = Math.max(...xs);
+    const yMax = Math.max(...series.flatMap(s => s.points.map(p => p[1]))) * 1.05 || 1;
+    const x = v => pad.l + (v - xMin) / (xMax - xMin || 1) * (width - pad.l - pad.r);
+    const y = v => height - pad.b - v / yMax * (height - pad.t - pad.b);
+    const grid = [0, 0.25, 0.5, 0.75, 1].map(f => `<line x1="${pad.l}" x2="${width - pad.r}" y1="${y(f * yMax)}" y2="${y(f * yMax)}" stroke="#e2e8f0"/><text x="${pad.l - 6}" y="${y(f * yMax) + 4}" text-anchor="end" font-size="11" fill="#64748b">${fmt(f * yMax)}</text>`).join("");
+    const ticks = xs.filter((_, i) => i % Math.ceil(xs.length / 12) === 0).map(v => `<text x="${x(v)}" y="${height - 10}" text-anchor="middle" font-size="11" fill="#64748b">${v}</text>`).join("");
+    const lines = series.map(s => `<polyline fill="none" stroke="${s.color}" stroke-width="2" ${s.dashed ? 'stroke-dasharray="5 4" opacity=".6"' : ""} points="${s.points.map(p => `${x(p[0])},${y(p[1])}`).join(" ")}"/>`).join("");
+    return `<svg viewBox="0 0 ${width} ${height}" width="100%">${grid}${ticks}${lines}<text x="${width - pad.r}" y="${height - 10}" text-anchor="end" font-size="11" fill="#94a3b8">${xLabel}</text></svg>`;
+}
+
+function renderCurves() {
+    const input = readInputs();
+    const perLevel = Math.max(50, Math.floor(input.samples / 60));
+    const rows = [];
+    for (let level = C.REQUIRED_LEVEL; level <= 200; level += 4) {
+        const sum = { energy: 0, attack: 0, defense: 0, speed: 0, capAttack: 0, capDefense: 0, capSpeed: 0 };
+        for (let i = 0; i < perLevel; i++) {
+            const { stats } = generateGuard(level, input.forcedClassId);
+            for (const key of ["energy", "attack", "defense", "speed"]) sum[key] += stats[key];
+            sum.capAttack += stats.caps.attack; sum.capDefense += stats.caps.defense; sum.capSpeed += stats.caps.speed;
+        }
+        const avg = key => sum[key] / perLevel;
+        rows.push({ level, range: rarityRangeOf(level), energy: avg("energy"), attack: avg("attack"), defense: avg("defense"), speed: avg("speed"), capAttack: avg("capAttack"), capDefense: avg("capDefense"), capSpeed: avg("capSpeed") });
+    }
+    const series = (key, color, dashed = false, factor = 1) => ({ color, dashed, points: rows.map(r => [r.level, r[key] / factor]) });
+    document.getElementById("statsChart").innerHTML = lineChart([
+        series("attack", "#e94560"), series("defense", "#3b82f6"), series("speed", "#22c55e"), series("energy", "#f59e0b", false, 10),
+        series("capAttack", "#e94560", true), series("capDefense", "#3b82f6", true), series("capSpeed", "#22c55e", true)
+    ]);
+    document.getElementById("rarityChart").innerHTML = lineChart([
+        { color: "#8b5cf6", points: rows.map(r => [r.level, r.range.max]) },
+        { color: "#6366f1", dashed: true, points: rows.map(r => [r.level, r.range.min]) }
+    ], { height: 220 });
+    document.getElementById("curveTable").innerHTML = `<thead><tr><th>Niveau</th><th>Rareté</th><th class="num">Énergie</th><th class="num">Attaque</th><th class="num">Défense</th><th class="num">Vitesse</th></tr></thead><tbody>${
+        rows.map(r => `<tr><td>${r.level}</td><td>${rarityBadge(r.range.min)} → ${rarityBadge(r.range.max)}</td><td class="num">${fmt(r.energy)}</td><td class="num">${fmt(r.attack)}</td><td class="num">${fmt(r.defense)}</td><td class="num">${fmt(r.speed)}</td></tr>`).join("")
+    }</tbody>`;
+}
+
+function renderPets() {
+    const weights = DATA.petPool.map(pet => ({ pet, weight: Math.pow(pet.force, C.PET_WEIGHT_EXPONENT) }));
+    const total = weights.reduce((s, w) => s + w.weight, 0);
+    DATA.petWeightTotal = total;
+    const meanForce = weights.reduce((s, w) => s + w.pet.force * w.weight, 0) / total;
+    const uniformForce = DATA.petPool.reduce((s, p) => s + p.force, 0) / DATA.petPool.length;
+    const sorted = weights.slice().sort((a, b) => b.weight - a.weight);
+    document.getElementById("petStats").innerHTML = [
+        [fmt(DATA.petPool.length), "Familiers possibles"],
+        [fmt(meanForce, 1), "Force moyenne tirée"],
+        [fmt(uniformForce, 1), "Force moyenne (tirage uniforme)"],
+        [pct(sorted[0].weight / total), "Familier le plus probable"],
+        [pct(sorted[sorted.length - 1].weight / total), "Familier le moins probable"]
+    ].map(([v, l]) => `<div class="card stat"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+    document.getElementById("petTable").innerHTML = `<thead><tr><th>#</th><th>Familier</th><th class="num">Force</th><th class="num">Rareté</th><th class="num">Probabilité</th><th class="num">Une fois sur</th></tr></thead><tbody>${
+        sorted.map(({ pet, weight }) => `<tr><td>${pet.id}</td><td>${escapeHtml(pet.name)}</td><td class="num">${pet.force}</td><td class="num">${pet.rarity}</td><td class="num">${pct(weight / total)}</td><td class="num">${fmt(total / weight)}</td></tr>`).join("")
+    }</tbody>`;
+}
+
+function buildConstantsEditor() {
+    document.getElementById("constGrid").innerHTML = Object.entries(CONSTANT_LABELS).map(([key, [label, source]]) =>
+        `<div class="fg"><label for="const_${key}">${label}</label><input type="number" step="any" id="const_${key}" data-key="${key}" value="${C[key]}"><span class="hint">${source} · branche : ${C_LOADED[key]}</span></div>`).join("");
+    for (const input of document.querySelectorAll("#constGrid input")) {
+        input.addEventListener("change", () => {
+            const value = parseFloat(input.value);
+            if (!Number.isNaN(value)) { C[input.dataset.key] = value; renderAll(); }
+        });
+    }
+}
+
+let activeTab = "generator";
+function renderAll() {
+    if (!DATA) return;
+    renderPets();
+    if (activeTab === "generator") generateCards(6);
+    if (activeTab === "distribution") renderDistribution();
+    if (activeTab === "curves") renderCurves();
+}
+
+/* ============================================================
+   ÉVÉNEMENTS
+   ============================================================ */
+document.getElementById("loadBtn").addEventListener("click", loadFromGithub);
+document.getElementById("clearCacheBtn").addEventListener("click", () => {
+    for (const key of Object.keys(localStorage)) if (key.startsWith(CACHE_PREFIX)) localStorage.removeItem(key);
+    setStatus("🗑️ Cache local vidé", "success");
+});
+document.getElementById("genOneBtn").addEventListener("click", () => generateCards(1));
+document.getElementById("genSixBtn").addEventListener("click", () => generateCards(6));
+document.getElementById("resetConstBtn").addEventListener("click", () => { C = Object.assign({}, C_LOADED); buildConstantsEditor(); renderAll(); });
+document.getElementById("historyMode").addEventListener("change", e => {
+    document.getElementById("historyLevelGroup").classList.toggle("hidden", e.target.value === "none");
+    renderAll();
+});
+for (const id of ["playerLevel", "historyLevel", "forcedClass", "sampleCount"]) document.getElementById(id).addEventListener("change", renderAll);
+for (const button of document.querySelectorAll(".tab-btn")) {
+    button.addEventListener("click", () => {
+        activeTab = button.dataset.tab;
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b === button));
+        document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.id === `tab-${activeTab}`));
+        renderAll();
+    });
+}
+document.getElementById("historyLevelGroup").classList.add("hidden");
+loadFromGithub();
+</script>
+</body>
+</html>
