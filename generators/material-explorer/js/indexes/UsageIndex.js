@@ -1,13 +1,13 @@
 // ==========================================================================
 // Builds the per-material usage index: which recipes consume or produce
-// each material, and which compost / boss / expedition tables include it.
+// each material, and which compost / monster / biome tables include it.
 //
 // usageIndex[materialId] = {
 //   usedInRecipes:     [{ recipeId, quantity, outputType }],
 //   producedByRecipes: [{ recipeId, quantity }],
 //   compostFrom:       [{ plantId, plantName }],
 //   bossLootFrom:      [{ mapId, mapName, bosses }],
-//   expeditionLootFrom:[{ locationType, locationName, locationEmoji }]
+//   expeditionLootFrom:[{ locationType, locationName, locationEmoji, locations }]
 // }
 // ==========================================================================
 
@@ -52,15 +52,17 @@ function buildUsageIndex() {
         }
     }
 
-    // Boss loot
+    // Boss loot, sourced from each monster's resource and linked by its maps field.
     for (const [mapId, entry] of Object.entries(BOSS_LOOT_TABLES)) {
-        for (const matId of entry.materials) {
-            if (usageIndex[matId]) {
-                usageIndex[matId].bossLootFrom.push({
-                    mapId: parseInt(mapId, 10),
-                    mapName: entry.name,
-                    bosses: entry.bosses
-                });
+        for (const monster of entry.monsters) {
+            for (const matId of monster.materials) {
+                if (usageIndex[matId]) {
+                    usageIndex[matId].bossLootFrom.push({
+                        mapId: parseInt(mapId, 10),
+                        mapName: entry.name,
+                        bosses: monster.name
+                    });
+                }
             }
         }
     }
@@ -72,7 +74,8 @@ function buildUsageIndex() {
                 usageIndex[matId].expeditionLootFrom.push({
                     locationType,
                     locationName: entry.name,
-                    locationEmoji: entry.emoji
+                    locationEmoji: entry.emoji,
+                    locations: entry.locations
                 });
             }
         }

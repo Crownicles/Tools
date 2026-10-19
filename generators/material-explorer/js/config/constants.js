@@ -40,18 +40,17 @@ const ITEM_RARITY_NAMES = {
 // Loaded at runtime from Core/resources/itemUpgradeMaterialCounts/<itemRarity>.json
 // into the `distinctCounts` global (see DataLoader.js).
 
-// Expedition loot tables. `name` / `emoji` are display-only metadata (not in the
-// Crownicles source); the `materials` arrays are loaded at runtime from
-// Lib/src/constants/ExpeditionConstants.ts (see parseExpeditionLoot in DataLoader.js).
+// Biome loot metadata is display-only; material pools and the map locations
+// assigned to each biome are loaded from Core/resources at runtime.
 const EXPEDITION_LOOT_TABLES = {
-    forest: { name: 'Forêt', emoji: '🌲', materials: [] },
-    mountain: { name: 'Montagne', emoji: '⛰️', materials: [] },
-    desert: { name: 'Désert', emoji: '🏜️', materials: [] },
-    swamp: { name: 'Marais', emoji: '🐊', materials: [] },
-    ruins: { name: 'Ruines', emoji: '🏚️', materials: [] },
-    cave: { name: 'Grotte', emoji: '🦇', materials: [] },
-    plains: { name: 'Plaines', emoji: '🌾', materials: [] },
-    coast: { name: 'Côte', emoji: '🏖️', materials: [] }
+    forest: { name: 'Forêt', emoji: '🌲', materials: [], locations: [] },
+    mountain: { name: 'Montagne', emoji: '⛰️', materials: [], locations: [] },
+    desert: { name: 'Désert', emoji: '🏜️', materials: [], locations: [] },
+    swamp: { name: 'Marais', emoji: '🐊', materials: [], locations: [] },
+    ruins: { name: 'Ruines', emoji: '🏚️', materials: [], locations: [] },
+    cave: { name: 'Grotte', emoji: '🦇', materials: [], locations: [] },
+    plains: { name: 'Plaines', emoji: '🌾', materials: [], locations: [] },
+    coast: { name: 'Côte', emoji: '🏖️', materials: [], locations: [] }
 };
 
 // Plant compost data. `name` is filled from translations at load time; the

@@ -24,7 +24,7 @@ function renderSourcesTable() {
             : '<span style="color:var(--text-secondary)">—</span>';
 
         const expedHtml = usage.expeditionLootFrom.length > 0
-            ? usage.expeditionLootFrom.map(e => `${e.locationEmoji} ${e.locationName}`).join('<br>')
+            ? usage.expeditionLootFrom.map(e => `${e.locationEmoji} ${e.locationName} (${e.locations.length} lieux)`).join('<br>')
             : '<span style="color:var(--text-secondary)">—</span>';
 
         return `<tr>

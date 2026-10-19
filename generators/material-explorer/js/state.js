@@ -13,6 +13,7 @@ let distinctCounts = {};
 let UPGRADE_TABLE = {};
 let plantData = {};
 let BOSS_LOOT_TABLES = {};
+// Biome tables are configured in constants.js and populated during data loading.
 let itemTypeStats = { weapons: {}, armors: {} };
 
 let usageIndex = {};

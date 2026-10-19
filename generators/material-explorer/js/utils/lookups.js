@@ -21,7 +21,7 @@ function getItemName(itemId, category) {
 function getMapName(mapId) {
     const entry = BOSS_LOOT_TABLES[mapId];
     if (entry) return entry.name;
-    return translations.mapLocations?.[String(mapId)] || `Map #${mapId}`;
+    return translations.map_locations?.[String(mapId)]?.name || `Map #${mapId}`;
 }
 
 function isUnused(id) {

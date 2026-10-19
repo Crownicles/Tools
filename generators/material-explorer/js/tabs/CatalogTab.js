@@ -51,7 +51,7 @@ function buildMaterialCard(info) {
         usageHtml += `<div class="usage-section">
             <div class="usage-title">🗺️ Trouvé en expédition :</div>
             <ul class="usage-list">${usage.expeditionLootFrom.map(e =>
-                `<li>${e.locationEmoji} ${e.locationName}</li>`
+                `<li>${e.locationEmoji} ${e.locationName} <span style="color:var(--text-secondary);font-size:0.85rem">(${e.locations.length} lieux)</span></li>`
             ).join('')}</ul></div>`;
     }
 

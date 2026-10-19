@@ -25,7 +25,7 @@
             </div>
             <div class="github-input-group">
                 <label>Branche</label>
-                <input type="text" id="branchName" value="cities2" placeholder="Branche">
+                <input type="text" id="branchName" value="develop" placeholder="Branche">
             </div>
             <button class="github-load-btn" id="loadBtn" onclick="loadFromGithub()">
                 <span class="loading-spinner" id="loadingSpinner"></span>
@@ -106,14 +106,14 @@
             <!-- Boss Loot tab -->
             <div class="tab-content" id="tab-bossloot">
                 <h3 style="margin-bottom:16px;color:var(--accent-secondary);">🐉 Loot des boss PVE</h3>
-                <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque boss des îles PVE possède une table de loot de matériaux. Lors d'une victoire, 5-10 unités sont droppées aléatoirement, pondérées par rareté (commun 60%, peu commun 30%, rare 10%).</p>
+                <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque monstre des îles PVE possède sa propre table de loot de matériaux (<code>materialLoot</code> de son fichier). Lors d'une victoire, 8-18 unités sont droppées aléatoirement, pondérées par rareté (commun 60%, peu commun 30%, rare 10%).</p>
                 <div id="bossLootContent"></div>
             </div>
 
             <!-- Expedition Loot tab -->
             <div class="tab-content" id="tab-expedloot">
                 <h3 style="margin-bottom:16px;color:var(--accent-secondary);">🗺️ Loot d'expédition</h3>
-                <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque type de terrain d'expédition possède une table de loot de matériaux. Le nombre de drops dépend de l'indice de récompense (1-5 drops), pondérés par rareté (commun 60%, peu commun 30%, rare 10%). Minimum reward index de 1 requis.</p>
+                <p style="margin-bottom:16px;color:var(--text-secondary);">Chaque biome possède une table de loot de matériaux (<code>Core/resources/biomes</code>), partagée avec l'event de découverte de matériaux. Un lieu peut déclarer plusieurs biomes. Le nombre de drops dépend de l'indice de récompense (1-5 drops), pondérés par rareté (commun 60%, peu commun 30%, rare 10%). Minimum reward index de 1 requis.</p>
                 <div id="expedLootContent"></div>
             </div>
 

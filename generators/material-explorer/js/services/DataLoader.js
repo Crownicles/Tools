@@ -1,6 +1,6 @@
 // ==========================================================================
 // Orchestrates GitHub data loading: materials, translations, recipes,
-// weapons, armors, plant compost names, and boss loot tables.
+// weapons, armors, plant compost names, and loot sources.
 // ==========================================================================
 
 // Materials map material rarity names to their numeric ids (mirrors MaterialRarity).
@@ -64,25 +64,50 @@ function parseUpgradeTotals(tsText) {
     return out;
 }
 
-// Parse the `key: [ ...ids ]` arrays of EXPEDITION_LOOT_TABLES from
-// ExpeditionConstants.ts into { [locationKey]: number[] }.
-function parseExpeditionLoot(tsText) {
-    const anchor = tsText.indexOf('EXPEDITION_LOOT_TABLES');
-    if (anchor < 0) {
-        throw new Error('EXPEDITION_LOOT_TABLES not found');
+async function loadExpeditionLootTables(owner, repo, branch, statusUpdater) {
+    statusUpdater?.('📡 Chargement des biomes et de leurs lieux...');
+    for (const entry of Object.values(EXPEDITION_LOOT_TABLES)) {
+        entry.materials = [];
+        entry.locations = [];
     }
-    const body = extractBraceBlock(tsText, tsText.indexOf('= {', anchor));
-    if (!body) {
-        throw new Error('EXPEDITION_LOOT_TABLES body not found');
+
+    const biomeFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/biomes');
+    await Promise.all(biomeFiles.map(async file => {
+        const biome = file.name.replace('.json', '');
+        const entry = EXPEDITION_LOOT_TABLES[biome] || (EXPEDITION_LOOT_TABLES[biome] = {
+            name: biome,
+            emoji: '🌍',
+            materials: [],
+            locations: []
+        });
+        try {
+            const data = await fetchRaw(owner, repo, branch, `Core/resources/biomes/${file.name}`);
+            entry.materials = Array.isArray(data.materialLoot) ? data.materialLoot : [];
+        }
+        catch {
+            entry.materials = [];
+        }
+    }));
+
+    const locationFiles = await fetchDirListing(owner, repo, branch, 'Core/resources/mapLocations');
+    await Promise.all(locationFiles.map(async file => {
+        const id = Number(file.name.replace('.json', ''));
+        try {
+            const location = await fetchRaw(owner, repo, branch, `Core/resources/mapLocations/${file.name}`);
+            const name = translations.map_locations?.[String(id)]?.name || `Map #${id}`;
+            for (const biome of Array.isArray(location.biomes) ? location.biomes : []) {
+                const entry = EXPEDITION_LOOT_TABLES[biome];
+                if (entry) {
+                    entry.locations.push({ id, name });
+                }
+            }
+        }
+        catch { /* skip unavailable locations while preserving other biome data */ }
+    }));
+
+    for (const entry of Object.values(EXPEDITION_LOOT_TABLES)) {
+        entry.locations.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
     }
-    const out = {};
-    const entryRegex = /(\w+)\s*:\s*\[([\s\S]*?)\]/g;
-    let entry;
-    while ((entry = entryRegex.exec(body)) !== null) {
-        const ids = entry[2].replace(/\/\/.*$/gm, '').match(/\d+/g);
-        out[entry[1]] = ids ? ids.map(Number) : [];
-    }
-    return out;
 }
 
 // Parse the ordered `compostMaterials: [ ...ids ]` arrays of PLANT_TYPES from
@@ -178,8 +203,7 @@ async function loadFromGithub() {
             catch { /* rarity file missing on this branch */ }
         }));
 
-        // Upgrade totals, expedition loot and plant compost live in TS constants
-        // (no JSON export), so fetch + parse them to stay in sync with the source.
+        // Upgrade totals and plant compost live in TS constants (no JSON export).
         updateStatus('📡 Chargement des tables de constantes...', 'loading');
         try {
             const itemConstTxt = await fetchText(owner, repo, branch, 'Lib/src/constants/ItemConstants.ts');
@@ -190,16 +214,14 @@ async function loadFromGithub() {
             UPGRADE_TABLE = {};
         }
         try {
-            const expeditionConstTxt = await fetchText(owner, repo, branch, 'Lib/src/constants/ExpeditionConstants.ts');
-            const loot = parseExpeditionLoot(expeditionConstTxt);
-            for (const [key, ids] of Object.entries(loot)) {
-                if (EXPEDITION_LOOT_TABLES[key]) {
-                    EXPEDITION_LOOT_TABLES[key].materials = ids;
-                }
-            }
+            await loadExpeditionLootTables(owner, repo, branch, (msg) => updateStatus(msg, 'loading'));
         }
         catch (err) {
-            console.warn('EXPEDITION_LOOT_TABLES not available on this branch:', err);
+            console.warn('Biome loot data not available on this branch:', err);
+            for (const entry of Object.values(EXPEDITION_LOOT_TABLES)) {
+                entry.materials = [];
+                entry.locations = [];
+            }
         }
         try {
             const plantConstTxt = await fetchText(owner, repo, branch, 'Lib/src/constants/PlantConstants.ts');
@@ -283,18 +305,17 @@ async function loadFromGithub() {
             }
         }
 
-        // Boss loot tables (PVEConstants.ts + monsters dir) — graceful on older branches.
+        // Boss loot is now defined on each monster; monster maps link it to PVE locations.
         try {
             BOSS_LOOT_TABLES = await loadBossLootTables(owner, repo, branch, (msg) => updateStatus(msg, 'loading'));
         }
         catch (err) {
-            // Older branches (before #3874) don't ship BOSS_LOOT_TABLES.
-            console.warn('BOSS_LOOT_TABLES not available on this branch:', err);
+            console.warn('Monster loot data not available on this branch:', err);
             BOSS_LOOT_TABLES = {};
         }
 
         const totalMats = Object.keys(materials).length;
-        const bossCount = Object.keys(BOSS_LOOT_TABLES).length;
+        const bossCount = Object.values(BOSS_LOOT_TABLES).reduce((count, map) => count + map.monsters.length, 0);
         updateStatus(
             `✅ Chargé: ${totalMats} matériaux, ${recipes.length} recettes, ${weapons.length} armes, ${armors.length} armures, ${bossCount} tables de boss`,
             'success'

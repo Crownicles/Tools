@@ -1,12 +1,12 @@
 // ==========================================================================
-// Expedition Loot tab — drop tables per terrain type.
+// Expedition Loot tab — drop tables per biome and the locations assigned to it.
 // ==========================================================================
 
 function renderExpedLootTab() {
     const container = document.getElementById('expedLootContent');
     let html = '';
 
-    for (const [locationType, entry] of Object.entries(EXPEDITION_LOOT_TABLES)) {
+    for (const entry of Object.values(EXPEDITION_LOOT_TABLES)) {
         let materialsHtml = '';
         let totalWeight = 0;
         const matEntries = [];
@@ -30,6 +30,10 @@ function renderExpedLootTab() {
                 </div>`;
         }
 
+        const locationsHtml = entry.locations.length > 0
+            ? `<details><summary style="cursor:pointer;color:var(--text-secondary);font-size:0.85rem;margin:8px 0;">Lieux associés (${entry.locations.length})</summary><div style="font-size:0.85rem;color:var(--text-secondary);margin:4px 0 10px;">${entry.locations.map(location => location.name).join(' · ')}</div></details>`
+            : '<div style="color:var(--text-secondary);font-size:0.85rem;margin:8px 0;">Aucun lieu associé à ce biome</div>';
+
         html += `
             <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px var(--shadow);">
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
@@ -39,8 +43,9 @@ function renderExpedLootTab() {
                         <span style="color:var(--text-secondary);font-size:0.85rem;margin-left:8px;">Drops : ${DROPS_BY_REWARD_INDEX[1]}–${DROPS_BY_REWARD_INDEX[9]} (selon indice de récompense)</span>
                     </div>
                 </div>
+                ${locationsHtml}
                 <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));gap:8px;">
-                    ${materialsHtml}
+                    ${materialsHtml || '<span style="color:var(--text-secondary)">Aucun matériau configuré</span>'}
                 </div>
             </div>`;
     }
