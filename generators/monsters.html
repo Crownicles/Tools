@@ -98,6 +98,10 @@
         obj.breath = 999999;
         obj.maxBreath = 999999;
         obj.breathRegen = 999999;
+        const materialLoot = document.getElementById('materialLoot').value.trim();
+        obj.materialLoot = materialLoot
+            ? materialLoot.split(/[,\s]+/).map(Number).filter(id => Number.isSafeInteger(id) && id > 0)
+            : [];
         obj.attacks = [{ "id": "attackName", "minLevel": 0 }];
         obj.maps = [999999];
         return JSON.stringify(obj, undefined, '\t');
@@ -128,6 +132,11 @@
                             <option value="40">Very strong</option>
                             <option value="50">Final boss</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="materialLoot">Material loot IDs (comma or space separated)</label>
+                        <input type="text" class="form-control" id="materialLoot" placeholder="e.g. 14, 35, 68"
+                            onInput="changeForm()" autocomplete="off">
                     </div>
                     <br />
                     <div class="form-group">

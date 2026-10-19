@@ -5,7 +5,7 @@ const CONSTANTS = {
     NATURE_NAMES: ["None", "Health", "Speed", "Attack", "Defense", "Time Speedup", "Money", "Energy"],
     
     ITEM_TYPES: [
-        { type: 'weapons', count: 99 },
+        { type: 'weapons', count: 100 },
         { type: 'armors', count: 65 },
         { type: 'objects', count: 93 },
         { type: 'potions', count: 50 }
