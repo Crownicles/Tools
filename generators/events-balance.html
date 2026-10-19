@@ -174,6 +174,9 @@ const EFFECT_LABEL = {
 // XP constants from Lib/src/constants/BigEventConstants.ts
 const XP = { BASE: 172, HEALTH_BONUS: 230, RANDOM_ITEM_BONUS: 345, MONEY_BONUS: 115,
     OCCUPIED_PENALTY: 125, SLEEPING_STARVING_PENALTY: 130, CONFOUNDED_PENALTY: 140 };
+const CITY_MAP_LOCATION_TYPE = "ci";
+const CITY_STAY_TIME_LIMIT_MINUTES = 1000;
+const CITY_STAY_BONUS_POINT_TIME_DIVIDER = 6;
 
 // Default value-model weights (1 unit ≈ "1 point of player value")
 const DEFAULT_WEIGHTS = {
@@ -203,6 +206,7 @@ class EventsBalanceApp {
         this.sortDir = "desc";
         this.search = "";
         this.loopMaxLen = 8;       // max number of locations in a farming loop
+        this.cityStayMinutes = 60;
         this.renderWeights();
         this.loadBranches();
     }
@@ -578,14 +582,21 @@ class EventsBalanceApp {
             const evs = pool.map(e => e.bestEV);
             const avg = evs.length ? evs.reduce((s, v) => s + v, 0) / evs.length : 0;
             const worstAvg = pool.length ? pool.reduce((s, e) => s + e.worstEV, 0) / pool.length : 0;
-            return { id, ...loc, poolSize: pool.length, avgBestEV: avg, avgWorstEV: worstAvg, localCount: pool.filter(e => !e.isGlobal).length };
+            const cityStayPoints = loc.type === CITY_MAP_LOCATION_TYPE
+                ? this.estimateCityStayPoints(this.cityStayMinutes)
+                : 0;
+            const valueWithStay = avg + cityStayPoints * this.weights.bonusPoints;
+            return {
+                id, ...loc, poolSize: pool.length, avgBestEV: avg, avgWorstEV: worstAvg,
+                cityStayPoints, valueWithStay, localCount: pool.filter(e => !e.isGlobal).length
+            };
         }).filter(l => l.poolSize > 0);
 
-        const avgs = locStats.map(l => l.avgBestEV);
+        const avgs = locStats.map(l => l.valueWithStay);
         const mean = avgs.reduce((s, v) => s + v, 0) / (avgs.length || 1);
         const std = Math.sqrt(avgs.reduce((s, v) => s + (v - mean) ** 2, 0) / (avgs.length || 1)) || 1;
-        locStats.forEach(l => { l.z = (l.avgBestEV - mean) / std; l.flag = this.flagForLoc(l.z); });
-        locStats.sort((a, b) => b.avgBestEV - a.avgBestEV);
+        locStats.forEach(l => { l.z = (l.valueWithStay - mean) / std; l.flag = this.flagForLoc(l.z); });
+        locStats.sort((a, b) => b.valueWithStay - a.valueWithStay);
 
         // route table: each maplink => destination location profitability
         const routes = this.links
@@ -598,7 +609,8 @@ class EventsBalanceApp {
                     originName: origin?.name || `Lieu ${l.startMap}`,
                     destName: this.locations[l.endMap]?.name || `Lieu ${l.endMap}`,
                     tripDuration: l.tripDuration,
-                    avgBestEV: dest ? dest.avgBestEV : null,
+                    avgBestEV: dest ? dest.valueWithStay : null,
+                    cityStayPoints: dest ? dest.cityStayPoints : 0,
                     flag: dest ? dest.flag : null,
                     poolSize: dest ? dest.poolSize : 0
                 };
@@ -609,13 +621,21 @@ class EventsBalanceApp {
         pane.innerHTML = `
             <div class="card">
                 <h3 style="margin-top:0">🗺️ Rentabilité par localisation (destination de voyage)</h3>
-                <p class="hint">Valeur attendue à l'arrivée = moyenne de la « valeur meilleur choix » sur le pool d'events pouvant s'y déclencher (events globaux + spécifiques au lieu). Permet de repérer des destinations trop généreuses ou trop hostiles.</p>
+                <p class="hint">La valeur estimée combine la moyenne de la « valeur meilleur choix » des events applicables et, pour les villes, les points de séjour estimés. Le séjour n'est pas une récompense d'arrivée : il dépend du temps réellement passé en ville.</p>
+                <div class="row" style="margin:10px 0">
+                    <div class="field">
+                        <label for="cityStayMinutes">Séjour en ville estimé (minutes, maximum ${CITY_STAY_TIME_LIMIT_MINUTES})</label>
+                        <input id="cityStayMinutes" type="number" min="0" max="${CITY_STAY_TIME_LIMIT_MINUTES}" value="${this.cityStayMinutes}" onchange="app.setCityStayMinutes(this.value)">
+                    </div>
+                    <div class="hint" style="align-self:center">≈ ${Math.round(this.estimateCityStayPoints(this.cityStayMinutes))} points de séjour pour une ville, bonus aléatoire moyen inclus. Les effets qui suspendent le décompte ne sont pas modélisés.</div>
+                </div>
                 <div class="table-scroll" style="margin-top:10px">
                 <table>
                     <thead><tr>
                         <th>Lieu</th><th>Type</th><th>Attribut</th>
-                        <th class="num">Valeur moy.</th><th class="num">Écart (z)</th><th>Équilibrage</th>
-                        <th class="num">Events (dont locaux)</th><th class="num">Valeur pire cas</th>
+                        <th class="num">Valeur events</th><th class="num">Points séjour</th><th class="num">Valeur estimée</th>
+                        <th class="num">Écart (z)</th><th>Équilibrage</th>
+                        <th class="num">Events (dont locaux)</th><th class="num">Pire cas events</th>
                     </tr></thead>
                     <tbody>
                         ${locStats.map(l => `
@@ -624,6 +644,8 @@ class EventsBalanceApp {
                                 <td>${this.esc(l.typeName || "")}</td>
                                 <td>${this.esc(l.attribute || "")}</td>
                                 <td class="num"><strong>${Math.round(l.avgBestEV)}</strong></td>
+                                <td class="num">${l.cityStayPoints ? Math.round(l.cityStayPoints) : "—"}</td>
+                                <td class="num"><strong>${Math.round(l.valueWithStay)}</strong></td>
                                 <td class="num">${l.z.toFixed(2)}</td>
                                 <td><span class="flag ${l.flag.cls}">${l.flag.label}</span></td>
                                 <td class="num">${l.poolSize} <span class="breakdown">(${l.localCount})</span></td>
@@ -639,13 +661,14 @@ class EventsBalanceApp {
                 <div class="table-scroll">
                 <table>
                     <thead><tr>
-                        <th>Route</th><th class="num">Durée (min)</th><th class="num">Valeur dest.</th><th>Équilibrage</th><th class="num">Pool events</th>
+                        <th>Route</th><th class="num">Durée (min)</th><th class="num">Points séjour</th><th class="num">Valeur dest.</th><th>Équilibrage</th><th class="num">Pool events</th>
                     </tr></thead>
                     <tbody>
                         ${routes.map(r => `
                             <tr>
                                 <td>${this.esc(r.originName)} → <strong>${this.esc(r.destName)}</strong></td>
                                 <td class="num">${r.tripDuration}</td>
+                                <td class="num">${r.cityStayPoints ? Math.round(r.cityStayPoints) : "—"}</td>
                                 <td class="num"><strong>${Math.round(r.avgBestEV)}</strong></td>
                                 <td><span class="flag ${r.flag.cls}">${r.flag.label}</span></td>
                                 <td class="num">${r.poolSize}</td>
@@ -656,6 +679,19 @@ class EventsBalanceApp {
             </div>
 
             ${this.renderLoopsSection()}`;
+    }
+
+    estimateCityStayPoints(minutes) {
+        const cappedMinutes = Math.min(Math.max(Math.floor(Number(minutes) || 0), 0), CITY_STAY_TIME_LIMIT_MINUTES);
+        const maximumBonus = Math.floor(cappedMinutes / CITY_STAY_BONUS_POINT_TIME_DIVIDER);
+        return cappedMinutes + maximumBonus / 2;
+    }
+
+    setCityStayMinutes(value) {
+        const minutes = Number(value);
+        if (!Number.isFinite(minutes) || minutes < 0) return;
+        this.cityStayMinutes = Math.min(Math.floor(minutes), CITY_STAY_TIME_LIMIT_MINUTES);
+        this.renderLocationsPane();
     }
 
     // ---- Most profitable farming loops (cycles in the mapLinks graph) ----

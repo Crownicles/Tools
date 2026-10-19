@@ -369,11 +369,13 @@
 const OWNER = 'Crownicles';
 const REPO = 'Crownicles';
 const SE_PATH = 'Core/resources/smallEvents';
+const BIOMES_PATH = 'Core/resources/biomes';
 const TRANSLATIONS_PATH = 'Lang/fr/smallEvents.json';
+const MODELS_PATH = 'Lang/fr/models.json';
 
 // Event category classification
 const EVENT_CATEGORIES = {
-    'Récompense': ['advanceTime', 'farmer', 'findItem', 'findMission', 'findPet', 'findPotion', 'winEnergy', 'winEnergyOnIsland', 'winGuildXP', 'winHealth', 'winPersonalXP', 'petDropToken', 'leagueReward'],
+    'Récompense': ['advanceTime', 'farmer', 'findItem', 'findMaterial', 'findMission', 'findPet', 'findPotion', 'winEnergy', 'winEnergyOnIsland', 'winGuildXP', 'winHealth', 'winPersonalXP', 'petDropToken', 'leagueReward'],
     'Pénalité': ['bigBad', 'smallBad', 'haunted'],
     'Commerce': ['shop', 'epicItemShop', 'ultimateFoodMerchant', 'cart'],
     'Interactif': ['lottery', 'gobletsGame', 'limoges', 'altar', 'witch', 'badPet', 'petFood'],
@@ -418,6 +420,8 @@ class SmallEventsBalanceApp {
     constructor() {
         this.events = [];
         this.translations = {};
+        this.biomeLoot = {};
+        this.models = {};
         this.charts = {};
         this.sortCol = 'probability';
         this.sortDir = 'desc';
@@ -478,13 +482,31 @@ class SmallEventsBalanceApp {
             );
 
             const transPromise = fetch(`${rawBase}/${TRANSLATIONS_PATH}`).then(r => r.json()).catch(() => ({}));
+            const modelsPromise = fetch(`${rawBase}/${MODELS_PATH}`).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+            const biomesPromise = fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${BIOMES_PATH}?ref=${branch}`)
+                .then(r => {
+                    this.trackRateLimit(r);
+                    return r.ok ? r.json() : [];
+                })
+                .then(data => Array.isArray(data) ? data.filter(f => f.name.endsWith('.json')) : [])
+                .catch(() => []);
 
-            const [eventsRaw, translations] = await Promise.all([
+            const [eventsRaw, translations, models, biomeFiles] = await Promise.all([
                 Promise.all(promises),
-                transPromise
+                transPromise,
+                modelsPromise,
+                biomesPromise
             ]);
 
             this.translations = translations;
+            this.models = models;
+            const biomeEntries = await Promise.all(biomeFiles.map(file =>
+                fetch(file.download_url)
+                    .then(r => r.ok ? r.json() : null)
+                    .then(data => data ? [file.name.replace('.json', ''), data] : null)
+                    .catch(() => null)
+            ));
+            this.biomeLoot = Object.fromEntries(biomeEntries.filter(Boolean));
             const totalRarity = eventsRaw.reduce((s, e) => s + (e.rarity || 0), 0);
 
             this.events = eventsRaw.map(e => ({
@@ -802,9 +824,12 @@ class SmallEventsBalanceApp {
         const name = event.name;
 
         // Reward-type events
-        if (['findItem', 'findPotion', 'findPet', 'findMission', 'winEnergy', 'winEnergyOnIsland', 'winGuildXP',
+        if (['findItem', 'findMaterial', 'findPotion', 'findPet', 'findMission', 'winEnergy', 'winEnergyOnIsland', 'winGuildXP',
              'winHealth', 'winPersonalXP', 'farmer', 'leagueReward', 'petDropToken', 'advanceTime'].includes(name)) {
             tags.push({ label: 'Gain', type: 'reward' });
+        }
+        if (name === 'findMaterial') {
+            tags.push({ label: 'Matériaux par biome', type: 'neutral' });
         }
 
         // Penalty events
@@ -866,6 +891,8 @@ class SmallEventsBalanceApp {
                 </div>`;
         }
 
+        const biomeLootHtml = eventName === 'findMaterial' ? this.renderBiomeLoot() : '';
+
         let transHtml = '';
         if (trans) {
             const keys = this.flattenKeys(trans);
@@ -903,11 +930,35 @@ class SmallEventsBalanceApp {
                     <div class="stat-box"><div class="value">${event.properties ? 'Oui' : 'Non'}</div><div class="label">Configurable</div></div>
                 </div>
                 ${propsHtml}
+                ${biomeLootHtml}
                 ${transHtml}
                 ${similarHtml}
             </div>`;
 
         section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    renderBiomeLoot() {
+        const entries = Object.entries(this.biomeLoot);
+        if (entries.length === 0) {
+            return `<div class="detail-panel"><h3>🌿 Butin par biome</h3><p class="hint">Les tables de biomes ne sont pas disponibles sur cette branche.</p></div>`;
+        }
+
+        return `
+            <div class="detail-panel">
+                <h3>🌿 Matériaux accessibles selon le biome</h3>
+                <p class="hint">Le mini-événement choisit un biome entre le lieu de départ et la destination selon la progression du trajet, puis tire dans sa table de butin en respectant la rareté demandée.</p>
+                <div style="max-height: 300px; overflow-y: auto;">
+                    ${entries.map(([biome, data]) => {
+                        const name = this.models.biomes?.[biome] || biome;
+                        const materials = (data.materialLoot || []).map(id => {
+                            const materialName = this.models.materials?.[id] || `Matériau ${id}`;
+                            return `${this.escapeHtml(materialName)} <span class="breakdown">#${this.escapeHtml(id)}</span>`;
+                        });
+                        return `<p><strong>${this.escapeHtml(name)}</strong> (${materials.length}) : ${materials.join(', ') || 'aucun matériau'}</p>`;
+                    }).join('')}
+                </div>
+            </div>`;
     }
 
     flattenKeys(obj, prefix = '') {
@@ -923,6 +974,10 @@ class SmallEventsBalanceApp {
             }
         }
         return result;
+    }
+
+    escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
 }
 
