@@ -3,22 +3,20 @@ const PATHS = {
 	locations: "Core/resources/mapLocations",
 	links: "Core/resources/mapLinks",
 	events: "Core/resources/events",
+	biomes: "Core/resources/biomes",
 	models: "Lang/fr/models.json",
-	expeditions: "Lib/src/constants/ExpeditionConstants.ts",
-	mapTypes: "Lib/src/constants/MapLocationConstants.ts",
 	coords: "generators/map-builder/mapCoords",
 	coordsManifest: "generators/map-builder/mapCoords/_manifest.json"
 };
-const DEFAULTS = {crowniclesRef: "develop", toolsRef: "master", fallbackBiome: "plains"};
+const DEFAULTS = {crowniclesRef: "develop", toolsRef: "master"};
 const NON_GEOGRAPHIC_TYPES = new Set(["continent", "pveExit"]);
 const TUTORIAL_LOCATION_TYPES = new Set(["castleEntrance", "castleThrone"]);
 const COLORS = ["#6fa85f", "#3f91b3", "#2f7d52", "#d19a32", "#8a8f98", "#748c3a", "#ae6250", "#76558e", "#c45d83", "#547a9b", "#a57b45", "#4f8d7b"];
 const repositoryIndexCache = new Map();
 const state = {
-	locations: [], links: [], events: [], pages: [], zones: [], names: {}, typeNames: {}, typeCodes: {}, mapping: {},
-	declaredBiomes: [], lootBiomes: new Set(), activeZoneId: null, activePageId: null, selectedId: null,
-	mode: "effective", eventFilter: "all", showLabels: false, showDirections: true,
-	crowniclesRef: DEFAULTS.crowniclesRef, toolsRef: DEFAULTS.toolsRef
+	locations: [], links: [], events: [], pages: [], zones: [], names: {}, typeNames: {}, biomeLoot: new Map(),
+	activeZoneId: null, activePageId: null, selectedId: null, eventFilter: "all", showLabels: false, showDirections: true,
+	crowniclesRef: DEFAULTS.crowniclesRef, crowniclesCommit: DEFAULTS.crowniclesRef, toolsRef: DEFAULTS.toolsRef
 };
 const $ = id => document.getElementById(id);
 
@@ -47,6 +45,27 @@ function cdnUrl(repo, path, ref) {
 async function fetchFile(repo, path, ref, text = false) {
 	const url = cdnUrl(repo, path, ref);
 	return text ? fetchText(url, path) : fetchJson(url, path);
+}
+
+/**
+ * jsDelivr caches branch names for several days, so a freshly pushed file can stay invisible.
+ * Resolve the branch to its current commit through the GitHub API and fetch that immutable commit instead.
+ * Falls back to the given reference when the API is unreachable (e.g. unauthenticated rate limit).
+ */
+async function resolveCommitRef(repo, ref) {
+	if (/^[0-9a-f]{40}$/i.test(ref)) return ref;
+	try {
+		const response = await fetch(`https://api.github.com/repos/${repo}/commits/${encodeURIComponent(ref)}`, {
+			cache: "no-store",
+			headers: {Accept: "application/vnd.github.sha"}
+		});
+		const sha = response.ok ? (await response.text()).trim() : "";
+		return /^[0-9a-f]{40}$/i.test(sha) ? sha : ref;
+	}
+	catch (error) {
+		console.warn(`Résolution du commit impossible pour ${repo}@${ref}`, error);
+		return ref;
+	}
 }
 
 async function fetchRepositoryIndex(repo, ref) {
@@ -109,10 +128,23 @@ async function fetchCombinedFiles(repo, files, ref, label) {
 
 async function fetchNumberedDirectory(path, label) {
 	const prefix = `${path}/`;
-	const files = (await fetchRepositoryIndex(REPOS.crownicles, state.crowniclesRef))
+	const files = (await fetchRepositoryIndex(REPOS.crownicles, state.crowniclesCommit))
 		.filter(file => file.startsWith(prefix) && /^\d+\.json$/.test(file.slice(prefix.length)));
-	const payloads = await fetchCombinedFiles(REPOS.crownicles, files, state.crowniclesRef, label);
+	const payloads = await fetchCombinedFiles(REPOS.crownicles, files, state.crowniclesCommit, label);
 	return files.map((file, index) => ({id: Number.parseInt(file.slice(prefix.length), 10), data: payloads[index]}));
+}
+
+async function fetchBiomeEntries() {
+	const prefix = `${PATHS.biomes}/`;
+	const files = (await fetchRepositoryIndex(REPOS.crownicles, state.crowniclesCommit))
+		.filter(file => file.startsWith(prefix) && /^[^/]+\.json$/.test(file.slice(prefix.length)))
+		.sort();
+	if (!files.length) throw new Error("Aucun fichier de biome trouvé");
+	const payloads = await fetchCombinedFiles(REPOS.crownicles, files, state.crowniclesCommit, "Loot des biomes");
+	return files.map((file, index) => ({
+		biome: file.slice(prefix.length, -".json".length),
+		materialLoot: Array.isArray(payloads[index].materialLoot) ? payloads[index].materialLoot : []
+	}));
 }
 
 async function fetchCoordinateEntries() {
@@ -129,29 +161,6 @@ async function fetchCoordinateEntries() {
 	const paths = filenames.map(name => `${PATHS.coords}/${name}`);
 	const payloads = await fetchCombinedFiles(REPOS.tools, paths, state.toolsRef, "Cartes");
 	return filenames.map((name, index) => ({name, data: payloads[index]}));
-}
-
-function objectBlock(source, marker) {
-	const markerIndex = source.indexOf(marker);
-	const start = source.indexOf("{", markerIndex);
-	if (markerIndex < 0 || start < 0) return "";
-	let depth = 0;
-	for (let index = start; index < source.length; index += 1) {
-		if (source[index] === "{") depth += 1;
-		if (source[index] === "}" && --depth === 0) return source.slice(start + 1, index);
-	}
-	return "";
-}
-
-function parseConstants(expeditionSource, mapTypeSource) {
-	state.typeCodes = Object.fromEntries([...mapTypeSource.matchAll(/^\s*([A-Z_]+):\s*"([^"]+)"/gm)].map(match => [match[1], match[2]]));
-	state.declaredBiomes = [...objectBlock(expeditionSource, "EXPEDITION_LOCATION_TYPES").matchAll(/^\s*[A-Z_]+:\s*"([^"]+)"/gm)].map(match => match[1]);
-	state.mapping = {};
-	for (const match of objectBlock(expeditionSource, "MAP_TYPE_TO_EXPEDITION_TYPE").matchAll(/\[MapLocationConstants\.TYPES\.([A-Z_]+)\]:\s*"([^"]+)"/g)) {
-		if (state.typeCodes[match[1]]) state.mapping[state.typeCodes[match[1]]] = match[2];
-	}
-	state.lootBiomes = new Set([...objectBlock(expeditionSource, "EXPEDITION_LOOT_TABLES").matchAll(/^\s*([A-Za-z][\w-]*):\s*\[/gm)].map(match => match[1]));
-	if (!state.declaredBiomes.length || !Object.keys(state.mapping).length) throw new Error("Les constantes de biomes n'ont pas pu être lues");
 }
 
 function normalizeModels(models) {
@@ -204,12 +213,18 @@ function activePage() { return activeZone()?.pages.find(page => page.mapPage ===
 function locationById(id) { return state.locations.find(location => location.id === id); }
 function locationName(value) { const id = typeof value === "object" ? value.id : value; return state.names[String(id)] || `Lieu ${id}`; }
 function mapTypeName(type) { return state.typeNames[type] || type || "Inconnu"; }
-function derivedBiome(location) { return state.mapping[location.type] || DEFAULTS.fallbackBiome; }
-function effectiveBiome(location) { return location.expeditionType || derivedBiome(location); }
-function displayedBiome(location) { return state.mode === "derived" ? derivedBiome(location) : effectiveBiome(location); }
+function locationBiomes(location) {
+	if (Array.isArray(location.biomes)) return [...new Set(location.biomes.filter(biome => typeof biome === "string" && biome.length))];
+	return typeof location.expeditionType === "string" && location.expeditionType ? [location.expeditionType] : [];
+}
+function hasBiomeLoot(biome) { return (state.biomeLoot.get(biome)?.length || 0) > 0; }
+function biomeLootStatus(biome) {
+	if (!state.biomeLoot.has(biome)) return "Fichier absent";
+	return hasBiomeLoot(biome) ? `${state.biomeLoot.get(biome).length} matériaux` : "Loot vide";
+}
 
 function knownBiomes() {
-	return [...new Set([...state.declaredBiomes, ...Object.values(state.mapping), ...state.locations.map(location => location.expeditionType).filter(Boolean), ...state.lootBiomes])];
+	return [...new Set([...state.biomeLoot.keys(), ...state.locations.flatMap(locationBiomes)])].sort();
 }
 
 function biomeColor(biome) { return COLORS[Math.max(0, knownBiomes().indexOf(biome)) % COLORS.length]; }
@@ -291,8 +306,8 @@ function renderZoneTabs() {
 	$("zoneTabs").innerHTML = state.zones.map(zone => {
 		const locations = zoneLocations(zone);
 		const analyzed = analyzedLocations(zone);
-		const unmapped = locations.filter(location => !state.mapping[location.type]).length;
-		return `<button class="zone-tab ${zone.id === state.activeZoneId ? "active" : ""}" data-zone="${escapeHtml(zone.id)}"><span>${escapeHtml(zone.displayName)}</span><small>${locations.length} affichés · ${analyzed.length} analysés${unmapped ? ` · ${unmapped} non mappés` : ""}</small></button>`;
+		const withoutBiomes = locations.filter(location => !locationBiomes(location).length).length;
+		return `<button class="zone-tab ${zone.id === state.activeZoneId ? "active" : ""}" data-zone="${escapeHtml(zone.id)}"><span>${escapeHtml(zone.displayName)}</span><small>${locations.length} affichés · ${analyzed.length} analysés${withoutBiomes ? ` · ${withoutBiomes} sans biome` : ""}</small></button>`;
 	}).join("");
 	$("zoneTabs").querySelectorAll("[data-zone]").forEach(button => button.addEventListener("click", () => selectZone(button.dataset.zone)));
 }
@@ -312,15 +327,14 @@ function renderSummary() {
 	const zone = activeZone();
 	const locations = zoneLocations();
 	const analyzed = analyzedLocations();
-	const biomes = new Set(analyzed.map(displayedBiome));
+	const biomes = new Set(analyzed.flatMap(locationBiomes));
 	const unplaced = locations.filter(location => !NON_GEOGRAPHIC_TYPES.has(location.type) && !zone.pages.some(page => page.nodes?.[String(location.id)]));
 	$("zoneTitle").textContent = zone.displayName;
-	$("zoneScope").textContent = zone.expeditionActive ? "Zone actuellement utilisée pour les expéditions" : "Zone hors sélection actuelle des expéditions · vérification prospective des mappings";
+	$("zoneScope").textContent = zone.expeditionActive ? "Zone actuellement utilisée pour les expéditions" : "Zone hors sélection actuelle des expéditions · vérification prospective des biomes";
 	$("summaryStats").innerHTML = [
-		[locations.length, "lieux affichés"], [analyzed.length, "lieux analysés"], [biomes.size, "biomes"],
-		[locations.filter(location => !state.mapping[location.type]).length, "map types non mappés"],
-		[locations.filter(location => location.expeditionType).length, "overrides"],
-		[[...biomes].filter(biome => !state.lootBiomes.has(biome)).length, "biomes sans loot"],
+		[locations.length, "lieux affichés"], [analyzed.length, "lieux analysés"], [biomes.size, "biomes couverts"],
+		[analyzed.filter(location => !locationBiomes(location).length).length, "lieux sans biome"],
+		[ [...biomes].filter(biome => !hasBiomeLoot(biome)).length, "biomes sans loot valide"],
 		[unplaced.length, "lieux non placés"]
 	].map(([value, label]) => `<article class="summary-stat"><span class="stat-value">${value}</span><span class="stat-label">${label}</span></article>`).join("");
 	$("mapTitle").textContent = activePage()?.displayName || zone.displayName;
@@ -348,17 +362,26 @@ function renderMap() {
 	overlay.appendChild(svg);
 	pageLocations(page).forEach(location => {
 		const position = pagePosition(page, location.id);
-		const biome = displayedBiome(location);
+		const biomes = locationBiomes(location);
 		const marker = document.createElement("button");
 		marker.type = "button"; marker.className = `map-marker ${state.selectedId === location.id ? "selected" : ""}`;
-		marker.style.left = `${position.left}%`; marker.style.top = `${position.top}%`; marker.style.setProperty("--biome-color", biomeColor(biome));
-		marker.title = `${locationName(location)} · ${biomeLabel(biome)}`;
+		marker.style.left = `${position.left}%`; marker.style.top = `${position.top}%`;
+		marker.style.background = biomeBackground(biomes);
+		marker.title = `${locationName(location)} · ${biomes.length ? biomes.map(biomeLabel).join(" / ") : "Aucun biome déclaré"}`;
 		marker.innerHTML = `${location.id}<span class="marker-name">${escapeHtml(locationName(location))}</span>`;
 		marker.addEventListener("click", () => { state.selectedId = location.id; renderMap(); renderInspector(); });
 		overlay.appendChild(marker);
 	});
-	const biomes = [...new Set(zoneLocations().map(displayedBiome))];
+	const biomes = [...new Set(zoneLocations().flatMap(locationBiomes))].sort();
 	$("mapLegend").innerHTML = biomes.map(biome => `<span class="legend-item" style="--biome-color:${biomeColor(biome)}"><span class="legend-swatch"></span>${escapeHtml(biomeLabel(biome))}</span>`).join("");
+}
+
+function biomeBackground(biomes) {
+	if (!biomes.length) return "#b83b2f";
+	if (biomes.length === 1) return biomeColor(biomes[0]);
+	const step = 100 / biomes.length;
+	const stops = biomes.map((biome, index) => `${biomeColor(biome)} ${index * step}% ${(index + 1) * step}%`);
+	return `linear-gradient(135deg, ${stops.join(", ")})`;
 }
 
 function renderDirections(svg, page) {
@@ -378,16 +401,16 @@ function renderDirections(svg, page) {
 function renderInspector() {
 	const location = locationById(state.selectedId);
 	if (!location) {
-		$("selectionPanel").innerHTML = '<p class="eyebrow">Inspecteur</p><h2>Sélectionne un lieu</h2><p class="muted">Mapping du biome et redirections forcées sur les lieux adjacents.</p>';
+		$("selectionPanel").innerHTML = '<p class="eyebrow">Inspecteur</p><h2>Sélectionne un lieu</h2><p class="muted">Biomes déclarés, tables de loot et redirections forcées sur les lieux adjacents.</p>';
 		return;
 	}
-	const effective = effectiveBiome(location); const outgoing = directionRecords().filter(record => record.triggerId === location.id); const incoming = directionRecords().filter(record => record.candidateIds.includes(location.id));
+	const biomes = locationBiomes(location);
+	const outgoing = directionRecords().filter(record => record.triggerId === location.id); const incoming = directionRecords().filter(record => record.candidateIds.includes(location.id));
+	const lootDetails = biomes.length ? biomes.map(biome => `${escapeHtml(biomeLabel(biome))} : ${escapeHtml(biomeLootStatus(biome))}`).join("<br>") : "Aucun biome configuré";
 	$("selectionPanel").innerHTML = `<p class="eyebrow">Inspecteur</p><span class="selection-id">ID ${location.id}</span><h2>${escapeHtml(locationName(location))}</h2><dl>
 		<div class="detail-row"><dt>Map type</dt><dd>${escapeHtml(mapTypeName(location.type))} <code>${escapeHtml(location.type)}</code></dd></div>
-		<div class="detail-row"><dt>Mapping</dt><dd>${state.mapping[location.type] ? escapeHtml(biomeLabel(derivedBiome(location))) : `Absent → ${escapeHtml(biomeLabel(DEFAULTS.fallbackBiome))}`}</dd></div>
-		<div class="detail-row"><dt>Override</dt><dd>${location.expeditionType ? escapeHtml(biomeLabel(location.expeditionType)) : "Aucun"}</dd></div>
-		<div class="detail-row"><dt>Biome effectif</dt><dd>${escapeHtml(biomeLabel(effective))}</dd></div>
-		<div class="detail-row"><dt>Loot table</dt><dd>${state.lootBiomes.has(effective) ? "Présente" : "Manquante"}</dd></div></dl>
+		<div class="detail-row"><dt>Biomes déclarés</dt><dd>${biomes.length ? biomes.map(biome => `<span class="badge biome" style="--biome-color:${biomeColor(biome)}">${escapeHtml(biomeLabel(biome))}</span>`).join(" ") : '<span class="warning-text">Aucun biome déclaré</span>'}</dd></div>
+		<div class="detail-row"><dt>Loot</dt><dd>${lootDetails}</dd></div></dl>
 		${directionDetails("Redirections sortantes", outgoing, location.id)}${directionDetails("Redirections entrantes possibles", incoming, location.id)}`;
 }
 
@@ -400,47 +423,56 @@ function directionDetails(title, records, currentId) {
 	}).join("")}</section>`;
 }
 
-function countBy(locations, resolver) {
-	const counts = new Map(); locations.forEach(location => counts.set(resolver(location), (counts.get(resolver(location)) || 0) + 1)); return counts;
+function countBiomes(locations) {
+	const counts = new Map();
+	locations.forEach(location => new Set(locationBiomes(location)).forEach(biome => counts.set(biome, (counts.get(biome) || 0) + 1)));
+	return counts;
 }
 
 function renderCoverage() {
-	const locations = analyzedLocations(); const effective = countBy(locations, effectiveBiome); const derived = countBy(locations, derivedBiome);
-	const biomes = [...new Set([...effective.keys(), ...derived.keys()])]; const max = Math.max(1, ...effective.values(), ...derived.values());
+	const locations = analyzedLocations(); const counts = countBiomes(locations);
+	const biomes = [...new Set([...knownBiomes(), ...counts.keys()])].sort(); const max = Math.max(1, ...counts.values());
 	$("biomeDistribution").innerHTML = biomes.map(biome => {
-		const count = effective.get(biome) || 0; const baseCount = derived.get(biome) || 0; const delta = baseCount - count; const share = locations.length ? count / locations.length * 100 : 0;
-		return `<article class="coverage-row" style="--biome-color:${biomeColor(biome)}"><div class="coverage-title"><span class="biome-dot"></span><strong>${escapeHtml(biomeLabel(biome))}</strong><span>${count} · ${share.toLocaleString("fr-FR", {maximumFractionDigits: 1})} %</span></div><div class="bar-track"><div class="bar-fill" style="width:${count / max * 100}%"></div></div><div class="coverage-meta"><span>Sans overrides : ${baseCount}${delta ? ` (${delta > 0 ? "+" : ""}${delta})` : ""}</span><span class="config-pill ${state.lootBiomes.has(biome) ? "ok" : "bad"}">${state.lootBiomes.has(biome) ? "Loot configuré" : "Loot manquant"}</span></div></article>`;
+		const count = counts.get(biome) || 0;
+		const share = locations.length ? count / locations.length * 100 : 0;
+		const lootStatus = biomeLootStatus(biome);
+		return `<article class="coverage-row" style="--biome-color:${biomeColor(biome)}"><div class="coverage-title"><span class="biome-dot"></span><strong>${escapeHtml(biomeLabel(biome))}</strong><span>${count} lieu(x) · ${share.toLocaleString("fr-FR", {maximumFractionDigits: 1})} %</span></div><div class="bar-track"><div class="bar-fill" style="width:${count / max * 100}%"></div></div><div class="coverage-meta"><span>Couverture de la zone · les lieux multi-biomes comptent pour chaque biome</span><span class="config-pill ${hasBiomeLoot(biome) ? "ok" : "bad"}">${escapeHtml(lootStatus)}</span></div></article>`;
 	}).join("") || '<p class="muted">Aucun lieu dans cette zone.</p>';
 }
 
 function renderDiagnostics() {
-	const locations = zoneLocations(); const unmapped = locations.filter(location => !state.mapping[location.type]); const overrides = locations.filter(location => location.expeditionType && location.expeditionType !== derivedBiome(location));
-	const invalid = locations.filter(location => !state.declaredBiomes.includes(effectiveBiome(location))); const noLoot = locations.filter(location => !state.lootBiomes.has(effectiveBiome(location)));
+	const locations = zoneLocations();
+	const missingBiomes = locations.filter(location => !locationBiomes(location).length);
+	const usedBiomes = [...new Set(locations.flatMap(locationBiomes))];
+	const noLoot = usedBiomes.filter(biome => !hasBiomeLoot(biome));
 	const unplaced = locations.filter(location => !NON_GEOGRAPHIC_TYPES.has(location.type) && !activeZone().pages.some(page => page.nodes?.[String(location.id)])); const broken = directionRecords().filter(record => !record.candidateIds.length);
 	$("diagnostics").innerHTML = [
-		diagnostic("Map types sans biome", unmapped.length ? groupIssue(unmapped, location => location.type, (type, values) => `<strong>${escapeHtml(mapTypeName(type))} <code>${escapeHtml(type)}</code></strong> · ${values.length} lieu(x) → plains`) : "Tous les map types sont mappés.", unmapped.length ? "danger" : "ok"),
-		diagnostic("Overrides divergents", overrides.length ? overrides.map(location => `${escapeHtml(locationName(location))} : ${escapeHtml(biomeLabel(derivedBiome(location)))} → ${escapeHtml(biomeLabel(effectiveBiome(location)))}`).join("<br>") : "Aucun override divergent.", overrides.length ? "warning" : "ok"),
-		diagnostic("Configuration des biomes", invalid.length || noLoot.length ? `${invalid.length} lieu(x) sur biome non déclaré.<br>${noLoot.length} lieu(x) sur biome sans loot table.` : "Biomes déclarés et loot tables présents.", invalid.length || noLoot.length ? "danger" : "ok"),
+		diagnostic("Lieux sans biomes", missingBiomes.length ? missingBiomes.map(location => `${escapeHtml(locationName(location))} (#${location.id}) · ${escapeHtml(mapTypeName(location.type))}`).join("<br>") : "Tous les lieux ont au moins un biome déclaré.", missingBiomes.length ? "danger" : "ok"),
+		diagnostic("Biomes sans loot valide", noLoot.length ? noLoot.map(biome => `${escapeHtml(biomeLabel(biome))} : ${escapeHtml(biomeLootStatus(biome))}`).join("<br>") : "Tous les biomes utilisés ont une table de loot non vide.", noLoot.length ? "danger" : "ok"),
 		diagnostic("Lieux sans coordonnées", unplaced.length ? unplaced.map(location => `${escapeHtml(locationName(location))} (#${location.id})`).join(", ") : "Tous les lieux sont placés.", unplaced.length ? "warning" : "ok"),
 		diagnostic("Redirections sans issue", broken.length ? broken.map(record => `Event #${record.eventId} depuis ${escapeHtml(locationName(record.triggerId))}`).join("<br>") : "Toutes les redirections ont une cible adjacente.", broken.length ? "danger" : "ok")
 	].join("");
 }
 
-function groupIssue(values, keyFn, renderFn) {
-	const groups = new Map(); values.forEach(value => groups.set(keyFn(value), [...(groups.get(keyFn(value)) || []), value])); return [...groups.entries()].map(([key, group]) => renderFn(key, group)).join("<br>");
-}
 function diagnostic(title, body, tone) { return `<article class="diagnostic ${tone}"><h3>${escapeHtml(title)}</h3><p>${body}</p></article>`; }
 
 function renderLocations() {
 	const query = $("searchInput").value.trim().toLocaleLowerCase("fr"); const issuesOnly = $("issuesOnly").checked;
 	const rows = zoneLocations().filter(location => {
-		const issue = !state.mapping[location.type] || !state.declaredBiomes.includes(effectiveBiome(location)) || !state.lootBiomes.has(effectiveBiome(location));
-		return (!query || `${locationName(location)} ${location.id} ${location.type} ${effectiveBiome(location)}`.toLocaleLowerCase("fr").includes(query)) && (!issuesOnly || issue);
+		const biomes = locationBiomes(location);
+		const issue = !biomes.length || biomes.some(biome => !hasBiomeLoot(biome));
+		return (!query || `${locationName(location)} ${location.id} ${location.type} ${biomes.join(" ")}`.toLocaleLowerCase("fr").includes(query)) && (!issuesOnly || issue);
 	}).sort((left, right) => locationName(left).localeCompare(locationName(right), "fr"));
 	$("locationsBody").innerHTML = rows.map(location => {
-		const biome = effectiveBiome(location); const pages = activeZone().pages.filter(page => page.nodes?.[String(location.id)]);
-		return `<tr data-location="${location.id}"><td class="location-cell">${escapeHtml(locationName(location))}<small>#${location.id}</small></td><td>${escapeHtml(mapTypeName(location.type))} <code>${escapeHtml(location.type)}</code></td><td><span class="badge biome" style="--biome-color:${biomeColor(biome)}">${escapeHtml(biomeLabel(biome))}</span>${location.expeditionType ? '<small class="override-flag">override</small>' : ""}</td><td class="status-cell ${state.mapping[location.type] ? "ok" : "bad"}">${state.mapping[location.type] ? escapeHtml(biomeLabel(derivedBiome(location))) : "Non mappé → plains"}</td><td class="status-cell ${state.lootBiomes.has(biome) ? "ok" : "bad"}">${state.lootBiomes.has(biome) ? "Oui" : "Non"}</td><td>${pages.length ? pages.map(page => escapeHtml(page.displayName)).join(", ") : '<span class="warning-text">Non placé</span>'}</td></tr>`;
-	}).join("") || '<tr><td colspan="6">Aucun lieu.</td></tr>';
+		const biomes = locationBiomes(location); const pages = activeZone().pages.filter(page => page.nodes?.[String(location.id)]);
+		const biomeBadges = biomes.length
+			? biomes.map(biome => `<span class="badge biome" style="--biome-color:${biomeColor(biome)}">${escapeHtml(biomeLabel(biome))}</span>`).join(" ")
+			: '<span class="warning-text">Aucun biome déclaré</span>';
+		const lootStatus = biomes.length
+			? biomes.map(biome => `<span class="status-cell ${hasBiomeLoot(biome) ? "ok" : "bad"}">${escapeHtml(biomeLabel(biome))} : ${escapeHtml(biomeLootStatus(biome))}</span>`).join("<br>")
+			: '<span class="status-cell bad">Non vérifiable</span>';
+		return `<tr data-location="${location.id}"><td class="location-cell">${escapeHtml(locationName(location))}<small>#${location.id}</small></td><td>${escapeHtml(mapTypeName(location.type))} <code>${escapeHtml(location.type)}</code></td><td>${biomeBadges}</td><td>${lootStatus}</td><td>${pages.length ? pages.map(page => escapeHtml(page.displayName)).join(", ") : '<span class="warning-text">Non placé</span>'}</td></tr>`;
+	}).join("") || '<tr><td colspan="5">Aucun lieu.</td></tr>';
 	$("locationsBody").querySelectorAll("[data-location]").forEach(row => row.addEventListener("click", () => {
 		state.selectedId = Number.parseInt(row.dataset.location, 10); const page = activeZone().pages.find(candidate => candidate.nodes?.[row.dataset.location]); if (page) state.activePageId = page.mapPage;
 		renderPageTabs(); renderMap(); renderInspector();
@@ -459,21 +491,21 @@ async function loadData() {
 	state.crowniclesRef = $("branchInput").value.trim() || DEFAULTS.crowniclesRef; state.toolsRef = $("toolsBranchInput").value.trim() || DEFAULTS.toolsRef;
 	$("loadButton").disabled = true; setStatus("Chargement GitHub…");
 	try {
-		const [locations, links, events, models, expeditionSource, mapTypeSource, coords] = await Promise.all([
+		state.crowniclesCommit = await resolveCommitRef(REPOS.crownicles, state.crowniclesRef);
+		const [locations, links, events, models, biomeEntries, coords] = await Promise.all([
 			fetchNumberedDirectory(PATHS.locations, "Lieux"), fetchNumberedDirectory(PATHS.links, "Liens"), fetchNumberedDirectory(PATHS.events, "Events"),
-			fetchFile(REPOS.crownicles, PATHS.models, state.crowniclesRef), fetchFile(REPOS.crownicles, PATHS.expeditions, state.crowniclesRef, true),
-			fetchFile(REPOS.crownicles, PATHS.mapTypes, state.crowniclesRef, true), fetchCoordinateEntries()
+			fetchFile(REPOS.crownicles, PATHS.models, state.crowniclesCommit), fetchBiomeEntries(), fetchCoordinateEntries()
 		]);
-		parseConstants(expeditionSource, mapTypeSource); normalizeModels(models); normalizeData(locations, links, events, coords);
+		state.biomeLoot = new Map(biomeEntries.map(entry => [entry.biome, entry.materialLoot]));
+		normalizeModels(models); normalizeData(locations, links, events, coords);
 		if (!state.zones.some(zone => zone.id === state.activeZoneId)) state.activeZoneId = state.zones[0]?.id; if (!activeZone()?.pages.some(page => page.mapPage === state.activePageId)) state.activePageId = activeZone()?.pages[0]?.mapPage;
-		renderAll(); setStatus(`Chargé · ${state.locations.length} lieux · ${state.zones.length} zones · Crownicles/${state.crowniclesRef}`, "success");
+		renderAll(); setStatus(`Chargé · ${state.locations.length} lieux · ${state.zones.length} zones · Crownicles/${state.crowniclesRef}${state.crowniclesCommit !== state.crowniclesRef ? ` (${state.crowniclesCommit.slice(0, 7)})` : ""}`, "success");
 		localStorage.setItem("expeditionBiomeCrowniclesRef", state.crowniclesRef); localStorage.setItem("expeditionBiomeToolsRef", state.toolsRef);
 	} catch (error) { console.error(error); setStatus(`Échec : ${error.message}`, "error"); } finally { $("loadButton").disabled = false; }
 }
 
 function bindEvents() {
 	$("loadForm").addEventListener("submit", event => { event.preventDefault(); loadData(); });
-	document.querySelectorAll("[data-mode]").forEach(button => button.addEventListener("click", () => { state.mode = button.dataset.mode; document.querySelectorAll("[data-mode]").forEach(entry => entry.classList.toggle("active", entry === button)); renderSummary(); renderMap(); renderCoverage(); }));
 	$("showLabels").addEventListener("change", () => { state.showLabels = $("showLabels").checked; renderMap(); });
 	$("showDirections").addEventListener("change", () => { state.showDirections = $("showDirections").checked; renderMap(); });
 	$("eventFilter").addEventListener("change", () => { state.eventFilter = $("eventFilter").value; renderMap(); renderInspector(); renderDiagnostics(); });

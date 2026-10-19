@@ -53,10 +53,6 @@
                     <h2 id="mapTitle">Carte des biomes</h2>
                 </div>
                 <div class="map-actions">
-                    <div class="segmented" aria-label="Mode de résolution du biome">
-                        <button class="segment active" type="button" data-mode="effective">Effectif</button>
-                        <button class="segment" type="button" data-mode="derived">Map type seul</button>
-                    </div>
                     <label class="check-control"><input id="showLabels" type="checkbox"> Noms</label>
                     <label class="check-control"><input id="showDirections" type="checkbox" checked> Redirections</label>
                     <select id="eventFilter" aria-label="Filtrer les redirections par événement"><option value="all">Tous les events</option></select>
@@ -74,7 +70,7 @@
         <aside id="selectionPanel" class="selection-panel" aria-live="polite">
             <p class="eyebrow">Inspecteur</p>
             <h2>Sélectionne un lieu</h2>
-            <p class="muted">Clique sur un marqueur pour voir tout ce que son type de carte influence.</p>
+            <p class="muted">Clique sur un marqueur pour voir les biomes déclarés et leurs tables de loot.</p>
         </aside>
     </section>
 
@@ -84,7 +80,7 @@
                 <p class="eyebrow">Balance</p>
                 <h2 id="distributionTitle">Homogénéité de la zone</h2>
             </div>
-            <p class="section-copy">Compare la part de chaque biome et vérifie qu'il possède une loot table. « Sans override » montre la répartition issue des seuls map types.</p>
+            <p class="section-copy">Compare le nombre de lieux qui couvrent chaque biome. Un lieu avec plusieurs biomes compte dans chacun d'eux.</p>
         </div>
         <div id="biomeDistribution" class="biome-distribution"></div>
     </section>
@@ -116,9 +112,8 @@
                 <tr>
                     <th>Lieu</th>
                     <th>Map type</th>
-                    <th>Biome effectif</th>
-                    <th>Mapping du type</th>
-                    <th>Loot table</th>
+                    <th>Biomes déclarés</th>
+                    <th>Loot par biome</th>
                     <th>Sous-carte</th>
                 </tr>
                 </thead>

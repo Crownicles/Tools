@@ -154,7 +154,7 @@ code { padding: 2px 5px; border-radius: 3px; background: #e5e1d5; font-size: .9e
 
 .summary-stats {
     display: grid;
-    grid-template-columns: repeat(7, minmax(95px, 1fr));
+    grid-template-columns: repeat(6, minmax(95px, 1fr));
     border: 1px solid var(--line);
     background: var(--surface);
 }
@@ -183,17 +183,6 @@ code { padding: 2px 5px; border-radius: 3px; background: #e5e1d5; font-size: .9e
 }
 .page-tab.active { background: #3e5e51; color: white; }
 .map-actions { gap: 14px; flex-wrap: wrap; }
-.segmented { display: inline-flex; border: 1px solid #8d9a91; border-radius: 4px; overflow: hidden; }
-.segment {
-    border: 0;
-    border-right: 1px solid #8d9a91;
-    padding: 8px 12px;
-    background: transparent;
-    color: #35483f;
-    font-weight: 600;
-}
-.segment:last-child { border-right: 0; }
-.segment.active { background: #173f36; color: white; }
 .check-control { display: inline-flex; align-items: center; gap: 7px; color: #45554d; font-size: 13px; font-weight: 600; white-space: nowrap; }
 #eventFilter { min-height: 34px; max-width: 155px; border: 1px solid #8d9a91; border-radius: 3px; background: #fffdf7; color: var(--ink); padding: 5px 8px; }
 
@@ -336,7 +325,6 @@ tbody tr:hover { background: #f2efe5; }
 .location-cell small { display: block; color: var(--muted); font-weight: 500; }
 .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 7px; border-radius: 3px; background: #ece9df; color: #34443c; font-weight: 700; white-space: nowrap; }
 .badge.biome { background: color-mix(in srgb, var(--biome-color) 28%, white); border-left: 3px solid var(--biome-color); }
-.override-flag { display: block; margin-top: 5px; color: #a33229; font-size: 11px; font-weight: 700; }
 .impact-copy { max-width: 340px; color: var(--muted); line-height: 1.45; }
 .status-cell.ok { color: #27603a; font-weight: 700; }
 .status-cell.bad { color: #a33229; font-weight: 700; }
