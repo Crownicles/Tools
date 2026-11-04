@@ -287,6 +287,16 @@ process.on("message", msg => {
 async function handle(msg) {
 	if (msg.type === "config") {
 		config = msg.config;
+		// Balance variants without recompiling: FightConstants overrides and class stats
+		for (const [key, value] of config.sets ?? []) {
+			const keys = key.split(".");
+			const holder = keys.slice(0, -1).reduce((o, k) => o[k], world.FightConstants);
+			holder[keys[keys.length - 1]] = Number(value);
+		}
+		for (const [key, value] of config.classStats ?? []) {
+			const [cls, stat] = key.split(".");
+			world.ClassDataController.instance.getById(+cls)[stat] = Number(value);
+		}
 		if (config.gearSpec || config.gearSetSpecs) {
 			const { WeaponDataController } = require(`${world.D}/data/Weapon`);
 			const { ArmorDataController } = require(`${world.D}/data/Armor`);

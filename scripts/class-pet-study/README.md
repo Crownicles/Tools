@@ -35,6 +35,18 @@ Variables d'environnement : `STUDY_POTIONS` (`none` : pas de potion en mode `aut
 
 Avec les valeurs par défaut sur 15 cœurs : environ 4 min pour les 3,2 millions de combats entre toutes les combinaisons, puis environ 1 min pour les 2,1 millions de combats du méta.
 
+## Tester une variante sans recompiler
+
+`comboRun.js` accepte `--set CONSTANTE=valeur` (constantes de `FightConstants`, chemins pointés possibles) et `--class-stat classe.stat=valeur` (statistiques des fichiers `Core/resources/classes`). Exemple : score de chaque classe avec la riposte de la prod et un Tank à 350 `fightPoint`, en reprenant l'équipement choisi par `study.sh auto` :
+
+```bash
+node comboRun.js --core ~/Crownicles/Core --gear-by-class "$(python3 -c "import json;print(json.dumps(json.load(open('.work/gear.json'))['gearByClass']))")" \
+	--n 2 --set COUNTER_ATTACK_DAMAGE_MULTIPLIER=1 --class-stat 19.fightPoint=350 --out .work/variant.json
+python3 comboReport.py .work/variant.json ~/Crownicles .work/variant.data.json | head -1
+```
+
+Le réseau a été entraîné sur les règles du Core : pour une variante très éloignée, les chiffres sont indicatifs.
+
 ## Après un changement d'équilibrage
 
 1. Recompiler le Core du checkout.

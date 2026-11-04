@@ -33,6 +33,9 @@ const gearSetSpecs = {
 const config = {
 	mode: "combo", comboAi: opt("combo-ai", "network"), model: path.resolve(opt("model") ?? path.join(coreDir, "resources/kingGuardAi/model.json")),
 	tieMargin: +opt("tie", 0.5), level: +opt("level", 157), gearSpec, gearSetSpecs,
+	// --set COUNTER_ATTACK_DAMAGE_MULTIPLIER=1,DARK_ATTACK_WEAR.BASE_MULTIPLIER=1.5 · --class-stat 19.attack=50,19.health=150
+	sets: (opt("set") ?? "").split(",").filter(Boolean).map(kv => kv.split("=")),
+	classStats: (opt("class-stat") ?? "").split(",").filter(Boolean).map(kv => kv.split("=")),
 	search: { depth: 2, rootSamples: 8, samples: [8, 3], pruneTop: 3, opponentArgmax: 0.7 }
 };
 
