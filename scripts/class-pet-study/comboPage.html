@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Crownicles — classes et familiers</title>
+<style>
+	:root { --bg: #14161a; --panel: #1d2026; --line: #2c3038; --text: #e6e6e6; --muted: #9aa0aa; --accent: #e0b04b; }
+	* { box-sizing: border-box; }
+	body { margin: 0; font: 14px/1.45 system-ui, -apple-system, Segoe UI, sans-serif; background: var(--bg); color: var(--text); }
+	header { padding: 18px 24px 8px; }
+	h1 { margin: 0 0 4px; font-size: 22px; }
+	h2 { font-size: 17px; margin: 18px 0 8px; }
+	.muted { color: var(--muted); }
+	nav { display: flex; gap: 6px; padding: 8px 24px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg); z-index: 5; }
+	nav button { background: var(--panel); color: var(--text); border: 1px solid var(--line); padding: 7px 14px; border-radius: 6px; cursor: pointer; }
+	nav button.on { border-color: var(--accent); color: var(--accent); }
+	main { padding: 8px 24px 40px; }
+	section { display: none; }
+	section.on { display: block; }
+	.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin: 10px 0; }
+	table { border-collapse: collapse; }
+	th, td { padding: 4px 8px; text-align: right; white-space: nowrap; }
+	th { color: var(--muted); font-weight: 600; cursor: pointer; user-select: none; background: var(--panel); }
+	.scroll th { position: sticky; top: 0; z-index: 2; }
+	.scroll { padding-top: 0; }
+	td.l, th.l { text-align: left; }
+	tr.row:hover td { background: #262a31; }
+	tr.sel td { outline: 1px solid var(--accent); }
+	.heat td.c { width: 74px; text-align: center; font-variant-numeric: tabular-nums; color: #111; font-weight: 600; }
+	.cell { display: inline-block; width: 30px; text-align: center; border-radius: 3px; color: #111; font-size: 11px; font-weight: 600; margin: 0 1px; }
+	.flag { color: #ff6b6b; font-weight: 700; }
+	.controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 6px 0 10px; }
+	select, input { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 5px; padding: 5px 8px; }
+	.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+	@media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+	.scroll { overflow: auto; max-height: 70vh; }
+	#tip { position: fixed; pointer-events: none; background: #000d; border: 1px solid var(--line); padding: 6px 9px; border-radius: 5px; font-size: 12px; display: none; z-index: 20; max-width: 360px; }
+	.bar { height: 10px; background: var(--accent); border-radius: 2px; display: inline-block; vertical-align: middle; }
+	canvas { image-rendering: pixelated; border: 1px solid var(--line); }
+	.legend { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+	.legend span.sw { width: 120px; height: 10px; border-radius: 3px; background: linear-gradient(90deg, #d9534f, #f1f1f1, #4cae4c); }
+	ul.tight { margin: 4px 0; padding-left: 18px; }
+</style>
+</head>
+<body>
+<header>
+	<h1>Classes et familiers : qui bat qui ?</h1>
+	<div class="muted" id="setup"></div>
+</header>
+<nav id="tabs"></nav>
+<main>
+	<section id="s-alerts"></section>
+	<section id="s-classes"></section>
+	<section id="s-combos"></section>
+	<section id="s-grid"></section>
+	<section id="s-pets"></section>
+	<section id="s-moves"></section>
+	<section id="s-method"></section>
+</main>
+<div id="tip"></div>
+<script>
+const DATA = /*DATA*/null;
+const META = /*META*/null;
+const MOVE_NAMES = DATA.moves.names;
+const $ = (s, el = document) => el.querySelector(s);
+const pct = x => (100 * x).toFixed(1);
+const sgn = x => (x >= 0 ? "+" : "") + (100 * x).toFixed(1);
+const cls = Object.fromEntries(DATA.classes.map((c, i) => [c.id, { ...c, i }]));
+const pet = Object.fromEntries(DATA.pets.map((p, i) => [p.id, { ...p, i }]));
+const shortCls = id => cls[id].name.split(" ")[0];
+const comboName = c => `${shortCls(c.cls)} + ${pet[c.pet].name}`;
+const powersText = p => p.powers.length ? p.powers.map(w => w.id).join(" + ") : "aucun pouvoir";
+
+// Diverging colour: red below 50 %, white at 50 %, green above; `span` = distance from 50 % giving full colour
+function color(x, span = 0.25) {
+	const t = Math.max(-1, Math.min(1, (x - 0.5) / span));
+	const mix = (a, b, k) => Math.round(a + (b - a) * k);
+	const [r, g, b] = t < 0 ? [mix(241, 217, -t), mix(241, 83, -t), mix(241, 79, -t)] : [mix(241, 76, t), mix(241, 174, t), mix(241, 76, t)];
+	return `rgb(${r},${g},${b})`;
+}
+const tip = $("#tip");
+function showTip(e, html) {
+	tip.innerHTML = html;
+	tip.style.display = "block";
+	tip.style.left = Math.min(e.clientX + 14, innerWidth - 380) + "px";
+	tip.style.top = (e.clientY + 14) + "px";
+}
+const hideTip = () => (tip.style.display = "none");
+
+const s = DATA.setup;
+const gearNames = ["arme", "armure", "potion", "objet"];
+$("#setup").innerHTML = `${s.combos} combinaisons classe + familier, chacune contre toutes les autres, dans les deux rôles · ${s.fights.toLocaleString("fr")} combats simulés en ${s.seconds} s · niveau ${s.level} · même équipement pour tous (${s.gear.map(g => `${gearNames[g[0]]} ${g[1]}${g[2] ? " +" + g[2] : ""}${g[3] ? " " + g[3] : ""}`).join(", ")}) · les deux combattants jouent avec le réseau des gardes du roi.`;
+
+// Tabs
+const tabs = [["alerts", "Méta : le meilleur contre le meilleur"], ["classes", "Classe contre classe"], ["combos", "Toutes les combinaisons"], ["grid", "Classe × familier"], ["pets", "Familiers"], ["moves", "Attaques jouées"], ["method", "Méthode"]];
+for (const [id, label] of tabs) {
+	const b = document.createElement("button");
+	b.textContent = label;
+	b.onclick = () => {
+		document.querySelectorAll("nav button").forEach(x => x.classList.toggle("on", x === b));
+		document.querySelectorAll("section").forEach(x => x.classList.toggle("on", x.id === "s-" + id));
+	};
+	$("#tabs").append(b);
+}
+$("#tabs").firstChild.click();
+
+const grand = DATA.combos.reduce((a, c) => a + c.score, 0) / DATA.combos.length;
+const sd = Math.sqrt(DATA.combos.reduce((a, c) => a + (c.score - grand) ** 2, 0) / DATA.combos.length);
+
+// ---------- Meta: the best against the best ----------
+(() => {
+	const el = $("#s-alerts");
+	const mc = META.combos.map((c, i) => ({ ...c, i }));
+	const name = c => comboName(c);
+	const ranked = [...mc].sort((a, b) => b.score - a.score);
+	const noCounter = mc.filter(c => c.worst >= 0.5);
+	const eqList = [...mc].filter(c => c.eq >= 0.01).sort((a, b) => b.eq - a.eq);
+	const perClass = Math.round(mc.length / DATA.classes.length);
+	const cellRow = c => c.vsClass.map((v, k) => `<span class="cell" style="background:${color(v)}" title="contre les ${perClass} meilleurs ${DATA.classes[k].name} : ${pct(v)} %">${pct(v).split(".")[0]}</span>`).join("");
+	el.innerHTML = `
+	<div class="card">Un joueur qui veut gagner ne prend pas n'importe quel familier : on ne garde donc que les <b>${perClass} meilleurs familiers de chaque classe</b> (${mc.length} combinaisons), et on les fait s'affronter toutes entre elles, ${META.fightsPerPair / 2} fois en attaque et ${META.fightsPerPair / 2} fois en défense (${META.fights.toLocaleString("fr")} combats, réseau des deux côtés). Chaque duel est précis à ±${pct(1.96 * META.pairSe)} points.</div>
+	<div class="card"><h2 style="margin-top:0">${noCounter.length ? `<span class="flag">${noCounter.length} combinaison(s) sans contre parmi les meilleures</span>` : "Aucune combinaison sans contre"}</h2>
+	${noCounter.length ? noCounter.map(c => `<div>${name(c)} : pire duel ${pct(c.worst)} %</div>`).join("") : `<div class="muted">Chacune des ${mc.length} meilleures combinaisons perd au moins un duel contre une autre combinaison du haut du panier.</div>`}</div>
+	<div class="card"><h2 style="margin-top:0">Ce que jouerait un champ de joueurs parfaits</h2>
+	<div class="muted">Équilibre du jeu : le mélange de combinaisons qu'aucune autre ne peut exploiter (calculé sur les duels ci-dessous). Une seule combinaison à 100 % = combinaison dominante ; plusieurs combinaisons de classes différentes = un pierre-feuille-ciseaux sain. Les classes absentes ont toujours une meilleure option dans le méta, avec ce stuff.</div>
+	<table style="margin-top:8px">${DATA.classes.map(k => ({ k, v: META.classEq[k.id] ?? 0 })).sort((a, b) => b.v - a.v).map(({ k, v }) => `<tr><td class="l">${k.name}</td><td class="l"><span class="bar" style="width:${Math.round(300 * v)}px"></span> ${pct(v)} %</td></tr>`).join("")}</table>
+	<table style="margin-top:10px"><tr><th class="l">Combinaison</th><th>Part</th><th>Score contre le méta</th><th class="l">Son pire adversaire</th></tr>
+	${eqList.map(c => { const j = META.combos[c.beatenBy[0]?.j ?? c.i]; return `<tr class="row" data-i="${c.i}"><td class="l">${name(c)}</td><td>${pct(c.eq)} %</td><td>${pct(c.score)}</td><td class="l">${c.beatenBy.length ? `${name(j)} (${pct(c.beatenBy[0].v)} %)` : "—"}</td></tr>`; }).join("")}</table></div>
+	<div class="card"><h2 style="margin-top:0">Classe contre classe, entre meilleures versions</h2><div class="muted">Moyenne des duels entre les ${perClass} meilleures combinaisons de chaque classe. ${legend()}</div><div style="margin:6px 0"><b>Lecture :</b> chaque case = % de victoires de la classe <b>en ligne</b> contre la classe <b>en colonne</b>. <b>Vert = la ligne gagne</b>, rouge = la ligne perd. Une ligne verte = classe forte ; une colonne verte = classe que tout le monde bat.</div>
+	<table class="heat">${`<tr><th class="l muted">gagne contre →</th>${DATA.classes.map(c => `<th>${shortCls(c.id)}</th>`).join("")}<th>Moyenne</th></tr>`}${DATA.classes.map((a, x) => `<tr><td class="l"><b>${a.name}</b></td>${DATA.classes.map((b, y) => `<td class="c" style="background:${x === y ? "#3a3f48;color:#aaa" : color(META.classVs[x][y])}" title="${a.name} gagne ${pct(META.classVs[x][y])} % de ses combats contre ${b.name}">${pct(META.classVs[x][y])}</td>`).join("")}<td class="c" style="background:${color(META.classVs[x].reduce((t, v, y) => t + (y === x ? 0 : v), 0) / (DATA.classes.length - 1), 0.15)}">${pct(META.classVs[x].reduce((t, v, y) => t + (y === x ? 0 : v), 0) / (DATA.classes.length - 1))}</td></tr>`).join("")}</table></div>
+	<div class="grid"><div class="card scroll"><b>Les ${mc.length} meilleures combinaisons</b> <span class="muted">— cliquez pour voir leurs contres</span>
+	<table><tr><th class="l">Classe</th><th class="l">Familier</th><th>Score contre le méta</th><th>±</th><th>Part à l'équilibre</th><th>Pire duel</th><th>Battue par</th><th class="l">Contre ${DATA.classes.map(c => shortCls(c.id).slice(0, 4)).join(" · ")}</th></tr>
+	${ranked.map(c => `<tr class="row" data-i="${c.i}"><td class="l">${shortCls(c.cls)}</td><td class="l" title="${powersText(pet[c.pet])}">${pet[c.pet].name}</td><td style="background:${color(c.score, 0.15)};color:#111">${pct(c.score)}</td><td class="muted">${pct(1.96 * c.se)}</td><td>${c.eq >= 0.001 ? pct(c.eq) + " %" : "—"}</td><td>${pct(c.worst)}</td><td>${mc.filter(o => META.vs[o.i][c.i] > 0.5).length}</td><td class="l">${cellRow(c)}</td></tr>`).join("")}</table></div>
+	<div class="card" id="meta-detail">Cliquez une combinaison.</div></div>
+	<div class="card"><b>Tous les duels du méta</b> <span class="muted">(vert = la combinaison en ligne bat celle en colonne ; triés par classe puis par score ; survolez pour les noms)</span> ${legend()}<br><canvas id="c-meta"></canvas></div>`;
+	const detail = i => {
+		const c = mc[i];
+		const list = arr => arr.map(({ j, v }) => `<li>${name(mc[j])} — <b>${pct(v)} %</b></li>`).join("");
+		$("#meta-detail").innerHTML = `<h2>${name(c)}</h2><div class="muted">${powersText(pet[c.pet])} · score contre le méta ${pct(c.score)} % · part à l'équilibre ${pct(c.eq)} %</div>
+		<b>Ses contres dans le méta</b>${c.beatenBy.length ? `<ul class="tight">${list(c.beatenBy.map(({ j, v }) => ({ j, v })))}</ul>` : `<div class="flag">aucun</div>`}
+		<b>Ce qu'elle bat le plus nettement</b><ul class="tight">${list(c.beats)}</ul>
+		<table>${c.vsClass.map((v, k) => `<tr><td class="l">contre les meilleurs ${DATA.classes[k].name}</td><td style="background:${color(v)};color:#111;width:70px">${pct(v)} %</td></tr>`).join("")}</table>`;
+	};
+	el.addEventListener("click", e => {
+		const tr = e.target.closest("tr.row");
+		if (tr && tr.dataset.i !== undefined) {
+			detail(+tr.dataset.i);
+		}
+	});
+	detail(ranked[0].i);
+	const order = [...mc].sort((a, b) => (a.cls - b.cls) || (b.score - a.score));
+	const n = order.length, cellPx = 7, cv = $("#c-meta");
+	cv.width = cv.height = n * cellPx;
+	const ctx = cv.getContext("2d");
+	order.forEach((a, y) => order.forEach((b, x) => {
+		ctx.fillStyle = a.i === b.i ? "#3a3f48" : color(META.vs[a.i][b.i]);
+		ctx.fillRect(x * cellPx, y * cellPx, cellPx, cellPx);
+	}));
+	ctx.fillStyle = "#14161a";
+	order.forEach((c, k) => {
+		if (k > 0 && order[k - 1].cls !== c.cls) {
+			ctx.fillRect(0, k * cellPx - 1, n * cellPx, 1);
+			ctx.fillRect(k * cellPx - 1, 0, 1, n * cellPx);
+		}
+	});
+	cv.style.width = cv.style.height = Math.min(700, n * cellPx * 1.2) + "px";
+	cv.addEventListener("mousemove", e => {
+		const r = cv.getBoundingClientRect();
+		const x = Math.floor((e.clientX - r.left) / (r.width / n)), y = Math.floor((e.clientY - r.top) / (r.height / n));
+		if (x >= 0 && y >= 0 && x < n && y < n) {
+			showTip(e, `${name(order[y])} gagne <b>${pct(META.vs[order[y].i][order[x].i])} %</b> de ses combats contre ${name(order[x])}`);
+		}
+	});
+	cv.addEventListener("mouseleave", hideTip);
+})();
+
+// Detail of a combination: matchups by class and its best and worst opponents
+function renderDetail(i, el) {
+	const c = DATA.combos[i], k = DATA.counters[i], p = pet[c.pet];
+	const list = (idx, sc) => idx.map((j, n) => `<li>${comboName(DATA.combos[j])} — <b>${pct(sc[n])} %</b></li>`).join("");
+	el.innerHTML = `<h2>${comboName(c)} <span class="muted">· score ${pct(c.score)} % (attaque ${pct(c.attack)}, défense ${pct(c.defense)}, nuls ${pct(c.draws)} %)</span></h2>
+	<div class="muted">Pouvoirs : ${p.powers.length ? p.powers.map(w => `<b>${w.id}</b> — ${w.desc}`).join("<br>") : "aucun"}</div>
+	<div class="grid" style="margin-top:10px">
+		<div><b>Contre chaque classe</b><table>${c.vsClass.map((v, j) => `<tr><td class="l">${DATA.classes[j].name}</td><td style="background:${color(v)};color:#111;width:70px">${pct(v)} %</td></tr>`).join("")}</table></div>
+		<div><b>Bat le plus nettement</b><ul class="tight">${list(k.beats, k.beatsScore)}</ul><b>Ses pires adversaires</b><ul class="tight">${list(k.losesTo, k.losesToScore)}</ul>
+		<div class="muted">Duels individuels : 12 combats chacun, donc ±15 points ; à lire comme des tendances.</div></div>
+	</div>`;
+}
+
+// ---------- Classes ----------
+(() => {
+	const el = $("#s-classes");
+	const order = [...DATA.classes].sort((a, b) => b.score - a.score);
+	el.innerHTML = `<div class="card">Moyenne sur <b>tous</b> les familiers des deux côtés (y compris les mauvais) et les deux rôles. ${legend()}<div style="margin:6px 0"><b>Lecture :</b> chaque case = % de victoires de la classe <b>en ligne</b> contre la classe <b>en colonne</b>. <b>Vert = la ligne gagne</b>, rouge = la ligne perd. Une ligne verte = classe forte ; une colonne verte = classe que tout le monde bat.</div></div>
+	<div class="card"><table class="heat"><tr><th class="l muted">gagne contre →</th>${order.map(c => `<th>${shortCls(c.id)}</th>`).join("")}<th>Moyenne</th></tr>
+	${order.map(a => `<tr><td class="l"><b>${a.name}</b></td>${order.map(b => {
+		const v = DATA.classVs[a.i ?? cls[a.id].i][cls[b.id].i];
+		return `<td class="c" style="background:${a.id === b.id ? "#3a3f48;color:#aaa" : color(v)}" title="${a.name} gagne ${pct(v)} % de ses combats contre ${b.name}">${pct(v)}</td>`;
+	}).join("")}<td class="c" style="background:${color(a.score, 0.1)}">${pct(a.score)}</td></tr>`).join("")}</table></div>
+	<div class="card"><b>Écart entre les familiers d'une même classe</b> <span class="muted">(meilleur familier, pire familier, sans familier)</span><table>
+	${order.map(a => {
+		const own = DATA.combos.filter(c => c.cls === a.id);
+		const best = own.reduce((x, y) => (y.score > x.score ? y : x)), worst = own.reduce((x, y) => (y.score < x.score ? y : x));
+		const none = own.find(c => c.pet === 0);
+		return `<tr><td class="l">${a.name}</td><td>${pct(best.score)} (${pet[best.pet].name})</td><td>${pct(worst.score)} (${pet[worst.pet].name})</td><td>${none ? pct(none.score) : "—"}</td></tr>`;
+	}).join("")}</table></div>`;
+})();
+
+function legend(span = 25) {
+	return `<span class="legend">${50 - span} %<span class="sw"></span>${50 + span} %</span>`;
+}
+
+// ---------- All combinations ----------
+(() => {
+	const el = $("#s-combos");
+	el.innerHTML = `<div class="controls"><label>Classe <select id="f-cls"><option value="">toutes</option>${DATA.classes.map(c => `<option value="${c.id}">${c.name}</option>`).join("")}</select></label>
+	<label>Familier ou pouvoir <input id="f-pet" placeholder="ex. requin, bite"></label><span class="muted" id="f-count"></span></div>
+	<div class="grid"><div class="card scroll"><table id="t-combos"></table></div><div class="card" id="combo-detail">Cliquez une ligne.</div></div>`;
+	const cols = [["Classe", c => shortCls(c.cls), "l"], ["Familier", c => pet[c.pet].name, "l"], ["Score", c => c.score], ["±", c => 1.96 * c.se], ["Attaque", c => c.attack], ["Défense", c => c.defense], ["Synergie", c => c.synergy], ["Nuls", c => c.draws], ["Pire classe", c => Math.min(...c.vsClass)]];
+	let sortCol = 2, desc = true;
+	const draw = () => {
+		const fc = $("#f-cls").value, fp = $("#f-pet").value.toLowerCase();
+		let rows = DATA.combos.map((c, i) => ({ ...c, i })).filter(c => (!fc || c.cls === +fc) && (!fp || pet[c.pet].name.toLowerCase().includes(fp) || powersText(pet[c.pet]).toLowerCase().includes(fp)));
+		const key = cols[sortCol][1];
+		rows.sort((a, b) => (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0) * (desc ? -1 : 1));
+		$("#f-count").textContent = `${rows.length} combinaisons`;
+		$("#t-combos").innerHTML = `<tr>${cols.map((c, k) => `<th class="${c[2] ?? ""}" data-k="${k}">${c[0]}${k === sortCol ? (desc ? " ▾" : " ▴") : ""}</th>`).join("")}<th class="l">Contre ${DATA.classes.map(c => shortCls(c.id).slice(0, 4)).join(" · ")}</th></tr>` +
+			rows.map(c => `<tr class="row" data-i="${c.i}"><td class="l">${shortCls(c.cls)}</td><td class="l" title="${powersText(pet[c.pet])}">${pet[c.pet].name}</td><td style="background:${color(c.score, 0.15)};color:#111">${pct(c.score)}</td><td class="muted">${pct(1.96 * c.se)}</td><td>${pct(c.attack)}</td><td>${pct(c.defense)}</td><td>${sgn(c.synergy)}</td><td>${pct(c.draws)}</td><td>${pct(Math.min(...c.vsClass))}</td>
+			<td class="l">${c.vsClass.map((v, k) => `<span class="cell" style="background:${color(v)}" title="contre ${DATA.classes[k].name} : ${pct(v)} %">${pct(v).split(".")[0]}</span>`).join("")}</td></tr>`).join("");
+	};
+	$("#t-combos").addEventListener("click", e => {
+		const th = e.target.closest("th[data-k]");
+		if (th) {
+			const k = +th.dataset.k;
+			desc = k === sortCol ? !desc : true;
+			sortCol = k;
+			draw();
+			return;
+		}
+		const tr = e.target.closest("tr.row");
+		if (tr) {
+			document.querySelectorAll("#t-combos tr.sel").forEach(x => x.classList.remove("sel"));
+			tr.classList.add("sel");
+			renderDetail(+tr.dataset.i, $("#combo-detail"));
+		}
+	});
+	$("#f-cls").onchange = draw;
+	$("#f-pet").oninput = draw;
+	draw();
+})();
+
+// ---------- Class x pet grid ----------
+(() => {
+	const el = $("#s-grid");
+	el.innerHTML = `<div class="controls"><label>Afficher <select id="g-mode"><option value="score">score de la combinaison</option><option value="synergy">synergie (ce que le familier rapporte à cette classe en plus de sa valeur moyenne)</option><option value="delta">gain par rapport à la classe sans familier</option></select></label>
+	<label>Trier par <select id="g-sort"><option value="score">score moyen du familier</option><option value="spread">écart entre classes</option><option value="name">nom</option></select></label><span id="g-legend"></span></div>
+	<div class="card scroll"><table class="heat" id="t-grid"></table></div>`;
+	const byKey = new Map(DATA.combos.map(c => [c.cls + ":" + c.pet, c]));
+	const draw = () => {
+		const mode = $("#g-mode").value, sort = $("#g-sort").value;
+		const pets = [...DATA.pets].sort((a, b) => (sort === "name" ? a.name.localeCompare(b.name) : b[sort] - a[sort]));
+		const span = mode === "score" ? 0.15 : 0.06;
+		$("#g-legend").innerHTML = mode === "score" ? legend(15) : `<span class="legend">−6 pts<span class="sw"></span>+6 pts</span>`;
+		const value = c => (mode === "score" ? c.score : mode === "synergy" ? 0.5 + c.synergy : 0.5 + c.score - byKey.get(c.cls + ":0").score);
+		$("#t-grid").innerHTML = `<tr><th class="l">Familier</th><th class="l">Pouvoirs</th><th>Moyenne</th>${DATA.classes.map(c => `<th>${shortCls(c.id)}</th>`).join("")}</tr>` +
+			pets.map(p => `<tr class="row"><td class="l">${p.name}</td><td class="l muted" style="font-size:12px">${powersText(p)}</td><td>${pct(p.score)}</td>${DATA.classes.map(k => {
+				const c = byKey.get(k.id + ":" + p.id), v = value(c);
+				return `<td class="c" style="background:${color(v, span)}" data-t="${comboName(c)} : score ${pct(c.score)} %, synergie ${sgn(c.synergy)}">${mode === "score" ? pct(v) : sgn(v - 0.5)}</td>`;
+			}).join("")}</tr>`).join("");
+	};
+	$("#t-grid").addEventListener("mousemove", e => (e.target.dataset.t ? showTip(e, e.target.dataset.t) : hideTip()));
+	$("#t-grid").addEventListener("mouseleave", hideTip);
+	$("#g-mode").onchange = draw;
+	$("#g-sort").onchange = draw;
+	draw();
+})();
+
+// ---------- Pets ----------
+(() => {
+	const el = $("#s-pets");
+	const order = DATA.pets.map((p, i) => ({ ...p, i })).sort((a, b) => b.score - a.score);
+	const max = Math.max(...order.map(p => p.score)), min = Math.min(...order.map(p => p.score));
+	el.innerHTML = `<div class="grid"><div class="card scroll"><b>Familiers, toutes classes confondues</b><table><tr><th class="l">Familier</th><th class="l">Pouvoirs</th><th>Score</th><th></th><th>Écart entre classes</th></tr>
+	${order.map(p => `<tr class="row"><td class="l">${p.name}</td><td class="l muted" style="font-size:12px" title="${p.powers.map(w => w.desc).join(" / ")}">${powersText(p)}</td><td>${pct(p.score)}</td><td class="l"><span class="bar" style="width:${(160 * (p.score - min) / (max - min || 1)).toFixed(0)}px"></span></td><td>${pct(p.spread)}</td></tr>`).join("")}</table></div>
+	<div class="card"><b>Familier contre familier</b> <span class="muted">(vert = le familier en ligne bat celui en colonne, toutes classes confondues ; triés du plus fort au plus faible ; survolez)</span> ${legend(10)}<br><canvas id="c-pets"></canvas></div></div>`;
+	const P = order.length, cell = 6, cv = $("#c-pets");
+	cv.width = cv.height = P * cell;
+	const ctx = cv.getContext("2d");
+	order.forEach((a, y) => order.forEach((b, x) => {
+		ctx.fillStyle = color(DATA.petVs[a.i][b.i], 0.1);
+		ctx.fillRect(x * cell, y * cell, cell, cell);
+	}));
+	cv.addEventListener("mousemove", e => {
+		const r = cv.getBoundingClientRect();
+		const x = Math.floor((e.clientX - r.left) / (r.width / P)), y = Math.floor((e.clientY - r.top) / (r.height / P));
+		if (x >= 0 && y >= 0 && x < P && y < P) {
+			showTip(e, `${order[y].name} gagne <b>${pct(DATA.petVs[order[y].i][order[x].i])} %</b> de ses combats contre ${order[x].name}`);
+		}
+	});
+	cv.addEventListener("mouseleave", hideTip);
+	cv.style.width = cv.style.height = Math.min(640, P * cell * 1.5) + "px";
+})();
+
+
+// ---------- Moves played ----------
+(() => {
+	const el = $("#s-moves");
+	const moveName = id => MOVE_NAMES[id] ?? id;
+	const flagOf = share => (share < 0.02 ? `<span class="flag">quasi jamais jouée</span>` : share < 0.07 ? `<span class="flag" style="color:#f0ad4e">peu jouée</span>` : "");
+	const bar = v => `<span class="bar" style="width:${Math.round(200 * v)}px;opacity:.85"></span> ${pct(v)} %`;
+	let html = `<div class="card">Ce que joue le réseau dans les ${DATA.moves.fights.toLocaleString("fr")} combats (chaque combinaison contre chaque autre).
+	<b>Part des coups</b> : part de l'attaque parmi les décisions de la classe (la seconde moitié d'une attaque chargée n'est pas comptée).
+	<b>Combats</b> : part des combats où elle est jouée au moins une fois ; c'est la bonne mesure pour les attaques limitées (l'ultime une fois par combat, l'attaque divine dans la limite de deux coups divins par combat).</div>`;
+	for (const c of DATA.classes) {
+		const e = DATA.moves.classes[c.id];
+		html += `<div class="card"><h2 style="margin-top:0">${c.name}</h2><table><tr><th class="l">Attaque</th><th>Souffle</th><th class="l">Part des coups</th><th>Combats</th><th class="l"></th></tr>
+		${e.moves.map(m => `<tr class="row"><td class="l"><b>${moveName(m.id)}</b></td><td>${m.breath}</td><td class="l">${bar(m.share)}</td><td>${pct(m.fightsUsed)} %</td><td class="l">${flagOf(m.share)}</td></tr>`).join("")}
+		<tr><td class="l muted">Tours perdus</td><td></td><td class="l muted">${pct(e.lostShare)} %</td><td></td><td></td></tr></table></div>`;
+	}
+	el.innerHTML = html;
+})();
+
+// ---------- Method ----------
+$("#s-method").innerHTML = `<div class="card"><ul>
+<li>Chaque combinaison classe + familier affronte toutes les autres, ${s.fightsPerPair} fois en attaque et ${s.fightsPerPair} fois en défense, avec les mêmes tirages aléatoires pour toutes les paires. Score par combinaison : ±${pct(1.96 * Math.sqrt(0.25 / (2 * s.fightsPerPair * s.combos)))} points (IC 95 %).</li>
+<li>Tout le monde a le même équipement (celui passé à l'outil) et le même niveau : seule la classe et le familier changent. Les statistiques des objets sont plafonnées par la classe comme en jeu.</li>
+<li>Les deux combattants jouent avec le réseau de neurones des gardes du roi (environ le niveau d'un bon joueur, sans recherche). L'attaquant commence entre 80 et 100 % d'énergie, le défenseur à 100 %, comme en PvP.</li>
+<li>Les adversaires sont pris uniformément : chaque classe et chaque familier comptent autant, quelle que soit leur fréquence réelle. Un familier rare ou cher pèse autant qu'un familier courant.</li>
+<li>Synergie = score de la combinaison − score moyen de la classe − (score moyen du familier − moyenne générale) : ce que ce familier rapporte à cette classe en plus de ce qu'il rapporte en moyenne.</li>
+<li>Limites : le réseau n'est pas parfait et peut sous-exploiter un familier qui demande un plan particulier ; un seul équipement est testé (un autre équipement peut changer les rapports de force entre classes).</li></ul></div>`;
+</script>
+</body>
+</html>

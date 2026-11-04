@@ -3,3 +3,8 @@ generators/moderation-scanner.html
 
 # Local translation review cache and reports
 .translation-review/
+
+# Class + pet study outputs (generated locally)
+scripts/class-pet-study/.work/
+scripts/class-pet-study/*.html
+!scripts/class-pet-study/comboPage.html

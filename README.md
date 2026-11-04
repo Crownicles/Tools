@@ -35,4 +35,5 @@ Ce repo présente différents outils pour travailler sur Crownicles
 
 ## Scripts
 
+- [Étude classes × familiers](scripts/class-pet-study/) - Simule des millions de combats PvP entre toutes les combinaisons classe + familier avec le vrai code de combat et le réseau des gardes du roi, puis génère une page : méta, classe contre classe, synergies, attaques peu jouées.
 - [Translation Review](scripts/translation-review/) - Relit les traductions Crowdin depuis la source française avec des contrôles déterministes et un LLM local, puis produit des rapports et files d'actions sans écrire dans Crowdin.
