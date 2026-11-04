@@ -45,6 +45,8 @@ node comboRun.js --core ~/Crownicles/Core --gear-by-class "$(python3 -c "import 
 python3 comboReport.py .work/variant.json ~/Crownicles .work/variant.data.json | head -1
 ```
 
+Pour changer le code d'une attaque ou d'un pouvoir de familier, `--patch fichier.js --patch-options '{...}'` charge dans chaque worker un module `module.exports = (world, options) => { ... }` qui peut remplacer les fonctions du cache de `FightActionDataController` ou de `PetAssistanceDataController`, ou le coût en souffle d'une action. Vérifiez d'abord qu'avec les valeurs du jeu le patch redonne exactement les mêmes scores.
+
 Le réseau a été entraîné sur les règles du Core : pour une variante très éloignée, les chiffres sont indicatifs.
 
 ## Après un changement d'équilibrage

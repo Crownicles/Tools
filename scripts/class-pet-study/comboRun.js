@@ -38,6 +38,9 @@ const config = {
 	classStats: (opt("class-stat") ?? "").split(",").filter(Boolean).map(kv => kv.split("=")),
 	// --damage-mult canonAttack=1.15,boomerangAttack=1.2: the damage of these actions is multiplied
 	damageMults: (opt("damage-mult") ?? "").split(",").filter(Boolean).map(kv => kv.split("=")),
+	// --patch file.js [--patch-options '{"key": value}']: replaces actions or pet powers in the workers
+	patchFile: opt("patch") ? path.resolve(opt("patch")) : undefined,
+	patchOptions: JSON.parse(opt("patch-options", "{}")),
 	search: { depth: 2, rootSamples: 8, samples: [8, 3], pruneTop: 3, opponentArgmax: 0.7 }
 };
 

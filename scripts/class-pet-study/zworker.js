@@ -306,6 +306,10 @@ async function handle(msg) {
 			};
 			cache.set(id, boosted);
 		}
+		// --patch file.js: module.exports = (world, options) => { ... } replacing actions or pet powers of the build
+		if (config.patchFile) {
+			require(config.patchFile)(world, config.patchOptions ?? {});
+		}
 		for (const [key, value] of config.classStats ?? []) {
 			const [cls, stat] = key.split(".");
 			world.ClassDataController.instance.getById(+cls)[stat] = Number(value);
