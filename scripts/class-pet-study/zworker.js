@@ -232,11 +232,13 @@ async function runSeed(seed) {
 	}
 	if (config.mode === "combo") {
 		// Class + pet combinations, all with the same gear and level, both sides playing the network alone
-		const [a, pa, d, pd] = config.pair;
+		// Gear: the pair's gear set when given, else the class's gear, else the common gear
+		const [a, pa, d, pd, ga, gd] = config.pair;
+		const gearOf = (cls, key) => config.gearSets[key] ?? config.gearSets[`class${cls}`] ?? config.gear;
 		const fight = {
 			kind: "pvp",
-			attacker: { id: 1000001, level: config.level, cls: a, ao: config.gear },
-			defender: { id: 1000002, level: config.level, cls: d, ao: config.gear },
+			attacker: { id: 1000001, level: config.level, cls: a, ao: gearOf(a, ga) },
+			defender: { id: 1000002, level: config.level, cls: d, ao: gearOf(d, gd) },
 			attackerPet: pa || null, defenderPet: pd || null,
 			energyRatio: 0.8 + 0.2 * makeRng(seed)()
 		};
@@ -285,17 +287,22 @@ process.on("message", msg => {
 async function handle(msg) {
 	if (msg.type === "config") {
 		config = msg.config;
-		if (config.gearSpec) {
+		if (config.gearSpec || config.gearSetSpecs) {
 			const { WeaponDataController } = require(`${world.D}/data/Weapon`);
 			const { ArmorDataController } = require(`${world.D}/data/Armor`);
 			const { PotionDataController } = require(`${world.D}/data/Potion`);
 			const { ObjectItemDataController } = require(`${world.D}/data/ObjectItem`);
 			const controllers = [WeaponDataController, ArmorDataController, PotionDataController, ObjectItemDataController];
 			const keys = ["weapon", "armor", "potion", "object"];
-			config.gear = {};
-			config.gearSpec.forEach(([cat, id, lvl, ench]) => {
-				config.gear[keys[cat]] = { item: controllers[cat].instance.getById(id), itemLevel: lvl, itemEnchantmentId: ench };
-			});
+			const parse = spec => {
+				const gear = {};
+				spec.forEach(([cat, id, lvl, ench]) => {
+					gear[keys[cat]] = { item: controllers[cat].instance.getById(id), itemLevel: lvl, itemEnchantmentId: ench };
+				});
+				return gear;
+			};
+			config.gear = config.gearSpec ? parse(config.gearSpec) : null;
+			config.gearSets = Object.fromEntries(Object.entries(config.gearSetSpecs ?? {}).map(([key, spec]) => [key, parse(spec)]));
 		}
 		if (config.model) {
 			net = loadNet(config.model);

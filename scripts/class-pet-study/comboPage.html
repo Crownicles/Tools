@@ -89,7 +89,11 @@ const hideTip = () => (tip.style.display = "none");
 
 const s = DATA.setup;
 const gearNames = ["arme", "armure", "potion", "objet"];
-$("#setup").innerHTML = `${s.combos} combinaisons classe + familier, chacune contre toutes les autres, dans les deux rôles · ${s.fights.toLocaleString("fr")} combats simulés en ${s.seconds} s · niveau ${s.level} · même équipement pour tous (${s.gear.map(g => `${gearNames[g[0]]} ${g[1]}${g[2] ? " +" + g[2] : ""}${g[3] ? " " + g[3] : ""}`).join(", ")}) · les deux combattants jouent avec le réseau des gardes du roi.`;
+const gearText = spec => (typeof spec === "string" ? spec.split("|").map(p => p.split(":")) : spec)
+	.map(g => `${gearNames[+g[0]]} ${g[1]}${+g[2] ? " +" + g[2] : ""}${g[3] ? " " + g[3] : ""}`).join(", ");
+const byClass = Object.keys(s.gearByClass ?? {}).length > 0;
+$("#setup").innerHTML = `${s.combos} combinaisons classe + familier, chacune contre toutes les autres, dans les deux rôles · ${s.fights.toLocaleString("fr")} combats simulés en ${s.seconds} s · niveau ${s.level} · ${byClass ? "chaque classe avec l'équipement le plus adapté parmi des objets comparables (rareté 7, +5, enchantements de niveau 3)" : `même équipement pour tous (${gearText(s.gear)})`} · les deux combattants jouent avec le réseau des gardes du roi.
+	${byClass ? `<details style="margin-top:4px"><summary>Équipement de chaque classe</summary><ul class="tight">${DATA.classes.map(c => `<li><b>${c.name}</b> : ${gearText(s.gearByClass[c.id])}</li>`).join("")}</ul></details>` : ""}`;
 
 // Tabs
 const tabs = [["alerts", "Méta : le meilleur contre le meilleur"], ["classes", "Classe contre classe"], ["combos", "Toutes les combinaisons"], ["grid", "Classe × familier"], ["pets", "Familiers"], ["moves", "Attaques jouées"], ["method", "Méthode"]];
@@ -323,11 +327,11 @@ function legend(span = 25) {
 // ---------- Method ----------
 $("#s-method").innerHTML = `<div class="card"><ul>
 <li>Chaque combinaison classe + familier affronte toutes les autres, ${s.fightsPerPair} fois en attaque et ${s.fightsPerPair} fois en défense, avec les mêmes tirages aléatoires pour toutes les paires. Score par combinaison : ±${pct(1.96 * Math.sqrt(0.25 / (2 * s.fightsPerPair * s.combos)))} points (IC 95 %).</li>
-<li>Tout le monde a le même équipement (celui passé à l'outil) et le même niveau : seule la classe et le familier changent. Les statistiques des objets sont plafonnées par la classe comme en jeu.</li>
+<li>${byClass ? "Chaque classe porte l'équipement qui lui réussit le mieux parmi des objets comparables portés en prod (tous de rareté 7, arme et armure +5, enchantements PvP de niveau 3), choisi par simulation contre les autres classes." : "Tout le monde a le même équipement (celui passé à l'outil)."} Même niveau pour tous : seuls la classe, l'équipement et le familier changent. Les statistiques des objets sont plafonnées par la classe comme en jeu.</li>
 <li>Les deux combattants jouent avec le réseau de neurones des gardes du roi (environ le niveau d'un bon joueur, sans recherche). L'attaquant commence entre 80 et 100 % d'énergie, le défenseur à 100 %, comme en PvP.</li>
 <li>Les adversaires sont pris uniformément : chaque classe et chaque familier comptent autant, quelle que soit leur fréquence réelle. Un familier rare ou cher pèse autant qu'un familier courant.</li>
 <li>Synergie = score de la combinaison − score moyen de la classe − (score moyen du familier − moyenne générale) : ce que ce familier rapporte à cette classe en plus de ce qu'il rapporte en moyenne.</li>
-<li>Limites : le réseau n'est pas parfait et peut sous-exploiter un familier qui demande un plan particulier ; un seul équipement est testé (un autre équipement peut changer les rapports de force entre classes).</li></ul></div>`;
+<li>Limites : le réseau n'est pas parfait et peut sous-exploiter un familier qui demande un plan particulier ; ${byClass ? "l'équipement de chaque classe est choisi parmi un petit nombre d'objets de rareté 7 portés en prod" : "un seul équipement est testé (un autre équipement peut changer les rapports de force entre classes)"}.</li></ul></div>`;
 </script>
 </body>
 </html>

@@ -19,13 +19,20 @@ const workers = +opt("workers", 15);
 const PAIRS_PER_TASK = +opt("pairs-per-task", 400);
 const classes = (opt("classes") ?? "18,19,20,21,22,23,24").split(",").map(Number);
 const pets = JSON.parse(opt("pets", "null")) ?? null;
-const gearSpec = opt("gear").split("|").map(part => {
+const parseGear = text => text.split("|").map(part => {
 	const [cat, id, lvl, ench] = part.split(":");
 	return [+cat, +id, +lvl, ench || null];
 });
+// --gear: common gear; --gear-by-class '{"18": "<gear>", ...}': gear of each class; --gear-sets '{"key": "<gear>"}' with
+// combinations [class, pet, key] for gear variants
+const gearSpec = opt("gear") ? parseGear(opt("gear")) : null;
+const gearSetSpecs = {
+	...Object.fromEntries(Object.entries(JSON.parse(opt("gear-by-class", "{}"))).map(([cls, text]) => [`class${cls}`, parseGear(text)])),
+	...Object.fromEntries(Object.entries(JSON.parse(opt("gear-sets", "{}"))).map(([key, text]) => [key, parseGear(text)]))
+};
 const config = {
 	mode: "combo", comboAi: opt("combo-ai", "network"), model: path.resolve(opt("model") ?? path.join(coreDir, "resources/kingGuardAi/model.json")),
-	tieMargin: +opt("tie", 0.5), level: +opt("level", 157), gearSpec,
+	tieMargin: +opt("tie", 0.5), level: +opt("level", 157), gearSpec, gearSetSpecs,
 	search: { depth: 2, rootSamples: 8, samples: [8, 3], pruneTop: 3, opponentArgmax: 0.7 }
 };
 
@@ -47,9 +54,14 @@ const config = {
 	console.log(`${C} combinations, ${C * C} ordered pairs, ${C * C * N} fights`);
 	const tasks = [];
 	let pairs = [], idx = [];
+	// --field-start k: the combinations from index k on are a reference field; the ones before only meet the field
+	const fieldStart = +opt("field-start", 0);
 	for (let i = 0; i < C; i++) {
 		for (let j = 0; j < C; j++) {
-			pairs.push([...combos[i], ...combos[j]]);
+			if (i < fieldStart && j < fieldStart) {
+				continue;
+			}
+			pairs.push([combos[i][0], combos[i][1], combos[j][0], combos[j][1], combos[i][2], combos[j][2]]);
 			idx.push(i * C + j);
 			if (pairs.length === PAIRS_PER_TASK) {
 				tasks.push({ id: tasks.length, pairs, idx });
@@ -61,6 +73,8 @@ const config = {
 	if (pairs.length) {
 		tasks.push({ id: tasks.length, pairs, idx });
 	}
+	const pairCount = tasks.reduce((sum, task) => sum + task.pairs.length, 0);
+	console.log(`${C} combinations, ${pairCount} ordered pairs, ${pairCount * N} fights`);
 	// counts[pair * 3 + result]: result 0 draw, 1 attacker won, 2 defender won
 	const counts = new Uint32Array(C * C * 3);
 	const actions = {};
@@ -145,8 +159,8 @@ const config = {
 		}
 	});
 	const seconds = (Date.now() - started) / 1000;
-	console.log(`${C * C * N} fights in ${seconds.toFixed(0)} s`);
-	fs.writeFileSync(path.resolve(opt("out", "combo.json")), JSON.stringify({ classes, petIds, combos, N, level: config.level, gear: gearSpec, comboAi: config.comboAi, counts: Array.from(counts), actions, petPowers, classActions, seconds }));
+	console.log(`${pairCount * N} fights in ${seconds.toFixed(0)} s`);
+	fs.writeFileSync(path.resolve(opt("out", "combo.json")), JSON.stringify({ classes, petIds, combos, N, level: config.level, gear: gearSpec, gearByClass: JSON.parse(opt("gear-by-class", "{}")), comboAi: config.comboAi, counts: Array.from(counts), actions, petPowers, classActions, seconds }));
 	// The Core loaded in this process to list the pets keeps it alive
 	process.exit(0);
 })().catch(error => {

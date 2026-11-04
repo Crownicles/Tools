@@ -78,7 +78,7 @@ for p in pet_ids:
 
 r = lambda x: round(float(x), 4)
 data = {
-    "setup": {"level": run["level"], "gear": run["gear"], "fightsPerPair": N, "combos": C, "fights": int(n_pair.sum()),
+    "setup": {"level": run["level"], "gear": run["gear"], "gearByClass": run.get("gearByClass", {}), "fightsPerPair": N, "combos": C, "fights": int(n_pair.sum()),
               "seconds": round(run["seconds"])},
     "classes": [{"id": c, "name": models["classes"][str(c)], "score": r(class_score[i])} for i, c in enumerate(classes)],
     "classVs": [[r(x) for x in row] for row in class_vs],
