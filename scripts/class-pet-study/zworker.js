@@ -293,6 +293,19 @@ async function handle(msg) {
 			const holder = keys.slice(0, -1).reduce((o, k) => o[k], world.FightConstants);
 			holder[keys[keys.length - 1]] = Number(value);
 		}
+		// --damage-mult actionId=multiplier: the damage of an action is multiplied (like raising its base damage)
+		for (const [id, mult] of config.damageMults ?? []) {
+			const original = world.FightActionDataController.getFightActionFunction(id);
+			const cache = world.FightActionDataController.fightActionsFunctionsCache ?? world.FightActionDataController["fightActionsFunctionsCache"];
+			const boosted = (...callArgs) => {
+				const result = original(...callArgs);
+				if (result?.damages) {
+					result.damages = Math.round(result.damages * Number(mult));
+				}
+				return result;
+			};
+			cache.set(id, boosted);
+		}
 		for (const [key, value] of config.classStats ?? []) {
 			const [cls, stat] = key.split(".");
 			world.ClassDataController.instance.getById(+cls)[stat] = Number(value);

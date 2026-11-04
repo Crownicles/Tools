@@ -36,6 +36,8 @@ const config = {
 	// --set COUNTER_ATTACK_DAMAGE_MULTIPLIER=1,DARK_ATTACK_WEAR.BASE_MULTIPLIER=1.5 · --class-stat 19.attack=50,19.health=150
 	sets: (opt("set") ?? "").split(",").filter(Boolean).map(kv => kv.split("=")),
 	classStats: (opt("class-stat") ?? "").split(",").filter(Boolean).map(kv => kv.split("=")),
+	// --damage-mult canonAttack=1.15,boomerangAttack=1.2: the damage of these actions is multiplied
+	damageMults: (opt("damage-mult") ?? "").split(",").filter(Boolean).map(kv => kv.split("=")),
 	search: { depth: 2, rootSamples: 8, samples: [8, 3], pruneTop: 3, opponentArgmax: 0.7 }
 };
 

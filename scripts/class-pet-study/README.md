@@ -37,7 +37,7 @@ Avec les valeurs par défaut sur 15 cœurs : environ 4 min pour les 3,2 millions
 
 ## Tester une variante sans recompiler
 
-`comboRun.js` accepte `--set CONSTANTE=valeur` (constantes de `FightConstants`, chemins pointés possibles) et `--class-stat classe.stat=valeur` (statistiques des fichiers `Core/resources/classes`). Exemple : score de chaque classe avec la riposte de la prod et un Tank à 350 `fightPoint`, en reprenant l'équipement choisi par `study.sh auto` :
+`comboRun.js` accepte `--set CONSTANTE=valeur` (constantes de `FightConstants`, chemins pointés possibles), `--class-stat classe.stat=valeur` (statistiques des fichiers `Core/resources/classes`) et `--damage-mult action=multiplicateur` (dégâts d'une action multipliés, comme si ses dégâts de base augmentaient). Exemple : score de chaque classe avec la riposte de la prod et un Tank à 350 `fightPoint`, en reprenant l'équipement choisi par `study.sh auto` :
 
 ```bash
 node comboRun.js --core ~/Crownicles/Core --gear-by-class "$(python3 -c "import json;print(json.dumps(json.load(open('.work/gear.json'))['gearByClass']))")" \
