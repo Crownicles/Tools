@@ -204,7 +204,9 @@ function makeZPolicy(engine, featurizer, net, options = {}) {
 				return candidates[0];
 			}
 			const z = net.logits(featurizer.featurize(me, fightView.fightController.getDefendingFighter(), fightView.fightController.turn));
-			const scores = candidates.map(c => z[index(c.id)] ?? -1e9);
+			// Optional bias per move, for every class ("divineAttack") or one class ("22:divineAttack")
+			const bias = id => options.logitBias?.[`${me.player?.class}:${id}`] ?? options.logitBias?.[id] ?? 0;
+			const scores = candidates.map(c => (z[index(c.id)] ?? -1e9) + bias(c.id));
 			const max = Math.max(...scores);
 			const ties = candidates.filter((_, k) => scores[k] >= max - (options.tieMargin ?? 0));
 			return ties.length === 1 ? ties[0] : ties[Math.floor(Math.random() * ties.length)];

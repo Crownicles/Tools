@@ -49,6 +49,20 @@ Pour changer le code d'une attaque ou d'un pouvoir de familier, `--patch fichier
 
 Le réseau a été entraîné sur les règles du Core : pour une variante très éloignée, les chiffres sont indicatifs.
 
+### Une attaque peu jouée est-elle faible, ou le réseau la sous-estime-t-il ?
+`--logit-bias action=biais` (ou `classe:action=biais` pour une seule classe) ajoute un biais au score du réseau pour cette attaque. La classe la joue alors plus souvent.
+- Si la classe gagne davantage, le réseau la sous-estimait.
+- Si elle perd, l'attaque est réellement moins bonne que les autres hors de ses situations : c'est le design qu'il faut changer.
+
+Un biais de 0,7 la fait jouer à peu près deux fois plus. Exemple : l'ultime du Paladin, avec l'équipement choisi par `study.sh auto` :
+
+```bash
+node comboRun.js --core <checkout>/Core --gear-by-class "$(python3 -c "import json; print(json.dumps(json.load(open('.work/gear.json'))['gearByClass']))")" \
+	--n 2 --logit-bias 22:chargeUltimateAttack=0.7 --out .work/bias.json
+```
+
+Comparer ensuite le score du Paladin et l'usage de l'attaque (onglet « attaques jouées ») avec une exécution sans biais. Pour tester un buff, combiner avec `--patch` : si, après le buff, le biais ne coûte plus rien, le réseau réentraîné jouera l'attaque plus souvent.
+
 ## Après un changement d'équilibrage
 
 1. Recompiler le Core du checkout.

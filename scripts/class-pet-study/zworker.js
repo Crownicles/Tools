@@ -337,7 +337,7 @@ async function handle(msg) {
 				throw new Error("the model was trained with other actions, alterations or pet assistances than this build");
 			}
 			Search = makeZSearch(world, engine, featurizer, net, { ...config.search, knowPolicy: config.mode === "bench" && config.knowPolicy !== false });
-			Policy = makeZPolicy(engine, featurizer, config.guardModel && config.guardModel !== "scripted" ? loadNet(config.guardModel) : net, { tieMargin: config.tieMargin ?? 0 });
+			Policy = makeZPolicy(engine, featurizer, config.guardModel && config.guardModel !== "scripted" ? loadNet(config.guardModel) : net, { tieMargin: config.tieMargin ?? 0, logitBias: config.logitBias });
 		}
 		nets = (config.pastModels ?? []).map(loadNet);
 		if (config.guardDepth) {

@@ -3,6 +3,7 @@
 // node comboRun.js --core <compiled Core dir> --gear "0:89:5:pveAttack3|1:13:5:defense3|2:4:0:|3:4:0:" --level 157 --n 6 --out combo.json
 //   [--model <model.json> (default: the Core's resources/kingGuardAi/model.json)] [--tie 0.5] [--workers 15]
 //   [--combos '[[class, pet], ...]' instead of every class x every pet] [--combo-ai network|scripted|search]
+//   [--logit-bias actionId=bias,...] (network favoring some moves)
 // --gear: category:itemId:itemLevel:enchantmentId for the weapon (0), armor (1), potion (2) and object (3)
 const { fork } = require("child_process");
 const fs = require("fs");
@@ -41,6 +42,9 @@ const config = {
 	// --patch file.js [--patch-options '{"key": value}']: replaces actions or pet powers in the workers
 	patchFile: opt("patch") ? path.resolve(opt("patch")) : undefined,
 	patchOptions: JSON.parse(opt("patch-options", "{}")),
+	// --logit-bias divineAttack=1,23:chargeChargingAttack=1: the network favors these moves (for every class, or one class),
+	// to see whether playing them more often wins more
+	logitBias: Object.fromEntries((opt("logit-bias") ?? "").split(",").filter(Boolean).map(kv => kv.split("=")).map(([id, bias]) => [id, Number(bias)])),
 	search: { depth: 2, rootSamples: 8, samples: [8, 3], pruneTop: 3, opponentArgmax: 0.7 }
 };
 
