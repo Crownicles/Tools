@@ -1,10 +1,11 @@
 // State encoding shared by the learned policies: the same vocabulary and layout in every process of a build.
-function makeFeaturizer(world) {
+// vocab ({ actionIds, alterationIds }) replaces the default one (the value models of the engine use the default)
+function makeFeaturizer(world, vocab = null) {
 	const { FightConstants, ClassDataController } = world;
 	const CLASSES = [18, 19, 20, 21, 22, 23, 24];
-	const actionIds = [...new Set(CLASSES.flatMap(c => ClassDataController.instance.getById(c).fightActionsIds)
+	const actionIds = vocab?.actionIds ?? [...new Set(CLASSES.flatMap(c => ClassDataController.instance.getById(c).fightActionsIds)
 		.concat([FightConstants.FIGHT_ACTIONS.PLAYER.NONE, FightConstants.FIGHT_ACTIONS.ALTERATION.OUT_OF_BREATH]))].sort();
-	const alterationIds = [...new Set(Object.values(FightConstants.FIGHT_ACTIONS.ALTERATION))].sort();
+	const alterationIds = vocab?.alterationIds ?? [...new Set(Object.values(FightConstants.FIGHT_ACTIONS.ALTERATION))].sort();
 	const actionIndex = new Map(actionIds.map((id, i) => [id, i]));
 	const alterationIndex = new Map(alterationIds.map((id, i) => [id, i]));
 	const classIndex = new Map(CLASSES.map((c, i) => [c, i]));

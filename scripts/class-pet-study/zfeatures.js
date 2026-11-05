@@ -10,12 +10,22 @@ const ROLES = ["attacker", "guard", "pvpDefender"];
 const STYLES = ["strategist", "aggressive", "prudent"];
 
 function makeZFeaturizer(world) {
-	const value = makeValueFeaturizer(world);
-	const v1 = makeFeaturizer(world);
 	const { PetConstants } = require(`${world.L}/constants/PetConstants`);
 	const { PetDataController } = require(`${world.D}/data/Pet`);
 	const { FightUtils } = require(`${world.D}/core/utils/FightUtils`);
 	const { FightConstants } = require(`${world.L}/constants/FightConstants`);
+	const { FightAlterations } = require(`${world.D}/core/fights/actions/FightAlterations`);
+	// Every action that can be in a player's history (the second half of a charged attack included) and every alteration
+	// of the game: an id missing from the vocabulary would read as no last action or no alteration
+	const CLASSES = [18, 19, 20, 21, 22, 23, 24];
+	const actionIds = [...new Set([
+		...CLASSES.flatMap(c => world.ClassDataController.instance.getById(c).fightActionsIds),
+		...Object.values(FightConstants.FIGHT_ACTIONS.PLAYER),
+		FightConstants.FIGHT_ACTIONS.ALTERATION.OUT_OF_BREATH
+	])].sort();
+	const alterationIdsAll = [...new Set([...Object.values(FightConstants.FIGHT_ACTIONS.ALTERATION), ...Object.values(FightAlterations)])].sort();
+	const value = makeValueFeaturizer(world, { actionIds, alterationIds: alterationIdsAll });
+	const v1 = makeFeaturizer(world, { actionIds, alterationIds: alterationIdsAll });
 	const assistIds = [...new Set(PetConstants.PET_BEHAVIORS.map(m => m.behaviorId))].sort();
 	// Second powers of the pets that have one (none on older builds)
 	const secondaryIds = [...new Set((PetConstants.PET_SECONDARY_BEHAVIORS ?? []).map(m => m.behaviorId))].sort();
@@ -25,8 +35,7 @@ function makeZFeaturizer(world) {
 	const actionIndex = new Map(v1.actionIds.map((id, i) => [id, i]));
 	const V = v1.actionIds.length, P = assistIds.length;
 	const size = value.size + V + 2 + 2 * (P + 1) + 4 + 2 * (S + 1) + ROLES.length + STYLES.length;
-	const alterationIds = [...new Set(Object.values(FightConstants.FIGHT_ACTIONS.ALTERATION))].sort();
-	const vocab = { actionIds: v1.actionIds, alterationIds, assistIds, secondaryIds, classes: [18, 19, 20, 21, 22, 23, 24], roles: ROLES, styles: STYLES };
+	const vocab = { actionIds: v1.actionIds, alterationIds: alterationIdsAll, assistIds, secondaryIds, classes: CLASSES, roles: ROLES, styles: STYLES };
 
 	function petInfo(fighter) {
 		const typeId = fighter.pet?.typeId;

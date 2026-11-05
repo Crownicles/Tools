@@ -1,8 +1,8 @@
 // Features of a decision state for the value network, from the point of view of the fighter about to decide.
 const { makeFeaturizer } = require("./features");
 
-function makeValueFeaturizer(world) {
-	const base = makeFeaturizer(world);
+function makeValueFeaturizer(world, vocab = null) {
+	const base = makeFeaturizer(world, vocab);
 	const CLASSES = [18, 19, 20, 21, 22, 23, 24];
 	const classIndex = new Map(CLASSES.map((c, i) => [c, i]));
 	// 15 scalar features, then the one-hot of the deciding fighter's class
