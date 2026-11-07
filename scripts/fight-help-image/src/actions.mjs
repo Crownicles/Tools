@@ -1,4 +1,4 @@
-// Reads the fight actions of the player classes from a compiled Core and measures them: every action is played in a grid of
+// Reads the fight actions of the player classes and the class lineages from a compiled Core, and measures the actions: every action is played in a grid of
 // fight situations, and the damage and hit probabilities it asks the fight action controller for are recorded.
 // Nothing is copied from the Core sources, so the figures follow the game as soon as the Core is recompiled.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
@@ -50,26 +50,63 @@ function loadCore(coreDir) {
 		FightActionController: require(path.join(dist, "core/fights/actions/FightActionController")).FightActionController,
 		Fighter: require(path.join(dist, "core/fights/fighter/Fighter")).Fighter,
 		FightConstants: require(path.join(lib, "constants/FightConstants")).FightConstants,
+		ClassInfoConstants: require(path.join(lib, "constants/ClassInfoConstants")).ClassInfoConstants,
 		CrowniclesIcons: require(path.join(lib, "CrowniclesIcons")).CrowniclesIcons
 	};
 }
 
 /**
- * Ids of the actions of every player class, in the order the classes are numbered
+ * Actions of every player class, by class id in increasing order
  * @param {string} coreDir
+ * @returns {Map<number, string[]>}
  */
-function getPlayerActionIds(coreDir) {
+function readClassActions(coreDir) {
 	const classesDir = path.join(coreDir, "resources/classes");
-	const classFiles = readdirSync(classesDir)
+	return new Map(readdirSync(classesDir)
 		.filter(file => file.endsWith(".json"))
-		.sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
-	const actionIds = new Set();
-	for (const file of classFiles) {
-		for (const actionId of JSON.parse(readFileSync(path.join(classesDir, file), "utf8")).fightActionsIds) {
-			actionIds.add(actionId);
+		.map(file => [parseInt(file, 10), JSON.parse(readFileSync(path.join(classesDir, file), "utf8")).fightActionsIds])
+		.sort(([a], [b]) => a - b));
+}
+
+/**
+ * Actions of a lineage in the order its classes unlock them, each with the first class of the lineage having it
+ * @param {readonly number[]} classIds Classes of the lineage, in the order a player reaches them
+ * @param {Map<number, string[]>} classActions
+ * @returns {{ id: string, unlockClassId: number }[]}
+ */
+export function getLineageActions(classIds, classActions) {
+	const unlockClassIds = new Map();
+	for (const classId of classIds) {
+		for (const actionId of classActions.get(classId) ?? []) {
+			if (!unlockClassIds.has(actionId)) {
+				unlockClassIds.set(actionId, classId);
+			}
 		}
 	}
-	return [...actionIds];
+	return [...unlockClassIds].map(([id, unlockClassId]) => ({
+		id, unlockClassId
+	}));
+}
+
+/**
+ * Class lineages of the game (ClassInfoConstants.CLASS_LINEAGES), a class outside of any lineage being a lineage on its own
+ * @param {Map<number, string[]>} classActions
+ * @param {object} core
+ */
+function readLineages(classActions, core) {
+	const lineages = new Map();
+	for (const classId of classActions.keys()) {
+		const classIds = core.ClassInfoConstants.getClassLineage(classId);
+		if (!lineages.has(classIds.join())) {
+			lineages.set(classIds.join(), {
+				classes: classIds.map(id => ({
+					id, emoji: core.CrowniclesIcons.classes[id]
+				})),
+				actions: getLineageActions(classIds, classActions)
+			});
+		}
+	}
+	return [...lineages.values()];
 }
 
 /**
@@ -183,11 +220,14 @@ function spyOnController(controller) {
 }
 
 /**
- * Fight actions of the player classes with their figures, measured with the code of a compiled Core
+ * Fight actions of the player classes with their figures, measured with the code of a compiled Core, and the class lineages using them
  * @param {string} coreDir Core folder of a compiled Crownicles checkout
- * @returns {{ id: string, emoji: string, breath: number, power: { min: number, max: number } | null, accuracy: { min: number, max: number } | null, critical: { min: number, max: number } | null }[]}
+ * @returns {{
+ *   actions: Map<string, { id: string, emoji: string, breath: number, power: { min: number, max: number } | null, accuracy: { min: number, max: number } | null, critical: { min: number, max: number } | null }>,
+ *   lineages: { classes: { id: number, emoji: string }[], actions: { id: string, unlockClassId: number }[] }[]
+ * }}
  */
-export function readPlayerActions(coreDir) {
+export function readFightActions(coreDir) {
 	const core = loadCore(coreDir);
 	const MeasureFighter = makeFighterClass(core.Fighter);
 	const actions = core.FightActionDataController;
@@ -247,20 +287,25 @@ export function readPlayerActions(coreDir) {
 	}
 
 	try {
-		return getPlayerActionIds(coreDir).map(id => {
-			let measured = measure(id);
-			if (id.startsWith(CHARGE_ACTION_PREFIX) && measured.preparedActionId) {
-				measured = measure(measured.preparedActionId);
-			}
-			return {
-				id,
-				emoji: core.CrowniclesIcons.fightActions[id],
-				breath: actions.getFightActionBreathCost(id),
-				power: measured.power,
-				accuracy: measured.accuracy,
-				critical: measured.critical
-			};
-		});
+		const classActions = readClassActions(coreDir);
+		const actionIds = new Set([...classActions.values()].flat());
+		return {
+			actions: new Map([...actionIds].map(id => {
+				let measured = measure(id);
+				if (id.startsWith(CHARGE_ACTION_PREFIX) && measured.preparedActionId) {
+					measured = measure(measured.preparedActionId);
+				}
+				return [id, {
+					id,
+					emoji: core.CrowniclesIcons.fightActions[id],
+					breath: actions.getFightActionBreathCost(id),
+					power: measured.power,
+					accuracy: measured.accuracy,
+					critical: measured.critical
+				}];
+			})),
+			lineages: readLineages(classActions, core)
+		};
 	}
 	finally {
 		spy.restore();

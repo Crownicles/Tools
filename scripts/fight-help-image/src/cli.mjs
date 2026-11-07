@@ -2,17 +2,17 @@
 import { mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { readPlayerActions } from "./actions.mjs";
+import { readFightActions } from "./actions.mjs";
 import { loadWebsiteAssets } from "./assets.mjs";
 import { getLabels } from "./labels.mjs";
 import {
-	buildPage, PAGE_WIDTH, THEME_NAMES
+	buildPage, getPageWidth, THEME_NAMES
 } from "./page.mjs";
 import {
 	launchBrowser, screenshotPage
 } from "./render.mjs";
 import {
-	getLanguages, loadFightActionTexts
+	getLanguages, loadTexts
 } from "./texts.mjs";
 import {
 	formatNumber, formatPercent
@@ -57,7 +57,7 @@ function readOptions() {
  */
 function printActions(actions) {
 	const rangeText = (range, format) => (range ? format(range, "en") : "-");
-	console.table(Object.fromEntries(actions.map(action => [action.id, {
+	console.table(Object.fromEntries([...actions.values()].map(action => [action.id, {
 		power: rangeText(action.power, formatNumber),
 		accuracy: rangeText(action.accuracy, formatPercent),
 		critical: rangeText(action.critical, formatPercent),
@@ -69,7 +69,9 @@ async function main() {
 	const options = readOptions();
 	const labelsByLanguage = Object.fromEntries(options.languages.map(language => [language, getLabels(language)]));
 	const assets = loadWebsiteAssets(options.websiteDir);
-	const actions = readPlayerActions(path.join(options.crowniclesDir, "Core"));
+	const {
+		actions, lineages
+	} = readFightActions(path.join(options.crowniclesDir, "Core"));
 	printActions(actions);
 
 	const browser = await launchBrowser();
@@ -77,7 +79,8 @@ async function main() {
 		for (const language of options.languages) {
 			const html = buildPage({
 				actions,
-				texts: loadFightActionTexts(options.crowniclesDir, language),
+				lineages,
+				texts: loadTexts(options.crowniclesDir, language),
 				labels: labelsByLanguage[language],
 				language,
 				version: options.version,
@@ -88,7 +91,7 @@ async function main() {
 			mkdirSync(folder, { recursive: true });
 			const file = path.join(folder, `${options.version}.png`);
 			await screenshotPage(browser, {
-				html, file, width: PAGE_WIDTH, scale: options.scale
+				html, file, width: getPageWidth(lineages.length), scale: options.scale
 			});
 			console.log(`${language}: ${file}`);
 		}

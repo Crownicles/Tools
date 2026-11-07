@@ -1,5 +1,6 @@
 // Page of the image, drawn with the design tokens and the components of the website (public/css/site.css of Crownicles/Website):
-// its banner, its title, its white cards and its figures
+// its banner, its title, its white cards and its figures. One column per class lineage, with the attacks in the order its
+// classes unlock them, so a player reads the column of their class
 import { emojiDataUri } from "./emoji.mjs";
 import {
 	formatNumber, formatPercent
@@ -13,6 +14,7 @@ const THEMES = {
 		paper: "#FFFFFF",
 		wash: "#F4F4F5",
 		line: "#E6E6E8",
+		gold: "#C8963C",
 		cardShadow: "0 4px 12px rgba(11, 11, 12, 0.06)"
 	},
 	dark: {
@@ -21,17 +23,17 @@ const THEMES = {
 		paper: "#1C1C20",
 		wash: "#101012",
 		line: "#2E2E34",
+		gold: "#DDAE55",
 		cardShadow: "0 4px 12px rgba(0, 0, 0, 0.3)"
 	}
 };
 
 export const THEME_NAMES = Object.keys(THEMES);
 
-// Width of the page in CSS pixels (the screenshot multiplies it by its scale) and columns of cards: Discord shows a landscape
-// image larger than a portrait one in an embed
-export const PAGE_WIDTH = 2200;
-
-const CARD_COLUMNS = 6;
+// Width of a column of the page in CSS pixels, the screenshot multiplies the page by its scale
+const COLUMN_WIDTH = 330;
+const COLUMN_GAP = 16;
+const PAGE_PADDING = 40;
 
 const HTML_ESCAPES = {
 	"&": "&amp;",
@@ -49,48 +51,86 @@ function emojiImage(emoji) {
 }
 
 function figure(label, value) {
-	return `<div class="figure"><span>${escapeHtml(label)}</span><b>${value}</b></div>`;
+	return `<div class="figure"><span>${escapeHtml(label)}</span><b>${escapeHtml(value)}</b></div>`;
 }
 
 /**
- * Card of an action: its name, its figures (the breath it costs is always known) and its description
+ * Width of the page in CSS pixels for a number of columns
+ * @param {number} columns
  */
-function card(action, {
+export function getPageWidth(columns) {
+	return columns * COLUMN_WIDTH + (columns - 1) * COLUMN_GAP + 2 * PAGE_PADDING;
+}
+
+/**
+ * Card of an action: its name, the class unlocking it, its figures (the breath it costs is always known) and its description
+ */
+function card(action, unlockClass, {
 	texts, labels, language
 }) {
 	const figures = [
-		action.power ? figure(labels.power, escapeHtml(formatNumber(action.power, language))) : "",
-		action.accuracy ? figure(labels.accuracy, escapeHtml(formatPercent(action.accuracy, language))) : "",
-		action.critical ? figure(labels.critical, escapeHtml(formatPercent(action.critical, language))) : "",
-		figure(labels.breath, escapeHtml(formatNumber({
+		action.power ? figure(labels.power, formatNumber(action.power, language)) : "",
+		action.accuracy ? figure(labels.accuracy, formatPercent(action.accuracy, language)) : "",
+		action.critical ? figure(labels.critical, formatPercent(action.critical, language)) : "",
+		figure(labels.breath, formatNumber({
 			min: action.breath, max: action.breath
-		}, language)))
+		}, language))
 	].join("");
+	const unlock = unlockClass
+		? `<p class="card__unlock">${emojiImage(unlockClass.emoji)}${escapeHtml(texts.className(unlockClass.id))}</p>`
+		: "";
 	return `<article class="card">
-		<header class="card__head">
-			<span class="card__emblem">${emojiImage(action.emoji)}</span>
-			<h2 class="card__name">${escapeHtml(texts.name(action.id))}</h2>
+			<header class="card__head">
+				<span class="emblem">${emojiImage(action.emoji)}</span>
+				<div>
+					<h3 class="card__name">${escapeHtml(texts.actionName(action.id))}</h3>
+					${unlock}
+				</div>
+			</header>
+			<div class="figures">${figures}</div>
+			<p class="card__text">${escapeHtml(texts.actionDescription(action.id))}</p>
+		</article>`;
+}
+
+/**
+ * Column of a lineage: its last class, the classes leading to it, then its actions. The class unlocking each action is only
+ * shown when the actions of the lineage are not all unlocked by the same class
+ */
+function lineageColumn(lineage, actions, context) {
+	const lastClass = lineage.classes.at(-1);
+	// Each separator stays with the class before it, so a line never starts with one
+	const path = lineage.classes.slice(0, -1)
+		.map(lineageClass => `<span>${emojiImage(lineageClass.emoji)}${escapeHtml(context.texts.className(lineageClass.id))}<i>›</i></span>`)
+		.join("");
+	const showsUnlock = new Set(lineage.actions.map(action => action.unlockClassId)).size > 1;
+	const classesById = new Map(lineage.classes.map(lineageClass => [lineageClass.id, lineageClass]));
+	const cards = lineage.actions
+		.map(action => card(actions.get(action.id), showsUnlock ? classesById.get(action.unlockClassId) : null, context))
+		.join("\n");
+	return `<section class="lineage">
+		<header class="lineage__head">
+			<span class="emblem emblem--large">${emojiImage(lastClass.emoji)}</span>
+			<div>
+				<h2 class="lineage__name">${escapeHtml(context.texts.className(lastClass.id))}</h2>
+				${path ? `<p class="lineage__path">${path}</p>` : ""}
+			</div>
 		</header>
-		<div class="figures">${figures}</div>
-		<p class="card__text">${escapeHtml(texts.description(action.id))}</p>
-	</article>`;
+		${cards}
+	</section>`;
 }
 
 /**
  * HTML page of the image in a language
- * @param {{ actions: object[], texts: object, labels: object, language: string, version: string, theme: string, assets: object }} params
+ * @param {{ actions: Map<string, object>, lineages: object[], texts: object, labels: object, language: string, version: string, theme: string, assets: object }} params
  */
 export function buildPage({
-	actions, texts, labels, language, version, theme, assets
+	actions, lineages, texts, labels, language, version, theme, assets
 }) {
 	const colors = THEMES[theme];
-	const collator = new Intl.Collator(language);
-	const cards = [...actions]
-		.sort((a, b) => collator.compare(texts.name(a.id), texts.name(b.id)))
-		.map(action => card(action, {
-			texts, labels, language
-		}))
-		.join("\n");
+	const context = {
+		texts, labels, language
+	};
+	const columns = lineages.map(lineage => lineageColumn(lineage, actions, context)).join("\n");
 
 	return `<!doctype html>
 <html lang="${language}">
@@ -115,6 +155,7 @@ export function buildPage({
 		--paper: ${colors.paper};
 		--wash: ${colors.wash};
 		--line: ${colors.line};
+		--gold: ${colors.gold};
 		--radius: 14px;
 		--pill: 999px;
 		--card-shadow: ${colors.cardShadow};
@@ -125,7 +166,7 @@ export function buildPage({
 	}
 
 	body {
-		width: ${PAGE_WIDTH}px;
+		width: ${getPageWidth(lineages.length)}px;
 		margin: 0;
 		background: var(--wash);
 		color: var(--ink);
@@ -191,15 +232,99 @@ export function buildPage({
 		letter-spacing: -0.01em;
 	}
 
-	.cards {
-		column-count: ${CARD_COLUMNS};
-		column-gap: 16px;
-		padding: 24px 40px 8px;
+	.lineages {
+		display: grid;
+		grid-template-columns: repeat(${lineages.length}, ${COLUMN_WIDTH}px);
+		gap: ${COLUMN_GAP}px;
+		align-items: start;
+		padding: 28px ${PAGE_PADDING}px 8px;
+	}
+
+	.lineage {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.emblem {
+		display: flex;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background: var(--wash);
+	}
+
+	.emblem .emoji {
+		width: 22px;
+		height: 22px;
+	}
+
+	.lineage__head {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		min-height: 88px;
+		padding: 0 4px 12px;
+		border-bottom: 2px solid var(--gold);
+	}
+
+	.emblem--large {
+		width: 56px;
+		height: 56px;
+		background: var(--paper);
+		box-shadow: var(--card-shadow);
+	}
+
+	.emblem--large .emoji {
+		width: 30px;
+		height: 30px;
+	}
+
+	.lineage__name {
+		margin: 0;
+		font-size: 22px;
+		font-weight: 800;
+		line-height: 1.15;
+		letter-spacing: -0.03em;
+	}
+
+	.lineage__path {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 2px 6px;
+		margin: 6px 0 0;
+		color: var(--muted);
+		font-size: 12px;
+		font-weight: 500;
+	}
+
+	.lineage__path span,
+	.card__unlock {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	.lineage__path i {
+		margin-left: 2px;
+		font-style: normal;
+	}
+
+	.lineage__path span:last-child i {
+		display: none;
+	}
+
+	.lineage__path .emoji,
+	.card__unlock .emoji {
+		width: 13px;
+		height: 13px;
 	}
 
 	.card {
-		break-inside: avoid;
-		margin: 0 0 16px;
 		padding: 16px;
 		border-radius: var(--radius);
 		background: var(--paper);
@@ -212,28 +337,19 @@ export function buildPage({
 		gap: 12px;
 	}
 
-	.card__emblem {
-		display: flex;
-		flex-shrink: 0;
-		align-items: center;
-		justify-content: center;
-		width: 44px;
-		height: 44px;
-		border-radius: 50%;
-		background: var(--wash);
-	}
-
-	.card__emblem .emoji {
-		width: 22px;
-		height: 22px;
-	}
-
 	.card__name {
 		margin: 0;
 		font-size: 17px;
 		font-weight: 700;
 		line-height: 1.25;
 		letter-spacing: -0.02em;
+	}
+
+	.card__unlock {
+		margin: 3px 0 0;
+		color: var(--muted);
+		font-size: 12px;
+		font-weight: 500;
 	}
 
 	.figures {
@@ -281,7 +397,7 @@ export function buildPage({
 	}
 
 	.footer {
-		padding: 8px 0 32px;
+		padding: 16px 0 32px;
 		color: var(--muted);
 		font-size: 13px;
 		font-weight: 600;
@@ -301,8 +417,8 @@ export function buildPage({
 		<h1 class="title">${escapeHtml(labels.title)}</h1>
 		<span class="version">Crownicles ${escapeHtml(version)}</span>
 	</section>
-	<main class="cards">
-${cards}
+	<main class="lineages">
+${columns}
 	</main>
 	<footer class="footer">crownicles.com</footer>
 </body>

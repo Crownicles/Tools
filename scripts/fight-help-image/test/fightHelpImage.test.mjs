@@ -5,7 +5,9 @@ import {
 	formatNumber, formatPercent
 } from "../src/format.mjs";
 import { LABELS } from "../src/labels.mjs";
-import { toRange } from "../src/actions.mjs";
+import {
+	getLineageActions, toRange
+} from "../src/actions.mjs";
 
 test("Twemoji file names drop the variation selector of a single emoji", () => {
 	assert.equal(toTwemojiFileName("⚔️"), "2694");
@@ -53,4 +55,29 @@ test("every language has every label", () => {
 			assert.ok(label.trim().length > 0, language);
 		}
 	}
+});
+
+test("the actions of a lineage come in the order its classes unlock them, with the first class having each", () => {
+	const classActions = new Map([
+		[0, ["simpleAttack", "piercingAttack", "protection"]],
+		[1, ["simpleAttack", "piercingAttack", "powerfulAttack", "protection"]],
+		[2, ["simpleAttack", "piercingAttack", "powerfulAttack", "chargeChargingAttack", "protection"]]
+	]);
+	assert.deepEqual(getLineageActions([0, 1, 2], classActions), [
+		{
+			id: "simpleAttack", unlockClassId: 0
+		},
+		{
+			id: "piercingAttack", unlockClassId: 0
+		},
+		{
+			id: "protection", unlockClassId: 0
+		},
+		{
+			id: "powerfulAttack", unlockClassId: 1
+		},
+		{
+			id: "chargeChargingAttack", unlockClassId: 2
+		}
+	]);
 });

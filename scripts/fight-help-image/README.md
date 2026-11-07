@@ -1,16 +1,19 @@
 # Image de l'aide des combats
 
-Génère l'image affichée par `/aide combat` dans **toutes les langues du jeu**, dans le style du site [crownicles.com](https://crownicles.com) : sa bannière, son titre, ses cartes et ses chiffres, en thème Nuit par défaut. Une carte par action de combat des classes, avec sa puissance, sa précision, ses coups critiques, son coût en souffle et sa description.
+Génère l'image affichée par `/aide combat` dans **toutes les langues du jeu**, dans le style du site [crownicles.com](https://crownicles.com) : sa bannière, son titre, ses cartes et ses chiffres, en thème Nuit par défaut.
+
+L'image a **une colonne par lignée de classes** (Fantassin, Tank, Canonnier...). En tête de colonne : la classe finale et les classes qui y mènent. Dessous : les attaques de la lignée, dans l'ordre où ses classes les débloquent. Chaque attaque a sa puissance, sa précision, ses coups critiques, son coût en souffle, sa description et la classe qui la débloque (sauf quand une seule classe les débloque toutes). Un joueur n'a qu'à lire la colonne de sa classe.
 
 Rien n'est recopié à la main : l'image se régénère après chaque équilibrage ou changement de texte.
 
 | Ce qui est affiché | D'où ça vient |
 |---|---|
-| Les actions | `fightActionsIds` de toutes les classes (`Core/resources/classes`) |
+| Les colonnes | `ClassInfoConstants.CLASS_LINEAGES`, une classe hors de toute lignée formant sa propre colonne |
+| Les attaques de chaque colonne | `fightActionsIds` des classes de la lignée (`Core/resources/classes`) |
 | Puissance, précision, critique | **mesurées avec le Core compilé** (voir plus bas) |
 | Souffle | `Core/resources/fightActions` |
-| Noms et descriptions | `Lang/<langue>/models.json` (`fight_actions`), avec les mêmes langues de repli que le bot (anglais, puis français) |
-| Émojis | `CrowniclesIcons.fightActions`, dessinés avec Twemoji comme sur Discord |
+| Noms des classes et des attaques, descriptions | `Lang/<langue>/models.json` (`classes`, `fight_actions`), avec les mêmes langues de repli que le bot (anglais, puis français) |
+| Émojis | `CrowniclesIcons.classes` et `CrowniclesIcons.fightActions`, dessinés avec Twemoji comme sur Discord |
 | Titre et noms des chiffres | `src/labels.mjs`, avec les termes que le jeu emploie déjà dans chaque langue |
 | Police, bannière, logo | le checkout du site (`public/fonts`, `public/ressources`) |
 
@@ -29,7 +32,7 @@ pnpm generate --crownicles ~/Crownicles --website ~/Website --version 6.2.0
 pnpm generate --crownicles ~/Crownicles --website ~/Website --version 6.2.0 --languages fr --theme light
 ```
 
-Options : `--version` (par défaut, la version de `Core/package.json`), `--languages` (par défaut, tous les dossiers de `Lang/`), `--theme` (`dark` ou `light`), `--scale` (1,5 par défaut, l'image fait alors 3 300 pixels de large).
+Options : `--version` (par défaut, la version de `Core/package.json`), `--languages` (par défaut, tous les dossiers de `Lang/`), `--theme` (`dark` ou `light`), `--scale` (1,5 par défaut : avec 7 lignées, l'image fait environ 3 700 pixels de large).
 
 Les images sont écrites dans `Website/public/ressources/fighthelp/<langue>/<version>.png`, et les chiffres mesurés sont affichés dans le terminal pour les vérifier. Pour les publier :
 
@@ -57,10 +60,10 @@ Ajouter ses mots dans `src/labels.mjs`. Sans eux, l'outil s'arrête en indiquant
 | Fichier | Rôle |
 |---|---|
 | `src/cli.mjs` | lit les options, mesure les actions et écrit une image par langue |
-| `src/actions.mjs` | charge le Core compilé et mesure les actions des classes |
-| `src/texts.mjs` | lit les noms et descriptions traduits |
+| `src/actions.mjs` | charge le Core compilé, lit les lignées et mesure les actions des classes |
+| `src/texts.mjs` | lit les noms des classes et des attaques et leurs descriptions traduites |
 | `src/labels.mjs` | titre et noms des chiffres dans chaque langue |
-| `src/page.mjs` | page HTML, avec les couleurs et les composants du site |
+| `src/page.mjs` | page HTML, une colonne par lignée, avec les couleurs et les composants du site |
 | `src/assets.mjs` | police, bannière et logo lus dans le checkout du site |
 | `src/emoji.mjs` | émojis Twemoji |
 | `src/format.mjs` | nombres et pourcentages écrits comme dans chaque langue |
