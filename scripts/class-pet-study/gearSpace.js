@@ -27,6 +27,9 @@ const categories = [
 ];
 
 const capped = (value, base, cap) => {
+	if (process.env.STUDY_NO_CAPS === "1") {
+		return value;
+	}
 	if (cap === Infinity) {
 		return value;
 	}

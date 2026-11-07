@@ -95,7 +95,16 @@ function loadWorld(coreDir, options = {}) {
 		const e = id ? ItemEnchantment.getById(id) : null;
 		return e && e.kind === kind ? mults[e.level - 1] ?? 1 : 1;
 	}
+	// STUDY_NO_CAPS=1: items are not capped by the class base stat; STUDY_ITEM_MULT: multiplier of every item stat (1)
+	const NO_CAPS = process.env.STUDY_NO_CAPS === "1";
+	const ITEM_MULT = +(process.env.STUDY_ITEM_MULT ?? 1);
 	function cum(base, w, a, o, p) {
+		if (NO_CAPS || ITEM_MULT !== 1) {
+			[w, a, o, p] = [w, a, o, p].map(v => v * ITEM_MULT);
+		}
+		if (NO_CAPS) {
+			return base + w + a + o + p;
+		}
 		return base + (w < base ? w : base) + (a < base ? a : base) + (o / 2 < base ? o : base * 2) + p;
 	}
 	function makePlayer(cls, level, id) {
