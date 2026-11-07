@@ -18,6 +18,8 @@ const coreDir = path.resolve(opt("core"));
 const N = +opt("n", 2);
 const workers = +opt("workers", 15);
 const PAIRS_PER_TASK = +opt("pairs-per-task", 400);
+// A worker's memory grows with the fights it plays (about 30 MB per task of 2,400 fights): it is replaced after this many tasks
+const RECYCLE_AFTER = +opt("recycle", 15);
 const classes = (opt("classes") ?? "18,19,20,21,22,23,24").split(",").map(Number);
 const pets = JSON.parse(opt("pets", "null")) ?? null;
 const parseGear = text => text.split("|").map(part => {
@@ -68,6 +70,23 @@ const config = {
 	let pairs = [], idx = [];
 	// --field-start k: the combinations from index k on are a reference field; the ones before only meet the field
 	const fieldStart = +opt("field-start", 0);
+	// --paired-seeds: the seeds of a fight depend only on the field opponent and the role, so every variant meets each field
+	// combination on the same fights (common random numbers: the gaps between variants are much less noisy)
+	const pairedSeeds = args.includes("--paired-seeds");
+	const seedBase = +opt("seed", 900001);
+	const hashKey = key => {
+		let h = 2166136261;
+		for (const ch of key) {
+			h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
+		}
+		return h % 1000000007;
+	};
+	const seedsOfPair = (i, j) => {
+		const key = i < fieldStart ? `a${j}` : j < fieldStart ? `d${i}` : `f${i}_${j}`;
+		const base = seedBase + hashKey(key);
+		return Array.from({ length: N }, (_, k) => (base + k * 15485863) % 2147483647);
+	};
+	let pairSeeds = [];
 	for (let i = 0; i < C; i++) {
 		for (let j = 0; j < C; j++) {
 			if (i < fieldStart && j < fieldStart) {
@@ -75,15 +94,19 @@ const config = {
 			}
 			pairs.push([combos[i][0], combos[i][1], combos[j][0], combos[j][1], combos[i][2], combos[j][2]]);
 			idx.push(i * C + j);
+			if (pairedSeeds) {
+				pairSeeds.push(seedsOfPair(i, j));
+			}
 			if (pairs.length === PAIRS_PER_TASK) {
-				tasks.push({ id: tasks.length, pairs, idx });
+				tasks.push({ id: tasks.length, pairs, idx, pairSeeds });
 				pairs = [];
 				idx = [];
+				pairSeeds = [];
 			}
 		}
 	}
 	if (pairs.length) {
-		tasks.push({ id: tasks.length, pairs, idx });
+		tasks.push({ id: tasks.length, pairs, idx, pairSeeds });
 	}
 	const pairCount = tasks.reduce((sum, task) => sum + task.pairs.length, 0);
 	console.log(`${C} combinations, ${pairCount} ordered pairs, ${pairCount * N} fights`);
@@ -118,7 +141,7 @@ const config = {
 					pending.set(child.pid, task);
 					// Same seeds for every pair: the fights differ only by their combinations
 					const seeds = Array.from({ length: N }, (_, k) => 900001 + k * 15485863 + task.id * 7919);
-					child.send({ type: "task", id: task.id, pairs: task.pairs, seeds });
+					child.send({ type: "task", id: task.id, pairs: task.pairs, seeds, pairSeeds: pairedSeeds ? task.pairSeeds : undefined });
 				}
 				else {
 					child.kill();
@@ -146,6 +169,7 @@ const config = {
 						counts[base + 2] += r[2];
 					});
 					done++;
+					child.tasksDone = (child.tasksDone ?? 0) + 1;
 					if (done % 100 === 0) {
 						const s = (Date.now() - started) / 1000;
 						process.stderr.write(`${done}/${tasks.length} tasks, ${s.toFixed(0)} s, ${(done * PAIRS_PER_TASK * N / s).toFixed(0)} fights/s\n`);
@@ -153,7 +177,13 @@ const config = {
 					if (done === tasks.length) {
 						resolve();
 					}
-					feed();
+					if (child.tasksDone >= RECYCLE_AFTER && (retry.length || next < tasks.length)) {
+						child.kill();
+						spawn();
+					}
+					else {
+						feed();
+					}
 				}
 			});
 			child.on("exit", (code, signal) => {

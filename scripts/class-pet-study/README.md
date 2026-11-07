@@ -35,6 +35,26 @@ Variables d'environnement : `STUDY_POTIONS` (`none` : pas de potion en mode `aut
 
 Avec les valeurs par défaut sur 15 cœurs : environ 4 min pour les 3,2 millions de combats entre toutes les combinaisons, puis environ 1 min pour les 2,1 millions de combats du méta.
 
+## Équipement et familiers optimaux de chaque classe
+
+Le mode `auto` ne choisit qu'entre 3 objets par emplacement, avec les seuls enchantements `pvpAttack3` / `defense3` et un seul familier.
+`optimalStudy.sh` cherche l'équipement **optimal** de chaque classe et ses **meilleurs familiers**, contre un terrain lui-même optimisé :
+
+- `gearSpace.js` : pour chaque classe, ce que chaque objet apporte vraiment une fois les plafonds du jeu appliqués (arme et armure à la stat de base, objet à 2 fois, potion sans plafond), et les objets non dominés (rareté ≤ 7 par défaut) ;
+- `loadoutSweep.py` : descente par blocs (arme × enchantement d'arme, armure × enchantement d'armure, objet + potion), chaque bloc en *successive halving* sur des combats appariés (`--paired-seeds` : chaque candidat rencontre chaque adversaire sur les mêmes combats), contre toutes les classes avec leur équipement courant et leurs 3 meilleurs familiers, jusqu'à ce qu'un round ne change plus rien ;
+- `optimalStudy.sh` : familiers → équipement → toutes les combinaisons → méta, à partir d'un équipement de départ :
+
+```bash
+python3 loadoutSweep.py <checkout>/Core .work/lo.json --pets '{"18": [102, 27, 61], ...}' [--potions none]
+ITERATIONS=1 ./optimalStudy.sh <checkout>/Core .work/opt .work/lo.json best 157   # ou none : sans potion
+```
+
+Environ 15 minutes par scénario sur 15 cœurs. **Ne lancez jamais deux études en parallèle** : chaque worker grossit d'environ 30 Mo par tâche (le runner les remplace toutes les 15 tâches, `--recycle`), et deux études saturent 24 Go de mémoire, ce qui divise le débit par 15.
+
+Autres outils :
+- `realGear.py` : chaque vrai joueur 100+ (table `players100`) contre le terrain optimal, avec son équipement puis avec l'équipement optimal de sa classe, à niveau égal : ce que chaque classe perd à cause de son équipement ;
+- `makeRoster.py` : écrit un faux roster (`players100.md`, `pets100.json`) des classes avec leur équipement et leurs familiers optimaux, pour le solver de `Fight-Simulator-30000` (`SOLVER_DATA_DIR`) : le moteur au niveau humain attaque alors les IA de défense scriptées avec des joueurs optimisés.
+
 ## Tester une variante sans recompiler
 
 `comboRun.js` accepte `--set CONSTANTE=valeur` (constantes de `FightConstants`, chemins pointés possibles), `--class-stat classe.stat=valeur` (statistiques des fichiers `Core/resources/classes`) et `--damage-mult action=multiplicateur` (dégâts d'une action multipliés, comme si ses dégâts de base augmentaient). Exemple : score de chaque classe avec la riposte de la prod et un Tank à 350 `fightPoint`, en reprenant l'équipement choisi par `study.sh auto` :
@@ -84,6 +104,8 @@ Comparer ensuite le score du Paladin et l'usage de l'attaque (onglet « attaques
 |---|---|
 | `study.sh` | enchaîne tout |
 | `gearSweep.py` | choisit l'équipement le plus adapté de chaque classe parmi des objets comparables |
+| `gearSpace.js`, `loadoutSweep.py`, `optimalStudy.sh` | équipement et familiers optimaux de chaque classe, étude complète |
+| `realGear.py`, `makeRoster.py` | écart entre l'équipement réel des joueurs et l'optimal ; roster optimisé pour le solver |
 | `comboRun.js` | répartit les combats sur les cœurs (`zworker.js`) et compte résultats et attaques |
 | `world.js`, `engine.js`, `syncPets.js` | chargent le Core compilé, construisent les combattants, modèle de combat synchrone |
 | `zfeatures.js`, `znet.js`, `zsearch.js` | entrées et inférence du réseau, choix des coups |

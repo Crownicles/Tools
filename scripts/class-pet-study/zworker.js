@@ -354,10 +354,10 @@ async function handle(msg) {
 	if (msg.pairs) {
 		// Combo tasks: several pairs, each played on its seeds; compact results [result per seed] per pair
 		const out = [];
-		for (const pair of msg.pairs) {
+		for (const [k, pair] of msg.pairs.entries()) {
 			config.pair = pair;
 			const r = [0, 0, 0];
-			for (const seed of msg.seeds) {
+			for (const seed of msg.pairSeeds?.[k] ?? msg.seeds) {
 				r[await runSeed(seed)]++;
 			}
 			out.push(r);
@@ -378,4 +378,6 @@ async function handle(msg) {
 	}
 	process.send({ type: "done", id: msg.id, results });
 }
+// A worker whose runner is gone (finished or killed) has nothing left to do
+process.on("disconnect", () => process.exit(0));
 process.send({ type: "loaded" });
