@@ -1,0 +1,825 @@
+{
+	"uid": "royaume-en-direct",
+	"title": "🗺️ Le royaume en direct",
+	"tags": [
+		"crownicles",
+		"carte",
+		"joueurs"
+	],
+	"timezone": "browser",
+	"editable": true,
+	"graphTooltip": 0,
+	"schemaVersion": 41,
+	"time": {
+		"from": "now-6h",
+		"to": "now"
+	},
+	"refresh": "30s",
+	"timepicker": {
+		"refresh_intervals": [
+			"10s",
+			"30s",
+			"1m",
+			"5m"
+		]
+	},
+	"panels": [
+		{
+			"id": 10,
+			"type": "stat",
+			"title": "En route",
+			"description": "Héros actifs ces dernières 24 h qui marchent vers leur prochain lieu, à la fin de la période choisie.",
+			"gridPos": {
+				"h": 4,
+				"w": 4,
+				"x": 0,
+				"y": 0
+			},
+			"datasource": {
+				"type": "mysql",
+				"uid": "kKJCQf44z"
+			},
+			"targets": [
+				{
+					"refId": "counts",
+					"datasource": {
+						"type": "mysql",
+						"uid": "kKJCQf44z"
+					},
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "WITH places(id, x, y, name) AS (VALUES\n\t\t(1, 1040, 433, 'Plage Sentinelle'),\n\t\t(2, 2384, 888, 'Voie champêtre'),\n\t\t(3, 2960, 636, 'Le Berceau'),\n\t\t(4, 2588, 1352, 'Forêt Du Vieillard'),\n\t\t(5, 2040, 1736, 'Chemin du Dédale'),\n\t\t(6, 1146, 2049, 'Boug-Coton'),\n\t\t(7, 1410, 4694, 'Vallée des Rois'),\n\t\t(8, 3114, 1891, 'Croisement des Destins'),\n\t\t(9, 3715, 961, 'Grande Rue'),\n\t\t(10, 3684, 1432, 'Ville Forte'),\n\t\t(11, 4195, 589, 'Grand Axe'),\n\t\t(12, 4876, 891, 'L''Étendue'),\n\t\t(13, 5650, 558, 'Route Marécageuse'),\n\t\t(14, 5394, 2526, 'Lac Mirage'),\n\t\t(15, 3784, 2410, 'Mont Célestrum'),\n\t\t(16, 4768, 3338, 'Chemin aux Loups'),\n\t\t(17, 4457, 4252, 'Village Coco'),\n\t\t(18, 5341, 3823, 'Rivière Vacarme'),\n\t\t(19, 6001, 4659, 'La Dune'),\n\t\t(21, 7472, 3490, 'Route des Merveilles'),\n\t\t(22, 6945, 3167, 'Bois Hurlant'),\n\t\t(23, 7605, 2056, 'Claire de Ville'),\n\t\t(24, 7619, 1384, 'Route Grimpante'),\n\t\t(25, 6467, 852, 'Rivière aux Crabes'),\n\t\t(26, 1412, 876, 'Mergagnan'),\n\t\t(27, 3441, 3367, 'Forêt Célestrum'),\n\t\t(28, 879, 3446, 'Portes du château'),\n\t\t(29, 879, 3446, 'Salle de réception'),\n\t\t(32, 879, 3446, 'Route vers le château du Roi'),\n\t\t(41, 879, 3446, 'Cour du Château')\n\t),\n\tmids(a, b, x, y) AS (VALUES\n\t\t(1, 26, 1069, 641),\n\t\t(2, 3, 2524, 808),\n\t\t(2, 26, 1884, 1068),\n\t\t(3, 4, 2904, 1201),\n\t\t(3, 9, 3404, 898),\n\t\t(4, 5, 2337, 1658),\n\t\t(5, 6, 1764, 1968),\n\t\t(6, 7, 2229, 3253),\n\t\t(6, 26, 1414, 1598),\n\t\t(7, 8, 2384, 3648),\n\t\t(7, 17, 3134, 4518),\n\t\t(7, 19, 3734, 5438),\n\t\t(8, 10, 3197, 1758),\n\t\t(8, 15, 3217, 2298),\n\t\t(9, 10, 4077, 1268),\n\t\t(9, 11, 3867, 848),\n\t\t(11, 12, 4698, 768),\n\t\t(12, 13, 4968, 768),\n\t\t(12, 14, 5148, 1808),\n\t\t(12, 15, 4388, 1808),\n\t\t(13, 25, 6068, 738),\n\t\t(14, 16, 4818, 3068),\n\t\t(14, 22, 6338, 2808),\n\t\t(14, 25, 5494, 1368),\n\t\t(15, 16, 4339, 3054),\n\t\t(15, 27, 3477, 3168),\n\t\t(16, 17, 4538, 3738),\n\t\t(17, 18, 4867, 4078),\n\t\t(17, 27, 3817, 3938),\n\t\t(18, 19, 5695, 4537),\n\t\t(18, 22, 6148, 3798),\n\t\t(19, 21, 6828, 4248),\n\t\t(21, 23, 8018, 2908),\n\t\t(22, 23, 7288, 2758),\n\t\t(22, 24, 6888, 2548),\n\t\t(23, 24, 7818, 1708),\n\t\t(24, 25, 6888, 1538)\n\t),\n\ttrips(s, e, minutes) AS (VALUES\n\t\t(1, 26, 60),\n\t\t(2, 3, 120),\n\t\t(2, 26, 120),\n\t\t(3, 2, 120),\n\t\t(3, 4, 240),\n\t\t(3, 9, 180),\n\t\t(4, 3, 240),\n\t\t(4, 5, 180),\n\t\t(5, 4, 180),\n\t\t(5, 6, 180),\n\t\t(6, 5, 180),\n\t\t(6, 7, 420),\n\t\t(6, 26, 300),\n\t\t(6, 41, 120),\n\t\t(7, 6, 420),\n\t\t(7, 8, 480),\n\t\t(7, 17, 540),\n\t\t(7, 19, 600),\n\t\t(7, 41, 540),\n\t\t(8, 7, 480),\n\t\t(8, 10, 120),\n\t\t(8, 15, 420),\n\t\t(9, 3, 180),\n\t\t(9, 10, 60),\n\t\t(9, 11, 180),\n\t\t(10, 8, 120),\n\t\t(10, 9, 60),\n\t\t(11, 9, 180),\n\t\t(11, 12, 180),\n\t\t(12, 11, 180),\n\t\t(12, 13, 240),\n\t\t(12, 14, 360),\n\t\t(12, 15, 600),\n\t\t(13, 12, 240),\n\t\t(13, 25, 180),\n\t\t(14, 12, 360),\n\t\t(14, 16, 180),\n\t\t(14, 22, 180),\n\t\t(14, 25, 300),\n\t\t(15, 8, 360),\n\t\t(15, 12, 480),\n\t\t(15, 16, 480),\n\t\t(15, 27, 300),\n\t\t(16, 14, 180),\n\t\t(16, 15, 540),\n\t\t(16, 17, 180),\n\t\t(17, 7, 540),\n\t\t(17, 16, 180),\n\t\t(17, 18, 120),\n\t\t(17, 27, 300),\n\t\t(18, 17, 120),\n\t\t(18, 19, 60),\n\t\t(18, 22, 240),\n\t\t(19, 7, 600),\n\t\t(19, 18, 60),\n\t\t(19, 21, 180),\n\t\t(21, 19, 180),\n\t\t(21, 23, 240),\n\t\t(22, 14, 180),\n\t\t(22, 18, 240),\n\t\t(22, 23, 240),\n\t\t(22, 24, 240),\n\t\t(23, 21, 240),\n\t\t(23, 22, 240),\n\t\t(23, 24, 60),\n\t\t(24, 22, 240),\n\t\t(24, 23, 60),\n\t\t(24, 25, 240),\n\t\t(25, 13, 180),\n\t\t(25, 14, 300),\n\t\t(25, 24, 300),\n\t\t(26, 1, 60),\n\t\t(26, 2, 120),\n\t\t(26, 6, 300),\n\t\t(27, 15, 360),\n\t\t(27, 17, 300),\n\t\t(41, 6, 120),\n\t\t(41, 7, 540)\n\t),\n\tlast_departures AS (\n\t\tSELECT playerId, mapLinkId, date FROM (\n\t\t\tSELECT playerId, mapLinkId, date, ROW_NUMBER() OVER (PARTITION BY playerId ORDER BY date DESC) AS n\n\t\t\tFROM players_travels\n\t\t\tWHERE date > $__unixEpochTo() - 86400 AND date <= $__unixEpochTo()\n\t\t) ranked WHERE n = 1\n\t),\n\tjourneys AS (\n\t\tSELECT l.start, l.end, d.date, t.minutes\n\t\tFROM last_departures d JOIN map_links l ON l.id = d.mapLinkId\n\t\tLEFT JOIN trips t ON t.s = l.start AND t.e = l.end\n\t)\nSELECT\n\tSUM(minutes IS NOT NULL AND date + minutes * 60 > $__unixEpochTo()) AS \"En route\",\n\tSUM(minutes IS NOT NULL AND date + minutes * 60 <= $__unixEpochTo()) AS \"Au repos\",\n\tSUM(start >= 1000 OR end >= 1000 OR start = 33 OR end = 33) AS \"Au large\",\n\tSUM(start IN (39, 40) OR end IN (39, 40)) AS \"Maison hantée\"\nFROM journeys"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "fixed",
+						"fixedColor": "#E5322D"
+					},
+					"unit": "none",
+					"decimals": 0
+				},
+				"overrides": []
+			},
+			"options": {
+				"reduceOptions": {
+					"calcs": [
+						"lastNotNull"
+					],
+					"fields": "/^En route$/",
+					"values": false
+				},
+				"colorMode": "value",
+				"graphMode": "none",
+				"textMode": "value",
+				"justifyMode": "center",
+				"orientation": "horizontal",
+				"wideLayout": true,
+				"showPercentChange": false
+			}
+		},
+		{
+			"id": 11,
+			"type": "stat",
+			"title": "Au repos",
+			"description": "Héros actifs ces dernières 24 h arrivés à destination, qui attendent leur prochain départ.",
+			"gridPos": {
+				"h": 4,
+				"w": 4,
+				"x": 4,
+				"y": 0
+			},
+			"datasource": {
+				"type": "mysql",
+				"uid": "kKJCQf44z"
+			},
+			"targets": [
+				{
+					"refId": "counts",
+					"datasource": {
+						"type": "mysql",
+						"uid": "kKJCQf44z"
+					},
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "WITH places(id, x, y, name) AS (VALUES\n\t\t(1, 1040, 433, 'Plage Sentinelle'),\n\t\t(2, 2384, 888, 'Voie champêtre'),\n\t\t(3, 2960, 636, 'Le Berceau'),\n\t\t(4, 2588, 1352, 'Forêt Du Vieillard'),\n\t\t(5, 2040, 1736, 'Chemin du Dédale'),\n\t\t(6, 1146, 2049, 'Boug-Coton'),\n\t\t(7, 1410, 4694, 'Vallée des Rois'),\n\t\t(8, 3114, 1891, 'Croisement des Destins'),\n\t\t(9, 3715, 961, 'Grande Rue'),\n\t\t(10, 3684, 1432, 'Ville Forte'),\n\t\t(11, 4195, 589, 'Grand Axe'),\n\t\t(12, 4876, 891, 'L''Étendue'),\n\t\t(13, 5650, 558, 'Route Marécageuse'),\n\t\t(14, 5394, 2526, 'Lac Mirage'),\n\t\t(15, 3784, 2410, 'Mont Célestrum'),\n\t\t(16, 4768, 3338, 'Chemin aux Loups'),\n\t\t(17, 4457, 4252, 'Village Coco'),\n\t\t(18, 5341, 3823, 'Rivière Vacarme'),\n\t\t(19, 6001, 4659, 'La Dune'),\n\t\t(21, 7472, 3490, 'Route des Merveilles'),\n\t\t(22, 6945, 3167, 'Bois Hurlant'),\n\t\t(23, 7605, 2056, 'Claire de Ville'),\n\t\t(24, 7619, 1384, 'Route Grimpante'),\n\t\t(25, 6467, 852, 'Rivière aux Crabes'),\n\t\t(26, 1412, 876, 'Mergagnan'),\n\t\t(27, 3441, 3367, 'Forêt Célestrum'),\n\t\t(28, 879, 3446, 'Portes du château'),\n\t\t(29, 879, 3446, 'Salle de réception'),\n\t\t(32, 879, 3446, 'Route vers le château du Roi'),\n\t\t(41, 879, 3446, 'Cour du Château')\n\t),\n\tmids(a, b, x, y) AS (VALUES\n\t\t(1, 26, 1069, 641),\n\t\t(2, 3, 2524, 808),\n\t\t(2, 26, 1884, 1068),\n\t\t(3, 4, 2904, 1201),\n\t\t(3, 9, 3404, 898),\n\t\t(4, 5, 2337, 1658),\n\t\t(5, 6, 1764, 1968),\n\t\t(6, 7, 2229, 3253),\n\t\t(6, 26, 1414, 1598),\n\t\t(7, 8, 2384, 3648),\n\t\t(7, 17, 3134, 4518),\n\t\t(7, 19, 3734, 5438),\n\t\t(8, 10, 3197, 1758),\n\t\t(8, 15, 3217, 2298),\n\t\t(9, 10, 4077, 1268),\n\t\t(9, 11, 3867, 848),\n\t\t(11, 12, 4698, 768),\n\t\t(12, 13, 4968, 768),\n\t\t(12, 14, 5148, 1808),\n\t\t(12, 15, 4388, 1808),\n\t\t(13, 25, 6068, 738),\n\t\t(14, 16, 4818, 3068),\n\t\t(14, 22, 6338, 2808),\n\t\t(14, 25, 5494, 1368),\n\t\t(15, 16, 4339, 3054),\n\t\t(15, 27, 3477, 3168),\n\t\t(16, 17, 4538, 3738),\n\t\t(17, 18, 4867, 4078),\n\t\t(17, 27, 3817, 3938),\n\t\t(18, 19, 5695, 4537),\n\t\t(18, 22, 6148, 3798),\n\t\t(19, 21, 6828, 4248),\n\t\t(21, 23, 8018, 2908),\n\t\t(22, 23, 7288, 2758),\n\t\t(22, 24, 6888, 2548),\n\t\t(23, 24, 7818, 1708),\n\t\t(24, 25, 6888, 1538)\n\t),\n\ttrips(s, e, minutes) AS (VALUES\n\t\t(1, 26, 60),\n\t\t(2, 3, 120),\n\t\t(2, 26, 120),\n\t\t(3, 2, 120),\n\t\t(3, 4, 240),\n\t\t(3, 9, 180),\n\t\t(4, 3, 240),\n\t\t(4, 5, 180),\n\t\t(5, 4, 180),\n\t\t(5, 6, 180),\n\t\t(6, 5, 180),\n\t\t(6, 7, 420),\n\t\t(6, 26, 300),\n\t\t(6, 41, 120),\n\t\t(7, 6, 420),\n\t\t(7, 8, 480),\n\t\t(7, 17, 540),\n\t\t(7, 19, 600),\n\t\t(7, 41, 540),\n\t\t(8, 7, 480),\n\t\t(8, 10, 120),\n\t\t(8, 15, 420),\n\t\t(9, 3, 180),\n\t\t(9, 10, 60),\n\t\t(9, 11, 180),\n\t\t(10, 8, 120),\n\t\t(10, 9, 60),\n\t\t(11, 9, 180),\n\t\t(11, 12, 180),\n\t\t(12, 11, 180),\n\t\t(12, 13, 240),\n\t\t(12, 14, 360),\n\t\t(12, 15, 600),\n\t\t(13, 12, 240),\n\t\t(13, 25, 180),\n\t\t(14, 12, 360),\n\t\t(14, 16, 180),\n\t\t(14, 22, 180),\n\t\t(14, 25, 300),\n\t\t(15, 8, 360),\n\t\t(15, 12, 480),\n\t\t(15, 16, 480),\n\t\t(15, 27, 300),\n\t\t(16, 14, 180),\n\t\t(16, 15, 540),\n\t\t(16, 17, 180),\n\t\t(17, 7, 540),\n\t\t(17, 16, 180),\n\t\t(17, 18, 120),\n\t\t(17, 27, 300),\n\t\t(18, 17, 120),\n\t\t(18, 19, 60),\n\t\t(18, 22, 240),\n\t\t(19, 7, 600),\n\t\t(19, 18, 60),\n\t\t(19, 21, 180),\n\t\t(21, 19, 180),\n\t\t(21, 23, 240),\n\t\t(22, 14, 180),\n\t\t(22, 18, 240),\n\t\t(22, 23, 240),\n\t\t(22, 24, 240),\n\t\t(23, 21, 240),\n\t\t(23, 22, 240),\n\t\t(23, 24, 60),\n\t\t(24, 22, 240),\n\t\t(24, 23, 60),\n\t\t(24, 25, 240),\n\t\t(25, 13, 180),\n\t\t(25, 14, 300),\n\t\t(25, 24, 300),\n\t\t(26, 1, 60),\n\t\t(26, 2, 120),\n\t\t(26, 6, 300),\n\t\t(27, 15, 360),\n\t\t(27, 17, 300),\n\t\t(41, 6, 120),\n\t\t(41, 7, 540)\n\t),\n\tlast_departures AS (\n\t\tSELECT playerId, mapLinkId, date FROM (\n\t\t\tSELECT playerId, mapLinkId, date, ROW_NUMBER() OVER (PARTITION BY playerId ORDER BY date DESC) AS n\n\t\t\tFROM players_travels\n\t\t\tWHERE date > $__unixEpochTo() - 86400 AND date <= $__unixEpochTo()\n\t\t) ranked WHERE n = 1\n\t),\n\tjourneys AS (\n\t\tSELECT l.start, l.end, d.date, t.minutes\n\t\tFROM last_departures d JOIN map_links l ON l.id = d.mapLinkId\n\t\tLEFT JOIN trips t ON t.s = l.start AND t.e = l.end\n\t)\nSELECT\n\tSUM(minutes IS NOT NULL AND date + minutes * 60 > $__unixEpochTo()) AS \"En route\",\n\tSUM(minutes IS NOT NULL AND date + minutes * 60 <= $__unixEpochTo()) AS \"Au repos\",\n\tSUM(start >= 1000 OR end >= 1000 OR start = 33 OR end = 33) AS \"Au large\",\n\tSUM(start IN (39, 40) OR end IN (39, 40)) AS \"Maison hantée\"\nFROM journeys"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "fixed",
+						"fixedColor": "#D8C9A3"
+					},
+					"unit": "none",
+					"decimals": 0
+				},
+				"overrides": []
+			},
+			"options": {
+				"reduceOptions": {
+					"calcs": [
+						"lastNotNull"
+					],
+					"fields": "/^Au repos$/",
+					"values": false
+				},
+				"colorMode": "value",
+				"graphMode": "none",
+				"textMode": "value",
+				"justifyMode": "center",
+				"orientation": "horizontal",
+				"wideLayout": true,
+				"showPercentChange": false
+			}
+		},
+		{
+			"id": 12,
+			"type": "stat",
+			"title": "Au large",
+			"description": "Héros partis vers les îles mystérieuses ou en train de les explorer.",
+			"gridPos": {
+				"h": 4,
+				"w": 4,
+				"x": 8,
+				"y": 0
+			},
+			"datasource": {
+				"type": "mysql",
+				"uid": "kKJCQf44z"
+			},
+			"targets": [
+				{
+					"refId": "counts",
+					"datasource": {
+						"type": "mysql",
+						"uid": "kKJCQf44z"
+					},
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "WITH places(id, x, y, name) AS (VALUES\n\t\t(1, 1040, 433, 'Plage Sentinelle'),\n\t\t(2, 2384, 888, 'Voie champêtre'),\n\t\t(3, 2960, 636, 'Le Berceau'),\n\t\t(4, 2588, 1352, 'Forêt Du Vieillard'),\n\t\t(5, 2040, 1736, 'Chemin du Dédale'),\n\t\t(6, 1146, 2049, 'Boug-Coton'),\n\t\t(7, 1410, 4694, 'Vallée des Rois'),\n\t\t(8, 3114, 1891, 'Croisement des Destins'),\n\t\t(9, 3715, 961, 'Grande Rue'),\n\t\t(10, 3684, 1432, 'Ville Forte'),\n\t\t(11, 4195, 589, 'Grand Axe'),\n\t\t(12, 4876, 891, 'L''Étendue'),\n\t\t(13, 5650, 558, 'Route Marécageuse'),\n\t\t(14, 5394, 2526, 'Lac Mirage'),\n\t\t(15, 3784, 2410, 'Mont Célestrum'),\n\t\t(16, 4768, 3338, 'Chemin aux Loups'),\n\t\t(17, 4457, 4252, 'Village Coco'),\n\t\t(18, 5341, 3823, 'Rivière Vacarme'),\n\t\t(19, 6001, 4659, 'La Dune'),\n\t\t(21, 7472, 3490, 'Route des Merveilles'),\n\t\t(22, 6945, 3167, 'Bois Hurlant'),\n\t\t(23, 7605, 2056, 'Claire de Ville'),\n\t\t(24, 7619, 1384, 'Route Grimpante'),\n\t\t(25, 6467, 852, 'Rivière aux Crabes'),\n\t\t(26, 1412, 876, 'Mergagnan'),\n\t\t(27, 3441, 3367, 'Forêt Célestrum'),\n\t\t(28, 879, 3446, 'Portes du château'),\n\t\t(29, 879, 3446, 'Salle de réception'),\n\t\t(32, 879, 3446, 'Route vers le château du Roi'),\n\t\t(41, 879, 3446, 'Cour du Château')\n\t),\n\tmids(a, b, x, y) AS (VALUES\n\t\t(1, 26, 1069, 641),\n\t\t(2, 3, 2524, 808),\n\t\t(2, 26, 1884, 1068),\n\t\t(3, 4, 2904, 1201),\n\t\t(3, 9, 3404, 898),\n\t\t(4, 5, 2337, 1658),\n\t\t(5, 6, 1764, 1968),\n\t\t(6, 7, 2229, 3253),\n\t\t(6, 26, 1414, 1598),\n\t\t(7, 8, 2384, 3648),\n\t\t(7, 17, 3134, 4518),\n\t\t(7, 19, 3734, 5438),\n\t\t(8, 10, 3197, 1758),\n\t\t(8, 15, 3217, 2298),\n\t\t(9, 10, 4077, 1268),\n\t\t(9, 11, 3867, 848),\n\t\t(11, 12, 4698, 768),\n\t\t(12, 13, 4968, 768),\n\t\t(12, 14, 5148, 1808),\n\t\t(12, 15, 4388, 1808),\n\t\t(13, 25, 6068, 738),\n\t\t(14, 16, 4818, 3068),\n\t\t(14, 22, 6338, 2808),\n\t\t(14, 25, 5494, 1368),\n\t\t(15, 16, 4339, 3054),\n\t\t(15, 27, 3477, 3168),\n\t\t(16, 17, 4538, 3738),\n\t\t(17, 18, 4867, 4078),\n\t\t(17, 27, 3817, 3938),\n\t\t(18, 19, 5695, 4537),\n\t\t(18, 22, 6148, 3798),\n\t\t(19, 21, 6828, 4248),\n\t\t(21, 23, 8018, 2908),\n\t\t(22, 23, 7288, 2758),\n\t\t(22, 24, 6888, 2548),\n\t\t(23, 24, 7818, 1708),\n\t\t(24, 25, 6888, 1538)\n\t),\n\ttrips(s, e, minutes) AS (VALUES\n\t\t(1, 26, 60),\n\t\t(2, 3, 120),\n\t\t(2, 26, 120),\n\t\t(3, 2, 120),\n\t\t(3, 4, 240),\n\t\t(3, 9, 180),\n\t\t(4, 3, 240),\n\t\t(4, 5, 180),\n\t\t(5, 4, 180),\n\t\t(5, 6, 180),\n\t\t(6, 5, 180),\n\t\t(6, 7, 420),\n\t\t(6, 26, 300),\n\t\t(6, 41, 120),\n\t\t(7, 6, 420),\n\t\t(7, 8, 480),\n\t\t(7, 17, 540),\n\t\t(7, 19, 600),\n\t\t(7, 41, 540),\n\t\t(8, 7, 480),\n\t\t(8, 10, 120),\n\t\t(8, 15, 420),\n\t\t(9, 3, 180),\n\t\t(9, 10, 60),\n\t\t(9, 11, 180),\n\t\t(10, 8, 120),\n\t\t(10, 9, 60),\n\t\t(11, 9, 180),\n\t\t(11, 12, 180),\n\t\t(12, 11, 180),\n\t\t(12, 13, 240),\n\t\t(12, 14, 360),\n\t\t(12, 15, 600),\n\t\t(13, 12, 240),\n\t\t(13, 25, 180),\n\t\t(14, 12, 360),\n\t\t(14, 16, 180),\n\t\t(14, 22, 180),\n\t\t(14, 25, 300),\n\t\t(15, 8, 360),\n\t\t(15, 12, 480),\n\t\t(15, 16, 480),\n\t\t(15, 27, 300),\n\t\t(16, 14, 180),\n\t\t(16, 15, 540),\n\t\t(16, 17, 180),\n\t\t(17, 7, 540),\n\t\t(17, 16, 180),\n\t\t(17, 18, 120),\n\t\t(17, 27, 300),\n\t\t(18, 17, 120),\n\t\t(18, 19, 60),\n\t\t(18, 22, 240),\n\t\t(19, 7, 600),\n\t\t(19, 18, 60),\n\t\t(19, 21, 180),\n\t\t(21, 19, 180),\n\t\t(21, 23, 240),\n\t\t(22, 14, 180),\n\t\t(22, 18, 240),\n\t\t(22, 23, 240),\n\t\t(22, 24, 240),\n\t\t(23, 21, 240),\n\t\t(23, 22, 240),\n\t\t(23, 24, 60),\n\t\t(24, 22, 240),\n\t\t(24, 23, 60),\n\t\t(24, 25, 240),\n\t\t(25, 13, 180),\n\t\t(25, 14, 300),\n\t\t(25, 24, 300),\n\t\t(26, 1, 60),\n\t\t(26, 2, 120),\n\t\t(26, 6, 300),\n\t\t(27, 15, 360),\n\t\t(27, 17, 300),\n\t\t(41, 6, 120),\n\t\t(41, 7, 540)\n\t),\n\tlast_departures AS (\n\t\tSELECT playerId, mapLinkId, date FROM (\n\t\t\tSELECT playerId, mapLinkId, date, ROW_NUMBER() OVER (PARTITION BY playerId ORDER BY date DESC) AS n\n\t\t\tFROM players_travels\n\t\t\tWHERE date > $__unixEpochTo() - 86400 AND date <= $__unixEpochTo()\n\t\t) ranked WHERE n = 1\n\t),\n\tjourneys AS (\n\t\tSELECT l.start, l.end, d.date, t.minutes\n\t\tFROM last_departures d JOIN map_links l ON l.id = d.mapLinkId\n\t\tLEFT JOIN trips t ON t.s = l.start AND t.e = l.end\n\t)\nSELECT\n\tSUM(minutes IS NOT NULL AND date + minutes * 60 > $__unixEpochTo()) AS \"En route\",\n\tSUM(minutes IS NOT NULL AND date + minutes * 60 <= $__unixEpochTo()) AS \"Au repos\",\n\tSUM(start >= 1000 OR end >= 1000 OR start = 33 OR end = 33) AS \"Au large\",\n\tSUM(start IN (39, 40) OR end IN (39, 40)) AS \"Maison hantée\"\nFROM journeys"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "fixed",
+						"fixedColor": "#3D8BD9"
+					},
+					"unit": "none",
+					"decimals": 0
+				},
+				"overrides": []
+			},
+			"options": {
+				"reduceOptions": {
+					"calcs": [
+						"lastNotNull"
+					],
+					"fields": "/^Au large$/",
+					"values": false
+				},
+				"colorMode": "value",
+				"graphMode": "none",
+				"textMode": "value",
+				"justifyMode": "center",
+				"orientation": "horizontal",
+				"wideLayout": true,
+				"showPercentChange": false
+			}
+		},
+		{
+			"id": 13,
+			"type": "stat",
+			"title": "Maison hantée",
+			"description": "Héros sur le sentier brumeux ou dans la maison hantée.",
+			"gridPos": {
+				"h": 4,
+				"w": 4,
+				"x": 12,
+				"y": 0
+			},
+			"datasource": {
+				"type": "mysql",
+				"uid": "kKJCQf44z"
+			},
+			"targets": [
+				{
+					"refId": "counts",
+					"datasource": {
+						"type": "mysql",
+						"uid": "kKJCQf44z"
+					},
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "WITH places(id, x, y, name) AS (VALUES\n\t\t(1, 1040, 433, 'Plage Sentinelle'),\n\t\t(2, 2384, 888, 'Voie champêtre'),\n\t\t(3, 2960, 636, 'Le Berceau'),\n\t\t(4, 2588, 1352, 'Forêt Du Vieillard'),\n\t\t(5, 2040, 1736, 'Chemin du Dédale'),\n\t\t(6, 1146, 2049, 'Boug-Coton'),\n\t\t(7, 1410, 4694, 'Vallée des Rois'),\n\t\t(8, 3114, 1891, 'Croisement des Destins'),\n\t\t(9, 3715, 961, 'Grande Rue'),\n\t\t(10, 3684, 1432, 'Ville Forte'),\n\t\t(11, 4195, 589, 'Grand Axe'),\n\t\t(12, 4876, 891, 'L''Étendue'),\n\t\t(13, 5650, 558, 'Route Marécageuse'),\n\t\t(14, 5394, 2526, 'Lac Mirage'),\n\t\t(15, 3784, 2410, 'Mont Célestrum'),\n\t\t(16, 4768, 3338, 'Chemin aux Loups'),\n\t\t(17, 4457, 4252, 'Village Coco'),\n\t\t(18, 5341, 3823, 'Rivière Vacarme'),\n\t\t(19, 6001, 4659, 'La Dune'),\n\t\t(21, 7472, 3490, 'Route des Merveilles'),\n\t\t(22, 6945, 3167, 'Bois Hurlant'),\n\t\t(23, 7605, 2056, 'Claire de Ville'),\n\t\t(24, 7619, 1384, 'Route Grimpante'),\n\t\t(25, 6467, 852, 'Rivière aux Crabes'),\n\t\t(26, 1412, 876, 'Mergagnan'),\n\t\t(27, 3441, 3367, 'Forêt Célestrum'),\n\t\t(28, 879, 3446, 'Portes du château'),\n\t\t(29, 879, 3446, 'Salle de réception'),\n\t\t(32, 879, 3446, 'Route vers le château du Roi'),\n\t\t(41, 879, 3446, 'Cour du Château')\n\t),\n\tmids(a, b, x, y) AS (VALUES\n\t\t(1, 26, 1069, 641),\n\t\t(2, 3, 2524, 808),\n\t\t(2, 26, 1884, 1068),\n\t\t(3, 4, 2904, 1201),\n\t\t(3, 9, 3404, 898),\n\t\t(4, 5, 2337, 1658),\n\t\t(5, 6, 1764, 1968),\n\t\t(6, 7, 2229, 3253),\n\t\t(6, 26, 1414, 1598),\n\t\t(7, 8, 2384, 3648),\n\t\t(7, 17, 3134, 4518),\n\t\t(7, 19, 3734, 5438),\n\t\t(8, 10, 3197, 1758),\n\t\t(8, 15, 3217, 2298),\n\t\t(9, 10, 4077, 1268),\n\t\t(9, 11, 3867, 848),\n\t\t(11, 12, 4698, 768),\n\t\t(12, 13, 4968, 768),\n\t\t(12, 14, 5148, 1808),\n\t\t(12, 15, 4388, 1808),\n\t\t(13, 25, 6068, 738),\n\t\t(14, 16, 4818, 3068),\n\t\t(14, 22, 6338, 2808),\n\t\t(14, 25, 5494, 1368),\n\t\t(15, 16, 4339, 3054),\n\t\t(15, 27, 3477, 3168),\n\t\t(16, 17, 4538, 3738),\n\t\t(17, 18, 4867, 4078),\n\t\t(17, 27, 3817, 3938),\n\t\t(18, 19, 5695, 4537),\n\t\t(18, 22, 6148, 3798),\n\t\t(19, 21, 6828, 4248),\n\t\t(21, 23, 8018, 2908),\n\t\t(22, 23, 7288, 2758),\n\t\t(22, 24, 6888, 2548),\n\t\t(23, 24, 7818, 1708),\n\t\t(24, 25, 6888, 1538)\n\t),\n\ttrips(s, e, minutes) AS (VALUES\n\t\t(1, 26, 60),\n\t\t(2, 3, 120),\n\t\t(2, 26, 120),\n\t\t(3, 2, 120),\n\t\t(3, 4, 240),\n\t\t(3, 9, 180),\n\t\t(4, 3, 240),\n\t\t(4, 5, 180),\n\t\t(5, 4, 180),\n\t\t(5, 6, 180),\n\t\t(6, 5, 180),\n\t\t(6, 7, 420),\n\t\t(6, 26, 300),\n\t\t(6, 41, 120),\n\t\t(7, 6, 420),\n\t\t(7, 8, 480),\n\t\t(7, 17, 540),\n\t\t(7, 19, 600),\n\t\t(7, 41, 540),\n\t\t(8, 7, 480),\n\t\t(8, 10, 120),\n\t\t(8, 15, 420),\n\t\t(9, 3, 180),\n\t\t(9, 10, 60),\n\t\t(9, 11, 180),\n\t\t(10, 8, 120),\n\t\t(10, 9, 60),\n\t\t(11, 9, 180),\n\t\t(11, 12, 180),\n\t\t(12, 11, 180),\n\t\t(12, 13, 240),\n\t\t(12, 14, 360),\n\t\t(12, 15, 600),\n\t\t(13, 12, 240),\n\t\t(13, 25, 180),\n\t\t(14, 12, 360),\n\t\t(14, 16, 180),\n\t\t(14, 22, 180),\n\t\t(14, 25, 300),\n\t\t(15, 8, 360),\n\t\t(15, 12, 480),\n\t\t(15, 16, 480),\n\t\t(15, 27, 300),\n\t\t(16, 14, 180),\n\t\t(16, 15, 540),\n\t\t(16, 17, 180),\n\t\t(17, 7, 540),\n\t\t(17, 16, 180),\n\t\t(17, 18, 120),\n\t\t(17, 27, 300),\n\t\t(18, 17, 120),\n\t\t(18, 19, 60),\n\t\t(18, 22, 240),\n\t\t(19, 7, 600),\n\t\t(19, 18, 60),\n\t\t(19, 21, 180),\n\t\t(21, 19, 180),\n\t\t(21, 23, 240),\n\t\t(22, 14, 180),\n\t\t(22, 18, 240),\n\t\t(22, 23, 240),\n\t\t(22, 24, 240),\n\t\t(23, 21, 240),\n\t\t(23, 22, 240),\n\t\t(23, 24, 60),\n\t\t(24, 22, 240),\n\t\t(24, 23, 60),\n\t\t(24, 25, 240),\n\t\t(25, 13, 180),\n\t\t(25, 14, 300),\n\t\t(25, 24, 300),\n\t\t(26, 1, 60),\n\t\t(26, 2, 120),\n\t\t(26, 6, 300),\n\t\t(27, 15, 360),\n\t\t(27, 17, 300),\n\t\t(41, 6, 120),\n\t\t(41, 7, 540)\n\t),\n\tlast_departures AS (\n\t\tSELECT playerId, mapLinkId, date FROM (\n\t\t\tSELECT playerId, mapLinkId, date, ROW_NUMBER() OVER (PARTITION BY playerId ORDER BY date DESC) AS n\n\t\t\tFROM players_travels\n\t\t\tWHERE date > $__unixEpochTo() - 86400 AND date <= $__unixEpochTo()\n\t\t) ranked WHERE n = 1\n\t),\n\tjourneys AS (\n\t\tSELECT l.start, l.end, d.date, t.minutes\n\t\tFROM last_departures d JOIN map_links l ON l.id = d.mapLinkId\n\t\tLEFT JOIN trips t ON t.s = l.start AND t.e = l.end\n\t)\nSELECT\n\tSUM(minutes IS NOT NULL AND date + minutes * 60 > $__unixEpochTo()) AS \"En route\",\n\tSUM(minutes IS NOT NULL AND date + minutes * 60 <= $__unixEpochTo()) AS \"Au repos\",\n\tSUM(start >= 1000 OR end >= 1000 OR start = 33 OR end = 33) AS \"Au large\",\n\tSUM(start IN (39, 40) OR end IN (39, 40)) AS \"Maison hantée\"\nFROM journeys"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "fixed",
+						"fixedColor": "#8E6CC8"
+					},
+					"unit": "none",
+					"decimals": 0
+				},
+				"overrides": []
+			},
+			"options": {
+				"reduceOptions": {
+					"calcs": [
+						"lastNotNull"
+					],
+					"fields": "/^Maison hantée$/",
+					"values": false
+				},
+				"colorMode": "value",
+				"graphMode": "none",
+				"textMode": "value",
+				"justifyMode": "center",
+				"orientation": "horizontal",
+				"wideLayout": true,
+				"showPercentChange": false
+			}
+		},
+		{
+			"id": 14,
+			"type": "stat",
+			"title": "Sur la période",
+			"description": "Départs enregistrés et aventuriers différents entre le début et la fin de la période choisie.",
+			"gridPos": {
+				"h": 4,
+				"w": 8,
+				"x": 16,
+				"y": 0
+			},
+			"datasource": {
+				"type": "mysql",
+				"uid": "kKJCQf44z"
+			},
+			"targets": [
+				{
+					"refId": "period",
+					"datasource": {
+						"type": "mysql",
+						"uid": "kKJCQf44z"
+					},
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "SELECT COUNT(*) AS \"Départs\", COUNT(DISTINCT playerId) AS \"Aventuriers\"\nFROM players_travels WHERE $__unixEpochFilter(date)"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "fixed",
+						"fixedColor": "#F2B33D"
+					},
+					"unit": "none",
+					"decimals": 0
+				},
+				"overrides": []
+			},
+			"options": {
+				"reduceOptions": {
+					"calcs": [
+						"lastNotNull"
+					],
+					"fields": "",
+					"values": false
+				},
+				"colorMode": "value",
+				"graphMode": "none",
+				"textMode": "value_and_name",
+				"justifyMode": "center",
+				"orientation": "horizontal",
+				"wideLayout": true,
+				"showPercentChange": false
+			}
+		},
+		{
+			"id": 1,
+			"type": "geomap",
+			"title": "Le royaume",
+			"description": "Chaque point rouge est un héros en route, à l'instant de la fin de la période choisie. Les bulles comptent les héros arrivés dans chaque lieu, et les routes s'épaississent avec les passages de la période. Pour remonter le temps, sélectionnez un moment sur le graphique des départs ou décalez la période avec les flèches du sélecteur de temps.",
+			"gridPos": {
+				"h": 30,
+				"w": 24,
+				"x": 0,
+				"y": 4
+			},
+			"datasource": {
+				"type": "mysql",
+				"uid": "kKJCQf44z"
+			},
+			"targets": [
+				{
+					"refId": "nodes",
+					"datasource": {
+						"type": "mysql",
+						"uid": "kKJCQf44z"
+					},
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "SELECT 'L1' AS id, 83.105798 AS latitude, -134.296875 AS longitude\nUNION ALL SELECT 'L2' AS id, 80.238501 AS latitude, -75.234375 AS longitude\nUNION ALL SELECT 'L3' AS id, 81.947846 AS latitude, -49.921875 AS longitude\nUNION ALL SELECT 'L4' AS id, 76.100796 AS latitude, -66.269531 AS longitude\nUNION ALL SELECT 'L5' AS id, 71.413177 AS latitude, -90.351562 AS longitude\nUNION ALL SELECT 'L6' AS id, 66.495740 AS latitude, -129.638672 AS longitude\nUNION ALL SELECT 'L7' AS id, -25.403585 AS latitude, -118.037109 AS longitude\nUNION ALL SELECT 'L8' AS id, 69.115611 AS latitude, -43.154297 AS longitude\nUNION ALL SELECT 'L9' AS id, 79.679314 AS latitude, -16.743164 AS longitude\nUNION ALL SELECT 'L10' AS id, 75.230667 AS latitude, -18.105469 AS longitude\nUNION ALL SELECT 'L11' AS id, 82.232057 AS latitude, 4.350586 AS longitude\nUNION ALL SELECT 'L12' AS id, 80.216123 AS latitude, 34.277344 AS longitude\nUNION ALL SELECT 'L13' AS id, 82.414035 AS latitude, 68.291016 AS longitude\nUNION ALL SELECT 'L14' AS id, 56.607885 AS latitude, 57.041016 AS longitude\nUNION ALL SELECT 'L15' AS id, 59.310768 AS latitude, -13.710938 AS longitude\nUNION ALL SELECT 'L16' AS id, 31.578535 AS latitude, 29.531250 AS longitude\nUNION ALL SELECT 'L17' AS id, -6.839170 AS latitude, 15.864258 AS longitude\nUNION ALL SELECT 'L18' AS id, 11.910354 AS latitude, 54.711914 AS longitude\nUNION ALL SELECT 'L19' AS id, -24.006326 AS latitude, 83.715820 AS longitude\nUNION ALL SELECT 'L21' AS id, 25.720735 AS latitude, 148.359375 AS longitude\nUNION ALL SELECT 'L22' AS id, 37.753344 AS latitude, 125.200195 AS longitude\nUNION ALL SELECT 'L23' AS id, 66.372755 AS latitude, 154.204102 AS longitude\nUNION ALL SELECT 'L24' AS id, 75.758940 AS latitude, 154.819336 AS longitude\nUNION ALL SELECT 'L25' AS id, 80.503112 AS latitude, 104.194336 AS longitude\nUNION ALL SELECT 'L26' AS id, 80.327506 AS latitude, -117.949219 AS longitude\nUNION ALL SELECT 'L27' AS id, 30.486551 AS latitude, -28.784180 AS longitude\nUNION ALL SELECT 'L28' AS id, 27.449790 AS latitude, -141.372070 AS longitude\nUNION ALL SELECT 'L29' AS id, 27.449790 AS latitude, -141.372070 AS longitude\nUNION ALL SELECT 'L32' AS id, 27.449790 AS latitude, -141.372070 AS longitude\nUNION ALL SELECT 'L41' AS id, 27.449790 AS latitude, -141.372070 AS longitude\nUNION ALL SELECT 'M1_26' AS id, 81.917010 AS latitude, -133.022461 AS longitude\nUNION ALL SELECT 'M2_3' AS id, 80.816891 AS latitude, -69.082031 AS longitude\nUNION ALL SELECT 'M2_26' AS id, 78.801980 AS latitude, -97.207031 AS longitude\nUNION ALL SELECT 'M3_4' AS id, 77.608282 AS latitude, -52.382812 AS longitude\nUNION ALL SELECT 'M3_9' AS id, 80.163710 AS latitude, -30.410156 AS longitude\nUNION ALL SELECT 'M4_5' AS id, 72.475276 AS latitude, -77.299805 AS longitude\nUNION ALL SELECT 'M5_6' AS id, 67.875541 AS latitude, -102.480469 AS longitude\nUNION ALL SELECT 'M6_7' AS id, 34.705493 AS latitude, -82.045898 AS longitude\nUNION ALL SELECT 'M6_26' AS id, 73.252045 AS latitude, -117.861328 AS longitude\nUNION ALL SELECT 'M7_8' AS id, 19.311143 AS latitude, -75.234375 AS longitude\nUNION ALL SELECT 'M7_17' AS id, -18.229351 AS latitude, -42.275391 AS longitude\nUNION ALL SELECT 'M7_19' AS id, -50.680797 AS latitude, -15.908203 AS longitude\nUNION ALL SELECT 'M8_10' AS id, 71.102543 AS latitude, -39.506836 AS longitude\nUNION ALL SELECT 'M8_15' AS id, 61.731526 AS latitude, -38.627930 AS longitude\nUNION ALL SELECT 'M9_10' AS id, 76.960334 AS latitude, -0.834961 AS longitude\nUNION ALL SELECT 'M9_11' AS id, 80.532071 AS latitude, -10.063477 AS longitude\nUNION ALL SELECT 'M11_12' AS id, 81.093214 AS latitude, 26.455078 AS longitude\nUNION ALL SELECT 'M12_13' AS id, 81.093214 AS latitude, 38.320312 AS longitude\nUNION ALL SELECT 'M12_14' AS id, 70.377854 AS latitude, 46.230469 AS longitude\nUNION ALL SELECT 'M12_15' AS id, 70.377854 AS latitude, 12.832031 AS longitude\nUNION ALL SELECT 'M13_25' AS id, 81.295029 AS latitude, 86.660156 AS longitude\nUNION ALL SELECT 'M14_16' AS id, 41.112469 AS latitude, 31.728516 AS longitude\nUNION ALL SELECT 'M14_22' AS id, 49.152970 AS latitude, 98.525391 AS longitude\nUNION ALL SELECT 'M14_25' AS id, 75.930885 AS latitude, 61.435547 AS longitude\nUNION ALL SELECT 'M15_16' AS id, 41.574361 AS latitude, 10.678711 AS longitude\nUNION ALL SELECT 'M15_27' AS id, 37.718590 AS latitude, -27.202148 AS longitude\nUNION ALL SELECT 'M16_17' AS id, 15.538376 AS latitude, 19.423828 AS longitude\nUNION ALL SELECT 'M17_18' AS id, 0.790990 AS latitude, 33.881836 AS longitude\nUNION ALL SELECT 'M17_27' AS id, 6.926427 AS latitude, -12.260742 AS longitude\nUNION ALL SELECT 'M18_19' AS id, -19.020577 AS latitude, 70.268555 AS longitude\nUNION ALL SELECT 'M18_22' AS id, 12.983148 AS latitude, 90.175781 AS longitude\nUNION ALL SELECT 'M19_21' AS id, -6.664608 AS latitude, 120.058594 AS longitude\nUNION ALL SELECT 'M21_23' AS id, 46.195042 AS latitude, 172.353516 AS longitude\nUNION ALL SELECT 'M22_23' AS id, 50.569283 AS latitude, 140.273438 AS longitude\nUNION ALL SELECT 'M22_24' AS id, 56.072035 AS latitude, 122.695312 AS longitude\nUNION ALL SELECT 'M23_24' AS id, 71.801410 AS latitude, 163.564453 AS longitude\nUNION ALL SELECT 'M24_25' AS id, 73.995328 AS latitude, 122.695312 AS longitude"
+				},
+				{
+					"refId": "edges",
+					"datasource": {
+						"type": "mysql",
+						"uid": "kKJCQf44z"
+					},
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "WITH places(id, x, y, name) AS (VALUES\n\t\t(1, 1040, 433, 'Plage Sentinelle'),\n\t\t(2, 2384, 888, 'Voie champêtre'),\n\t\t(3, 2960, 636, 'Le Berceau'),\n\t\t(4, 2588, 1352, 'Forêt Du Vieillard'),\n\t\t(5, 2040, 1736, 'Chemin du Dédale'),\n\t\t(6, 1146, 2049, 'Boug-Coton'),\n\t\t(7, 1410, 4694, 'Vallée des Rois'),\n\t\t(8, 3114, 1891, 'Croisement des Destins'),\n\t\t(9, 3715, 961, 'Grande Rue'),\n\t\t(10, 3684, 1432, 'Ville Forte'),\n\t\t(11, 4195, 589, 'Grand Axe'),\n\t\t(12, 4876, 891, 'L''Étendue'),\n\t\t(13, 5650, 558, 'Route Marécageuse'),\n\t\t(14, 5394, 2526, 'Lac Mirage'),\n\t\t(15, 3784, 2410, 'Mont Célestrum'),\n\t\t(16, 4768, 3338, 'Chemin aux Loups'),\n\t\t(17, 4457, 4252, 'Village Coco'),\n\t\t(18, 5341, 3823, 'Rivière Vacarme'),\n\t\t(19, 6001, 4659, 'La Dune'),\n\t\t(21, 7472, 3490, 'Route des Merveilles'),\n\t\t(22, 6945, 3167, 'Bois Hurlant'),\n\t\t(23, 7605, 2056, 'Claire de Ville'),\n\t\t(24, 7619, 1384, 'Route Grimpante'),\n\t\t(25, 6467, 852, 'Rivière aux Crabes'),\n\t\t(26, 1412, 876, 'Mergagnan'),\n\t\t(27, 3441, 3367, 'Forêt Célestrum'),\n\t\t(28, 879, 3446, 'Portes du château'),\n\t\t(29, 879, 3446, 'Salle de réception'),\n\t\t(32, 879, 3446, 'Route vers le château du Roi'),\n\t\t(41, 879, 3446, 'Cour du Château')\n\t),\n\tmids(a, b, x, y) AS (VALUES\n\t\t(1, 26, 1069, 641),\n\t\t(2, 3, 2524, 808),\n\t\t(2, 26, 1884, 1068),\n\t\t(3, 4, 2904, 1201),\n\t\t(3, 9, 3404, 898),\n\t\t(4, 5, 2337, 1658),\n\t\t(5, 6, 1764, 1968),\n\t\t(6, 7, 2229, 3253),\n\t\t(6, 26, 1414, 1598),\n\t\t(7, 8, 2384, 3648),\n\t\t(7, 17, 3134, 4518),\n\t\t(7, 19, 3734, 5438),\n\t\t(8, 10, 3197, 1758),\n\t\t(8, 15, 3217, 2298),\n\t\t(9, 10, 4077, 1268),\n\t\t(9, 11, 3867, 848),\n\t\t(11, 12, 4698, 768),\n\t\t(12, 13, 4968, 768),\n\t\t(12, 14, 5148, 1808),\n\t\t(12, 15, 4388, 1808),\n\t\t(13, 25, 6068, 738),\n\t\t(14, 16, 4818, 3068),\n\t\t(14, 22, 6338, 2808),\n\t\t(14, 25, 5494, 1368),\n\t\t(15, 16, 4339, 3054),\n\t\t(15, 27, 3477, 3168),\n\t\t(16, 17, 4538, 3738),\n\t\t(17, 18, 4867, 4078),\n\t\t(17, 27, 3817, 3938),\n\t\t(18, 19, 5695, 4537),\n\t\t(18, 22, 6148, 3798),\n\t\t(19, 21, 6828, 4248),\n\t\t(21, 23, 8018, 2908),\n\t\t(22, 23, 7288, 2758),\n\t\t(22, 24, 6888, 2548),\n\t\t(23, 24, 7818, 1708),\n\t\t(24, 25, 6888, 1538)\n\t),\n\ttrips(s, e, minutes) AS (VALUES\n\t\t(1, 26, 60),\n\t\t(2, 3, 120),\n\t\t(2, 26, 120),\n\t\t(3, 2, 120),\n\t\t(3, 4, 240),\n\t\t(3, 9, 180),\n\t\t(4, 3, 240),\n\t\t(4, 5, 180),\n\t\t(5, 4, 180),\n\t\t(5, 6, 180),\n\t\t(6, 5, 180),\n\t\t(6, 7, 420),\n\t\t(6, 26, 300),\n\t\t(6, 41, 120),\n\t\t(7, 6, 420),\n\t\t(7, 8, 480),\n\t\t(7, 17, 540),\n\t\t(7, 19, 600),\n\t\t(7, 41, 540),\n\t\t(8, 7, 480),\n\t\t(8, 10, 120),\n\t\t(8, 15, 420),\n\t\t(9, 3, 180),\n\t\t(9, 10, 60),\n\t\t(9, 11, 180),\n\t\t(10, 8, 120),\n\t\t(10, 9, 60),\n\t\t(11, 9, 180),\n\t\t(11, 12, 180),\n\t\t(12, 11, 180),\n\t\t(12, 13, 240),\n\t\t(12, 14, 360),\n\t\t(12, 15, 600),\n\t\t(13, 12, 240),\n\t\t(13, 25, 180),\n\t\t(14, 12, 360),\n\t\t(14, 16, 180),\n\t\t(14, 22, 180),\n\t\t(14, 25, 300),\n\t\t(15, 8, 360),\n\t\t(15, 12, 480),\n\t\t(15, 16, 480),\n\t\t(15, 27, 300),\n\t\t(16, 14, 180),\n\t\t(16, 15, 540),\n\t\t(16, 17, 180),\n\t\t(17, 7, 540),\n\t\t(17, 16, 180),\n\t\t(17, 18, 120),\n\t\t(17, 27, 300),\n\t\t(18, 17, 120),\n\t\t(18, 19, 60),\n\t\t(18, 22, 240),\n\t\t(19, 7, 600),\n\t\t(19, 18, 60),\n\t\t(19, 21, 180),\n\t\t(21, 19, 180),\n\t\t(21, 23, 240),\n\t\t(22, 14, 180),\n\t\t(22, 18, 240),\n\t\t(22, 23, 240),\n\t\t(22, 24, 240),\n\t\t(23, 21, 240),\n\t\t(23, 22, 240),\n\t\t(23, 24, 60),\n\t\t(24, 22, 240),\n\t\t(24, 23, 60),\n\t\t(24, 25, 240),\n\t\t(25, 13, 180),\n\t\t(25, 14, 300),\n\t\t(25, 24, 300),\n\t\t(26, 1, 60),\n\t\t(26, 2, 120),\n\t\t(26, 6, 300),\n\t\t(27, 15, 360),\n\t\t(27, 17, 300),\n\t\t(41, 6, 120),\n\t\t(41, 7, 540)\n\t),\n\ttraffic AS (\n\t\tSELECT LEAST(l.start, l.end) AS a, GREATEST(l.start, l.end) AS b, COUNT(*) AS travels\n\t\tFROM players_travels t JOIN map_links l ON l.id = t.mapLinkId\n\t\tWHERE t.date BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\n\t\tGROUP BY 1, 2\n\t),\n\troads AS (\n\t\tSELECT DISTINCT LEAST(s, e) AS a, GREATEST(s, e) AS b FROM trips\n\t)\nSELECT CONCAT('E', r.a, '_', r.b, '_1') AS id, CONCAT('L', r.a) AS source,\n\tIF(m.a IS NULL, CONCAT('L', r.b), CONCAT('M', r.a, '_', r.b)) AS target, t.travels\nFROM roads r JOIN traffic t ON t.a = r.a AND t.b = r.b LEFT JOIN mids m ON m.a = r.a AND m.b = r.b\nUNION ALL\nSELECT CONCAT('E', r.a, '_', r.b, '_2'), CONCAT('M', r.a, '_', r.b), CONCAT('L', r.b), t.travels\nFROM roads r JOIN traffic t ON t.a = r.a AND t.b = r.b JOIN mids m ON m.a = r.a AND m.b = r.b"
+				},
+				{
+					"refId": "places",
+					"datasource": {
+						"type": "mysql",
+						"uid": "kKJCQf44z"
+					},
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "WITH places(id, x, y, name) AS (VALUES\n\t\t(1, 1040, 433, 'Plage Sentinelle'),\n\t\t(2, 2384, 888, 'Voie champêtre'),\n\t\t(3, 2960, 636, 'Le Berceau'),\n\t\t(4, 2588, 1352, 'Forêt Du Vieillard'),\n\t\t(5, 2040, 1736, 'Chemin du Dédale'),\n\t\t(6, 1146, 2049, 'Boug-Coton'),\n\t\t(7, 1410, 4694, 'Vallée des Rois'),\n\t\t(8, 3114, 1891, 'Croisement des Destins'),\n\t\t(9, 3715, 961, 'Grande Rue'),\n\t\t(10, 3684, 1432, 'Ville Forte'),\n\t\t(11, 4195, 589, 'Grand Axe'),\n\t\t(12, 4876, 891, 'L''Étendue'),\n\t\t(13, 5650, 558, 'Route Marécageuse'),\n\t\t(14, 5394, 2526, 'Lac Mirage'),\n\t\t(15, 3784, 2410, 'Mont Célestrum'),\n\t\t(16, 4768, 3338, 'Chemin aux Loups'),\n\t\t(17, 4457, 4252, 'Village Coco'),\n\t\t(18, 5341, 3823, 'Rivière Vacarme'),\n\t\t(19, 6001, 4659, 'La Dune'),\n\t\t(21, 7472, 3490, 'Route des Merveilles'),\n\t\t(22, 6945, 3167, 'Bois Hurlant'),\n\t\t(23, 7605, 2056, 'Claire de Ville'),\n\t\t(24, 7619, 1384, 'Route Grimpante'),\n\t\t(25, 6467, 852, 'Rivière aux Crabes'),\n\t\t(26, 1412, 876, 'Mergagnan'),\n\t\t(27, 3441, 3367, 'Forêt Célestrum'),\n\t\t(28, 879, 3446, 'Portes du château'),\n\t\t(29, 879, 3446, 'Salle de réception'),\n\t\t(32, 879, 3446, 'Route vers le château du Roi'),\n\t\t(41, 879, 3446, 'Cour du Château')\n\t),\n\tmids(a, b, x, y) AS (VALUES\n\t\t(1, 26, 1069, 641),\n\t\t(2, 3, 2524, 808),\n\t\t(2, 26, 1884, 1068),\n\t\t(3, 4, 2904, 1201),\n\t\t(3, 9, 3404, 898),\n\t\t(4, 5, 2337, 1658),\n\t\t(5, 6, 1764, 1968),\n\t\t(6, 7, 2229, 3253),\n\t\t(6, 26, 1414, 1598),\n\t\t(7, 8, 2384, 3648),\n\t\t(7, 17, 3134, 4518),\n\t\t(7, 19, 3734, 5438),\n\t\t(8, 10, 3197, 1758),\n\t\t(8, 15, 3217, 2298),\n\t\t(9, 10, 4077, 1268),\n\t\t(9, 11, 3867, 848),\n\t\t(11, 12, 4698, 768),\n\t\t(12, 13, 4968, 768),\n\t\t(12, 14, 5148, 1808),\n\t\t(12, 15, 4388, 1808),\n\t\t(13, 25, 6068, 738),\n\t\t(14, 16, 4818, 3068),\n\t\t(14, 22, 6338, 2808),\n\t\t(14, 25, 5494, 1368),\n\t\t(15, 16, 4339, 3054),\n\t\t(15, 27, 3477, 3168),\n\t\t(16, 17, 4538, 3738),\n\t\t(17, 18, 4867, 4078),\n\t\t(17, 27, 3817, 3938),\n\t\t(18, 19, 5695, 4537),\n\t\t(18, 22, 6148, 3798),\n\t\t(19, 21, 6828, 4248),\n\t\t(21, 23, 8018, 2908),\n\t\t(22, 23, 7288, 2758),\n\t\t(22, 24, 6888, 2548),\n\t\t(23, 24, 7818, 1708),\n\t\t(24, 25, 6888, 1538)\n\t),\n\ttrips(s, e, minutes) AS (VALUES\n\t\t(1, 26, 60),\n\t\t(2, 3, 120),\n\t\t(2, 26, 120),\n\t\t(3, 2, 120),\n\t\t(3, 4, 240),\n\t\t(3, 9, 180),\n\t\t(4, 3, 240),\n\t\t(4, 5, 180),\n\t\t(5, 4, 180),\n\t\t(5, 6, 180),\n\t\t(6, 5, 180),\n\t\t(6, 7, 420),\n\t\t(6, 26, 300),\n\t\t(6, 41, 120),\n\t\t(7, 6, 420),\n\t\t(7, 8, 480),\n\t\t(7, 17, 540),\n\t\t(7, 19, 600),\n\t\t(7, 41, 540),\n\t\t(8, 7, 480),\n\t\t(8, 10, 120),\n\t\t(8, 15, 420),\n\t\t(9, 3, 180),\n\t\t(9, 10, 60),\n\t\t(9, 11, 180),\n\t\t(10, 8, 120),\n\t\t(10, 9, 60),\n\t\t(11, 9, 180),\n\t\t(11, 12, 180),\n\t\t(12, 11, 180),\n\t\t(12, 13, 240),\n\t\t(12, 14, 360),\n\t\t(12, 15, 600),\n\t\t(13, 12, 240),\n\t\t(13, 25, 180),\n\t\t(14, 12, 360),\n\t\t(14, 16, 180),\n\t\t(14, 22, 180),\n\t\t(14, 25, 300),\n\t\t(15, 8, 360),\n\t\t(15, 12, 480),\n\t\t(15, 16, 480),\n\t\t(15, 27, 300),\n\t\t(16, 14, 180),\n\t\t(16, 15, 540),\n\t\t(16, 17, 180),\n\t\t(17, 7, 540),\n\t\t(17, 16, 180),\n\t\t(17, 18, 120),\n\t\t(17, 27, 300),\n\t\t(18, 17, 120),\n\t\t(18, 19, 60),\n\t\t(18, 22, 240),\n\t\t(19, 7, 600),\n\t\t(19, 18, 60),\n\t\t(19, 21, 180),\n\t\t(21, 19, 180),\n\t\t(21, 23, 240),\n\t\t(22, 14, 180),\n\t\t(22, 18, 240),\n\t\t(22, 23, 240),\n\t\t(22, 24, 240),\n\t\t(23, 21, 240),\n\t\t(23, 22, 240),\n\t\t(23, 24, 60),\n\t\t(24, 22, 240),\n\t\t(24, 23, 60),\n\t\t(24, 25, 240),\n\t\t(25, 13, 180),\n\t\t(25, 14, 300),\n\t\t(25, 24, 300),\n\t\t(26, 1, 60),\n\t\t(26, 2, 120),\n\t\t(26, 6, 300),\n\t\t(27, 15, 360),\n\t\t(27, 17, 300),\n\t\t(41, 6, 120),\n\t\t(41, 7, 540)\n\t),\n\tlast_departures AS (\n\t\tSELECT playerId, mapLinkId, date FROM (\n\t\t\tSELECT playerId, mapLinkId, date, ROW_NUMBER() OVER (PARTITION BY playerId ORDER BY date DESC) AS n\n\t\t\tFROM players_travels\n\t\t\tWHERE date > $__unixEpochTo() - 86400 AND date <= $__unixEpochTo()\n\t\t) ranked WHERE n = 1\n\t),\n\tarrived AS (\n\t\tSELECT l.end AS place, COUNT(*) AS heroes\n\t\tFROM last_departures d\n\t\tJOIN map_links l ON l.id = d.mapLinkId\n\t\tJOIN trips t ON t.s = l.start AND t.e = l.end\n\t\tWHERE d.date + t.minutes * 60 <= $__unixEpochTo()\n\t\tGROUP BY l.end\n\t)\nSELECT p.name AS \"Lieu\", a.heroes AS \"Héros présents\", DEGREES(2 * ATAN(EXP(PI() * (1 - 2 * (p.y) / 8192))) - PI() / 2) AS latitude, ((p.x) / 8192 * 360 - 180) AS longitude\nFROM arrived a JOIN places p ON p.id = a.place ORDER BY a.heroes DESC"
+				},
+				{
+					"refId": "heroes",
+					"datasource": {
+						"type": "mysql",
+						"uid": "kKJCQf44z"
+					},
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "WITH places(id, x, y, name) AS (VALUES\n\t\t(1, 1040, 433, 'Plage Sentinelle'),\n\t\t(2, 2384, 888, 'Voie champêtre'),\n\t\t(3, 2960, 636, 'Le Berceau'),\n\t\t(4, 2588, 1352, 'Forêt Du Vieillard'),\n\t\t(5, 2040, 1736, 'Chemin du Dédale'),\n\t\t(6, 1146, 2049, 'Boug-Coton'),\n\t\t(7, 1410, 4694, 'Vallée des Rois'),\n\t\t(8, 3114, 1891, 'Croisement des Destins'),\n\t\t(9, 3715, 961, 'Grande Rue'),\n\t\t(10, 3684, 1432, 'Ville Forte'),\n\t\t(11, 4195, 589, 'Grand Axe'),\n\t\t(12, 4876, 891, 'L''Étendue'),\n\t\t(13, 5650, 558, 'Route Marécageuse'),\n\t\t(14, 5394, 2526, 'Lac Mirage'),\n\t\t(15, 3784, 2410, 'Mont Célestrum'),\n\t\t(16, 4768, 3338, 'Chemin aux Loups'),\n\t\t(17, 4457, 4252, 'Village Coco'),\n\t\t(18, 5341, 3823, 'Rivière Vacarme'),\n\t\t(19, 6001, 4659, 'La Dune'),\n\t\t(21, 7472, 3490, 'Route des Merveilles'),\n\t\t(22, 6945, 3167, 'Bois Hurlant'),\n\t\t(23, 7605, 2056, 'Claire de Ville'),\n\t\t(24, 7619, 1384, 'Route Grimpante'),\n\t\t(25, 6467, 852, 'Rivière aux Crabes'),\n\t\t(26, 1412, 876, 'Mergagnan'),\n\t\t(27, 3441, 3367, 'Forêt Célestrum'),\n\t\t(28, 879, 3446, 'Portes du château'),\n\t\t(29, 879, 3446, 'Salle de réception'),\n\t\t(32, 879, 3446, 'Route vers le château du Roi'),\n\t\t(41, 879, 3446, 'Cour du Château')\n\t),\n\tmids(a, b, x, y) AS (VALUES\n\t\t(1, 26, 1069, 641),\n\t\t(2, 3, 2524, 808),\n\t\t(2, 26, 1884, 1068),\n\t\t(3, 4, 2904, 1201),\n\t\t(3, 9, 3404, 898),\n\t\t(4, 5, 2337, 1658),\n\t\t(5, 6, 1764, 1968),\n\t\t(6, 7, 2229, 3253),\n\t\t(6, 26, 1414, 1598),\n\t\t(7, 8, 2384, 3648),\n\t\t(7, 17, 3134, 4518),\n\t\t(7, 19, 3734, 5438),\n\t\t(8, 10, 3197, 1758),\n\t\t(8, 15, 3217, 2298),\n\t\t(9, 10, 4077, 1268),\n\t\t(9, 11, 3867, 848),\n\t\t(11, 12, 4698, 768),\n\t\t(12, 13, 4968, 768),\n\t\t(12, 14, 5148, 1808),\n\t\t(12, 15, 4388, 1808),\n\t\t(13, 25, 6068, 738),\n\t\t(14, 16, 4818, 3068),\n\t\t(14, 22, 6338, 2808),\n\t\t(14, 25, 5494, 1368),\n\t\t(15, 16, 4339, 3054),\n\t\t(15, 27, 3477, 3168),\n\t\t(16, 17, 4538, 3738),\n\t\t(17, 18, 4867, 4078),\n\t\t(17, 27, 3817, 3938),\n\t\t(18, 19, 5695, 4537),\n\t\t(18, 22, 6148, 3798),\n\t\t(19, 21, 6828, 4248),\n\t\t(21, 23, 8018, 2908),\n\t\t(22, 23, 7288, 2758),\n\t\t(22, 24, 6888, 2548),\n\t\t(23, 24, 7818, 1708),\n\t\t(24, 25, 6888, 1538)\n\t),\n\ttrips(s, e, minutes) AS (VALUES\n\t\t(1, 26, 60),\n\t\t(2, 3, 120),\n\t\t(2, 26, 120),\n\t\t(3, 2, 120),\n\t\t(3, 4, 240),\n\t\t(3, 9, 180),\n\t\t(4, 3, 240),\n\t\t(4, 5, 180),\n\t\t(5, 4, 180),\n\t\t(5, 6, 180),\n\t\t(6, 5, 180),\n\t\t(6, 7, 420),\n\t\t(6, 26, 300),\n\t\t(6, 41, 120),\n\t\t(7, 6, 420),\n\t\t(7, 8, 480),\n\t\t(7, 17, 540),\n\t\t(7, 19, 600),\n\t\t(7, 41, 540),\n\t\t(8, 7, 480),\n\t\t(8, 10, 120),\n\t\t(8, 15, 420),\n\t\t(9, 3, 180),\n\t\t(9, 10, 60),\n\t\t(9, 11, 180),\n\t\t(10, 8, 120),\n\t\t(10, 9, 60),\n\t\t(11, 9, 180),\n\t\t(11, 12, 180),\n\t\t(12, 11, 180),\n\t\t(12, 13, 240),\n\t\t(12, 14, 360),\n\t\t(12, 15, 600),\n\t\t(13, 12, 240),\n\t\t(13, 25, 180),\n\t\t(14, 12, 360),\n\t\t(14, 16, 180),\n\t\t(14, 22, 180),\n\t\t(14, 25, 300),\n\t\t(15, 8, 360),\n\t\t(15, 12, 480),\n\t\t(15, 16, 480),\n\t\t(15, 27, 300),\n\t\t(16, 14, 180),\n\t\t(16, 15, 540),\n\t\t(16, 17, 180),\n\t\t(17, 7, 540),\n\t\t(17, 16, 180),\n\t\t(17, 18, 120),\n\t\t(17, 27, 300),\n\t\t(18, 17, 120),\n\t\t(18, 19, 60),\n\t\t(18, 22, 240),\n\t\t(19, 7, 600),\n\t\t(19, 18, 60),\n\t\t(19, 21, 180),\n\t\t(21, 19, 180),\n\t\t(21, 23, 240),\n\t\t(22, 14, 180),\n\t\t(22, 18, 240),\n\t\t(22, 23, 240),\n\t\t(22, 24, 240),\n\t\t(23, 21, 240),\n\t\t(23, 22, 240),\n\t\t(23, 24, 60),\n\t\t(24, 22, 240),\n\t\t(24, 23, 60),\n\t\t(24, 25, 240),\n\t\t(25, 13, 180),\n\t\t(25, 14, 300),\n\t\t(25, 24, 300),\n\t\t(26, 1, 60),\n\t\t(26, 2, 120),\n\t\t(26, 6, 300),\n\t\t(27, 15, 360),\n\t\t(27, 17, 300),\n\t\t(41, 6, 120),\n\t\t(41, 7, 540)\n\t),\n\tlast_departures AS (\n\t\tSELECT playerId, mapLinkId, date FROM (\n\t\t\tSELECT playerId, mapLinkId, date, ROW_NUMBER() OVER (PARTITION BY playerId ORDER BY date DESC) AS n\n\t\t\tFROM players_travels\n\t\t\tWHERE date > $__unixEpochTo() - 86400 AND date <= $__unixEpochTo()\n\t\t) ranked WHERE n = 1\n\t),\n\tjourneys AS (\n\t\tSELECT d.playerId, l.start, l.end, d.date, t.minutes,\n\t\t\tLEAST(1, ($__unixEpochTo() - d.date) / (t.minutes * 60)) AS progress\n\t\tFROM last_departures d\n\t\tJOIN map_links l ON l.id = d.mapLinkId\n\t\tJOIN trips t ON t.s = l.start AND t.e = l.end\n\t),\n\tpositions AS (\n\t\tSELECT j.*, p1.name AS from_name, p2.name AS to_name, CASE\n\t\t\tWHEN m.a IS NULL THEN p1.x + (p2.x - p1.x) * j.progress\n\t\t\tWHEN j.progress < 0.5 THEN p1.x + (m.x - p1.x) * 2 * j.progress\n\t\t\tELSE m.x + (p2.x - m.x) * (2 * j.progress - 1)\n\t\tEND AS px, CASE\n\t\t\tWHEN m.a IS NULL THEN p1.y + (p2.y - p1.y) * j.progress\n\t\t\tWHEN j.progress < 0.5 THEN p1.y + (m.y - p1.y) * 2 * j.progress\n\t\t\tELSE m.y + (p2.y - m.y) * (2 * j.progress - 1)\n\t\tEND AS py\n\t\tFROM journeys j\n\t\tJOIN places p1 ON p1.id = j.start\n\t\tJOIN places p2 ON p2.id = j.end\n\t\tLEFT JOIN mids m ON m.a = LEAST(j.start, j.end) AND m.b = GREATEST(j.start, j.end)\n\t\tWHERE j.progress < 1\n\t)\nSELECT CONCAT('Héros n°', playerId) AS \"Héros\", from_name AS \"Parti de\", to_name AS \"En route vers\",\n\tROUND(100 * progress) AS \"Progression\",\n\tFROM_UNIXTIME(date + minutes * 60) AS \"Arrivée prévue\",\n\tDEGREES(2 * ATAN(EXP(PI() * (1 - 2 * (py) / 8192))) - PI() / 2) AS latitude, ((px) / 8192 * 360 - 180) AS longitude\nFROM positions ORDER BY progress DESC"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "continuous-YlRd"
+					},
+					"custom": {
+						"hideFrom": {
+							"legend": false,
+							"tooltip": false,
+							"viz": false
+						}
+					}
+				},
+				"overrides": [
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "latitude"
+						},
+						"properties": [
+							{
+								"id": "custom.hideFrom",
+								"value": {
+									"tooltip": true,
+									"viz": false,
+									"legend": true
+								}
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "longitude"
+						},
+						"properties": [
+							{
+								"id": "custom.hideFrom",
+								"value": {
+									"tooltip": true,
+									"viz": false,
+									"legend": true
+								}
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "id"
+						},
+						"properties": [
+							{
+								"id": "custom.hideFrom",
+								"value": {
+									"tooltip": true,
+									"viz": false,
+									"legend": true
+								}
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "source"
+						},
+						"properties": [
+							{
+								"id": "custom.hideFrom",
+								"value": {
+									"tooltip": true,
+									"viz": false,
+									"legend": true
+								}
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "target"
+						},
+						"properties": [
+							{
+								"id": "custom.hideFrom",
+								"value": {
+									"tooltip": true,
+									"viz": false,
+									"legend": true
+								}
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "Progression"
+						},
+						"properties": [
+							{
+								"id": "unit",
+								"value": "percent"
+							}
+						]
+					},
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "travels"
+						},
+						"properties": [
+							{
+								"id": "displayName",
+								"value": "Passages"
+							}
+						]
+					}
+				]
+			},
+			"options": {
+				"view": {
+					"id": "coords",
+					"lat": 55.5286,
+					"lon": 8.9648,
+					"zoom": 2.85,
+					"minZoom": 1,
+					"maxZoom": 7,
+					"allLayers": true,
+					"noRepeat": true
+				},
+				"controls": {
+					"showZoom": true,
+					"mouseWheelZoom": true,
+					"showAttribution": false,
+					"showScale": false,
+					"showMeasure": false,
+					"showDebug": false
+				},
+				"tooltip": {
+					"mode": "details"
+				},
+				"basemap": {
+					"type": "xyz",
+					"name": "Carte du royaume",
+					"noRepeat": true,
+					"config": {
+						"url": "https://crownicles.com/public/ressources/kingdom/tiles/{z}/{x}/{y}.webp",
+						"attribution": "Crownicles",
+						"minZoom": 0,
+						"maxZoom": 5
+					}
+				},
+				"layers": [
+					{
+						"type": "network",
+						"name": "Routes",
+						"tooltip": true,
+						"opacity": 0.85,
+						"location": {
+							"mode": "coords",
+							"latitude": "latitude",
+							"longitude": "longitude"
+						},
+						"config": {
+							"arrow": 0,
+							"showLegend": false,
+							"style": {
+								"color": {
+									"fixed": "transparent"
+								},
+								"opacity": 0,
+								"size": {
+									"fixed": 1,
+									"min": 1,
+									"max": 1
+								},
+								"symbol": {
+									"mode": "fixed",
+									"fixed": "img/icons/marker/circle.svg"
+								},
+								"rotation": {
+									"fixed": 0,
+									"mode": "mod",
+									"min": -360,
+									"max": 360
+								}
+							},
+							"edgeStyle": {
+								"color": {
+									"field": "travels",
+									"fixed": "#F2B33D"
+								},
+								"opacity": 0.85,
+								"size": {
+									"field": "travels",
+									"fixed": 3,
+									"min": 2,
+									"max": 12
+								},
+								"rotation": {
+									"fixed": 0,
+									"mode": "mod",
+									"min": -360,
+									"max": 360
+								}
+							}
+						}
+					},
+					{
+						"type": "markers",
+						"name": "Lieux",
+						"tooltip": true,
+						"filterData": {
+							"id": "byRefId",
+							"options": "places"
+						},
+						"location": {
+							"mode": "coords",
+							"latitude": "latitude",
+							"longitude": "longitude"
+						},
+						"config": {
+							"showLegend": false,
+							"style": {
+								"color": {
+									"fixed": "#FFF4D6"
+								},
+								"opacity": 0.4,
+								"lineWidth": 2,
+								"size": {
+									"field": "Héros présents",
+									"fixed": 10,
+									"min": 8,
+									"max": 26
+								},
+								"symbol": {
+									"mode": "fixed",
+									"fixed": "img/icons/marker/circle.svg"
+								},
+								"symbolAlign": {
+									"horizontal": "center",
+									"vertical": "center"
+								},
+								"rotation": {
+									"fixed": 0,
+									"mode": "mod",
+									"min": -360,
+									"max": 360
+								},
+								"text": {
+									"mode": "field",
+									"field": "Héros présents",
+									"fixed": ""
+								},
+								"textConfig": {
+									"fontSize": 15,
+									"font": "bold 15px Inter, Helvetica, Arial, sans-serif",
+									"offsetX": 0,
+									"offsetY": -30,
+									"textAlign": "center",
+									"textBaseline": "middle"
+								}
+							}
+						}
+					},
+					{
+						"type": "markers",
+						"name": "Héros en route",
+						"tooltip": true,
+						"filterData": {
+							"id": "byRefId",
+							"options": "heroes"
+						},
+						"location": {
+							"mode": "coords",
+							"latitude": "latitude",
+							"longitude": "longitude"
+						},
+						"config": {
+							"showLegend": false,
+							"style": {
+								"color": {
+									"fixed": "#E5322D"
+								},
+								"opacity": 0.95,
+								"size": {
+									"fixed": 7,
+									"min": 2,
+									"max": 15
+								},
+								"symbol": {
+									"mode": "fixed",
+									"fixed": "img/icons/marker/circle.svg"
+								},
+								"symbolAlign": {
+									"horizontal": "center",
+									"vertical": "center"
+								},
+								"rotation": {
+									"fixed": 0,
+									"mode": "mod",
+									"min": -360,
+									"max": 360
+								},
+								"textConfig": {
+									"fontSize": 12,
+									"offsetX": 0,
+									"offsetY": 0,
+									"textAlign": "center",
+									"textBaseline": "middle"
+								}
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"id": 20,
+			"type": "timeseries",
+			"title": "Départs",
+			"description": "Sélectionnez un moment à la souris pour y emmener la carte.",
+			"gridPos": {
+				"h": 8,
+				"w": 16,
+				"x": 0,
+				"y": 34
+			},
+			"datasource": {
+				"type": "mysql",
+				"uid": "kKJCQf44z"
+			},
+			"interval": "5m",
+			"maxDataPoints": 90,
+			"targets": [
+				{
+					"refId": "activity",
+					"datasource": {
+						"type": "mysql",
+						"uid": "kKJCQf44z"
+					},
+					"editorMode": "code",
+					"format": "time_series",
+					"rawQuery": true,
+					"rawSql": "SELECT $__unixEpochGroupAlias(date, $__interval), COUNT(*) AS \"Départs\"\nFROM players_travels WHERE $__unixEpochFilter(date)\nGROUP BY 1 ORDER BY 1"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"color": {
+						"mode": "fixed",
+						"fixedColor": "#F2B33D"
+					},
+					"custom": {
+						"drawStyle": "bars",
+						"fillOpacity": 70,
+						"lineWidth": 0,
+						"barAlignment": 0,
+						"showPoints": "never"
+					}
+				},
+				"overrides": []
+			},
+			"options": {
+				"legend": {
+					"showLegend": false,
+					"displayMode": "list",
+					"placement": "bottom",
+					"calcs": []
+				},
+				"tooltip": {
+					"mode": "single",
+					"sort": "none"
+				}
+			}
+		},
+		{
+			"id": 21,
+			"type": "table",
+			"title": "Routes les plus empruntées",
+			"gridPos": {
+				"h": 8,
+				"w": 8,
+				"x": 16,
+				"y": 34
+			},
+			"datasource": {
+				"type": "mysql",
+				"uid": "kKJCQf44z"
+			},
+			"targets": [
+				{
+					"refId": "roads",
+					"datasource": {
+						"type": "mysql",
+						"uid": "kKJCQf44z"
+					},
+					"editorMode": "code",
+					"format": "table",
+					"rawQuery": true,
+					"rawSql": "WITH places(id, x, y, name) AS (VALUES\n\t\t(1, 1040, 433, 'Plage Sentinelle'),\n\t\t(2, 2384, 888, 'Voie champêtre'),\n\t\t(3, 2960, 636, 'Le Berceau'),\n\t\t(4, 2588, 1352, 'Forêt Du Vieillard'),\n\t\t(5, 2040, 1736, 'Chemin du Dédale'),\n\t\t(6, 1146, 2049, 'Boug-Coton'),\n\t\t(7, 1410, 4694, 'Vallée des Rois'),\n\t\t(8, 3114, 1891, 'Croisement des Destins'),\n\t\t(9, 3715, 961, 'Grande Rue'),\n\t\t(10, 3684, 1432, 'Ville Forte'),\n\t\t(11, 4195, 589, 'Grand Axe'),\n\t\t(12, 4876, 891, 'L''Étendue'),\n\t\t(13, 5650, 558, 'Route Marécageuse'),\n\t\t(14, 5394, 2526, 'Lac Mirage'),\n\t\t(15, 3784, 2410, 'Mont Célestrum'),\n\t\t(16, 4768, 3338, 'Chemin aux Loups'),\n\t\t(17, 4457, 4252, 'Village Coco'),\n\t\t(18, 5341, 3823, 'Rivière Vacarme'),\n\t\t(19, 6001, 4659, 'La Dune'),\n\t\t(21, 7472, 3490, 'Route des Merveilles'),\n\t\t(22, 6945, 3167, 'Bois Hurlant'),\n\t\t(23, 7605, 2056, 'Claire de Ville'),\n\t\t(24, 7619, 1384, 'Route Grimpante'),\n\t\t(25, 6467, 852, 'Rivière aux Crabes'),\n\t\t(26, 1412, 876, 'Mergagnan'),\n\t\t(27, 3441, 3367, 'Forêt Célestrum'),\n\t\t(28, 879, 3446, 'Portes du château'),\n\t\t(29, 879, 3446, 'Salle de réception'),\n\t\t(32, 879, 3446, 'Route vers le château du Roi'),\n\t\t(41, 879, 3446, 'Cour du Château')\n\t),\n\tmids(a, b, x, y) AS (VALUES\n\t\t(1, 26, 1069, 641),\n\t\t(2, 3, 2524, 808),\n\t\t(2, 26, 1884, 1068),\n\t\t(3, 4, 2904, 1201),\n\t\t(3, 9, 3404, 898),\n\t\t(4, 5, 2337, 1658),\n\t\t(5, 6, 1764, 1968),\n\t\t(6, 7, 2229, 3253),\n\t\t(6, 26, 1414, 1598),\n\t\t(7, 8, 2384, 3648),\n\t\t(7, 17, 3134, 4518),\n\t\t(7, 19, 3734, 5438),\n\t\t(8, 10, 3197, 1758),\n\t\t(8, 15, 3217, 2298),\n\t\t(9, 10, 4077, 1268),\n\t\t(9, 11, 3867, 848),\n\t\t(11, 12, 4698, 768),\n\t\t(12, 13, 4968, 768),\n\t\t(12, 14, 5148, 1808),\n\t\t(12, 15, 4388, 1808),\n\t\t(13, 25, 6068, 738),\n\t\t(14, 16, 4818, 3068),\n\t\t(14, 22, 6338, 2808),\n\t\t(14, 25, 5494, 1368),\n\t\t(15, 16, 4339, 3054),\n\t\t(15, 27, 3477, 3168),\n\t\t(16, 17, 4538, 3738),\n\t\t(17, 18, 4867, 4078),\n\t\t(17, 27, 3817, 3938),\n\t\t(18, 19, 5695, 4537),\n\t\t(18, 22, 6148, 3798),\n\t\t(19, 21, 6828, 4248),\n\t\t(21, 23, 8018, 2908),\n\t\t(22, 23, 7288, 2758),\n\t\t(22, 24, 6888, 2548),\n\t\t(23, 24, 7818, 1708),\n\t\t(24, 25, 6888, 1538)\n\t),\n\ttrips(s, e, minutes) AS (VALUES\n\t\t(1, 26, 60),\n\t\t(2, 3, 120),\n\t\t(2, 26, 120),\n\t\t(3, 2, 120),\n\t\t(3, 4, 240),\n\t\t(3, 9, 180),\n\t\t(4, 3, 240),\n\t\t(4, 5, 180),\n\t\t(5, 4, 180),\n\t\t(5, 6, 180),\n\t\t(6, 5, 180),\n\t\t(6, 7, 420),\n\t\t(6, 26, 300),\n\t\t(6, 41, 120),\n\t\t(7, 6, 420),\n\t\t(7, 8, 480),\n\t\t(7, 17, 540),\n\t\t(7, 19, 600),\n\t\t(7, 41, 540),\n\t\t(8, 7, 480),\n\t\t(8, 10, 120),\n\t\t(8, 15, 420),\n\t\t(9, 3, 180),\n\t\t(9, 10, 60),\n\t\t(9, 11, 180),\n\t\t(10, 8, 120),\n\t\t(10, 9, 60),\n\t\t(11, 9, 180),\n\t\t(11, 12, 180),\n\t\t(12, 11, 180),\n\t\t(12, 13, 240),\n\t\t(12, 14, 360),\n\t\t(12, 15, 600),\n\t\t(13, 12, 240),\n\t\t(13, 25, 180),\n\t\t(14, 12, 360),\n\t\t(14, 16, 180),\n\t\t(14, 22, 180),\n\t\t(14, 25, 300),\n\t\t(15, 8, 360),\n\t\t(15, 12, 480),\n\t\t(15, 16, 480),\n\t\t(15, 27, 300),\n\t\t(16, 14, 180),\n\t\t(16, 15, 540),\n\t\t(16, 17, 180),\n\t\t(17, 7, 540),\n\t\t(17, 16, 180),\n\t\t(17, 18, 120),\n\t\t(17, 27, 300),\n\t\t(18, 17, 120),\n\t\t(18, 19, 60),\n\t\t(18, 22, 240),\n\t\t(19, 7, 600),\n\t\t(19, 18, 60),\n\t\t(19, 21, 180),\n\t\t(21, 19, 180),\n\t\t(21, 23, 240),\n\t\t(22, 14, 180),\n\t\t(22, 18, 240),\n\t\t(22, 23, 240),\n\t\t(22, 24, 240),\n\t\t(23, 21, 240),\n\t\t(23, 22, 240),\n\t\t(23, 24, 60),\n\t\t(24, 22, 240),\n\t\t(24, 23, 60),\n\t\t(24, 25, 240),\n\t\t(25, 13, 180),\n\t\t(25, 14, 300),\n\t\t(25, 24, 300),\n\t\t(26, 1, 60),\n\t\t(26, 2, 120),\n\t\t(26, 6, 300),\n\t\t(27, 15, 360),\n\t\t(27, 17, 300),\n\t\t(41, 6, 120),\n\t\t(41, 7, 540)\n\t)\nSELECT CONCAT(p1.name, ' ↔ ', p2.name) AS \"Route\", COUNT(*) AS \"Passages\"\nFROM players_travels t JOIN map_links l ON l.id = t.mapLinkId\nJOIN places p1 ON p1.id = LEAST(l.start, l.end) JOIN places p2 ON p2.id = GREATEST(l.start, l.end)\nWHERE $__unixEpochFilter(t.date) AND l.start <> l.end\nGROUP BY p1.name, p2.name ORDER BY 2 DESC LIMIT 12"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"custom": {
+						"align": "auto",
+						"cellOptions": {
+							"type": "auto"
+						}
+					}
+				},
+				"overrides": [
+					{
+						"matcher": {
+							"id": "byName",
+							"options": "Passages"
+						},
+						"properties": [
+							{
+								"id": "custom.cellOptions",
+								"value": {
+									"type": "gauge",
+									"mode": "basic",
+									"valueDisplayMode": "text"
+								}
+							},
+							{
+								"id": "color",
+								"value": {
+									"mode": "continuous-YlRd"
+								}
+							},
+							{
+								"id": "custom.width",
+								"value": 150
+							}
+						]
+					}
+				]
+			},
+			"options": {
+				"showHeader": true,
+				"cellHeight": "sm",
+				"footer": {
+					"show": false
+				}
+			}
+		}
+	],
+	"templating": {
+		"list": []
+	},
+	"annotations": {
+		"list": []
+	}
+}
