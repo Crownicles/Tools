@@ -1,12 +1,10 @@
 # Le royaume en direct
 
-Génère le tableau de bord Grafana « 🗺️ Le royaume en direct » (dossier 👤 Joueurs, uid `royaume-en-direct`) : tous les héros du royaume sur la vraie carte du jeu, à l'instant de la fin de la période choisie.
+Génère le tableau de bord Grafana « 🗺️ Le royaume en direct » (dossier 👤 Joueurs, uid `royaume-en-direct`) : tous les héros du continent principal sur la vraie carte du jeu, à l'instant de la fin de la période choisie. Les îles et la maison hantée, qui ont leurs propres cartes, ne sont pas affichées.
 
 - **Héros en route** : un point rouge par héros qui marche, placé le long de sa route selon le temps écoulé depuis son départ et la durée du trajet. Le survol donne son lieu de départ, sa destination, sa progression et son heure d'arrivée prévue.
 - **Lieux** : une bulle par lieu, qui grossit avec le nombre de héros arrivés et pas encore repartis.
 - **Routes** : les routes empruntées pendant la période, plus épaisses et plus rouges avec les passages.
-- **Au large** : sous le continent, les trois îles mystérieuses posées sur la mer. Une bulle compte les héros de chaque île, une autre ceux qui rentrent en bateau.
-- **Maison hantée** : compteur seul, la maison n'a pas encore de carte.
 
 Seuls les héros partis dans les 24 heures précédant la fin de la période sont affichés. Les autres sont considérés comme endormis.
 
@@ -34,6 +32,6 @@ Le dépôt Crownicles est cherché à côté de Tools, ou dans `CROWNICLES_REPO`
 
 Geomap ne sait afficher qu'un fond en tuiles. La carte `../Ressources/map_fr.jpg` (8192 × 5488) est donc placée en haut d'un faux monde Web Mercator carré de 8192 px, qui correspond au zoom 5. Un pixel de la carte se convertit ainsi exactement en latitude et longitude.
 
-Grafana garde la vue à l'intérieur de ce monde carré. Pour qu'il n'y ait jamais de zone vide sous le continent quand on dézoome ou qu'on se déplace, l'espace restant est peint en mer, et les cartes des îles y sont posées. Le niveau de zoom minimal n'est volontairement pas réglé : Grafana 13.0.2 l'applique comme zoom maximal, ce qui empêchait de zoomer à nouveau.
+Grafana garde la vue à l'intérieur de ce monde carré. Pour qu'il n'y ait jamais de zone vide sous le continent quand on dézoome ou qu'on se déplace, l'espace restant est peint en mer. Le niveau de zoom minimal n'est volontairement pas réglé : Grafana 13.0.2 l'applique comme zoom maximal, ce qui empêchait de zoomer à nouveau.
 
-Les tuiles WebP sont servies par le site, dans `Website/public/ressources/kingdom/tiles/{z}/{x}/{y}.webp`. Il faut les régénérer et les republier si une carte change. Les noms des îles utilisent la police Luminari de macOS.
+Les tuiles WebP sont servies par le site, dans `Website/public/ressources/kingdom/tiles/{z}/{x}/{y}.webp`. Il faut les régénérer et les republier si la carte change.
