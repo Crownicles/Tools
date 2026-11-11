@@ -22,7 +22,9 @@ TOOLS = os.path.normpath(os.path.join(HERE, "..", ".."))
 GAME = os.environ.get("CROWNICLES_REPO", os.path.normpath(os.path.join(TOOLS, "..", "Crownicles")))
 
 MAP_COORDS = os.path.join(TOOLS, "generators", "map-builder", "mapCoords", "main_continent.json")
-MAP_IMAGE = os.path.join(TOOLS, "generators", "Ressources", "map_fr.jpg")
+RESSOURCES = os.path.join(TOOLS, "generators", "Ressources")
+MAP_IMAGE = os.path.join(RESSOURCES, "map_fr.jpg")
+LABEL_FONT = "/System/Library/Fonts/Supplemental/Luminari.ttf"
 TILES_URL = "https://crownicles.com/public/ressources/kingdom/tiles/{z}/{x}/{y}.webp"
 
 DASHBOARD_UID = "royaume-en-direct"
@@ -34,6 +36,8 @@ NATIVE_ZOOM = 5
 WORLD = TILE_SIZE * 2 ** NATIVE_ZOOM
 # The marker of the cursor maps is pasted by its top-left corner: its tip is what points at the place.
 MARKER_TIP = (140, 484)
+# Height, in map pixels, over which the bottom of the continent melts into the sea.
+BOTTOM_FADE = 260
 # Heroes whose last departure is older than this are considered asleep and leave the map.
 ACTIVE_WINDOW = 24 * 3600
 # The reception room sends new heroes straight to their first destination, without a road on the map.
@@ -43,9 +47,26 @@ CASTLE_IDS = {28, 29, 32, 41}
 # Centred on the road network rather than fitted to the data: a fitted view would jump back at every refresh.
 VIEW_CENTER = (4300, 2570)
 VIEW_ZOOM = 2.85
+# No minZoom: Grafana 13.0.2 applies it as the maximum zoom, which locks the view out of zooming back in.
+# noRepeat already stops the zoom out where the map fills the panel. One level past the tiles stays sharp.
+MAX_ZOOM = NATIVE_ZOOM + 1
 
 HERO_COLOR = "#E5322D"
 PLACE_COLOR = "#FFF4D6"
+
+# The Mercator world is square and Grafana keeps the view inside it: below the continent lies the open sea,
+# with the islands laid on it like the cards of the trailer. Their bubbles count the heroes on each island.
+SEA_TOP = (86, 102, 106)
+SEA_BOTTOM = (40, 50, 54)
+CARD_WIDTH = 2300
+OFFSHORE = [
+	{"spot": 1, "name": "Île volcanique", "image": "volcano_island_fr.jpg", "ids": (1000, 1099), "center": (1365, 6930), "tilt": -2.5},
+	{"spot": 2, "name": "Île de glace", "image": "ice_island_exterior_fr.jpg", "ids": (1100, 1199), "center": (4096, 6930), "tilt": 1.0},
+	{"spot": 3, "name": "Île océanique", "image": "oceanic_exterior_fr.jpg", "ids": (1200, 1299), "center": (6827, 6930), "tilt": 2.5},
+]
+# Heroes sailing from the boat that leaves an island back to the continent.
+BOAT_EXIT = 1999
+AT_SEA = {"spot": 4, "name": "En mer, vers le continent", "center": (4096, 5790)}
 
 
 def load_map():
@@ -179,6 +200,36 @@ SELECT CONCAT('Héros n°', playerId) AS "Héros", from_name AS "Parti de", to_n
 FROM positions ORDER BY progress DESC"""
 
 
+def card_size(island):
+	from PIL import Image
+	width, height = Image.open(os.path.join(RESSOURCES, island["image"])).size
+	return CARD_WIDTH, round(CARD_WIDTH * height / width)
+
+
+def card_top(island):
+	"""Top middle of a tilted card, where its bubble sits."""
+	_, height = card_size(island)
+	angle = math.radians(island["tilt"])
+	x, y = island["center"]
+	return x - height / 2 * math.sin(angle), y - height / 2 * math.cos(angle) + 70
+
+
+def offshore_spots():
+	spots = [(i["spot"], *card_top(i), i["name"]) for i in OFFSHORE]
+	spots.append((AT_SEA["spot"], *AT_SEA["center"], AT_SEA["name"]))
+	return ",\n\t\t".join(f"({spot}, {x:.0f}, {y:.0f}, {sql_text(name)})" for spot, x, y, name in spots)
+
+
+def offshore_case():
+	cases = "\n\t\t\t".join(
+		f"WHEN l.start BETWEEN {a} AND {b} OR l.end BETWEEN {a} AND {b} THEN {i['spot']}" for i in OFFSHORE for a, b in [i["ids"]]
+	)
+	return f"""CASE
+			{cases}
+			WHEN l.start = {BOAT_EXIT} THEN {AT_SEA['spot']}
+		END"""
+
+
 def query_places(base):
 	return f"""WITH {base},
 	{last_departures()},
@@ -189,9 +240,21 @@ def query_places(base):
 		JOIN trips t ON t.s = l.start AND t.e = l.end
 		WHERE d.date + t.minutes * 60 <= $__unixEpochTo()
 		GROUP BY l.end
+	),
+	spots(id, x, y, name) AS (VALUES
+		{offshore_spots()}
+	),
+	offshore AS (
+		SELECT {offshore_case()} AS spot, COUNT(*) AS heroes
+		FROM last_departures d JOIN map_links l ON l.id = d.mapLinkId
+		GROUP BY 1
 	)
 SELECT p.name AS "Lieu", a.heroes AS "Héros présents", {lat_sql('p.y')} AS latitude, {lon_sql('p.x')} AS longitude
-FROM arrived a JOIN places p ON p.id = a.place ORDER BY a.heroes DESC"""
+FROM arrived a JOIN places p ON p.id = a.place
+UNION ALL
+SELECT s.name, o.heroes, {lat_sql('s.y')}, {lon_sql('s.x')}
+FROM offshore o JOIN spots s ON s.id = o.spot
+ORDER BY 2 DESC"""
 
 
 def query_counts(base):
@@ -275,7 +338,7 @@ def map_panel(places, midpoints, roads, base):
 			]
 		},
 		"options": {
-			"view": {"id": "coords", "lat": round(lat(VIEW_CENTER[1]), 4), "lon": round(lon(VIEW_CENTER[0]), 4), "zoom": VIEW_ZOOM, "minZoom": 1, "maxZoom": 7, "allLayers": True, "noRepeat": True},
+			"view": {"id": "coords", "lat": round(lat(VIEW_CENTER[1]), 4), "lon": round(lon(VIEW_CENTER[0]), 4), "zoom": VIEW_ZOOM, "maxZoom": MAX_ZOOM, "allLayers": True, "noRepeat": True},
 			"controls": {"showZoom": True, "mouseWheelZoom": True, "showAttribution": False, "showScale": False, "showMeasure": False, "showDebug": False},
 			"tooltip": {"mode": "details"},
 			"basemap": {
@@ -334,7 +397,7 @@ def build():
 	descriptions = {
 		"En route": "Héros actifs ces dernières 24 h qui marchent vers leur prochain lieu, à la fin de la période choisie.",
 		"Au repos": "Héros actifs ces dernières 24 h arrivés à destination, qui attendent leur prochain départ.",
-		"Au large": "Héros partis vers les îles mystérieuses ou en train de les explorer.",
+		"Au large": "Héros partis vers les îles mystérieuses, en train de les explorer ou sur le bateau du retour. Leurs bulles sont sous le continent.",
 		"Maison hantée": "Héros sur le sentier brumeux ou dans la maison hantée."
 	}
 	panels = [
@@ -374,27 +437,82 @@ def build():
 	}
 
 
+def sea(size):
+	from PIL import Image, ImageChops, ImageFilter
+	gradient = Image.new("RGB", (1, size))
+	for y in range(size):
+		k = max(0.0, (y - 5000) / (size - 5000))
+		gradient.putpixel((0, y), tuple(round(a + (b - a) * k) for a, b in zip(SEA_TOP, SEA_BOTTOM)))
+	water = gradient.resize((size, size))
+	# A soft mottling, so the open sea reads as painted water rather than a flat fill.
+	mottling = Image.effect_noise((40, 40), 60).resize((size // 8, size // 8), Image.BICUBIC).filter(ImageFilter.GaussianBlur(14))
+	mottling = mottling.resize((size, size), Image.BICUBIC).point(lambda v: 128 + round((v - 128) * 0.35))
+	return ImageChops.add(water, Image.merge("RGB", [mottling] * 3), 1, -128)
+
+
+def lay_card(world, island):
+	from PIL import Image, ImageDraw, ImageFilter
+	width, height = card_size(island)
+	radius, margin, border = 70, 220, 14
+	card = Image.open(os.path.join(RESSOURCES, island["image"])).convert("RGB").resize((width, height), Image.LANCZOS)
+	layer = Image.new("RGBA", (width + 2 * margin, height + 2 * margin), (0, 0, 0, 0))
+	shadow = ImageDraw.Draw(layer)
+	shadow.rounded_rectangle((margin, margin + 45, margin + width, margin + height + 45), radius, fill=(0, 0, 0, 150))
+	layer = layer.filter(ImageFilter.GaussianBlur(55))
+	mask = Image.new("L", (width, height), 0)
+	ImageDraw.Draw(mask).rounded_rectangle((0, 0, width - 1, height - 1), radius, fill=255)
+	layer.paste(card, (margin, margin), mask)
+	ImageDraw.Draw(layer).rounded_rectangle((margin, margin, margin + width - 1, margin + height - 1), radius, outline=(246, 236, 214, 255), width=border)
+	layer = layer.rotate(island["tilt"], resample=Image.BICUBIC)
+	x, y = island["center"]
+	world.paste(layer, (round(x - layer.width / 2), round(y - layer.height / 2)), layer)
+
+
+def write_label(world, text, center):
+	from PIL import Image, ImageDraw, ImageFilter, ImageFont
+	try:
+		font = ImageFont.truetype(LABEL_FONT, 165)
+	except OSError:
+		font = ImageFont.load_default(165)
+	glow = Image.new("L", world.size, 0)
+	ImageDraw.Draw(glow).text(center, text, font=font, anchor="mm", fill=200, stroke_width=10, stroke_fill=200)
+	box = glow.getbbox()
+	halo = glow.crop(box).filter(ImageFilter.GaussianBlur(18))
+	world.paste((20, 26, 28), box, halo)
+	ImageDraw.Draw(world).text(center, text, font=font, anchor="mm", fill=(246, 236, 214))
+
+
+def compose_world():
+	from PIL import Image, ImageDraw
+	Image.MAX_IMAGE_PIXELS = None
+	continent = Image.open(MAP_IMAGE).convert("RGB")
+	width, height = continent.size
+	assert width == WORLD, f"the map must be {WORLD} px wide to be zoom {NATIVE_ZOOM}"
+	world = sea(WORLD)
+	fade = Image.new("L", continent.size, 255)
+	draw = ImageDraw.Draw(fade)
+	for row in range(BOTTOM_FADE):
+		draw.line([(0, height - 1 - row), (width, height - 1 - row)], fill=round(255 * (row / BOTTOM_FADE) ** 0.8))
+	world.paste(continent, (0, 0), fade)
+	for island in OFFSHORE:
+		lay_card(world, island)
+		_, card_height = card_size(island)
+		x, y = island["center"]
+		write_label(world, island["name"], (x, y + card_height / 2 + 190))
+	return world
+
+
 def cut_tiles(directory):
 	from PIL import Image
-	Image.MAX_IMAGE_PIXELS = None
-	source = Image.open(MAP_IMAGE).convert("RGB")
-	width, height = source.size
-	assert width == WORLD, f"the map must be {WORLD} px wide to be zoom {NATIVE_ZOOM}"
+	world = compose_world()
 	for zoom in range(NATIVE_ZOOM + 1):
-		factor = 2 ** (NATIVE_ZOOM - zoom)
-		w, h = math.ceil(width / factor), math.ceil(height / factor)
-		image = source if factor == 1 else source.resize((w, h), Image.LANCZOS)
-		for x in range(math.ceil(w / TILE_SIZE)):
-			for y in range(math.ceil(h / TILE_SIZE)):
-				crop = image.crop((x * TILE_SIZE, y * TILE_SIZE, min(w, (x + 1) * TILE_SIZE), min(h, (y + 1) * TILE_SIZE)))
+		size = TILE_SIZE * 2 ** zoom
+		image = world if size == WORLD else world.resize((size, size), Image.LANCZOS)
+		for x in range(size // TILE_SIZE):
+			for y in range(size // TILE_SIZE):
 				os.makedirs(os.path.join(directory, str(zoom), str(x)), exist_ok=True)
-				path = os.path.join(directory, str(zoom), str(x), f"{y}.webp")
-				if crop.size == (TILE_SIZE, TILE_SIZE):
-					crop.save(path, "WEBP", quality=78, method=6)
-				else:
-					tile = Image.new("RGBA", (TILE_SIZE, TILE_SIZE), (0, 0, 0, 0))
-					tile.paste(crop, (0, 0))
-					tile.save(path, "WEBP", quality=78, method=6)
+				tile = image.crop((x * TILE_SIZE, y * TILE_SIZE, (x + 1) * TILE_SIZE, (y + 1) * TILE_SIZE))
+				tile.save(os.path.join(directory, str(zoom), str(x), f"{y}.webp"), "WEBP", quality=78, method=6)
 
 
 def deploy(dashboard):
