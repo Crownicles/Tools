@@ -1,0 +1,16 @@
+{
+  "name": "crownicles-fight-help-image",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "generate": "node src/cli.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@twemoji/svg": "15.0.0",
+    "playwright": "1.65.0"
+  }
+}
