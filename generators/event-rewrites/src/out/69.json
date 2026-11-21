@@ -1,7 +1,7 @@
 {
   "eventId": "69",
   "model": "gpt-6-luna",
-  "text": "Dans la Forêt Du Vieillard, une femme en robe argentée accourt vers vous entre les arbres. Avec ses cheveux clairs et son bâton d'aubépine, on la croirait sortie d'un conte. Elle dit s'appeler Donia et être une fée, et propose de vous bénir pour vous porter chance dans votre quête de la princesse.",
+  "text": "Dans la Forêt Du Vieillard, une femme accourt vers vous entre les arbres. Ses longs cheveux ont la couleur de l'écume, sa robe d'argent brille de petits saphirs et elle tient un bâton d'aubépine. Elle dit s'appeler Donia et être une fée, et propose de vous bénir pour votre quête de la princesse. Vous n'y croyez qu'à moitié, mais son bâton a l'air solide : mieux vaut ne pas la vexer.",
   "possibilities": {
     "accept": {
       "text": "Accepter son offre.",
@@ -231,6 +231,7 @@
     "Les effets de sommeil, de maladie et de blessure sont associés à leurs signes dans le texte ; la perte de temps de l'issue silencieuse est conservée.",
     "L'adoubement et la bénédiction certaine sont retirés pour respecter l'échelle humaine et le merveilleux ambigu du lore.",
     "Relecture : libellés terminés par un point ; vocabulaire simplifié (« geste de chance », « fixité », « fend les sous-bois » retirés) ; issues confuses réécrites en phrases courtes (accept 1 et 4, compromis 1 et 4, refus 3 et 4, sans allusions à des éléments non introduits) ; conséquences légères ajoutées aux issues qui n'en avaient pas (temps perdu pour accept 0, 1, 3, compromis 4, refus 3, 4 et end 2, vie +10 pour le repas du compromis 3, -5 pour la paume meurtrie du refus 2) ; conditions montrées plus clairement (karma reconnu, réflexe de la vitesse).",
-    "Seuils (barème des joueurs réguliers) : les naïfs qui se font avoir (accept 1, refus 1) passent au niveau max 30 (débutant) ; les réflexes et la vigilance relèvent de « correct » : vitesse min 350 au lieu de 250 (compromis 2, refus 3, end 2), défense min 520 au lieu de 250 (compromis 3), attaque min 600 au lieu de 300 (refus 2) ; aucun texte ne parle de joueur fort, donc pas de seuil « fort » ni de mot à changer ; conditions de karma, de familier et de classe inchangées."
+    "Seuils (barème des joueurs réguliers) : les naïfs qui se font avoir (accept 1, refus 1) passent au niveau max 30 (débutant) ; les réflexes et la vigilance relèvent de « correct » : vitesse min 350 au lieu de 250 (compromis 2, refus 3, end 2), défense min 520 au lieu de 250 (compromis 3), attaque min 600 au lieu de 300 (refus 2) ; aucun texte ne parle de joueur fort, donc pas de seuil « fort » ni de mot à changer ; conditions de karma, de familier et de classe inchangées.",
+    "Intro : rallongée après relecture pour garder ce que l'original posait et que les choix utilisent."
   ]
 }

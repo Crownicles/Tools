@@ -34,7 +34,7 @@ def check_text(path, text, ref="", kind="outcome"):
     if text.count("!") > 1: warnings.append(f"{path}: more than one !")
     if re.search(r"\b(Votre|Vos) (agilité|réputation|aura|force|vitesse|niveau|karma|expérience)\b", text): warnings.append(f"{path}: names the condition instead of showing it")
     if kind == "intro" and text.rstrip().endswith(("...", "…")): errors.append(f"{path}: intro ends with ellipsis")
-    lo, hi = {"intro": (180, 360), "choice": (8, 90), "outcome": (90, 300)}[kind]
+    lo, hi = {"intro": (180, 420), "choice": (8, 90), "outcome": (90, 300)}[kind]
     if not lo <= len(text) <= hi: warnings.append(f"{path}: {len(text)} chars (target {lo}-{hi})")
 
 

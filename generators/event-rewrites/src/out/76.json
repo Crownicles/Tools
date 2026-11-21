@@ -1,7 +1,7 @@
 {
   "eventId": "76",
   "model": "gpt-6.2-astra",
-  "text": "Depuis des heures, vous longez une rivière dans la Forêt Célestrum, au pied du mont. Un cri sort d'une maison en ruine. Vous frappez. Un vieil homme aux yeux hagards vous ouvre. Il s'appelle Parziter, parle trop vite et vous demande si vous aussi, vous sentez le sol trembler.",
+  "text": "Après des heures de marche dans la Forêt Célestrum, vous trouvez une maison en ruine au bord d'une rivière. Un cri en sort. Vous frappez à la porte vermoulue, et un vieil homme vous ouvre, les yeux hagards et les cheveux en bataille. Il s'appelle Parziter. Il parle trop vite et mélange tout, mais vous comprenez qu'il a besoin d'aide, et il vous demande si vous aussi, vous sentez le sol trembler.",
   "possibilities": {
     "help": {
       "text": "Proposer votre aide.",
@@ -253,6 +253,7 @@
     "Les réactions varient avec les gestes du joueur, ce que les voyageurs racontent de lui et le familier qui l'accompagne. Un mage peut notamment apaiser la vibration de la pierre.",
     "L'heure de recherche de Minou et la demi-heure de questions ont leur durée en jeu ; rendre un bien ou le subtiliser influe sur le karma.",
     "Relecture : phrases cryptiques réécrites pour se comprendre à la première lecture (sol qui tremble, bête de la cave, rues qui se fendent, tapis et planches, vision au mur) ; mots rares ou ambigus remplacés (éprouver, escamoter, cabinet, secrétaire, dépanner, chambranle, appui de fenêtre) ; scènes peu crédibles simplifiées (livre offert puis gardé, Parziter coincé dehors alors qu'il ouvre la porte, tasse sortie de nulle part) ; cache de question 2 différenciée de celle de l'escalier ; libellé au vouvoiement. Données inchangées.",
-    "Seuils : niveau et statistiques recalés sur les joueurs réguliers. Fort : attaque 700 (tonneau soulevé seul), vitesse 500 (tasse rattrapée au vol). Correct : vitesse 350 (dessins rattrapés), défense 520 (tuiles sur le bouclier), niveau 120 (marches testées, cache retrouvée). Débutant : niveau 30 au plus (tiroirs fouillés sans permission, vision qui étourdit). Vie, familier, classe et karma inchangés."
+    "Seuils : niveau et statistiques recalés sur les joueurs réguliers. Fort : attaque 700 (tonneau soulevé seul), vitesse 500 (tasse rattrapée au vol). Correct : vitesse 350 (dessins rattrapés), défense 520 (tuiles sur le bouclier), niveau 120 (marches testées, cache retrouvée). Débutant : niveau 30 au plus (tiroirs fouillés sans permission, vision qui étourdit). Vie, familier, classe et karma inchangés.",
+    "Intro : rallongée après relecture pour garder ce que l'original posait et que les choix utilisent."
   ]
 }

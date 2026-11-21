@@ -2,6 +2,8 @@
 
 Tu réécris **un seul** big event du jeu Crownicles (RPG textuel sur Discord, en français). Le joueur peut revoir cet event des dizaines de fois, dans n'importe quel ordre.
 
+Toutes les règles de style, de lore et de seuils sont résumées dans le skill `write-event-texts` du dépôt Crownicles (`.github/skills/write-event-texts/SKILL.md`). Ce brief les détaille pour l'atelier.
+
 ## Fichiers
 
 - **Ton event** : `input/<id>.json`. Il contient :
@@ -33,7 +35,7 @@ Ne modifie **aucun** autre fichier, et surtout pas le dépôt Crownicles.
 4. **Respecter le canon du lieu** : ne contredis pas la description, ne suppose comme proches que les voisins listés, et ne suppose pas la destination suivante du joueur. Dans une ville, ne nie pas ce que le menu propose (auberge du jeu, forgeron, boutiques), voir section 5 « Les villes : ce qu'un event peut en dire ».
 5. **Style** (section 14) :
    - **pas de discours direct** : ni guillemets « » ou " ", ni « dit-il », ni réplique entre apostrophes ; les paroles passent au style indirect ;
-   - introduction de 200 à 300 caractères (lieu, situation, accroche), sans points de suspension finaux ; issue de 150 à 280 caractères ; libellé de choix court (verbe à l'infinitif) ;
+   - introduction de 200 à 300 caractères (lieu, situation, accroche), jusqu'à 400 quand elle pose un personnage ou un enjeu que les choix utilisent ; jamais de points de suspension finaux ; issue de 150 à 280 caractères ; libellé de choix court (verbe à l'infinitif) ;
    - montrer la condition plutôt que la nommer ; registre sobre (pas de « héros de légende ») ; au plus un point d'exclamation par texte ;
    - typographie : apostrophe droite `'`, pas de tiret cadratin `—`, espace avant `: ; ! ?` ; on vouvoie le joueur ;
    - conserve tels quels les éventuels placeholders (`{{...}}`, `{emote:...}`, `$t(...)`).
@@ -113,4 +115,4 @@ Le relecteur a lu l'event 30 réécrit. Voici ce qui ne va pas, et la règle gé
 | *Conquis, le duc veut l'acheter ; vous refusez, et il vous paie le spectacle d'une poignée de pièces.* | Interaction peu crédible | **Les réactions des personnages doivent être plausibles** et s'enchaîner logiquement. Si une scène sert juste à justifier un gain, simplifie-la. |
 | *Les bras chargés de régimes* | Mot ambigu (« régimes » se lit d'abord comme une diète) | **Évite les mots à double sens qui font trébucher** (dis « bananes »). |
 | *puis vous fait reconduire sans que vous ayez vu le duc* | Le relecteur a buté sur la négation (la phrase est correcte, mais elle fait douter) | **Préfère une tournure qui ne fait pas hésiter** (*… et vous fait reconduire. Vous n'aurez pas vu le duc.*). |
-| *Le duc remarque vos cicatrices et votre équipement usé par les routes.* avec la condition `level: {min: 60}` | Niveau 60, c'est encore le début du jeu : le texte décrit un vétéran | **Une condition doit correspondre à ce que le texte raconte.** Un vétéran couvert de cicatrices, c'est un haut niveau. Les seuils seront recalés sur les données des joueurs actifs : en attendant, ne présente pas un niveau inférieur à 100 comme un vétéran. |
+| *Le duc remarque vos cicatrices et votre équipement usé par les routes.* avec la condition `level: {min: 60}` | Niveau 60, c'est encore le début du jeu : le texte décrit un vétéran | **Une condition doit correspondre à ce que le texte raconte.** Un vétéran couvert de cicatrices, c'est le premier dixième des joueurs réguliers (`level` `min` 130) : suis l'échelle de `reference.md`. |

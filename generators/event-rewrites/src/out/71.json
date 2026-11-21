@@ -1,7 +1,7 @@
 {
  "eventId": "71",
  "model": "gpt-6.2-sol",
- "text": "Entre les dunes de la Vallée des Rois, deux tombeaux à demi ensevelis dominent une petite oasis. Vous vous penchez pour boire à une rigole à moitié ensablée quand un rire vous fait sursauter. Un vieil homme barbu, le visage sous une large capuche, se présente : Xirtex. Il vous propose de vous héberger sous sa tente.",
+ "text": "Entre les dunes de la Vallée des Rois, deux tombeaux à demi ensevelis dominent une petite oasis. Assoiffé, vous vous penchez pour boire à une rigole à moitié ensablée quand un rire vous fait sursauter. Un vieil homme barbu, le visage sous une large capuche, se présente : Xirtex. Il vous propose de vous héberger sous sa tente, le temps de vous remettre et de lui raconter vos voyages.",
  "possibilities": {
   "accept": {
    "text": "Accepter son invitation",
@@ -298,6 +298,7 @@
   "Montre les conditions dans les gestes et les réactions : témoignages des voyageurs, ombre sur la toile, brassard, familiers et pierre résonante. Les coups, vols et gestes d'aide ont un effet sur le karma.",
   "Ajoute une possibilité d'entraide autour de la rigole, à l'échelle de l'oasis. Chaque branche garde au moins une issue sans condition.",
   "Relecture : mots rares ou ambigus remplacés (gîte, montant, écuelle, passe, vasque, somme, maugréer, carnet de bêtes), phrases alambiquées découpées (ponctuer chaque péripétie, sur la foi des gens de passage, bol pour chacun), scènes rendues plus crédibles (fouille du sac au lieu des nœuds de la tente, bouillon et croquis mieux amenés, bourse de noyaux claire), décor superflu retiré du refus poli ; aucune donnée modifiée, les conditions collant déjà aux textes.",
-  "Seuils : niveau et statistiques calés sur le barème des joueurs réguliers. Voyageur qui reconnaît le peyotl : vétéran, niveau 130 et plus (au lieu de 60), le texte le dit. Débutant qui suit de fausses traces ou trahit son vol par son ombre : niveau 30 et moins (au lieu de 25 et 30). Joueur encore faible à qui Xirtex fait la leçon : niveau 55 et moins (au lieu de 30). Coup qui assomme et dalle soulevée seul : joueur fort, attaque 700 (au lieu de 250 et 260). Brassard qui arrête les coups : défense correcte, 520 (au lieu de 220). Linge rattrapé de justesse : vitesse correcte, 350 (au lieu de 220). Karma, familiers et classe inchangés."
+  "Seuils : niveau et statistiques calés sur le barème des joueurs réguliers. Voyageur qui reconnaît le peyotl : vétéran, niveau 130 et plus (au lieu de 60), le texte le dit. Débutant qui suit de fausses traces ou trahit son vol par son ombre : niveau 30 et moins (au lieu de 25 et 30). Joueur encore faible à qui Xirtex fait la leçon : niveau 55 et moins (au lieu de 30). Coup qui assomme et dalle soulevée seul : joueur fort, attaque 700 (au lieu de 250 et 260). Brassard qui arrête les coups : défense correcte, 520 (au lieu de 220). Linge rattrapé de justesse : vitesse correcte, 350 (au lieu de 220). Karma, familiers et classe inchangés.",
+  "Intro : une demi-phrase rendue à l'original après relecture."
  ]
 }

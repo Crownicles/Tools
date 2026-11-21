@@ -1,7 +1,7 @@
 {
  "eventId": "46",
  "model": "claude-fable-5.2",
- "text": "À Boug-Coton, devant l'Auberge du Seigneur, le célèbre ménestrel Pérotin paie sa note en chansons. On dit qu'avec sa mandoline et ses poudres, il fait vivre ses chansons pour de bon à ceux qui l'écoutent. Il vous repère dans la foule et vous demande sur quel thème chanter.",
+ "text": "À Boug-Coton, devant l'Auberge du Seigneur, Pérotin, le ménestrel le plus célèbre du pays, paie sa note en chansons. On dit qu'avec sa mandoline et ses poudres, il fait vivre ses chansons pour de bon à ceux qui l'écoutent. Il vous repère dans la foule et vous demande sur quel thème chanter.",
  "possibilities": {
   "end": {
    "outcomes": {
@@ -461,6 +461,7 @@
   "Variance assumée comme trait de caractère (R3) : Pérotin flatte les ducs quand l'ardoise est longue et prêche la révolte le reste du temps. Karma ajouté seulement là où un geste du joueur le justifie (don au ménestrel, ardoise indûment encaissée, appel public à la révolte).",
   "Paires d'issues différenciées par une condition plutôt que par le hasard seul : end.2/end.3, singLove.2/singLove.5, singRoyalty.0/singRoyalty.3, singWork.2/singWork.6 (karma) ; chaque possibilité garde au moins une issue sans condition.",
   "Relecture : issues allégées (une action par phrase, décor réduit à l'action) ; mots rares ou ambigus remplacés (harnois, geste, fumigations, pugilat, masure, avise, se fendille, piqué, à jeun, marcher sur le trône) ; expressions fabriquées retirées (se porter garant de votre tête, l'orgueil plus léger, couvrir de pièces votre mâchoire, quand l'ardoise est longue) ; « jusqu'au matin » supprimé faute de temps perdu ; issue end.4 clarifiée (le joueur garde l'argent d'une dette qui n'est pas la sienne, d'où le karma) ; singHero.4 raconte des années de route, sa condition passe de niveau 50 à 100.",
-  "Seuils : conditions de niveau et de statistiques calées sur le barème des joueurs réguliers. Joueur correct reconnu du Concours au niveau 120 ; rares exploits pour un joueur encore faible (niveau 55 au plus) ; débutant mis au tambourin au niveau 30 au plus ; vétéran aux années de route au niveau 130 ; Pérotin rattrapé dans l'escalier par un joueur fort (vitesse 500) ; fuite par la fenêtre pour un joueur correct (vitesse 350) ; coup qui vous met à terre pour un joueur fort (attaque 700) ; poudres encaissées par un joueur fort (défense 740). Vie 50 au plus inchangée. Conditions de karma, de familier et de classe gardées telles quelles (issues rares voulues). Aucun texte à changer : chaque mot correspond déjà à sa catégorie."
+  "Seuils : conditions de niveau et de statistiques calées sur le barème des joueurs réguliers. Joueur correct reconnu du Concours au niveau 120 ; rares exploits pour un joueur encore faible (niveau 55 au plus) ; débutant mis au tambourin au niveau 30 au plus ; vétéran aux années de route au niveau 130 ; Pérotin rattrapé dans l'escalier par un joueur fort (vitesse 500) ; fuite par la fenêtre pour un joueur correct (vitesse 350) ; coup qui vous met à terre pour un joueur fort (attaque 700) ; poudres encaissées par un joueur fort (défense 740). Vie 50 au plus inchangée. Conditions de karma, de familier et de classe gardées telles quelles (issues rares voulues). Aucun texte à changer : chaque mot correspond déjà à sa catégorie.",
+  "Intro : une demi-phrase rendue à l'original après relecture."
  ]
 }

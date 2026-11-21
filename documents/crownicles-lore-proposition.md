@@ -1,4 +1,4 @@
-# Crownicles — Proposition de bible du lore (v0.2)
+# Crownicles — Proposition de bible du lore (v0.5)
 
 > Cette proposition part du lore existant (branche `develop`, commit `d23ffe883`, visualisable dans l'outil *Graphe du lore*). Il n'y a **pas de religion structurée**, seulement des références légères.
 >
@@ -9,6 +9,8 @@
 > **Ajouts de la v0.3.** La reprise de la branche du karma (`outcomerequirements`) dans la spécification (section 15.4) et un **plan de mise en œuvre par petits lots** (section 16), qui évite de réécrire tous les events.
 >
 > **Ajouts de la v0.4.** L'**annexe A, canon des lieux**, générée depuis `develop` : tout ce que le jeu dit déjà de chaque lieu. La géographie (section 5) est réalignée dessus et sépare ce qui est canon de ce que la proposition ajoute.
+>
+> **Ajouts de la v0.5.** Le guide de style (section 14) intègre les retours de relecture des events réécrits : vocabulaire simple, phrases courtes, décor limité à l'action, pas de montant, longueur d'introduction nuancée, et une échelle des seuils calée sur les joueurs réguliers en production. Ces règles sont aussi rassemblées dans le skill `write-event-texts` du dépôt Crownicles (`.github/skills/write-event-texts/SKILL.md`), à suivre pour tout texte d'event.
 
 ---
 
@@ -625,7 +627,12 @@ Comparer chaque event au lieu où il se déclenche (annexe A) fait ressortir ces
   - les Célestrins, avec des finales en *-um* et *-ine* (Célestrum, Neigeline) ;
   - les gens des routes, avec des surnoms (Gorim le Brise-Fer, Gaspard-Jo) ;
   - les débiteurs anonymes, avec un métier et un lieu (« le meunier de l'Étendue »).
-- **Longueurs cibles.** Une introduction fait 200 à 300 caractères : le lieu, la situation, l'accroche. Une issue fait 150 à 280 caractères. On garde un seul détail d'ambiance par texte.
+- **Longueurs cibles.** Une introduction fait 200 à 300 caractères : le lieu, la situation, l'accroche. Elle peut aller jusqu'à 400 quand elle pose ce que les choix utilisent (qui est le personnage, ce qu'il veut, ce qu'en pense le joueur) : couper ces éléments appauvrit l'event, comme pour Donia (event 69) et Parziter (event 76). Une issue fait 150 à 280 caractères. On garde un seul détail d'ambiance par texte.
+- **Mots simples et courants.** Pas de vocabulaire rare pour faire « médiéval » (pavoisé, poterne, échauguette, oriflamme) ni d'expression inventée (« vexé jusqu'à la moustache »). Pas de mot à double sens qui fait trébucher (« régimes » pour des bananes).
+- **Phrases courtes, une action par phrase**, pronoms sans ambiguïté. On relit à voix haute : si on bute, on réécrit. On évite les tournures qui font hésiter (« sans que vous ayez vu »).
+- **Dans une issue, le décor se limite à ce qui sert l'action.** Les réactions des personnages restent plausibles : si une scène ne sert qu'à justifier un gain, on la simplifie.
+- **Pas de montant dans le texte** (le jeu affiche les pièces, la vie et le temps perdu) et **pas de morale finale**.
+- **Le mot suit le seuil.** Un « vétéran », un joueur « fort », c'est le premier dixième des joueurs réguliers, pas un niveau 60. L'échelle des seuils est dans le skill `write-event-texts`.
 - **Montrer la condition, ne pas la nommer.** Au lieu de « Votre agilité vous permet d'éviter l'animal », écrire « Vous enjambez les poutres effondrées avant que le chien n'ait fait trois pas ». Pas de « votre aura », pas de « votre réputation » en ouverture.
 - **Registre sobre.** Pas de « héros de légende », de « gratitude éternelle » ni de « noble quête ». Un point d'exclamation au plus par texte, et pas de points de suspension en fin d'introduction.
 - **Pas de discours direct** (règle du dépôt, `.github/instructions/Draphtv1.instructions.md`) : ni guillemets, ni « dit-il », ni réplique entre apostrophes. Les paroles passent au style indirect (« Elle vous déconseille le sentier principal »). Les répliques citées entre guillemets dans ce document sont des notes de conception, pas des textes à reprendre tels quels.
@@ -639,6 +646,8 @@ Comparer chaque event au lieu où il se déclenche (annexe A) fait ressortir ces
 5. Peut-il lire une donnée du jeu plutôt qu'un fait figé ? (R6)
 6. Touche-t-il un personnage ou un lieu nommé existant ?
 7. Respecte-t-il le canon du lieu où il se déclenche (annexe A) ? Il faut vérifier la description, les seuls voisins qu'on peut supposer proches, et l'auberge et les boutiques de la ville, qui ne doivent pas être démenties par le menu affiché juste après. L'event ne doit pas non plus supposer la destination suivante.
+8. Se lit-il sans buter, avec des mots simples, sans décor inutile ni réaction invraisemblable ?
+9. Chaque seuil correspond-il au mot du texte, selon l'échelle des joueurs réguliers ?
 
 ---
 
