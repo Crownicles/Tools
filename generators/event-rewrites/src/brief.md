@@ -99,3 +99,18 @@ Ces paires viennent des events 1, 12, 18 et 19, déjà réécrits. Elles montren
 - expliquer la mécanique (*Votre agilité vous permet de…*, *Votre réputation…*) au lieu de la montrer ;
 - le registre gonflé (*héros de légende*, *gratitude éternelle*) ;
 - le discours direct, même court.
+
+## Retours de relecture (event 30) : à appliquer à tous les events
+
+Le relecteur a lu l'event 30 réécrit. Voici ce qui ne va pas, et la règle générale qu'on en tire. Chaque réécriture doit être relue avec ces règles.
+
+| Phrase relevée | Problème | Règle |
+|---|---|---|
+| *un château pavoisé* ; *On vous reconduit par la poterne* | Vocabulaire « trop IA » : mots rares ou recherchés que personne n'emploie | **Mots simples et courants.** Pas de vocabulaire rare pour faire « médiéval » (pavoisé, poterne, échauguette, oriflamme, mâchicoulis…). |
+| *Vexé jusqu'à la moustache* | Tournure bizarre, expression inventée | **Pas d'expression fabriquée.** Une image doit être naturelle en français ; sinon, on dit les choses simplement (*Vexé, le duc…*). |
+| *l'on vous pousse sur le talus boueux qui descend vers la rivière* | Trop descriptif : la géographie n'apporte rien à l'issue | **Dans une issue, le décor se limite à ce qui sert l'action.** Un détail concret au plus, et seulement s'il compte. |
+| *Le duc rit aux éclats, le lui fait redire devant toute la salle et vous remet une bourse* | Phrase alambiquée, pronoms en cascade | **Phrases courtes, une action par phrase**, pronoms sans ambiguïté. Relis à voix haute : si on bute, on réécrit. |
+| *Conquis, le duc veut l'acheter ; vous refusez, et il vous paie le spectacle d'une poignée de pièces.* | Interaction peu crédible | **Les réactions des personnages doivent être plausibles** et s'enchaîner logiquement. Si une scène sert juste à justifier un gain, simplifie-la. |
+| *Les bras chargés de régimes* | Mot ambigu (« régimes » se lit d'abord comme une diète) | **Évite les mots à double sens qui font trébucher** (dis « bananes »). |
+| *puis vous fait reconduire sans que vous ayez vu le duc* | Le relecteur a buté sur la négation (la phrase est correcte, mais elle fait douter) | **Préfère une tournure qui ne fait pas hésiter** (*… et vous fait reconduire. Vous n'aurez pas vu le duc.*). |
+| *Le duc remarque vos cicatrices et votre équipement usé par les routes.* avec la condition `level: {min: 60}` | Niveau 60, c'est encore le début du jeu : le texte décrit un vétéran | **Une condition doit correspondre à ce que le texte raconte.** Un vétéran couvert de cicatrices, c'est un haut niveau. Les seuils seront recalés sur les données des joueurs actifs : en attendant, ne présente pas un niveau inférieur à 100 comme un vétéran. |

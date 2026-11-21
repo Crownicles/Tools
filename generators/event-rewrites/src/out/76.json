@@ -1,47 +1,47 @@
 {
   "eventId": "76",
   "model": "gpt-6.2-astra",
-  "text": "Depuis des heures, vous suivez la rivière qui descend du mont à travers la Forêt Célestrum. Un cri sort d'une maison au toit crevé. Vous frappez ; un vieil homme entrouvre la porte. Il se présente comme Parziter, puis vous demande si le sol tremble aussi de votre côté.",
+  "text": "Depuis des heures, vous longez une rivière dans la Forêt Célestrum, au pied du mont. Un cri sort d'une maison en ruine. Vous frappez. Un vieil homme aux yeux hagards vous ouvre. Il s'appelle Parziter, parle trop vite et vous demande si vous aussi, vous sentez le sol trembler.",
   "possibilities": {
     "help": {
-      "text": "Proposer son aide.",
+      "text": "Proposer votre aide.",
       "outcomes": {
-        "0": "Les poules se tassent dans un coin de la cave. Vous soulevez d'une main le volet gonflé d'eau et laissez filer la drôle de bête qui les affole. Parziter vous donne une bourse de pièces et, après un coup de manche, un objet tiré de sa collection.",
-        "1": "Vous cherchez dans les tiroirs de quoi calmer Parziter sans songer à le prévenir. Au bruit du bois, il se recroqueville et lance son encrier. Vous sortez en pressant un mouchoir sur votre arcade ; bientôt, votre œil commence à enfler.",
-        "2": "Parziter voit des rues entières se fendre chaque fois qu'il prend en main une certaine pierre. Il en a posé un éclat sur le seuil, sans oser y toucher. À sa demande, vous l'enveloppez pour l'emporter. Il vibre jusque dans votre poche.",
-        "3": "Minou manque à l'appel. Le nez dans les feuilles, votre chien suit sa piste jusqu'à un arbre creux. Il vous faut une heure pour décider le chat à sortir : il attend que le chien tourne le dos. Parziter vous compte ses pièces, le chat sur les genoux.",
-        "4": "Parziter vous montre ses dessins que le vent emporte. Vous coupez par le talus, doublez les premiers feuillets et posez le pied sur le dernier juste avant la rivière. L'érudit secoue la terre du papier et vous tend quelques pièces.",
-        "5": "Les tuiles qui tombent dans la cour ont acculé Parziter sous un auvent. Elles se brisent sur votre bouclier sans vous faire plier le bras. Vous restez un quart d'heure à ses côtés avant qu'il ose franchir avec vous les trois pas jusqu'à sa porte."
+        "0": "Une bête inconnue s'est glissée dans la cave et affole les poules de Parziter. Vous soulevez seul le tonneau derrière lequel elle se cache et la chassez dehors. Soulagé, Parziter vous donne une bourse de pièces et un objet tiré de sa collection.",
+        "1": "Pour calmer Parziter, vous fouillez ses tiroirs à la recherche d'une tisane, sans lui demander la permission. Il prend peur et vous lance son encrier à la tête. Vous ressortez avec une entaille au front et un œil qui commence à enfler.",
+        "2": "Parziter a des visions depuis qu'il a trouvé une pierre étrange : chaque fois qu'il la touche, il voit une ville se fendre en deux. Il vous supplie de l'emporter. Vous l'enveloppez dans un linge. Même au fond de votre sac, la pierre vibre.",
+        "3": "Minou, le chat de Parziter, a disparu dans les bois. Votre chien suit sa piste jusqu'à un arbre creux. Le chat refuse de sortir tant que le chien est là : il vous faut une heure pour le décider. Parziter, Minou sur les genoux, vous donne quelques pièces.",
+        "4": "Un coup de vent emporte les dessins que Parziter faisait sécher devant sa porte. Vous courez après les feuilles et rattrapez la dernière juste avant qu'elle tombe dans la rivière. Parziter récupère ses dessins, un peu froissés, et vous donne quelques pièces.",
+        "5": "Des tuiles tombent du toit crevé à chaque coup de vent, et Parziter n'ose plus traverser sa cour pour aller au puits. Vous l'accompagnez, bouclier levé au-dessus de vos deux têtes. Les tuiles s'y brisent sans vous faire plier. L'aller-retour prend un quart d'heure."
       }
     },
     "explore": {
       "text": "Demander à visiter la maison.",
       "outcomes": {
-        "0": "Sur les rayons de la bibliothèque, un volume est rangé à l'envers. Vous le retournez pour en lire les signes. Parziter aimerait vous l'offrir, mais il surveille vos doigts avec une telle inquiétude que vous le remettez en place, dos au mur.",
-        "1": "Le tapis du couloir tient mieux que les planches qu'il recouvre. L'une d'elles cède ; votre pied passe au travers et la cheville tourne. Parziter pose un cataplasme frais sur l'enflure. Même ainsi bandée, elle vous fait boiter.",
-        "2": "Au grenier, votre rat se glisse entre le mur et un coffre. En lui ménageant une sortie, vous découvrez derrière le coffre un écrin que Parziter croyait vide. Amusé par le museau qui en sort, il vous en laisse le contenu : des pièces et un objet qui luit.",
-        "3": "Vous éprouvez les marches du talon avant de vous engager dans l'escalier. La troisième bascule sur une cache pleine de pièces. Vous appelez Parziter au lieu de vous servir ; il en prélève une poignée qu'il dépose dans votre paume.",
-        "4": "Parziter vous suit des yeux dans son cabinet. Il a entendu parler de vous et garde la clef de son secrétaire au poing. En lui tenant la porte avec un sourire, vous escamotez les quelques pièces qu'il a laissées sur l'appui de fenêtre.",
-        "5": "Vous montez voir la chambre en vous tenant à la rampe. Parziter remarque le sang sur votre manche et vous fait asseoir au bord du lit. Il passe un quart d'heure à panser vos plaies ; Minou, qui occupait déjà les deux oreillers, ne cède pas un pouce."
+        "0": "Dans la bibliothèque, un livre couvert de signes étranges attire votre regard. Parziter vous l'offre aussitôt : selon lui, il porte malheur. Vous le feuilletez, puis le remettez poliment sur son rayon. Votre sac est déjà assez lourd.",
+        "1": "Dans le couloir, une planche pourrie cède sous le tapis. Votre pied passe au travers et votre cheville se tord. Parziter, affolé, y applique un cataplasme d'herbes. La douleur se calme un peu, mais vous boitez en repartant.",
+        "2": "Au grenier, votre rat disparaît derrière un vieux coffre. Il en ressort en poussant un coffret oublié, qui contient quelques pièces et un petit objet brillant. Parziter rit de voir le rat si fier de lui et vous laisse le tout.",
+        "3": "Avant de monter l'escalier, vous testez chaque marche du talon. La troisième sonne creux : dessous, il y a une cache pleine de pièces. Plutôt que de vous servir, vous appelez Parziter. Il vous en donne une poignée.",
+        "4": "Parziter vous suit de pièce en pièce, la clé de son armoire serrée dans le poing. Il ne vous quitte pas des yeux, mais il oublie la fenêtre. Pendant qu'il surveille l'armoire, vous empochez les quelques pièces posées sur le rebord.",
+        "5": "Vous montez l'escalier en vous tenant à la rampe. Parziter remarque le sang sur votre manche et vous fait asseoir sur son lit. Il passe un quart d'heure à nettoyer et panser vos plaies. Minou, roulé en boule sur l'oreiller, refuse de vous faire de la place."
       }
     },
     "question": {
       "text": "Interroger Parziter.",
       "outcomes": {
-        "0": "Parziter connaît votre nom par les voyageurs que vous avez dépannés. Il vous confie qu'il enseignait avant de déterrer la pierre qu'il croit maudite. Il en a recueilli un éclat dans un linge ; vous acceptez de l'emporter pour lui.",
-        "1": "À votre première question, Parziter vous tend une ardoise. Vous passez une demi-heure à noter sous sa dictée les bruits qui montent de sa cave. Quand vous lui demandez de préciser la différence entre deux grincements, il vous claque la porte au nez.",
-        "2": "Parziter se souvient de la taille de sa cache, pas de son emplacement. Vous sondez du talon les dalles usées devant son lit. L'une d'elles sonne creux et bascule ; l'érudit y retrouve ses économies et partage les pièces avec vous.",
-        "3": "Parziter décrit des cris qui reprennent chaque fois qu'il touche son fragment de Pierre-Écho. Vous lui montrez comment en étouffer la vibration du bout des doigts. Il réussit à finir son récit sans sursauter et vous paie la leçon en pièces.",
-        "4": "Au lieu de vous répondre, Parziter vous interroge sur votre compagnon. Dans son bestiaire, une page entière lui est réservée, encore blanche. Vous consacrez vingt minutes à lui décrire ses habitudes pendant qu'il taille sa plume et prend des notes.",
-        "5": "Parziter vous demande si vous entendez aussi des pas. Vous posez l'oreille contre le mur sans remarquer l'éclat de pierre enchâssé dans le plâtre. Une rue s'ouvre sous vos yeux ; même en rouvrant la porte, vous cherchez la berge du mauvais côté."
+        "0": "Des voyageurs que vous avez aidés lui ont parlé de vous, et Parziter se confie sans méfiance. Il était un érudit respecté avant de déterrer une pierre qu'il croit maudite. Il vous supplie d'en emporter un éclat loin d'ici. Vous acceptez.",
+        "1": "Pour toute réponse, Parziter vous dicte la liste des bruits qu'il entend la nuit. Vous notez pendant une demi-heure. Quand vous osez lui demander la différence entre deux grincements, il se vexe et vous claque la porte au nez.",
+        "2": "Parziter a caché ses économies il y a des années et ne sait plus où. Vous lui demandez où il passait le plus de temps à l'époque : près du poêle. Derrière une brique descellée, vous trouvez une bourse. Il partage les pièces avec vous.",
+        "3": "Parziter entend des cris chaque fois qu'il touche son éclat de Pierre-Écho. Vous posez la main dessus et calmez sa vibration, puis vous lui montrez le geste. Il y arrive au troisième essai, tient la pierre sans trembler et vous paie la leçon de quelques pièces.",
+        "4": "Au lieu de répondre, Parziter fixe votre familier. Il n'en a jamais vu de pareil, et la page qui lui est réservée dans son bestiaire est encore blanche. Pendant vingt minutes, vous lui décrivez ses habitudes. Il note tout.",
+        "5": "Parziter vous demande si vous entendez aussi des pas. Vous collez l'oreille au mur, sans voir l'éclat de pierre pris dans le plâtre. Une vision vous traverse : une ville qui se fend. En ressortant, encore étourdi, vous ne savez plus de quel côté est la rivière."
       }
     },
     "end": {
       "outcomes": {
-        "0": "Vous saluez Parziter d'un signe de tête et vous reprenez le sentier de la berge. Derrière vous, sa voix descend d'un ton : à travers la fenêtre ouverte, vous l'entendez demander à Minou ce qu'il pense de la visite.",
-        "1": "Votre chat se frotte au chambranle sans entrer. De l'autre côté du seuil, Minou vient flairer la marque, puis y frotte sa joue exactement au même endroit. Parziter vous laisse repartir ; il n'a pas perdu un geste des deux chats.",
-        "2": "Parziter fronce les sourcils en reconnaissant le visage dont des voyageurs lui ont conseillé de se méfier. Il ne vous retient pas. À peine avez-vous tourné les talons que vous entendez le verrou, puis les pieds d'une chaise qu'on cale sous la poignée.",
-        "3": "Une tasse glisse des mains de Parziter. Vous la rattrapez avant qu'elle ne heurte la marche et la posez sur le seuil sans entrer. En reprenant le sentier, vous apercevez le vieil homme qui y trempe enfin les lèvres."
+        "0": "Sans vous en mêler davantage, vous saluez Parziter et reprenez le sentier le long de la rivière. Par la fenêtre ouverte, vous l'entendez demander à Minou ce qu'il a pensé de vous.",
+        "1": "Pendant que vous hésitez, votre chat frotte sa joue contre le cadre de la porte. Minou vient renifler l'endroit, puis s'y frotte à son tour. Parziter regarde les deux chats, se calme enfin et vous laisse repartir.",
+        "2": "Parziter vous dévisage, puis fronce les sourcils : des voyageurs lui ont décrit votre visage, et pas en bien. Il ne vous retient pas. Dès que vous tournez les talons, vous entendez le verrou, puis une chaise qu'on cale sous la poignée.",
+        "3": "Les mains de Parziter tremblent tant que sa tasse lui échappe. Vous la rattrapez au vol, sans renverser une goutte, et la lui rendez. Puis vous reprenez votre route. En vous retournant, vous le voyez enfin boire, assis sur son seuil."
       }
     }
   },
@@ -251,6 +251,7 @@
     "Les visions de Parziter rejouent la Brisure. Le joueur peut emporter un éclat de la Pierre-Écho, sans guérir l'érudit ni le séparer de Minou.",
     "Les quatre choix et les onze issues d'origine sont conservés, du chat dans l'arbre creux à la porte claquée après l'interrogatoire.",
     "Les réactions varient avec les gestes du joueur, ce que les voyageurs racontent de lui et le familier qui l'accompagne. Un mage peut notamment apaiser la vibration de la pierre.",
-    "L'heure de recherche de Minou et la demi-heure de questions ont leur durée en jeu ; rendre un bien ou le subtiliser influe sur le karma."
+    "L'heure de recherche de Minou et la demi-heure de questions ont leur durée en jeu ; rendre un bien ou le subtiliser influe sur le karma.",
+    "Relecture : phrases cryptiques réécrites pour se comprendre à la première lecture (sol qui tremble, bête de la cave, rues qui se fendent, tapis et planches, vision au mur) ; mots rares ou ambigus remplacés (éprouver, escamoter, cabinet, secrétaire, dépanner, chambranle, appui de fenêtre) ; scènes peu crédibles simplifiées (livre offert puis gardé, Parziter coincé dehors alors qu'il ouvre la porte, tasse sortie de nulle part) ; cache de question 2 différenciée de celle de l'escalier ; libellé au vouvoiement. Données inchangées."
   ]
 }

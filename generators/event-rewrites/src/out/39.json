@@ -1,55 +1,55 @@
 {
   "eventId": "39",
   "model": "claude-sonnet-5.5",
-  "text": "À Mergagnan, entre les filets qui sèchent sur le port et la Plage Sentinelle toute proche, un mercenaire du nom de Price vous aborde. Épée au côté, sourire charmeur, il cherche un contrat et vous jauge avec un intérêt un peu trop poli.",
+  "text": "À Mergagnan, sur le port où sèchent les filets, à deux pas de la Plage Sentinelle, un mercenaire nommé Price vous aborde. L'épée au côté et le sourire charmeur, il cherche du travail et vous observe avec un peu trop d'attention.",
   "possibilities": {
     "convoy": {
       "text": "Le payer pour vous escorter jusqu'à votre prochaine destination.",
       "outcomes": {
-        "0": "Contre quelques pièces, Price accepte de vous accompagner. Au pied d'un rocher, une épée rutilante est plantée jusqu'à la garde. Vous tirez en vain, Price la dégage d'une main. Sans vous il ne serait jamais passé par là : il vous remet bien plus que son salaire.",
-        "1": "Contre quelques pièces, Price vous escorte. En chemin, votre familier se fige, aux aguets, puis vous entraîne vers un fossé où traîne une sacoche abandonnée. Vous partagez son contenu avec Price et gardez de l'argent, ainsi qu'un objet qui vous sera utile.",
-        "2": "Contre quelques pièces, Price vous escorte. Vous cheminez un moment sans histoire, hormis quelques voleurs surgis d'un fourré : Price en met un à terre et les autres détalent. Vous vous quittez ensuite, la bourse un peu plus légère.",
-        "3": "Price accepte la mission, mais il a reconnu votre nom : il sait qu'un tel client ira rarement se plaindre à la Garde. Au bivouac, un cliquetis vous réveille, il vide votre bourse. Vous vous jetez sur lui, et un coup de poing à la tempe vous laisse sonné.",
-        "4": "Price vous traite autrement que les clients ordinaires : poli tout le long du chemin, il guette la route à votre place. Au moment de se quitter, il vous rend votre paiement avec un petit supplément, comme si votre compagnie valait le détour.",
-        "5": "Contre quelques pièces, Price vous escorte. Trois brigands vous barrent la route, mais à deux vous les dispersez en quelques échanges. Price fouille leurs poches, puis vous cède une part qui dépasse largement son salaire."
+        "0": "Contre quelques pièces, Price accepte de vous accompagner. En chemin, vous trouvez une épée brillante plantée dans un rocher. Vous tirez de toutes vos forces, sans succès. Price essaie à son tour et la dégage. Sans vous, il ne serait jamais passé par là : il vous donne bien plus que son salaire.",
+        "1": "Contre quelques pièces, Price vous escorte. En chemin, votre familier s'arrête net, puis file vers un fossé où traîne une sacoche abandonnée. Vous en partagez le contenu avec Price : vous gardez une bonne somme et un objet qui pourra vous servir.",
+        "2": "Contre quelques pièces, Price vous escorte. Le trajet est calme, à part quelques voleurs qui surgissent d'un fourré. Price en met un à terre et les autres s'enfuient. Vous vous quittez ensuite, la bourse allégée de son salaire.",
+        "3": "Price accepte, mais il a entendu parler de vous : un client comme vous n'ira pas se plaindre à la garde. Le soir, au campement, un bruit de pièces vous réveille. Price vide votre bourse. Vous vous jetez sur lui, il vous sonne d'un coup de poing à la tempe et s'enfuit avec votre argent.",
+        "4": "Sur la route, un marchand vous reconnaît, vous salue chaleureusement et tient à vous offrir quelques pièces pour un service passé. Impressionné, Price refuse d'être payé pour l'escorte : il préfère rester dans les bonnes grâces d'un client comme vous.",
+        "5": "Contre quelques pièces, Price vous escorte. Trois brigands vous barrent la route. Vous en mettez deux à terre avant que Price ait dégainé, et le troisième s'enfuit. Price fouille leurs poches et vous laisse la plus grosse part, bien plus que son salaire."
       }
     },
     "meal": {
       "text": "Faire connaissance autour d'un bon repas.",
       "outcomes": {
-        "0": "Vous proposez un repas à Price, qui accepte. Au Coin du Feu, entre poisson grillé et chaudrée, vous parlez, riez et échangez des astuces. Au bout de quelques heures, il doit aller honorer un contrat et vous quitte avec un léger pincement au cœur.",
-        "1": "Vous proposez à Price de faire plus ample connaissance autour d'un repas. Il décline poliment, un contrat l'attend sur le port, et il s'éloigne entre les filets qui sèchent. Vous restez seul devant l'enseigne de l'auberge.",
-        "2": "Au Coin du Feu, Price passe plus de temps à faire la conversation à votre familier qu'à vous, et lui réserve les meilleurs morceaux. Il vous souffle l'adresse d'un contrat, et l'avance qu'il vous cède couvre largement le repas.",
-        "3": "Price a vite compris que vous débutez. Entre deux crevettes frites, il vous montre comment parer un coup de manche, puis vous laisse en cadeau un objet qui traînait au fond de son sac avant de partir honorer un contrat.",
-        "4": "Au Coin du Feu, Price s'accroche à l'addition et refuse que vous sortiez un denier. La soirée file entre deux histoires de contrats, et il vous quitte en glissant quelques pièces dans votre main, comme s'il vous les devait bien."
+        "0": "Vous proposez un repas à Price, qui accepte. Au Coin du Feu, entre poisson grillé et crevettes frites, vous parlez, riez et échangez des astuces. Au bout de quelques heures, un contrat l'appelle ailleurs, et il vous quitte à regret.",
+        "1": "Vous proposez à Price de faire plus ample connaissance autour d'un repas. Il refuse poliment : un contrat l'attend sur le port. Il s'éloigne d'un pas pressé et vous laisse seul devant l'auberge.",
+        "2": "Au Coin du Feu, Price remarque vite votre familier. Il vous parle d'une caisse qu'un marchand du port a égarée et dont la prime l'intéresse. Après le repas, votre familier la retrouve entre deux entrepôts, et Price partage la prime avec vous.",
+        "3": "Au Coin du Feu, Price comprend vite que vous débutez. Entre deux crevettes frites, il vous donne quelques conseils pour vos premiers combats. Avant de partir pour un contrat, il vous laisse un objet qui traînait au fond de son sac.",
+        "4": "Au Coin du Feu, Price remarque que les habitués vous saluent avec respect. Il vous confie alors une course qu'il ne peut pas faire lui-même : remettre un paquet à un marchand du port. Vous vous en chargez dans la soirée, et Price vous paie bien."
       }
     },
     "steal": {
       "text": "Tenter de lui voler de l'argent.",
       "outcomes": {
-        "0": "Vous vous glissez derrière lui pour lui faucher sa bourse, mais il vous repère avant même que vous la touchiez. Un direct à la mâchoire vous envoie au sol, et vous mettez un bon moment à retrouver vos esprits.",
-        "1": "Vous approchez la main de sa ceinture, il vous remarque aussitôt mais vous laisse partir, non sans un regard plein de mépris. Vous décampez sans demander votre reste, intimidé, et les mains vides.",
-        "2": "Vous frôlez Price dans la foule du port et sa bourse change de main sans un bruit. Il ne s'aperçoit de rien et poursuit son chemin en sifflotant, pendant que vous comptez votre butin à l'abri d'une ruelle.",
-        "3": "Price a reconnu votre nom avant même que vous leviez la main. Il détache sa bourse et vous la lance avec un sourire las : quelques piécettes et des jetons de plomb, gardés pour les gens de votre espèce.",
-        "4": "Pendant que vous occupez Price de vos questions, votre familier se faufile jusqu'à sa ceinture et revient avec la bourse. Price cherche un moment ce qui lui manque, hausse les épaules et s'éloigne, tandis que vous rangez le butin.",
-        "5": "Il vous surprend la main sur sa bourse et vous frappe aux côtes. Votre armure encaisse le plus gros du choc, et il n'insiste pas, secoué d'avoir tapé dans du métal. Vous repartez avec un hématome, sans un sou de plus."
+        "0": "Vous vous glissez derrière Price pour lui prendre sa bourse, mais il vous repère avant même que vous la touchiez. Un coup de poing à la mâchoire vous envoie au sol, et vous mettez un bon moment à retrouver vos esprits.",
+        "1": "Vous approchez la main de sa ceinture. Price le remarque aussitôt, mais votre maladresse lui montre que vous débutez : il se contente d'un regard plein de mépris. Vous partez sans demander votre reste, les mains vides.",
+        "2": "En passant près de Price dans la foule du port, vous lui prenez sa bourse d'un geste vif. Il ne s'aperçoit de rien et s'éloigne en sifflotant. À l'abri d'une ruelle, vous comptez votre butin.",
+        "3": "Price vous a reconnu avant même que vous leviez la main. Avec un sourire las, il détache une bourse et vous la lance. À l'intérieur, quelques pièces et beaucoup de jetons de plomb : il la garde exprès pour les voleurs de votre genre.",
+        "4": "Pendant que vous occupez Price avec vos questions, votre familier se glisse jusqu'à sa ceinture et revient avec sa bourse. Price ne remarque rien et vous quitte sur une poignée de main. Un peu plus loin, vous comptez le butin.",
+        "5": "Price vous surprend la main sur sa bourse et vous frappe aux côtes. Votre armure encaisse le plus gros du coup. Price secoue sa main endolorie et n'insiste pas. Vous repartez avec un bleu, et sans une pièce de plus."
       }
     },
     "follow": {
       "text": "Le suivre discrètement.",
       "outcomes": {
-        "0": "Vous suivez Price entre les étals et les caisses du port, mais la foule se referme sur lui à l'angle d'un entrepôt. Vous tournez un moment parmi les filets sans retrouver sa trace, et le temps passe.",
-        "1": "Vous gardez Price en vue jusqu'à une remise à filets, où il s'entretient à voix basse avec une silhouette encapuchonnée. Quand ils se séparent, vous ramassez sur un tonneau un objet que l'un d'eux a oublié.",
-        "2": "Price vous repère au troisième coin de rue. Amusé par votre filature, il vous glisse quelques pièces en vous suggérant de trouver un autre passe-temps, puis disparaît entre deux entrepôts.",
-        "3": "Price s'engouffre dans une ruelle du port. Trois silhouettes s'y tiennent et se tournent vers vous d'un même mouvement, comme si elles vous attendaient. Vous reculez, le cœur battant, et il vous faut un moment pour vous calmer."
+        "0": "Vous suivez Price sur le port, mais vous le perdez de vue dans la foule, à l'angle d'un entrepôt. Vous tournez un moment entre les étals sans retrouver sa trace, puis vous abandonnez.",
+        "1": "Vous pressez le pas pour ne pas perdre Price de vue. Il entre dans une cabane de pêcheurs et parle à voix basse avec une personne encapuchonnée. Quand ils repartent, vous trouvez sur un tonneau un objet que l'un d'eux a oublié.",
+        "2": "Price vous repère au troisième coin de rue. Votre filature maladroite l'amuse plus qu'elle ne l'inquiète : il vous lance quelques pièces, vous conseille d'aller plutôt manger un morceau, puis disparaît entre deux entrepôts.",
+        "3": "Price entre dans une ruelle du port où trois hommes l'attendent. L'un d'eux vous reconnaît et vous désigne du menton. Les trois se tournent vers vous. Vous reculez, le cœur battant, et il vous faut un moment pour vous calmer."
       }
     },
     "end": {
       "outcomes": {
         "0": "Vous restez quelques minutes à discuter avec Price, de la marée, des contrats et du prix des escortes, avant de le laisser retourner à ses affaires.",
-        "1": "Vous vous séparez après quelques mots. Quelques rues plus loin, un groupe à l'air peu amène vous encercle dans une ruelle du port et allège votre bourse sous la menace de ses gourdins avant de disparaître.",
-        "2": "Vous discutez quelques minutes avec Price, puis vous vous séparez. Quelques rues plus loin, un groupe à l'air peu amène vous barre la route, vous dévisage, puis s'écarte sans un mot pour vous laisser passer.",
-        "3": "Après une brève discussion, vous vous séparez. Quelques rues plus loin, un groupe vous encercle, mais le premier à lever le bras s'effondre et les autres détalent, laissant dans la poussière une bourse que vous ramassez."
+        "1": "Vous vous séparez après quelques mots. Quelques rues plus loin, une bande vous encercle dans une ruelle du port. Vous semblez une proie facile : sous la menace de leurs gourdins, vous leur cédez une bonne partie de votre argent.",
+        "2": "Vous discutez quelques minutes avec Price, puis vous vous séparez. Quelques rues plus loin, une bande vous barre la route. L'un d'eux vous reconnaît et fait signe aux autres de s'écarter. Ils vous laissent passer sans un mot.",
+        "3": "Vous vous séparez après une brève discussion. Quelques rues plus loin, une bande vous encercle. Vous mettez à terre le premier qui lève la main sur vous, et les autres s'enfuient. L'un d'eux a perdu sa bourse : vous la ramassez."
       }
     }
   },
@@ -63,11 +63,6 @@
       "convoy": {
         "outcomes": {
           "0": {
-            "requirements": {
-              "level": {
-                "max": 30
-              }
-            },
             "money": 350,
             "mapTypesDestination": [
               "ro"
@@ -319,11 +314,12 @@
   },
   "notes": [
     "Introduction ancrée à Mergagnan (filets du port, Plage Sentinelle) ; Price reste le mercenaire charmeur et ambigu de la fiche (agent double, R3), sans révéler la Main Grise (silhouette encapuchonnée seulement).",
-    "Issues d'origine conservées et différenciées par des conditions : épée dans le rocher (niveau bas), sacoche flairée par le familier (rareté), escorte sans histoire (issue sans condition), trahison (karma bas, Price reconnaît le client).",
+    "Issues d'origine conservées et différenciées par des conditions : épée dans le rocher (sans condition depuis la relecture), sacoche flairée par le familier (rareté), escorte sans histoire, trahison (karma bas, Price reconnaît le client).",
     "Ajouts de convoy : karma élevé (Price rend le paiement avec un supplément) et attaque haute (brigands dispersés, butin partagé). Le texte ne nomme jamais la destination, seule la mécanique garde le type route.",
     "Repas : situé Au Coin du Feu (auberge du jeu), karma +1 pour l'invitation acceptée ; variantes familier rare, débutant (objet), karma élevé (Price insiste pour payer) ; le refus reste l'issue sans condition.",
     "Vol : karma négatif sur chaque tentative ; vitesse haute (butin), familier singe/corbeau, défense haute (coup encaissé), karma très bas (bourse piégée, Price vous connaît), débutant (Price laisse partir).",
     "Nouvelle possibilité « follow » (Le suivre discrètement) : filature qui échoue, rencontre à la remise à filets, Price amusé par un débutant, ruelle hostile pour un karma bas (effet scared). Pas de dévoilement de lore.",
-    "Possibilité « end » enrichie (agression pour niveau modéré, groupe qui s'écarte pour un karma élevé, agresseurs mis en fuite pour une attaque haute). Style : pas de discours direct, apostrophes droites, aucune destination supposée."
+    "Possibilité « end » enrichie (agression pour niveau modéré, groupe qui s'écarte pour un karma élevé, agresseurs mis en fuite pour une attaque haute). Style : pas de discours direct, apostrophes droites, aucune destination supposée.",
+    "Relecture : vocabulaire simplifié (chaudrée, peu amène, denier, hématome, rutilante, s'accroche à l'addition), expressions fabriquées et phrases alambiquées réécrites (cliquetis, coup de manche, échanges), décor superflu retiré des issues ; réactions rendues plausibles (repas familier : prime partagée pour une caisse retrouvée ; repas karma élevé : course payée ; escorte karma élevé : marchand reconnaissant, Price renonce à son salaire ; Price qui ne voit pas le vol au lieu de hausser les épaules) ; conditions montrées (débutant, reconnu, geste vif) ; l'épée dans le rocher (+350) n'est plus réservée aux bas niveaux, rien dans le texte ne justifiant une récompense plus forte pour un joueur plus faible."
   ]
 }

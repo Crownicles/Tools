@@ -1,44 +1,44 @@
 {
   "eventId": "69",
   "model": "gpt-6-luna",
-  "text": "Dans la Forêt Du Vieillard, où tant de voyageurs s'égarent, une femme en robe argentée fend les sous-bois vers vous. Ses cheveux clairs et son bâton d'aubépine semblent sortir d'un conte. Elle se présente comme Donia, dit être une Fae et propose un geste de chance pour votre quête de la princesse.",
+  "text": "Dans la Forêt Du Vieillard, une femme en robe argentée accourt vers vous entre les arbres. Avec ses cheveux clairs et son bâton d'aubépine, on la croirait sortie d'un conte. Elle dit s'appeler Donia et être une fée, et propose de vous bénir pour vous porter chance dans votre quête de la princesse.",
   "possibilities": {
     "accept": {
-      "text": "Accepter son offre",
+      "text": "Accepter son offre.",
       "outcomes": {
-        "0": "Donia fait tournoyer son bâton d'aubépine près de vous, les yeux fermés, comme si elle attendait un signe. Vous restez immobile, mais rien ne change. Elle paraît satisfaite de son geste et s'éloigne sans vous retenir.",
-        "1": "Vous prenez d'abord la sensation pour une force réelle et partez chercher Donia pour lui demander comment la garder. Elle s'est déjà fondue entre les arbres. Vous revenez honteux, avec la certitude de ne pas croire aussi vite la prochaine fois.",
-        "2": "Votre écoute attentive semble la rassurer ; Donia baisse son bâton et vous remercie de ne pas tourner en dérision ses croyances. Vous lui répondez avec la même courtoisie, et elle reprend sa route d'un pas léger.",
-        "3": "Votre chat se hérisse au passage du bâton et vient se frotter à vos jambes. Donia retient son geste, amusée par cette méfiance, puis vous laisse reprendre la route sans poudre ni cérémonie.",
-        "4": "Les grains bleus vibrent dans votre paume et un réflexe de vos études magiques vous en révèle l'effet soporifique. Vous en acceptez une pincée, puis dormez sous un arbre. Un banquet royal vous mène en rêve auprès de la princesse voilée ; au réveil, vos douleurs sont apaisées."
+        "0": "Donia fait tourner son bâton autour de vous, les yeux fermés, en murmurant des mots que vous ne comprenez pas. Le rituel s'éternise. Quand elle repart enfin, l'air satisfait, vous ne vous sentez pas différent.",
+        "1": "Après le rituel, vous vous sentez invincible. Puis Donia disparaît entre les arbres, et la sensation part avec elle. Vous la cherchez longtemps pour qu'elle recommence, en vain. Vous repartez honteux, en vous promettant de ne plus vous laisser prendre.",
+        "2": "Donia semble avoir entendu parler de vous en bien. Elle vous bénit avec un soin particulier et vous remercie de ne pas vous moquer de ses croyances. Vous la saluez poliment, et elle repart d'un pas léger.",
+        "3": "Votre chat se hérisse quand le bâton passe près de lui, puis file dans les fougères. Donia éclate de rire et s'en va. Vous mettez un bon quart d'heure à retrouver votre chat, qui boude sous une souche.",
+        "4": "Donia sort de sa sacoche une poudre bleue. Vous la reconnaissez : elle fait dormir. Vous en respirez une pincée et vous endormez contre un arbre. Vous rêvez d'un banquet au château, où vous dansez avec la princesse au visage voilé. Vous vous réveillez reposé."
       }
     },
     "compromise": {
-      "text": "Trouver un compromis",
+      "text": "Trouver un compromis.",
       "outcomes": {
-        "0": "Vous demandez un endroit où souffler. Donia vous mène sous un abri de branches et partage un repas avec du vin. La fatigue vous endort ; dans un cauchemar, elle devient une vieille sorcière qui veut vous cuire. Vous vous réveillez seul, tandis qu'elle a déjà repris sa route.",
-        "1": "Déçue par votre demande, Donia cueille une rose rouge qu'elle destine à la princesse. Vous la remerciez, mais la laissez dans sa main pour ne pas transporter une fleur fragile ; elle sourit et vous indique un abri avant de repartir.",
-        "2": "Vous repérez rapidement un recoin sec sous les racines et vous y installez pour reprendre haleine. Donia vous laisse une portion de son repas ; cette halte calme vous occupe une demi-heure avant le départ.",
-        "3": "Votre armure vous isole de l'humidité du sol ; vous vous asseyez à l'écart et refusez le vin. Donia partage quelques provisions, puis reprend la route. Vous poursuivez aussitôt, sans vous assoupir ni vous attarder.",
-        "4": "L'allure peu commune de votre compagnon pique la curiosité de Donia. Elle range le vin et cueille une rose rouge pour la princesse ; vous déclinez le cadeau avec soin, et elle vous laisse reprendre la route sans insister."
+        "0": "Plutôt qu'une bénédiction, vous lui demandez où vous reposer. Donia vous mène à un abri de branches et partage avec vous un repas et du vin. Vous videz la bouteille et vous endormez. Dans votre cauchemar, elle devient une sorcière qui veut vous cuire.",
+        "1": "Un peu déçue, Donia cueille une rose rouge et vous la confie pour la princesse. Elle semble sûre que vous en prendrez soin. Vous la remerciez poliment et gardez la fleur pour lui faire plaisir, même si elle fanera bien avant la fin du voyage.",
+        "2": "Avant même que Donia ne propose son abri, vous avez repéré un coin sec sous les racines d'un chêne. Elle vous y laisse une part de son repas et repart. Vous mangez tranquillement et vous reposez une demi-heure avant de reprendre la route.",
+        "3": "Vous gardez votre armure et refusez le vin : on ne sait jamais, avec une inconnue. Donia hausse les épaules et partage quand même son pain et son fromage. Ce repas vous fait du bien, et vous repartez sans vous être assoupi.",
+        "4": "Votre familier fascine Donia, qui n'a jamais vu pareille bête. Elle en oublie sa bénédiction et passe un long moment à le caresser en lui parlant à voix basse. Vous attendez qu'elle ait fini. Elle repart enfin, ravie, en vous souhaitant bonne route."
       }
     },
     "deny": {
-      "text": "Refuser sa proposition",
+      "text": "Refuser sa proposition.",
       "outcomes": {
-        "0": "Vous balayez son offre d'un geste méprisant et traitez son histoire de fée comme une absurdité. Donia abat son bâton sur vos bras et vos épaules ; vous vous retrouvez au sol, meurtri, avec le temps de ravaler votre insolence.",
-        "1": "Vous expliquez sans la brusquer que vous n'y croyez pas. Donia répand une poudre rouge qui brouille votre vision : des guêpes vous semblent être de petites fées avant de vous piquer plusieurs fois. L'illusion se dissipe, mais le malaise vous gagne.",
-        "2": "Quand Donia lève son bâton, vous bloquez le mouvement avec votre avant-bras et reculez hors de portée. Elle paraît vexée, mais n'insiste pas ; votre refus reste ferme et vous repartez sans blessure ni perte.",
-        "3": "Vous repérez le nuage rouge avant qu'il n'atteigne votre visage. Une esquive vous évite de respirer la poudre ; des guêpes s'éparpillent dans les fougères et vous vous éloignez sans piqûre ni blessure.",
-        "4": "Votre chien se place devant vous dès que Donia ouvre sa sacoche ; son grognement la fait hésiter et le nuage rouge tombe au sol. Vous profitez de sa distraction pour partir, sans subir les piqûres qui vous attendaient."
+        "0": "D'un air méprisant, vous lui dites que les fées n'existent pas et qu'elle délire. Furieuse, Donia vous frappe à coups de bâton sur les bras et les épaules. Vous finissez au sol, couvert de bleus, sur un lit de feuilles mortes.",
+        "1": "Vous lui expliquez poliment que les fées n'existent que dans les contes. Pour vous prouver le contraire, Donia vous souffle une poudre rouge au visage. Tout se brouille. Elle vous mène à une clairière pleine de petites fées : des guêpes, qui vous piquent.",
+        "2": "Quand Donia lève son bâton sur vous, vous l'attrapez au vol et le lui arrachez des mains. Vous le lui rendez aussitôt, et elle s'en va, vexée. Le choc vous a juste un peu meurtri la paume.",
+        "3": "Donia plonge la main dans sa sacoche et vous lance une poudre rouge au visage. Vous faites un bond de côté et la poudre retombe dans les fougères. Vous filez entre les arbres et mettez un quart d'heure à retrouver le sentier.",
+        "4": "Quand Donia ouvre sa sacoche, votre chien se met à grogner. Elle sursaute et laisse tomber sa poignée de poudre rouge. Votre chien vient la renifler et éternue sans pouvoir s'arrêter. Vous attendez que la crise passe, puis vous repartez."
       }
     },
     "end": {
       "outcomes": {
-        "0": "Donia finit par détourner les yeux et disparaît entre les arbres, mais vous restez immobile, absorbé par le balancement des branches. Deux heures et quart s'écoulent avant que le bruit de la forêt vous ramène à vous et au chemin.",
-        "1": "Donia croise votre regard, puis recule comme si elle craignait votre réaction. Elle s'éloigne sans tenter de vous convaincre. Vous restez figé à la place qu'elle a quittée, perdu dans vos pensées plus de deux heures avant de repartir.",
-        "2": "Un craquement sec vous tire de votre fixité avant que Donia ait disparu de vue. Vous vous écartez de la piste, vérifiez les environs et reprenez votre route, sans rester plongé dans vos pensées.",
-        "3": "La présence remarquable de votre compagnon vous ramène à la forêt quand il s'agite à vos côtés. Donia a déjà disparu entre les arbres, mais vous n'avez perdu que quelques instants à la regarder."
+        "0": "Vous fixez Donia sans rien dire. Elle finit par se désintéresser de vous et s'en va. Vous, vous continuez de fixer le vide, l'esprit ailleurs. Plus de deux heures passent avant que vous repreniez vos esprits et votre route.",
+        "1": "Donia croise votre regard et recule d'un pas. On dirait qu'elle a entendu parler de vous, et pas en bien. Elle s'éloigne sans un mot. Vous restez planté là, perdu dans vos pensées, plus de deux heures avant de repartir.",
+        "2": "Donia s'éloigne sans un mot. Un craquement de branche vous fait sursauter, et vous vous retournez d'un bond, prêt à fuir. Ce n'était rien. Vous reprenez la route sans tarder, en n'ayant perdu que dix minutes.",
+        "3": "Donia s'éloigne sans un mot, et vous restez à fixer les arbres. Votre familier n'aime pas vous voir immobile : il vous mordille la main jusqu'à ce que vous réagissiez. Vous n'avez perdu que quelques minutes."
       }
     }
   },
@@ -51,13 +51,18 @@
     "possibilities": {
       "accept": {
         "outcomes": {
-          "0": {},
+          "0": {
+            "effect": "occupied",
+            "lostTime": 15
+          },
           "1": {
             "requirements": {
               "level": {
                 "max": 25
               }
-            }
+            },
+            "effect": "occupied",
+            "lostTime": 30
           },
           "2": {
             "requirements": {
@@ -72,7 +77,9 @@
               "validPetTypeIds": [
                 3
               ]
-            }
+            },
+            "effect": "occupied",
+            "lostTime": 15
           },
           "4": {
             "requirements": {
@@ -115,14 +122,17 @@
               "defense": {
                 "min": 250
               }
-            }
+            },
+            "health": 10
           },
           "4": {
             "requirements": {
               "petRarity": {
                 "min": 4
               }
-            }
+            },
+            "effect": "occupied",
+            "lostTime": 20
           }
         }
       },
@@ -147,21 +157,26 @@
               "attack": {
                 "min": 250
               }
-            }
+            },
+            "health": -5
           },
           "3": {
             "requirements": {
               "speed": {
                 "min": 250
               }
-            }
+            },
+            "effect": "occupied",
+            "lostTime": 15
           },
           "4": {
             "requirements": {
               "validPetTypeIds": [
                 1
               ]
-            }
+            },
+            "effect": "occupied",
+            "lostTime": 10
           }
         }
       },
@@ -185,7 +200,9 @@
               "speed": {
                 "min": 250
               }
-            }
+            },
+            "effect": "occupied",
+            "lostTime": 10
           },
           "3": {
             "requirements": {
@@ -212,6 +229,7 @@
     "Donia reste une Fae possible plutôt qu'une figure religieuse ; ses poudres et visions gardent une explication concrète.",
     "Les quatre choix d'origine sont conservés, avec cinq issues pour chacun et des conditions variées sur le karma, la classe, le familier, les statistiques et le niveau.",
     "Les effets de sommeil, de maladie et de blessure sont associés à leurs signes dans le texte ; la perte de temps de l'issue silencieuse est conservée.",
-    "L'adoubement et la bénédiction certaine sont retirés pour respecter l'échelle humaine et le merveilleux ambigu du lore."
+    "L'adoubement et la bénédiction certaine sont retirés pour respecter l'échelle humaine et le merveilleux ambigu du lore.",
+    "Relecture : libellés terminés par un point ; vocabulaire simplifié (« geste de chance », « fixité », « fend les sous-bois » retirés) ; issues confuses réécrites en phrases courtes (accept 1 et 4, compromis 1 et 4, refus 3 et 4, sans allusions à des éléments non introduits) ; conséquences légères ajoutées aux issues qui n'en avaient pas (temps perdu pour accept 0, 1, 3, compromis 4, refus 3, 4 et end 2, vie +10 pour le repas du compromis 3, -5 pour la paume meurtrie du refus 2) ; conditions montrées plus clairement (karma reconnu, réflexe de la vitesse)."
   ]
 }
