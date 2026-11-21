@@ -8,3 +8,6 @@ generators/moderation-scanner.html
 scripts/class-pet-study/.work/
 scripts/class-pet-study/*.html
 !scripts/class-pet-study/comboPage.html
+
+# Fight help image dependencies
+scripts/fight-help-image/node_modules/
