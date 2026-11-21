@@ -8,14 +8,30 @@ k = sys.argv[1]
 inp = json.loads((W / "input" / f"{k}.json").read_text())
 out = json.loads((W / "out" / f"{k}.json").read_text())
 pets = {int(i): p for i, p in json.loads((W / "pets.json").read_text()).items()}
+materials = json.loads((W / "materials.json").read_text())
 orig = inp["original"]
 errors, warnings = [], []
 
 OUTCOME_KEYS = {"condition", "requirements", "lostTime", "health", "karma", "effect", "money", "energy", "gems", "tokens", "bonusExperience",
                 "bonusPoints", "randomItem", "randomPet", "givePet", "oneshot", "nextEvent", "mapTypesDestination", "mapTypesExcludeDestination",
-                "mapLink", "forceStayInCity", "forceLeaveCity", "tags"}
-REQ_RANGES = ["level", "karma", "health", "attack", "defense", "speed", "petRarity"]
-REQ_KEYS = set(REQ_RANGES) | {"validClassIds", "validPetTypeIds", "campaignCurrentMissionId"}
+                "mapLink", "forceStayInCity", "forceLeaveCity", "tags", "consumeMaterials", "giveMaterials"}
+REQ_RANGES = ["level", "karma", "health", "attack", "defense", "speed", "petRarity", "cookingLevel", "weaponLevel", "armorLevel"]
+REQ_KEYS = set(REQ_RANGES) | {"validClassIds", "validPetTypeIds", "campaignCurrentMissionId", "materials", "enchantment"}
+MATERIAL_TYPES = {"metal", "alloy", "nature", "spiritual", "magic", "leather", "rope", "poison", "explosive", "wood"}
+ENCHANT_TYPES = {"damage", "health", "defense", "speed", "magic", "other"}
+ENCHANT_KINDS = {"pvpAttack", "pveAttack", "allAttack", "defense", "speed", "maxEnergy", "baseBreath", "maxBreath", "burnedDamage", "frozenDamage", "poisonedDamage"}
+
+
+def check_material_filter(path, flt, extra):
+    allowed = {"type", "rarity", "ids"} | extra
+    if set(flt) - allowed: errors.append(f"{path}: unknown filter {set(flt) - allowed}")
+    if "type" in flt and flt["type"] not in MATERIAL_TYPES: errors.append(f"{path}: unknown material type {flt['type']}")
+    for mid in flt.get("ids", []):
+        if str(mid) not in materials: errors.append(f"{path}: unknown material {mid}")
+
+
+def in_range(rg, val):
+    return not rg or not ((rg.get("min") is not None and val < rg["min"]) or (rg.get("max") is not None and val > rg["max"]))
 EFFECTS = {"occupied", "sleeping", "drunk", "freezing", "feetHurt", "hurt", "sick", "jailed", "injured", "starving", "confounded", "scared",
            "lost", "fished", "working", "burning"}
 
@@ -73,8 +89,12 @@ for p, v in dp.items():
         if (x.get("forceStayInCity") or x.get("forceLeaveCity")) and not inp["isCity"]: errors.append(f"{path}: forceStayInCity/forceLeaveCity outside a city")
         for field in ("mapTypesDestination",):
             if x.get(field) and not set(x[field]) & neighbour_types: errors.append(f"{path}: no neighbour of type {x[field]}")
-        req = x.get("requirements")
-        if req:
+        for field in ("consumeMaterials", "giveMaterials"):
+            if field in x:
+                check_material_filter(f"{path}.{field}", x[field], {"quantity"})
+                if not (isinstance(x[field].get("quantity"), int) and x[field]["quantity"] > 0): errors.append(f"{path}.{field}: quantity must be a positive integer")
+        req = x.get("requirements") or {}
+        if req or "consumeMaterials" in x:
             conditional += 1
             for key in set(req) - REQ_KEYS: errors.append(f"{path}: unknown requirement {key}")
             for key in REQ_RANGES:
@@ -85,6 +105,15 @@ for p, v in dp.items():
                 if key in req and not (isinstance(req[key], list) and req[key]): errors.append(f"{path}: {key} must be a non-empty list")
             for pid in req.get("validPetTypeIds", []):
                 if pid not in pets: errors.append(f"{path}: unknown pet {pid}")
+            mat = req.get("materials")
+            if mat is not None:
+                check_material_filter(path + ".requirements.materials", mat, {"quantity"})
+            ench = req.get("enchantment")
+            if ench is not None:
+                if set(ench) - {"slot", "types", "kinds", "level"}: errors.append(f"{path}: unknown enchantment filter {set(ench) - {'slot', 'types', 'kinds', 'level'}}")
+                if ench.get("slot") not in (None, "weapon", "armor"): errors.append(f"{path}: enchantment slot must be weapon or armor")
+                for t in set(ench.get("types", [])) - ENCHANT_TYPES: errors.append(f"{path}: unknown enchantment type {t}")
+                for k in set(ench.get("kinds", [])) - ENCHANT_KINDS: errors.append(f"{path}: unknown enchantment kind {k}")
 
     # coverage: every player profile must have at least one valid outcome
     def values(key, defaults):
@@ -95,15 +124,26 @@ for p, v in dp.items():
                 if r.get(b) is not None:
                     vals |= {r[b], r[b] - 1, r[b] + 1}
         return sorted(vals)
-    reqs = [x.get("requirements") or {} for x in outs.values()]
+    reqs = [dict(x.get("requirements") or {}, **({"materials": {"quantity": {"min": x["consumeMaterials"]["quantity"]}}} if "consumeMaterials" in x else {}))
+            for x in outs.values()]
     classes = sorted({c for r in reqs for c in r.get("validClassIds", [])} | {0})
     listed_pets = sorted({i for r in reqs for i in r.get("validPetTypeIds", [])})
     pet_profiles = [None] + [(i, pets[i]["rarity"]) for i in listed_pets if i in pets] + [(-1, r) for r in values("petRarity", [1, 8]) if 1 <= r <= 8]
+    uses = lambda key: any(key in r for r in reqs)
+    # extra dimensions only vary when an outcome uses them; materials and enchantment: the player has none, or has everything
     dims = [values("level", [1, 200]), values("karma", [-500, 0, 500]), values("health", [1, 1000]), values("attack", [0, 2000]),
-            values("defense", [0, 2000]), values("speed", [0, 2000]), classes, pet_profiles]
+            values("defense", [0, 2000]), values("speed", [0, 2000]), classes, pet_profiles,
+            values("cookingLevel", [0, 100]) if uses("cookingLevel") else [0],
+            values("weaponLevel", [0, 10]) if uses("weaponLevel") else [0],
+            values("armorLevel", [0, 10]) if uses("armorLevel") else [0],
+            [False, True] if uses("materials") else [True], [False, True] if uses("enchantment") else [True]]
 
     def ok(r, prof):
-        lvl, karma, hp, atk, dfn, spd, cls, pet = prof
+        lvl, karma, hp, atk, dfn, spd, cls, pet, cook, wlvl, alvl, has_mats, has_ench = prof
+        for key, val in (("cookingLevel", cook), ("weaponLevel", wlvl), ("armorLevel", alvl)):
+            if not in_range(r.get(key), max(val, 0)): return False
+        if "materials" in r and not in_range(r["materials"].get("quantity") or {"min": 1}, 10 ** 6 if has_mats else 0): return False
+        if "enchantment" in r and not has_ench: return False
         for key, val in (("level", lvl), ("karma", karma), ("health", hp), ("attack", atk), ("defense", dfn), ("speed", spd)):
             rg = r.get(key)
             if rg and ((rg.get("min") is not None and val < rg["min"]) or (rg.get("max") is not None and val > rg["max"])): return False
@@ -117,7 +157,8 @@ for p, v in dp.items():
     if outs:
         for prof in itertools.product(*dims):
             if not any(ok(r, prof) for r in reqs):
-                errors.append(f"{p}: no valid outcome for level={prof[0]} karma={prof[1]} health={prof[2]} attack={prof[3]} defense={prof[4]} speed={prof[5]} class={prof[6]} pet={prof[7]}")
+                errors.append(f"{p}: no valid outcome for level={prof[0]} karma={prof[1]} health={prof[2]} attack={prof[3]} defense={prof[4]} speed={prof[5]} class={prof[6]} pet={prof[7]}"
+                              f" cooking={prof[8]} weaponLevel={prof[9]} armorLevel={prof[10]} materials={'oui' if prof[11] else 'aucun'} enchantment={'oui' if prof[12] else 'aucun'}")
                 break
 
 if total and conditional / total < 0.4: warnings.append(f"only {conditional}/{total} outcomes are conditional (rewritten events: about 3/4)")

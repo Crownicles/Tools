@@ -775,9 +775,16 @@ export interface PossibilityOutcomeCondition {
 	validClassIds?: number[];
 	validPetTypeIds?: number[];
 	petRarity?: Range;
+	cookingLevel?: Range;
+	materials?: { type?: string; rarity?: Range; ids?: number[]; quantity?: Range };
+	enchantment?: { slot?: "weapon" | "armor"; types?: string[]; kinds?: string[]; level?: Range };
+	weaponLevel?: Range;
+	armorLevel?: Range;
 	quest?: { id: QuestId; minStepsDone?: number; maxStepsDone?: number; activeTemplate?: string };
 }
 ```
+
+Les critères de cuisine, de matériaux, d'enchantement et d'amélioration de l'équipement sont codés sur la branche, dans `requirements`. Deux champs d'issue les complètent : `consumeMaterials` retire des matériaux du sac (l'issue n'est possible que si le joueur en a assez), `giveMaterials` en donne un au hasard parmi ceux qui passent les filtres. Le résultat affiché sous l'issue indique le matériau utilisé ou obtenu. Les repères mesurés en production sont dans la référence de l'atelier (`generators/event-rewrites/src/reference.md`).
 
 Le critère `quest` est le même que celui des déclencheurs (15.1) : une issue peut ainsi n'exister que pour un Recouvreur, sans créer un event entier. C'est la façon la moins chère de faire réagir un event existant au Grand Livre.
 

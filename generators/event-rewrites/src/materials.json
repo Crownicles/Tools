@@ -1,0 +1,542 @@
+{
+ "1": {
+  "name": "Chlorate de potassium",
+  "type": "explosive",
+  "rarity": 1,
+  "share": 70
+ },
+ "2": {
+  "name": "Planche d'acacia",
+  "type": "wood",
+  "rarity": 2,
+  "share": 74
+ },
+ "3": {
+  "name": "Cellule extraterrestre",
+  "type": "poison",
+  "rarity": 3,
+  "share": 45
+ },
+ "4": {
+  "name": "Aluminium",
+  "type": "metal",
+  "rarity": 3,
+  "share": 51
+ },
+ "5": {
+  "name": "Cristal d'améthyste",
+  "type": "spiritual",
+  "rarity": 3,
+  "share": 68
+ },
+ "6": {
+  "name": "Ammoniac",
+  "type": "explosive",
+  "rarity": 3,
+  "share": 45
+ },
+ "7": {
+  "name": "Bronze antique",
+  "type": "alloy",
+  "rarity": 1,
+  "share": 70
+ },
+ "8": {
+  "name": "Tige de bambou",
+  "type": "nature",
+  "rarity": 2,
+  "share": 75
+ },
+ "9": {
+  "name": "Écorce d'hêtre",
+  "type": "wood",
+  "rarity": 2,
+  "share": 66
+ },
+ "10": {
+  "name": "Belladone",
+  "type": "poison",
+  "rarity": 1,
+  "share": 45
+ },
+ "11": {
+  "name": "Cuir de bison",
+  "type": "leather",
+  "rarity": 3,
+  "share": 72
+ },
+ "12": {
+  "name": "Corde de chanvre tressé",
+  "type": "rope",
+  "rarity": 3,
+  "share": 63
+ },
+ "13": {
+  "name": "Laiton",
+  "type": "metal",
+  "rarity": 2,
+  "share": 58
+ },
+ "14": {
+  "name": "Bronze",
+  "type": "metal",
+  "rarity": 1,
+  "share": 75
+ },
+ "15": {
+  "name": "Cactus",
+  "type": "nature",
+  "rarity": 2,
+  "share": 72
+ },
+ "16": {
+  "name": "Acier au carbone",
+  "type": "metal",
+  "rarity": 3,
+  "share": 49
+ },
+ "17": {
+  "name": "Graine de ricin",
+  "type": "poison",
+  "rarity": 2,
+  "share": 59
+ },
+ "18": {
+  "name": "Bois de cèdre",
+  "type": "wood",
+  "rarity": 3,
+  "share": 43
+ },
+ "19": {
+  "name": "Liane céleste",
+  "type": "nature",
+  "rarity": 3,
+  "share": 53
+ },
+ "20": {
+  "name": "Morceau de tissu",
+  "type": "rope",
+  "rarity": 1,
+  "share": 77
+ },
+ "21": {
+  "name": "Poudre de charbon",
+  "type": "explosive",
+  "rarity": 1,
+  "share": 75
+ },
+ "22": {
+  "name": "Métal composite",
+  "type": "alloy",
+  "rarity": 3,
+  "share": 54
+ },
+ "23": {
+  "name": "Gaz comprimé",
+  "type": "explosive",
+  "rarity": 2,
+  "share": 57
+ },
+ "24": {
+  "name": "Cuivre",
+  "type": "metal",
+  "rarity": 1,
+  "share": 71
+ },
+ "25": {
+  "name": "Coton",
+  "type": "rope",
+  "rarity": 1,
+  "share": 75
+ },
+ "26": {
+  "name": "Cuir de vache",
+  "type": "leather",
+  "rarity": 2,
+  "share": 74
+ },
+ "27": {
+  "name": "Cuir de crocodile",
+  "type": "leather",
+  "rarity": 3,
+  "share": 61
+ },
+ "28": {
+  "name": "Pétrole brut",
+  "type": "explosive",
+  "rarity": 3,
+  "share": 52
+ },
+ "29": {
+  "name": "Cuir de daim",
+  "type": "leather",
+  "rarity": 2,
+  "share": 72
+ },
+ "30": {
+  "name": "Lavande séchée",
+  "type": "spiritual",
+  "rarity": 2,
+  "share": 61
+ },
+ "31": {
+  "name": "Écorce d'ébène",
+  "type": "wood",
+  "rarity": 3,
+  "share": 51
+ },
+ "32": {
+  "name": "Mûres de sureau",
+  "type": "poison",
+  "rarity": 1,
+  "share": 66
+ },
+ "33": {
+  "name": "Larme d'élémentaire",
+  "type": "magic",
+  "rarity": 2,
+  "share": 72
+ },
+ "34": {
+  "name": "Rune enchantée",
+  "type": "magic",
+  "rarity": 1,
+  "share": 73
+ },
+ "35": {
+  "name": "Flamme éternelle",
+  "type": "magic",
+  "rarity": 1,
+  "share": 75
+ },
+ "36": {
+  "name": "Champignon extrêmement vénéneux",
+  "type": "poison",
+  "rarity": 3,
+  "share": 51
+ },
+ "37": {
+  "name": "Fil de lin",
+  "type": "rope",
+  "rarity": 1,
+  "share": 75
+ },
+ "38": {
+  "name": "Tétrodotoxine de fugu",
+  "type": "poison",
+  "rarity": 2,
+  "share": 48
+ },
+ "39": {
+  "name": "Acier galvanisé",
+  "type": "alloy",
+  "rarity": 3,
+  "share": 51
+ },
+ "40": {
+  "name": "Herbe fantôme",
+  "type": "nature",
+  "rarity": 3,
+  "share": 69
+ },
+ "41": {
+  "name": "Racine de gingembre",
+  "type": "nature",
+  "rarity": 2,
+  "share": 72
+ },
+ "42": {
+  "name": "Cuir de chèvre",
+  "type": "leather",
+  "rarity": 1,
+  "share": 75
+ },
+ "43": {
+  "name": "Laiton doré",
+  "type": "alloy",
+  "rarity": 1,
+  "share": 66
+ },
+ "44": {
+  "name": "Poudre à canon",
+  "type": "explosive",
+  "rarity": 2,
+  "share": 65
+ },
+ "45": {
+  "name": "Fibre de chanvre",
+  "type": "rope",
+  "rarity": 2,
+  "share": 71
+ },
+ "46": {
+  "name": "Peroxyde d'hydrogène",
+  "type": "explosive",
+  "rarity": 2,
+  "share": 57
+ },
+ "47": {
+  "name": "Corde de jute",
+  "type": "rope",
+  "rarity": 2,
+  "share": 71
+ },
+ "48": {
+  "name": "Cuir d'agneau",
+  "type": "leather",
+  "rarity": 1,
+  "share": 76
+ },
+ "49": {
+  "name": "Corde tressée en cuir",
+  "type": "rope",
+  "rarity": 2,
+  "share": 62
+ },
+ "50": {
+  "name": "Aluminium léger",
+  "type": "alloy",
+  "rarity": 2,
+  "share": 63
+ },
+ "51": {
+  "name": "Feuille d'érable",
+  "type": "wood",
+  "rarity": 1,
+  "share": 75
+ },
+ "52": {
+  "name": "Herbe de prairie",
+  "type": "nature",
+  "rarity": 1,
+  "share": 76
+ },
+ "53": {
+  "name": "Pierre de lune",
+  "type": "magic",
+  "rarity": 2,
+  "share": 74
+ },
+ "54": {
+  "name": "Tapis de mousse",
+  "type": "nature",
+  "rarity": 1,
+  "share": 81
+ },
+ "55": {
+  "name": "Champignon",
+  "type": "poison",
+  "rarity": 1,
+  "share": 72
+ },
+ "56": {
+  "name": "Nitroglycérine",
+  "type": "explosive",
+  "rarity": 3,
+  "share": 45
+ },
+ "57": {
+  "name": "Fil de nylon",
+  "type": "rope",
+  "rarity": 3,
+  "share": 52
+ },
+ "58": {
+  "name": "Branche de chêne",
+  "type": "wood",
+  "rarity": 1,
+  "share": 71
+ },
+ "59": {
+  "name": "Feuille de chêne",
+  "type": "nature",
+  "rarity": 1,
+  "share": 73
+ },
+ "60": {
+  "name": "Résine d'oud",
+  "type": "spiritual",
+  "rarity": 2,
+  "share": 56
+ },
+ "61": {
+  "name": "Livre philosophique",
+  "type": "spiritual",
+  "rarity": 3,
+  "share": 48
+ },
+ "62": {
+  "name": "Plume de phénix",
+  "type": "magic",
+  "rarity": 3,
+  "share": 43
+ },
+ "63": {
+  "name": "Cuir de porc",
+  "type": "leather",
+  "rarity": 1,
+  "share": 71
+ },
+ "64": {
+  "name": "Pignon de pin",
+  "type": "wood",
+  "rarity": 1,
+  "share": 68
+ },
+ "65": {
+  "name": "Plutonium 239",
+  "type": "poison",
+  "rarity": 3,
+  "share": 46
+ },
+ "66": {
+  "name": "Champignon vénéneux",
+  "type": "poison",
+  "rarity": 2,
+  "share": 58
+ },
+ "67": {
+  "name": "Pierre précieuse",
+  "type": "alloy",
+  "rarity": 3,
+  "share": 69
+ },
+ "68": {
+  "name": "Eau purifiée",
+  "type": "spiritual",
+  "rarity": 1,
+  "share": 76
+ },
+ "69": {
+  "name": "Quartz arc-en-ciel",
+  "type": "magic",
+  "rarity": 3,
+  "share": 62
+ },
+ "70": {
+  "name": "Fer brut",
+  "type": "metal",
+  "rarity": 1,
+  "share": 78
+ },
+ "71": {
+  "name": "Cuivre rouge",
+  "type": "alloy",
+  "rarity": 2,
+  "share": 66
+ },
+ "72": {
+  "name": "Encens sacré",
+  "type": "spiritual",
+  "rarity": 3,
+  "share": 46
+ },
+ "73": {
+  "name": "Encens de sauge",
+  "type": "spiritual",
+  "rarity": 1,
+  "share": 58
+ },
+ "74": {
+  "name": "Bois de santal",
+  "type": "spiritual",
+  "rarity": 2,
+  "share": 58
+ },
+ "75": {
+  "name": "Maille de soie",
+  "type": "rope",
+  "rarity": 3,
+  "share": 58
+ },
+ "76": {
+  "name": "Écaille de dragon argenté",
+  "type": "magic",
+  "rarity": 3,
+  "share": 53
+ },
+ "77": {
+  "name": "Poussière d'argent",
+  "type": "magic",
+  "rarity": 1,
+  "share": 74
+ },
+ "78": {
+  "name": "Cuir de serpent",
+  "type": "leather",
+  "rarity": 2,
+  "share": 75
+ },
+ "79": {
+  "name": "Acier inoxydable",
+  "type": "alloy",
+  "rarity": 1,
+  "share": 65
+ },
+ "80": {
+  "name": "Poussière d'étoile",
+  "type": "magic",
+  "rarity": 2,
+  "share": 68
+ },
+ "81": {
+  "name": "Acier",
+  "type": "metal",
+  "rarity": 2,
+  "share": 70
+ },
+ "82": {
+  "name": "Soufre",
+  "type": "explosive",
+  "rarity": 1,
+  "share": 71
+ },
+ "83": {
+  "name": "Cuir synthétique",
+  "type": "leather",
+  "rarity": 3,
+  "share": 53
+ },
+ "84": {
+  "name": "Planche de teck",
+  "type": "wood",
+  "rarity": 3,
+  "share": 52
+ },
+ "85": {
+  "name": "Acier trempé",
+  "type": "alloy",
+  "rarity": 2,
+  "share": 65
+ },
+ "86": {
+  "name": "Titane",
+  "type": "metal",
+  "rarity": 3,
+  "share": 58
+ },
+ "87": {
+  "name": "Rose du néant",
+  "type": "nature",
+  "rarity": 3,
+  "share": 50
+ },
+ "88": {
+  "name": "Branche de noyer",
+  "type": "wood",
+  "rarity": 2,
+  "share": 69
+ },
+ "89": {
+  "name": "Bougie blanche",
+  "type": "spiritual",
+  "rarity": 1,
+  "share": 71
+ },
+ "90": {
+  "name": "Zinc",
+  "type": "metal",
+  "rarity": 2,
+  "share": 68
+ }
+}

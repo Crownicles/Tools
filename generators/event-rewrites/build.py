@@ -38,7 +38,9 @@ def lang_names(lang_dir):
         for key, value in city.items():
             if isinstance(value, dict) and (value.get("menuLabel") or value.get("serviceTitle")):
                 names["services"][key] = value.get("menuLabel") or value.get("serviceTitle")
-        names["mapTypes"].update({k: v["name"] for k, v in load_json(lang_dir / "models.json")["map_types"].items() if v.get("name")})
+        models = load_json(lang_dir / "models.json")
+        names["mapTypes"].update({k: v["name"] for k, v in models["map_types"].items() if v.get("name")})
+        names["materials"] = models.get("materials", {})
     except (OSError, KeyError, ValueError) as e:
         print(f"note: French city names unavailable ({e}), ids will be shown", file=sys.stderr)
     return names

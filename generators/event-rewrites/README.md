@@ -17,7 +17,7 @@ The **Source** switch at the top of the sidebar picks where the data comes from:
 - By default only the texts are shown: introduction, then for each choice its label and its outcomes, each with a short condition tag and one line of consequences. Outcomes keep their ids in the rewrites, so before/after outcomes with the same id sit on the same row. Added outcomes and choices get a small "nouvelle" badge.
 - Everything else is folded, with a one-line summary: the place context (game description, neighbours and travel times, city menu, triggers, AI model, full canon block), the agent notes and the `validate.py` output.
 - The sidebar lists the events with their status (rewritten / in progress / validator errors), outcome counts before → after and the share of conditional outcomes.
-- **Profil de joueur** (sidebar, folded): set level, karma, stats, class and pet to grey out the rewritten outcomes this player cannot get. Possible outcomes show their odds (the game picks uniformly among them). The profile is saved in `localStorage`.
+- **Profil de joueur** (sidebar, folded): set level, karma, stats, class, pet, cooking level, a full or empty material bag, the upgrade level and enchantment of the weapon and armor to grey out the rewritten outcomes this player cannot get. Possible outcomes show their odds (the game picks uniformly among them). The profile is saved in `localStorage`.
 - Below 1000 px the before/after columns are interleaved in a single column.
 
 ## Data

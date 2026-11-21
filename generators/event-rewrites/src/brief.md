@@ -21,7 +21,7 @@ Ne modifie **aucun** autre fichier, et surtout pas le dépôt Crownicles.
 
 1. **Rester fidèle à l'event d'origine.** Même situation, mêmes personnages, même accroche. Garde **toutes les possibilités d'origine** (mêmes noms) et l'idée de chaque issue d'origine. Garde l'humour quand il y en a.
 2. **Enrichir avec des issues conditionnelles, comme les events déjà réécrits.** Ils sont passés de 4 à 16 issues par event à 13 à 48 (2 à 4 fois plus), et les trois quarts de leurs issues sont conditionnelles. Fais de même :
-   - pour chaque possibilité, ajoute des issues qui dépendent **du joueur** : son karma (réputation), son niveau (expérience), ses statistiques (attaque, défense, vitesse), sa classe, son familier ou la rareté de celui-ci ;
+   - pour chaque possibilité, ajoute des issues qui dépendent **du joueur** : son karma (réputation), son niveau (expérience), ses statistiques (attaque, défense, vitesse), sa classe, son familier ou la rareté de celui-ci, son niveau de cuisine, les matériaux de son sac, l'enchantement ou l'amélioration de son arme et de son armure (voir `reference.md` et `materials.json`) ;
    - vise **3 à 6 issues par possibilité**, dont **au moins une sans condition** ; le joueur doit toujours avoir au moins une issue possible, quel que soit son profil (le validateur le vérifie, karma et familier compris) ;
    - tu peux ajouter **une ou deux possibilités** si l'event s'y prête (pas plus) ;
    - la condition se **montre**, elle ne se nomme pas : un joueur rapide rattrape le voleur, un joueur au karma bas est reconnu et on se méfie de lui, un familier précis réagit à sa façon ;

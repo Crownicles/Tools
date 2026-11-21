@@ -116,6 +116,7 @@ window.EventRewritesGithub = (() => {
         for (const [k, v] of Object.entries(models?.map_types || {})) {
             if (v?.name) names.mapTypes[k] = v.name;
         }
+        if (models?.materials) names.materials = models.materials;
         return names;
     }
 

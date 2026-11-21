@@ -25,9 +25,18 @@
         injured: ["🚑", "gravement blessé", 660], starving: ["🍽️", "affamé", 50], confounded: ["😵‍💫", "confus", 40], scared: ["😱", "effrayé", 15],
         lost: ["🌫️", "perdu", 270], fished: ["🎣", "pêché", 5], working: ["⚒️", "au travail", 75], burning: ["🔥", "brûlé", 25],
     };
-    const RANGES = { level: "niveau", karma: "karma", health: "PV", attack: "attaque", defense: "défense", speed: "vitesse", petRarity: "rareté du familier" };
+    const RANGES = { level: "niveau", karma: "karma", health: "PV", attack: "attaque", defense: "défense", speed: "vitesse", petRarity: "rareté du familier",
+        cookingLevel: "cuisine", weaponLevel: "arme améliorée", armorLevel: "armure améliorée" };
+    const MATERIAL_TYPES = { metal: "métal", alloy: "alliage", nature: "plantes", spiritual: "objets spirituels", magic: "magie", leather: "cuir",
+        rope: "cordes et tissus", poison: "poisons", explosive: "explosifs", wood: "bois" };
+    const ENCHANT_TYPES = { damage: "attaque", defense: "défense", speed: "vitesse", health: "énergie", magic: "magie", other: "souffle" };
+    // [name, type, slot, highest level that exists in the game]
+    const ENCHANT_KINDS = { pvpAttack: ["Attaque PvP", "damage", "weapon", 3], pveAttack: ["Attaque PvE", "damage", "weapon", 3], allAttack: ["Attaque", "damage", "weapon", 3],
+        defense: ["Défense", "defense", "armor", 3], speed: ["Vitesse", "speed", "armor", 3], maxEnergy: ["Énergie max", "health", "armor", 3],
+        baseBreath: ["Souffle de base", "other", "weapon", 2], maxBreath: ["Souffle max", "other", "armor", 1], burnedDamage: ["Aspect de feu", "magic", "weapon", 1],
+        frozenDamage: ["Aspect de givre", "magic", "weapon", 1], poisonedDamage: ["Aspect de venin", "magic", "weapon", 1] };
     const ITEM_CATEGORIES = { 0: "arme", 1: "armure", 2: "potion", 3: "objet" };
-    const STATS = ["level", "karma", "health", "attack", "defense", "speed"];
+    const STATS = ["level", "karma", "health", "attack", "defense", "speed", "cookingLevel", "weaponLevel", "armorLevel"];
     const TARGETS = { intro: [180, 420], choice: [8, 90], outcome: [150, 280] };
 
     const nf = new Intl.NumberFormat("fr-FR");
@@ -119,8 +128,11 @@
             parts.push({ short: `familier : ${shortList(names)}`, full: `familier : ${names.join(", ")}` });
         }
         if (req.campaignCurrentMissionId !== undefined) parts.push({ short: `mission de campagne ${req.campaignCurrentMissionId}` });
+        if (req.materials) parts.push(materialsText(req.materials));
+        if (outcome?.consumeMaterials) parts.push(materialsText({ ...outcome.consumeMaterials, quantity: { min: outcome.consumeMaterials.quantity } }));
+        if (req.enchantment) parts.push(enchantmentText(req.enchantment));
         for (const key of Object.keys(req)) {
-            if (!(key in RANGES) && !["validClassIds", "validPetTypeIds", "campaignCurrentMissionId"].includes(key)) {
+            if (!(key in RANGES) && !["validClassIds", "validPetTypeIds", "campaignCurrentMissionId", "materials", "enchantment"].includes(key)) {
                 parts.push({ short: `${key} : ${JSON.stringify(req[key])}` });
             }
         }
@@ -131,6 +143,35 @@
     }
 
     const isConditional = (o) => conditionParts(o).length > 0;
+
+    function materialLabel(m) {
+        const label = [...(m.ids || []).map((id) => (NAMES.materials || {})[id] || `matériau ${id}`), ...(m.type ? [MATERIAL_TYPES[m.type] || m.type] : [])];
+        if (m.rarity) label.push(rangeText("rareté", m.rarity));
+        return label.length ? shortList(label) : "matériau";
+    }
+
+    function materialsText(m) {
+        const what = [];
+        if (m.ids) what.push(m.ids.map((id) => (NAMES.materials || {})[id] || `matériau ${id}`));
+        if (m.type) what.push([MATERIAL_TYPES[m.type] || m.type]);
+        if (m.rarity) what.push([rangeText("rareté", m.rarity)]);
+        const label = what.flat();
+        const q = m.quantity || { min: 1 };
+        const none = q.max === 0;
+        const quantity = none ? "aucun" : q.min > 1 || q.max != null ? rangeText("quantité", q) : "";
+        const base = label.length ? label : ["matériaux"];
+        return {
+            short: `${none ? "sans " : "sac : "}${shortList(base)}${quantity && !none ? ` (${quantity})` : ""}`,
+            full: `matériaux : ${base.join(", ")}${quantity ? ` (${quantity})` : ""}`,
+        };
+    }
+
+    function enchantmentText(e) {
+        const where = e.slot === "weapon" ? "arme" : e.slot === "armor" ? "armure" : "arme ou armure";
+        const what = [...(e.kinds || []).map((k) => ENCHANT_KINDS[k]?.[0] || k), ...(e.types || []).map((t) => ENCHANT_TYPES[t] || t)];
+        const level = e.level ? ` ${rangeText("niv.", e.level)}` : "";
+        return { short: `${where} enchantée${what.length ? ` : ${shortList(what)}` : ""}${level}`, full: `${where} enchantée${what.length ? ` : ${what.join(", ")}` : ""}${level}` };
+    }
 
     function consequences(o) {
         if (!o) return [{ text: "mécanique manquante", cls: "bad" }];
@@ -167,11 +208,13 @@
         if (o.mapTypesDestination) items.push({ text: `🧭 vers : ${o.mapTypesDestination.map(mapType).join(", ")}` });
         if (o.mapTypesExcludeDestination) items.push({ text: `🚫 pas vers : ${o.mapTypesExcludeDestination.map(mapType).join(", ")}` });
         if (o.mapLink) items.push({ text: "🗺️ trajet imposé", title: JSON.stringify(o.mapLink) });
+        if (o.consumeMaterials) items.push({ text: `🧺 −${o.consumeMaterials.quantity} ${materialLabel(o.consumeMaterials)}`, cls: "neg", title: "matériaux consommés" });
+        if (o.giveMaterials) items.push({ text: `🧺 +${o.giveMaterials.quantity} ${materialLabel(o.giveMaterials)}`, cls: "pos", title: "matériau donné (un seul, au hasard parmi ceux qui passent les filtres)" });
         if (o.forceStayInCity) items.push({ text: "🏙️ reste en ville" });
         if (o.forceLeaveCity) items.push({ text: "🚪 quitte la ville" });
         const known = new Set(["requirements", "condition", "oneshot", "health", "money", "lostTime", "effect", "karma", "randomItem", "energy", "gems", "tokens",
             "bonusExperience", "bonusPoints", "randomPet", "givePet", "nextEvent", "mapTypesDestination", "mapTypesExcludeDestination", "mapLink",
-            "forceStayInCity", "forceLeaveCity", "tags"]);
+            "forceStayInCity", "forceLeaveCity", "tags", "consumeMaterials", "giveMaterials"]);
         for (const key of Object.keys(o)) {
             if (!known.has(key)) items.push({ text: `${key} : ${JSON.stringify(o[key])}`, cls: "bad", title: "champ inconnu" });
         }
@@ -186,8 +229,10 @@
     // --- player profile -------------------------------------------------------------
 
     const PROFILE_KEY = "eventRewrites.profile";
-    const profileInputs = { level: "pLevel", karma: "pKarma", attack: "pAttack", defense: "pDefense", speed: "pSpeed", health: "pHealth" };
-    const profile = { on: false, level: 50, karma: 0, attack: 200, defense: 200, speed: 200, health: 500, classId: "0", petId: "" };
+    const profileInputs = { level: "pLevel", karma: "pKarma", attack: "pAttack", defense: "pDefense", speed: "pSpeed", health: "pHealth",
+        cookingLevel: "pCooking", weaponLevel: "pWeaponLevel", armorLevel: "pArmorLevel" };
+    const profile = { on: false, level: 50, karma: 0, attack: 200, defense: 200, speed: 200, health: 500, classId: "0", petId: "",
+        cookingLevel: 0, weaponLevel: 0, armorLevel: 0, hasMaterials: true, weaponEnchant: "", armorEnchant: "" };
     try {
         Object.assign(profile, JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}"));
     } catch {
@@ -211,6 +256,21 @@
             if (!pet || (r.min != null && pet.rarity < r.min) || (r.max != null && pet.rarity > r.max)) fails.push(rangeText(RANGES.petRarity, r));
         }
         if (req.campaignCurrentMissionId !== undefined) fails.push("mission de campagne");
+        for (const m of [req.materials, outcome?.consumeMaterials && { quantity: { min: outcome.consumeMaterials.quantity } }].filter(Boolean)) {
+            const q = m.quantity || { min: 1 };
+            const owned = profile.hasMaterials ? Infinity : 0;
+            if ((q.min != null && owned < q.min) || (q.max != null && owned > q.max)) fails.push("matériaux");
+        }
+        if (req.enchantment) {
+            const e = req.enchantment;
+            const equipped = [["weapon", profile.weaponEnchant], ["armor", profile.armorEnchant]].filter(([slot, id]) => id && (!e.slot || e.slot === slot));
+            const matches = equipped.some(([, id]) => {
+                const kind = id.replace(/\d+$/, ""), level = Number(id.match(/\d+$/)?.[0] || 1);
+                return (!e.kinds || e.kinds.includes(kind)) && (!e.types || e.types.includes(ENCHANT_KINDS[kind]?.[1]))
+                    && (!e.level || ((e.level.min == null || level >= e.level.min) && (e.level.max == null || level <= e.level.max)));
+            });
+            if (!matches) fails.push("enchantement");
+        }
         return fails;
     }
 
@@ -227,6 +287,14 @@
             .map((id) => `<option value="${esc(id)}">${esc(PETS[id].name)}${PETS[id].rarity !== undefined ? ` (rareté ${PETS[id].rarity})` : ""}</option>`).join("");
         $("pClass").value = profile.classId;
         $("pPet").value = profile.petId;
+        const enchantOptions = (slot) => "<option value=\"\">Aucun</option>" + Object.entries(ENCHANT_KINDS).filter(([, k]) => k[2] === slot)
+            .flatMap(([id, k]) => Array.from({ length: k[3] }, (_, i) => i + 1)
+                .map((l) => `<option value="${id}${l}">${esc(k[0])}${k[3] > 1 ? ` ${"I".repeat(l)}` : ""}</option>`)).join("");
+        $("pWeaponEnchant").innerHTML = enchantOptions("weapon");
+        $("pArmorEnchant").innerHTML = enchantOptions("armor");
+        $("pWeaponEnchant").value = profile.weaponEnchant;
+        $("pArmorEnchant").value = profile.armorEnchant;
+        $("pMaterials").value = profile.hasMaterials ? "1" : "0";
     }
 
     function setupProfile() {
@@ -243,6 +311,9 @@
             for (const [key, id] of Object.entries(profileInputs)) profile[key] = Number($(id).value) || 0;
             profile.classId = $("pClass").value;
             profile.petId = $("pPet").value;
+            profile.weaponEnchant = $("pWeaponEnchant").value;
+            profile.armorEnchant = $("pArmorEnchant").value;
+            profile.hasMaterials = $("pMaterials").value === "1";
             sync();
             localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
             const scroll = content.scrollTop;
