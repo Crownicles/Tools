@@ -239,6 +239,78 @@ select {
     margin-top: 18px;
 }
 
+/* --- source: workshop or two GitHub branches --- */
+
+#source {
+    margin-bottom: 18px;
+}
+
+.seg {
+    display: flex;
+    border: 1px solid #475569;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.seg button {
+    flex: 1;
+    padding: 6px 8px;
+    border: 0;
+    background: #0f172a;
+    color: #cbd5e1;
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+}
+
+.seg button + button {
+    border-left: 1px solid #475569;
+}
+
+.seg button.active {
+    background: #334155;
+    color: #fff;
+    font-weight: 600;
+}
+
+#ghForm input[type="text"] {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #475569;
+    background: #0f172a;
+    color: #e5e7eb;
+    margin-top: 2px;
+    font: inherit;
+    font-size: 0.85rem;
+}
+
+.btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: 1px solid #f59e0b80;
+    background: #f59e0b22;
+    color: #fbbf24;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #f59e0b33;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+#ghStatus {
+    margin: 6px 0 0;
+}
+
 /* --- folds (collapsed blocks with a one-line summary) --- */
 
 details.fold {
@@ -455,6 +527,11 @@ pre {
 .badge.bad {
     border-color: #f8717180;
     color: #f87171;
+}
+
+.badge.changed {
+    border-color: #60a5fa80;
+    color: #93c5fd;
 }
 
 /* --- before / after grid: cells of the same row line up --- */

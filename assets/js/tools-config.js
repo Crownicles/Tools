@@ -292,10 +292,10 @@ const toolsConfig = [
     {
         id: 'event-rewrites',
         title: 'Réécriture des big events',
-        description: 'Compare chaque big event avant et après sa réécriture : textes, conditions et conséquences des issues, contexte du lieu, notes de l\'auteur et validation.',
+        description: 'Compare les big events avant et après réécriture, ou entre deux branches GitHub du jeu : textes, conditions et conséquences des issues, contexte du lieu, notes de l\'auteur et validation.',
         path: 'generators/event-rewrites/index.html',
         category: 'Visualisation',
-        tags: ['Events', 'Lore', 'Écriture', 'Karma', 'Comparaison'],
+        tags: ['Events', 'Lore', 'Écriture', 'Karma', 'Comparaison', 'Branches'],
         icon: '✍️',
         status: 'active'
     }

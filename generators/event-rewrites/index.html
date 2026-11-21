@@ -18,6 +18,21 @@
 </header>
 <main>
     <aside id="controls">
+        <section id="source">
+            <h2>Source</h2>
+            <div id="sourceMode" class="seg" role="group" aria-label="Source des données">
+                <button type="button" data-mode="local" title="Réécritures de l'atelier (data.js)">Atelier</button>
+                <button type="button" data-mode="github" title="Comparer deux branches de Crownicles/Crownicles">Branches GitHub</button>
+            </div>
+            <form id="ghForm" hidden>
+                <label>Avant <input type="text" id="ghBase" list="ghBranches" placeholder="develop" autocomplete="off" spellcheck="false"></label>
+                <label>Après <input type="text" id="ghHead" list="ghBranches" placeholder="branche à comparer" autocomplete="off" spellcheck="false"></label>
+                <label class="check small"><input type="checkbox" id="ghAll"> Inclure les events identiques</label>
+                <button type="submit" id="ghLoad" class="btn">Comparer</button>
+                <p id="ghStatus" class="muted small"></p>
+                <datalist id="ghBranches"></datalist>
+            </form>
+        </section>
         <section>
             <h2>Events</h2>
             <ul id="eventList"></ul>
@@ -46,6 +61,7 @@
     <div id="content"></div>
 </main>
 <script src="data.js"></script>
+<script src="github.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

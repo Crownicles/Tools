@@ -1,19 +1,23 @@
 (() => {
-    const DATA = window.EVENT_REWRITES;
+    const LOCAL = window.EVENT_REWRITES && Array.isArray(window.EVENT_REWRITES.events) ? window.EVENT_REWRITES : null;
+    const GH = window.EventRewritesGithub;
     const $ = (id) => document.getElementById(id);
     const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c]));
     const content = $("content");
 
-    if (!DATA || !Array.isArray(DATA.events)) {
-        content.innerHTML = "<div class=\"page\"><h1>Données manquantes</h1><p>Lancez <code>python3 build.py</code> pour générer <code>data.js</code>.</p></div>";
-        return;
-    }
+    // Current data: the workshop bundle (data.js) or a comparison of two GitHub branches (github.js).
+    let DATA = null, PETS = {}, CLASSES = {}, NAMES = {}, EVENTS = [], byId = {};
+    const isGithub = () => DATA?.mode === "github";
 
-    const PETS = DATA.pets || {};
-    const CLASSES = DATA.classes || {};
-    const NAMES = DATA.names || {};
-    const EVENTS = DATA.events;
-    const byId = Object.fromEntries(EVENTS.map((e) => [e.id, e]));
+    function setData(data) {
+        DATA = data;
+        PETS = data?.pets || {};
+        CLASSES = data?.classes || {};
+        NAMES = data?.names || {};
+        EVENTS = data?.events || [];
+        byId = Object.fromEntries(EVENTS.map((e) => [e.id, e]));
+        fillProfileOptions();
+    }
 
     const EFFECTS = {
         occupied: ["🕑", "occupé"], sleeping: ["😴", "endormi", 180], drunk: ["🥴", "ivre", 240], freezing: ["🥶", "gelé", 60],
@@ -24,7 +28,7 @@
     const RANGES = { level: "niveau", karma: "karma", health: "PV", attack: "attaque", defense: "défense", speed: "vitesse", petRarity: "rareté du familier" };
     const ITEM_CATEGORIES = { 0: "arme", 1: "armure", 2: "potion", 3: "objet" };
     const STATS = ["level", "karma", "health", "attack", "defense", "speed"];
-    const TARGETS = { intro: [200, 300], choice: [8, 90], outcome: [150, 280] };
+    const TARGETS = { intro: [180, 420], choice: [8, 90], outcome: [150, 280] };
 
     const nf = new Intl.NumberFormat("fr-FR");
     const num = (n) => nf.format(n).replace("-", "−");
@@ -40,6 +44,8 @@
     const className = (id) => CLASSES[id] || `classe ${id}`;
     const byNumKey = (obj) => Object.keys(obj || {}).sort((a, b) => (+a - +b) || a.localeCompare(b));
     const pct = (a, b) => (b ? Math.round((100 * a) / b) : 0);
+    const stableJson = (v) => JSON.stringify(v, (k, x) => (x && typeof x === "object" && !Array.isArray(x)
+        ? Object.fromEntries(Object.keys(x).sort().map((key) => [key, x[key]])) : x));
 
     const formatText = (text) => esc(text)
         .replace(/(\{\{[^}]+\}\}|\{emote:[^}]+\}|\$t\([^)]+\))/g, "<span class=\"ph\">$1</span>")
@@ -214,15 +220,18 @@
         return `niv. ${profile.level} · karma ${num(profile.karma)} · ${className(profile.classId)} · ${pet}`;
     }
 
-    function setupProfile() {
+    function fillProfileOptions() {
         $("pClass").innerHTML = Object.keys(CLASSES).sort((a, b) => +a - +b).map((id) => `<option value="${esc(id)}">${esc(CLASSES[id])}</option>`).join("");
         $("pPet").innerHTML = "<option value=\"\">Aucun familier</option>" + Object.keys(PETS)
             .sort((a, b) => PETS[a].name.localeCompare(PETS[b].name, "fr"))
-            .map((id) => `<option value="${esc(id)}">${esc(PETS[id].name)} (rareté ${PETS[id].rarity})</option>`).join("");
-        $("profileOn").checked = profile.on;
-        for (const [key, id] of Object.entries(profileInputs)) $(id).value = profile[key];
+            .map((id) => `<option value="${esc(id)}">${esc(PETS[id].name)}${PETS[id].rarity !== undefined ? ` (rareté ${PETS[id].rarity})` : ""}</option>`).join("");
         $("pClass").value = profile.classId;
         $("pPet").value = profile.petId;
+    }
+
+    function setupProfile() {
+        $("profileOn").checked = profile.on;
+        for (const [key, id] of Object.entries(profileInputs)) $(id).value = profile[key];
         const sync = () => {
             $("profileFields").classList.toggle("disabled", !profile.on);
             $("profileSummary").textContent = profileSummary();
@@ -260,7 +269,15 @@
         return { orig, after, conditional };
     }
 
+    const DIFFS = {
+        modified: { cls: "ok", text: "modifié" },
+        added: { cls: "warn", text: "nouveau" },
+        removed: { cls: "err", text: "supprimé" },
+        same: { cls: "pending", text: "identique" },
+    };
+
     function status(e) {
+        if (isGithub()) return DIFFS[e.diff] || DIFFS.same;
         if (e.rewriteError) return { cls: "err", text: "JSON invalide" };
         if (!e.rewrite) return { cls: "pending", text: "en cours" };
         const v = e.validation || { errors: [], warnings: [] };
@@ -274,13 +291,26 @@
     }
 
     function renderList(current) {
+        if (!DATA) {
+            $("eventList").innerHTML = "";
+            $("subtitle").textContent = "Comparaison avant / après des big events.";
+            $("generated").textContent = "";
+            return;
+        }
         $("eventList").innerHTML = EVENTS.map((e) => {
             const st = status(e);
             return `<li class="${e.id === current ? "active" : ""}"><a href="#${esc(e.id)}" title="${esc(st.text)}">
                 <div class="li-top"><span class="dot ${st.cls}"></span><b>#${esc(e.id)}</b> ${esc(e.place || "?")}</div>
                 <div class="li-sub">${esc(st.text)} · ${esc(figures(stats(e)))}</div>
-                <div class="li-sub">${esc(e.rewrite?.model || e.model || "")}</div></a></li>`;
-        }).join("");
+                ${isGithub() ? "" : `<div class="li-sub">${esc(e.rewrite?.model || e.model || "")}</div>`}</a></li>`;
+        }).join("") || "<li class=\"muted small\">Aucun event à afficher.</li>";
+        if (isGithub()) {
+            const { total, changed } = DATA.counts;
+            const fork = DATA.fork?.behind ? ` « Avant » est lu au point de divergence (${DATA.fork.sha.slice(0, 7)}) : ${DATA.base} a ${plural(DATA.fork.behind, "commit")} de plus depuis.` : "";
+            $("subtitle").textContent = `${DATA.base} → ${DATA.head} : ${plural(changed, "event modifié", "events modifiés")} sur ${total}.${fork}`;
+            $("generated").textContent = `Chargé depuis GitHub le ${new Date(DATA.generatedAt).toLocaleString("fr-FR")}`;
+            return;
+        }
         const done = EVENTS.filter((e) => e.rewrite).length;
         $("subtitle").textContent = `${plural(EVENTS.length, "event")}, ${plural(done, "réécrit")}${done < EVENTS.length ? `, ${EVENTS.length - done} en cours` : ""}.`;
         $("generated").textContent = `data.js généré le ${new Date(DATA.generatedAt).toLocaleString("fr-FR")}`;
@@ -296,8 +326,8 @@
 
     function renderContext(e) {
         const n = (group, id) => (NAMES[group] || {})[id] || id;
-        const neighbours = (e.neighbours || []).map((x) =>
-            `<li><b>${esc(x.name)}</b> <span class="muted">${esc(mapType(x.type))} · ${fmtMin(x.minutes)}</span></li>`).join("");
+        const neighbours = e.neighbours === null ? "<li class=\"muted\">chargement…</li>" : (e.neighbours || []).map((x) =>
+            `<li><b>${esc(x.name)}</b> <span class="muted">${esc(x.type ? mapType(x.type) : "?")} · ${fmtMin(x.minutes)}</span></li>`).join("");
         const placeName = (mapId) => (mapId === e.mapId ? e.place : (e.neighbours || []).find((x) => x.mapId === mapId)?.name);
         const triggerText = (t) => Object.entries(t).map(([k, v]) => k === "mapId" ? `carte ${v}${placeName(v) ? ` (${placeName(v)})` : ""}` : `${k} : ${JSON.stringify(v)}`).join(" · ");
         const triggers = (e.triggers || []).map(triggerText);
@@ -321,16 +351,20 @@
             city = fold("🏙️ Menu de la ville", esc(sub), body);
         }
 
+        const source = isGithub()
+            ? `<h4>Branches</h4><p>${esc(DATA.base)} → ${esc(DATA.head)}</p>`
+            : `<h4>Modèle d'IA</h4><p>${esc(e.rewrite?.model || e.model || "?")}</p>`;
         const body = `
-            <blockquote>${esc(e.placeDescription)}</blockquote>
+            ${e.placeDescription ? `<blockquote>${esc(e.placeDescription)}</blockquote>` : ""}
             <div class="ctx-grid">
                 <div><h4>Voisins</h4><ul class="plain">${neighbours || "<li class=\"muted\">aucun</li>"}</ul></div>
                 <div><h4>Déclencheurs</h4><ul class="plain">${triggers.map((t) => `<li>${esc(t)}</li>`).join("") || "<li class=\"muted\">aucun</li>"}</ul>
-                     <h4>Modèle d'IA</h4><p>${esc(e.rewrite?.model || e.model || "?")}</p></div>
+                     ${source}</div>
             </div>
             ${city}
-            ${fold("📖 Canon du lieu", "tout ce que le jeu en dit", `<div class="md">${markdown(e.canonBlock)}</div>`)}`;
-        const sub = [mapType(e.placeType).toLowerCase(), e.isCity && e.placeType !== "ci" ? "ville du jeu" : "", plural((e.neighbours || []).length, "voisin"),
+            ${e.canonBlock ? fold("📖 Canon du lieu", "tout ce que le jeu en dit", `<div class="md">${markdown(e.canonBlock)}</div>`) : ""}`;
+        const sub = [e.placeType ? mapType(e.placeType).toLowerCase() : "", e.isCity && e.placeType !== "ci" ? "ville du jeu" : "",
+            e.neighbours === null ? "" : plural((e.neighbours || []).length, "voisin"),
             triggers.length === 1 ? `déclenché sur ${triggers[0]}` : plural(triggers.length, "déclencheur")].filter(Boolean).join(" · ");
         return fold(`📍 ${esc(e.place)}`, esc(sub), body, { cls: "context" });
     }
@@ -343,7 +377,7 @@
             <h2>Introduction</h2>
             <div class="pair ${single ? "single" : ""}">
                 <div class="side-head">Avant <span class="muted small">${before.length} car.</span></div>
-                ${single ? "" : `<div class="side-head after">Après <span class="muted small">${(after || "").length} car.</span> ${lengthWarning(after, "intro")}</div>`}
+                ${single ? "" : `<div class="side-head after">Après <span class="muted small">${(after || "").length} car.</span> ${lengthWarning(after, "intro")}${isGithub() && before && after !== before ? " <span class=\"badge changed\">modifiée</span>" : ""}</div>`}
                 <div class="cell" data-side="Avant"><p class="prose">${formatText(before)}</p></div>
                 ${single ? "" : `<div class="cell" data-side="Après"><p class="prose">${after ? formatText(after) : "<span class=\"bad\">introduction manquante</span>"}</p></div>`}
             </div></section>`;
@@ -357,6 +391,7 @@
         const meta = [`<span class="oid">#${esc(id)}</span>`];
         if (opts.icon) meta.push(`<span class="o-icon">${esc(opts.icon)}</span>`);
         if (opts.added) meta.push("<span class=\"badge\">nouvelle</span>");
+        if (opts.changed) meta.push("<span class=\"badge changed\">modifiée</span>");
         if (parts.length) {
             const full = parts.map((p) => p.full || p.short).join(" · ");
             meta.push(`<span class="cond" title="${esc(`Condition : ${full}`)}">si ${esc(parts.map((p) => p.short).join(" · "))}</span>`);
@@ -408,10 +443,13 @@
             cells.push(outcomeCell("Avant", id, orig?.outcomes?.[id], orig?.outcomes?.[id] !== undefined ? (e.outcomeData?.[name]?.[id] || {}) : undefined));
             if (!single) {
                 const exists = rw?.outcomes?.[id] !== undefined || rwData[id] !== undefined;
+                const added = !isNew && !origIds.includes(id);
+                const changed = isGithub() && !added && !isNew
+                    && (rw?.outcomes?.[id] !== orig?.outcomes?.[id] || stableJson(rwData[id] || {}) !== stableJson(e.outcomeData?.[name]?.[id] || {}));
                 cells.push(exists
                     ? outcomeCell("Après", id, rw?.outcomes?.[id], rwData[id], {
                         profile: profile.on, possibleCount, showAlways: true, checkLength: true,
-                        icon: endIcons[id], added: !isNew && !origIds.includes(id),
+                        icon: endIcons[id], added, changed,
                     })
                     : outcomeCell("Après", id));
             }
@@ -425,7 +463,7 @@
     }
 
     function renderReview(e) {
-        if (!e.rewrite && !e.rewriteError) return "";
+        if (isGithub() || (!e.rewrite && !e.rewriteError)) return "";
         const notes = e.rewrite?.notes;
         const noteList = Array.isArray(notes) ? notes : notes ? [notes] : [];
         const notesFold = fold("📝 Notes de l'agent", plural(noteList.length, "puce"),
@@ -463,16 +501,21 @@
         const s = stats(e), st = status(e);
         const order = possibilityOrder(e);
         const nav = order.map((n) => `<a href="#${esc(e.id)}" data-scroll="p-${esc(n)}">${esc(n === "end" ? "sans réponse" : n)}</a>`).join("");
-        const banner = e.rewrite ? "" : e.rewriteError
-            ? `<p class="banner">La réécriture existe mais n'est pas lisible : <span class="bad">${esc(e.rewriteError)}</span>. Seule la version d'origine est affichée.</p>`
-            : `<p class="banner">⏳ Réécriture en cours : seule la version d'origine est affichée. Relancez <code>python3 build.py</code> quand <code>out/${esc(e.id)}.json</code> sera prêt.</p>`;
+        const banner = isGithub()
+            ? { added: `<p class="banner">Cet event n'existe pas sur <code>${esc(DATA.base)}</code> : tout est nouveau.</p>`,
+                removed: `<p class="banner">Cet event n'existe plus sur <code>${esc(DATA.head)}</code> : seule la version de <code>${esc(DATA.base)}</code> est affichée.</p>`,
+                same: "<p class=\"banner\">Cet event est identique sur les deux branches.</p>" }[e.diff] || ""
+            : e.rewrite ? "" : e.rewriteError
+                ? `<p class="banner">La réécriture existe mais n'est pas lisible : <span class="bad">${esc(e.rewriteError)}</span>. Seule la version d'origine est affichée.</p>`
+                : `<p class="banner">⏳ Réécriture en cours : seule la version d'origine est affichée. Relancez <code>python3 build.py</code> quand <code>out/${esc(e.id)}.json</code> sera prêt.</p>`;
         const head = s.after === null
             ? plural(s.orig, "issue")
             : `${s.orig} → ${s.after} issues · ${s.conditional} conditionnelles (${pct(s.conditional, s.after)} %)`;
+        const origin = isGithub() ? `${DATA.base} → ${DATA.head}` : e.rewrite?.model || e.model || "?";
         return `<div class="page">
             <div class="event-head">
                 <h1>#${esc(e.id)} · ${esc(e.place)}</h1>
-                <p class="muted"><span class="dot ${st.cls}"></span>${esc(st.text)} · ${esc(head)} · ${esc(e.rewrite?.model || e.model || "?")}</p>
+                <p class="muted"><span class="dot ${st.cls}"></span>${esc(st.text)} · ${esc(head)} · ${esc(origin)}</p>
             </div>
             ${banner}
             ${renderContext(e)}
@@ -497,15 +540,27 @@
     }, true);
 
     function render() {
+        if (!DATA) {
+            renderList(null);
+            return;
+        }
         const id = currentId();
         renderList(id);
-        content.innerHTML = id ? renderEvent(byId[id]) : "<div class=\"page\"><p>Aucun event dans data.js.</p></div>";
+        content.innerHTML = id ? renderEvent(byId[id]) : `<div class="page"><p>${isGithub()
+            ? "Aucune différence entre ces deux branches. Cochez « Inclure les events identiques » pour tout afficher."
+            : "Aucun event dans data.js."}</p></div>`;
         content.querySelectorAll("details.fold").forEach((d) => {
             const key = d.querySelector(":scope > summary .fold-title")?.textContent;
             if (openFolds.has(key)) d.open = true;
         });
         document.title = id ? `Crownicles — Réécriture #${id} ${byId[id].place}` : "Crownicles — Réécriture des big events";
     }
+
+    const rerender = () => {
+        const scroll = content.scrollTop;
+        render();
+        content.scrollTop = scroll;
+    };
 
     content.addEventListener("click", (ev) => {
         const link = ev.target.closest("[data-scroll]");
@@ -519,6 +574,111 @@
         content.scrollTop = 0;
     });
 
+    // --- source: the workshop bundle or two GitHub branches ---------------------------
+
+    const SOURCE_KEY = "eventRewrites.github";
+    let saved = {};
+    try {
+        saved = JSON.parse(localStorage.getItem(SOURCE_KEY) || "{}");
+    } catch {
+        // ignore a corrupted saved source
+    }
+    let loadToken = 0;
+    let branchesLoaded = false;
+    const ghStatus = (html) => { $("ghStatus").innerHTML = html; };
+    const showMessage = (html) => { content.innerHTML = `<div class="page">${html}</div>`; };
+
+    function showMode(mode) {
+        document.querySelectorAll("#sourceMode button").forEach((b) => b.classList.toggle("active", b.dataset.mode === mode));
+        $("ghForm").hidden = mode !== "github";
+    }
+
+    async function loadBranchList() {
+        if (branchesLoaded) return;
+        branchesLoaded = true;
+        try {
+            const names = await GH.listBranches();
+            $("ghBranches").innerHTML = names.map((n) => `<option value="${esc(n)}"></option>`).join("");
+        } catch (err) {
+            branchesLoaded = false;
+            ghStatus(`<span class="bad">${esc(err.message)}</span>`);
+        }
+    }
+
+    function useLocal() {
+        loadToken++;
+        showMode("local");
+        history.replaceState(null, "", location.pathname + location.hash);
+        setData(LOCAL);
+        if (LOCAL) render();
+        else showMessage("<h1>Pas de données locales</h1><p>Lancez <code>python3 build.py</code> pour générer <code>data.js</code>, ou comparez deux branches GitHub.</p>");
+    }
+
+    function useGithub() {
+        showMode("github");
+        loadBranchList();
+        if (!isGithub()) {
+            setData(null);
+            render();
+            showMessage("<h1>Comparer deux branches</h1><p>Choisissez la branche « Avant » et la branche « Après » dans la colonne de gauche, puis cliquez sur <b>Comparer</b>. Seuls les events qui diffèrent sont affichés.</p>");
+        }
+    }
+
+    async function compareBranches() {
+        const base = $("ghBase").value.trim(), head = $("ghHead").value.trim(), all = $("ghAll").checked;
+        if (!base || !head) {
+            ghStatus("<span class=\"bad\">Choisissez les deux branches.</span>");
+            return;
+        }
+        localStorage.setItem(SOURCE_KEY, JSON.stringify({ base, head, all }));
+        const params = new URLSearchParams({ base, head });
+        if (all) params.set("all", "1");
+        history.replaceState(null, "", `${location.pathname}?${params}${location.hash}`);
+
+        const token = ++loadToken;
+        const progress = (text) => { if (token === loadToken) ghStatus(esc(text)); };
+        $("ghLoad").disabled = true;
+        try {
+            const data = await GH.loadComparison({ base, head, all, fallback: LOCAL || {}, onProgress: progress });
+            if (token !== loadToken) return;
+            setData(data);
+            openFolds.clear();
+            render();
+            content.scrollTop = 0;
+            const shown = plural(data.events.length, "event affiché", "events affichés");
+            progress(`${shown}. Chargement des voisins…`);
+            GH.loadPlaces(data, progress)
+                .then(() => progress(`${shown}.`))
+                .catch((err) => {
+                    data.events.forEach((e) => { if (e.neighbours === null) e.neighbours = []; });
+                    if (token === loadToken) ghStatus(`${esc(shown)} <span class="warn">Voisins indisponibles : ${esc(err.message)}</span>`);
+                })
+                .finally(() => { if (token === loadToken) rerender(); });
+        } catch (err) {
+            if (token === loadToken) ghStatus(`<span class="bad">${esc(err.message)}</span>`);
+        } finally {
+            if (token === loadToken) $("ghLoad").disabled = false;
+        }
+    }
+
     setupProfile();
-    render();
+    const params = new URLSearchParams(location.search);
+    $("ghBase").value = params.get("base") || saved.base || "develop";
+    $("ghHead").value = params.get("head") || saved.head || "";
+    $("ghAll").checked = params.has("base") ? params.get("all") === "1" : !!saved.all;
+    $("ghForm").addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        compareBranches();
+    });
+    document.querySelectorAll("#sourceMode button").forEach((b) => b.addEventListener("click", () => (b.dataset.mode === "local" ? useLocal() : useGithub())));
+    if (!GH) $("source").hidden = true;
+
+    if (GH && params.get("base") && params.get("head")) {
+        useGithub();
+        compareBranches();
+    } else if (LOCAL || !GH) {
+        useLocal();
+    } else {
+        useGithub();
+    }
 })();

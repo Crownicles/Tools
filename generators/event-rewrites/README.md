@@ -2,7 +2,15 @@
 
 Before / after viewer for the rewritten big events of Crownicles. For each event it shows the original and the rewrite side by side: introduction, choice labels and outcomes. Each outcome shows its text, its conditions and its consequences (health, money, time, karma, status effect, item, destination…).
 
-Open `index.html` directly (no server needed). The data lives in `data.js`. Link to an event with its id: `index.html#56`.
+Open `index.html` directly (no server needed). Link to an event with its id: `index.html#56`.
+
+The **Source** switch at the top of the sidebar picks where the data comes from:
+
+- **Atelier**: the rewrite workshop bundled in `data.js` (see *Data* below), with the agents' notes and the `validate.py` output.
+- **Branches GitHub**: any two branches of `Crownicles/Crownicles`, loaded from GitHub in the browser (`github.js`). "Avant" is the base branch, read at the point where the compared branch left it (like a pull request, so commits added to the base since then don't show up as reverted); "Après" is the compared branch. Only the events whose texts (`Lang/fr/events.json`) or mechanics (`Core/resources/events/<id>.json`) differ are listed, unless "Inclure les events identiques" is checked. Changed outcomes and intros get a "modifiée" badge. The comparison is shareable: `index.html?base=develop&head=outcomerequirements#30`.
+  - Place names, city menus and event icons are read from the "Après" branch. Neighbours load in the background.
+  - Each comparison uses 5 GitHub API calls (the merge base and folder listings), plus 2 for the branch list (cached 10 min). Unauthenticated, GitHub allows 60 calls per hour. Files come from `raw.githubusercontent.com`, which is not counted.
+  - There is no canon block, agent note or validation in this mode.
 
 ## Features
 
