@@ -1,0 +1,330 @@
+{
+  "eventId": "89",
+  "model": "gpt-6.1-terra",
+  "text": "Dans la Cour du Château, les messagers croisent les passants sur l'esplanade pavée qui mène aux portes royales. Leurs sacoches frôlent les manteaux. Un chat miaule au loin ; soudain, un soldat ordonne à la foule de dégager la voie.",
+  "possibilities": {
+    "stepAside": {
+      "text": "S'écarter de la voie.",
+      "outcomes": {
+        "0": "Vous vous rangez contre un mur, mais la foule reflue dans votre dos et vous comprime contre la pierre. Quand le dernier garde passe, vous reprenez enfin votre souffle, les côtes endolories et la tête encore confuse.",
+        "1": "Un passant vous reconnaît et protège aussitôt sa bourse. Profitant de la cohue, vous glissez la main dans celle de son voisin et y prenez 250 pièces avant de vous fondre parmi les spectateurs.",
+        "2": "Serré entre deux spectateurs, vous sentez une main frôler votre ceinture. Lorsque la colonne s'éloigne, votre bourse est ouverte et 180 pièces ont disparu avec le voleur.",
+        "3": "Un enfant trébuche au bord des pavés. Vous le tirez hors du passage avant que les bottes ne l'atteignent ; sa mère vous reconnaît et vous remercie avec quelques pièces.",
+        "4": "Une main plonge dans la poche d'une spectatrice. Vous rattrapez le voleur entre deux rangs et récupérez sa bourse ; soulagée, la propriétaire vous donne quelques pièces.",
+        "5": "Votre chien se faufile sous les manteaux puis aboie près d'un gamin coincé contre le mur. Vous dégagez le petit et l'aidez à retrouver sa famille avant le passage des gardes."
+      }
+    },
+    "ignore": {
+      "text": "Ignorer la sommation.",
+      "outcomes": {
+        "0": "Vous continuez jusqu'à faire face à une trentaine de soldats. Leurs regards hostiles suffisent à vous faire reculer en bredouillant des excuses ; vos mains tremblent encore après leur passage.",
+        "1": "Vous heurtez un garde en poursuivant votre route. Il vous empoigne, vous frappe et vous jette sur le côté sous les rires de ses compagnons ; vos contusions restent douloureuses.",
+        "2": "Vous traversez la voie malgré la sommation et deux gardes vous arrêtent devant la colonne. Pour cet outrage, ils vous enferment en cellule pendant une journée entière.",
+        "3": "Un soldat lève le poing après votre collision ; vous lui saisissez le bras et le plaquez au sol. Amusé, le roi Aubéric vous fait remettre 2 000 pièces, puis vous ordonne de dégager la voie.",
+        "4": "Vous traversez devant les chevaux. Votre bouclier encaisse le coup d'une hampe, puis vous reculez entre les passants avant que les gardes ne vous saisissent ; votre bras reste meurtri.",
+        "5": "Un garde vous reconnaît à votre tenue de chevalier et vous barre la route de sa lance. Vous rangez votre arme, présentez vos excuses et attendez quelques minutes qu'il vous laisse passer."
+      }
+    },
+    "bow": {
+      "text": "S'incliner devant la Garde.",
+      "outcomes": {
+        "0": "Vous vous inclinez tandis que le carrosse passe et apercevez une main que les passants prêtent à la princesse. Une spectatrice profite de l'arrêt pour soigner votre égratignure, qui cesse enfin de saigner.",
+        "1": "Vous vous rangez et vous inclinez devant la colonne. Plusieurs passants vous imitent ; les gardes bombent le torse, et vous restez dix minutes courbé avant que le dernier ne soit passé.",
+        "2": "Vous posez un genou à terre devant les soldats, seul à saluer une simple patrouille. L'un d'eux vous bouscule en riant ; vous vous relevez avec un bleu douloureux au bras.",
+        "3": "Un garde vous reconnaît et vous demande de laisser un peu plus de place. Vous reculez, puis saluez le passage sans toucher aux bourses que leurs propriétaires serrent contre eux.",
+        "4": "Votre chat se faufile entre les jambes des badauds pendant votre salut. Vous le récupérez sous le regard amusé des gardes et passez quelques minutes à le calmer avant de repartir.",
+        "5": "Vous saluez les gardes puis relevez une spectatrice déséquilibrée par la foule. Reconnaissante, elle vous aide à nettoyer une petite plaie pendant que le cortège poursuit sa marche."
+      }
+    },
+    "otherAlley": {
+      "text": "Emprunter une autre ruelle.",
+      "outcomes": {
+        "0": "Sur un toit, vous repérez un arbalétrier visant le carrosse. Votre avertissement permet à la Garde d'arrêter cet homme de la Main Grise ; un officier vous remet un équipement rare et un familier rare.",
+        "1": "Dans une ruelle, vous signalez à un garde un arbalétrier posté sur un toit. La Garde arrête ce membre de la Main Grise avant son tir ; l'officier vous remet un équipement et 1 200 pièces.",
+        "2": "Des hommes parlent d'attaquer le carrosse ; vous les affrontez dans la ruelle, mais ils vous rouent de coups. Grièvement blessé, vous voyez la Garde les arrêter avant qu'ils ne rejoignent le cortège.",
+        "3": "En contournant la procession, vous achetez un repas et une pièce d'équipement à un étal pour 113 pièces. Le repas vous remet un peu d'aplomb avant que vous repreniez votre chemin.",
+        "4": "Derrière une porte, vous surprenez des bribes sur des marchandises et un passage. Vous reconnaissez la voix du mercenaire Price parmi les interlocuteurs et poursuivez votre chemin sans intervenir.",
+        "5": "Votre chien s'arrête devant une porte entrouverte. Vous apercevez une arbalète et prévenez la Garde, qui interpelle son porteur ; un officier vous remercie avec quelques pièces."
+      }
+    },
+    "end": {
+      "outcomes": {
+        "0": "Vous vous écartez du centre de la voie avec les autres passants. Les gardes défilent sur les pavés tandis que vous longez les murs, à l'écart de leurs bottes et des chevaux.",
+        "1": "La foule vous entraîne hors de la voie avant l'arrivée des soldats. Coincé derrière les spectateurs, vous attendez vingt minutes que la procession soit passée pour reprendre votre chemin.",
+        "2": "Votre chien tire sur sa laisse vers un espace libre entre deux groupes. Vous le suivez et trouvez de quoi vous tenir à l'écart sans gêner le passage des soldats.",
+        "3": "Un passant vous reconnaît et vous fait une place auprès de lui. Vous observez la colonne défiler entre les messagers, puis vous vous remettez en marche quand la voie se dégage."
+      }
+    }
+  },
+  "data": {
+    "triggers": [
+      {
+        "mapId": 41
+      }
+    ],
+    "possibilities": {
+      "stepAside": {
+        "outcomes": {
+          "0": {
+            "health": -8,
+            "effect": "confounded"
+          },
+          "1": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            },
+            "money": 250,
+            "karma": -5
+          },
+          "2": {
+            "requirements": {
+              "level": {
+                "max": 30
+              }
+            },
+            "money": -180
+          },
+          "3": {
+            "requirements": {
+              "karma": {
+                "min": 50
+              }
+            },
+            "money": 80,
+            "karma": 3
+          },
+          "4": {
+            "requirements": {
+              "speed": {
+                "min": 250
+              }
+            },
+            "money": 100,
+            "karma": 3
+          },
+          "5": {
+            "requirements": {
+              "validPetTypeIds": [
+                1
+              ]
+            },
+            "karma": 3
+          }
+        }
+      },
+      "ignore": {
+        "outcomes": {
+          "0": {
+            "effect": "scared"
+          },
+          "1": {
+            "requirements": {
+              "level": {
+                "max": 30
+              }
+            },
+            "health": -30,
+            "effect": "hurt"
+          },
+          "2": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            },
+            "effect": "jailed"
+          },
+          "3": {
+            "requirements": {
+              "attack": {
+                "min": 300
+              }
+            },
+            "money": 2000
+          },
+          "4": {
+            "requirements": {
+              "defense": {
+                "min": 250
+              }
+            },
+            "health": -5
+          },
+          "5": {
+            "requirements": {
+              "validClassIds": [
+                15,
+                21
+              ]
+            },
+            "effect": "occupied",
+            "lostTime": 10
+          }
+        }
+      },
+      "bow": {
+        "outcomes": {
+          "0": {
+            "health": 15
+          },
+          "1": {
+            "requirements": {
+              "karma": {
+                "min": 50
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 10
+          },
+          "2": {
+            "requirements": {
+              "level": {
+                "max": 30
+              }
+            },
+            "health": -10
+          },
+          "3": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            }
+          },
+          "4": {
+            "requirements": {
+              "validPetTypeIds": [
+                3
+              ]
+            },
+            "effect": "occupied",
+            "lostTime": 5
+          },
+          "5": {
+            "requirements": {
+              "speed": {
+                "min": 200
+              }
+            },
+            "health": 8,
+            "karma": 2
+          }
+        }
+      },
+      "otherAlley": {
+        "outcomes": {
+          "0": {
+            "requirements": {
+              "speed": {
+                "min": 250
+              }
+            },
+            "condition": {
+              "canAcceptPet": true
+            },
+            "randomItem": {
+              "rarity": {
+                "min": 5
+              }
+            },
+            "randomPet": {
+              "rarity": {
+                "min": 4
+              }
+            },
+            "karma": 5
+          },
+          "1": {
+            "requirements": {
+              "validClassIds": [
+                2,
+                3,
+                7,
+                15,
+                17,
+                19,
+                21,
+                23
+              ]
+            },
+            "randomItem": {},
+            "money": 1200,
+            "karma": 5
+          },
+          "2": {
+            "requirements": {
+              "level": {
+                "max": 30
+              }
+            },
+            "health": -100,
+            "effect": "injured",
+            "karma": 3
+          },
+          "3": {
+            "requirements": {
+              "level": {
+                "min": 40
+              }
+            },
+            "health": 8,
+            "randomItem": {},
+            "money": -113,
+            "tags": [
+              "moneyUsage"
+            ]
+          },
+          "4": {},
+          "5": {
+            "requirements": {
+              "validPetTypeIds": [
+                1
+              ]
+            },
+            "money": 100,
+            "karma": 3
+          }
+        }
+      },
+      "end": {
+        "outcomes": {
+          "0": {},
+          "1": {
+            "effect": "occupied",
+            "lostTime": 20
+          },
+          "2": {
+            "requirements": {
+              "validPetTypeIds": [
+                1
+              ]
+            }
+          },
+          "3": {
+            "requirements": {
+              "karma": {
+                "min": 50
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "icons": {
+    "end": {
+      "2": "🐕",
+      "3": "👀"
+    }
+  },
+  "notes": [
+    "La sommation, le défilé et les cinq choix d'origine sont conservés dans la Cour du Château.",
+    "Les tentatives contre le carrosse restent locales : le joueur avertit ou résiste, et la Garde intervient.",
+    "Price demeure une voix entendue dans une affaire louche, sans révéler son rôle secret.",
+    "Les issues originales et leurs mécaniques sont conservées ; les conséquences morales reçoivent du karma.",
+    "Des variantes montrent les effets de la réputation, des aptitudes, de la classe et des familiers, avec une issue accessible à tous pour chaque choix.",
+    "Le roi peut récompenser une prise sans adoubement ni obligation de quitter la ville, absente des données d'origine."
+  ]
+}

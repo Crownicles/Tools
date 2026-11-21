@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crownicles — Réécriture des big events</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <div>
+        <h1>✍️ Réécriture des big events</h1>
+        <p id="subtitle">Comparaison avant / après des big events réécrits.</p>
+    </div>
+    <div class="header-actions">
+        <a href="../../index.html" class="home">🏠 Outils</a>
+    </div>
+</header>
+<main>
+    <aside id="controls">
+        <section>
+            <h2>Events</h2>
+            <ul id="eventList"></ul>
+        </section>
+        <details id="profile" class="fold">
+            <summary><span class="fold-title">🎚️ Profil de joueur</span> <span id="profileSummary" class="fold-sub"></span></summary>
+            <div class="fold-body">
+                <label class="check"><input type="checkbox" id="profileOn"> Filtrer les issues « après »</label>
+                <p class="muted small">Les issues impossibles pour ce profil sont grisées.</p>
+                <div id="profileFields">
+                    <div class="grid2">
+                        <label>Niveau <input type="number" id="pLevel" value="50" min="1"></label>
+                        <label>Karma <input type="number" id="pKarma" value="0"></label>
+                        <label>Attaque <input type="number" id="pAttack" value="200" min="0"></label>
+                        <label>Défense <input type="number" id="pDefense" value="200" min="0"></label>
+                        <label>Vitesse <input type="number" id="pSpeed" value="200" min="0"></label>
+                        <label>PV actuels <input type="number" id="pHealth" value="500" min="1"></label>
+                    </div>
+                    <label>Classe <select id="pClass"></select></label>
+                    <label>Familier <select id="pPet"></select></label>
+                </div>
+            </div>
+        </details>
+        <p id="generated" class="muted small"></p>
+    </aside>
+    <div id="content"></div>
+</main>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

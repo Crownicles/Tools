@@ -1,0 +1,301 @@
+{
+ "eventId": "71",
+ "model": "gpt-6.2-sol",
+ "text": "Entre les dunes de la Vallée des Rois, deux tombeaux à demi ensevelis dominent une oasis. Un rire vous fait sursauter quand vous vous penchez pour boire près de la rigole ensablée. Sous sa large capuche, un vieil homme barbu se présente : Xirtex. Il vous offre le gîte sous sa tente.",
+ "possibilities": {
+  "accept": {
+   "text": "Accepter son invitation",
+   "outcomes": {
+    "0": "Sous la tente, vous goûtez la soupe de peyotl par politesse. Le sol semble osciller. Vous vous cognez l'épaule contre un montant en cherchant la sortie. Une fois dehors, la nausée vous cloue au sol et la migraine ne vous quitte pas.",
+    "1": "Xirtex a entendu du bien de vous. Au repas, il confie que Xetrix et lui sont les seuls de leur famille revenus du Célestrum. Il en tient son frère pour responsable. Le sommeil vous remet d'aplomb ; au réveil, vous secouez un scorpion hors de votre botte.",
+    "2": "Vous partagez la galette et le ragoût à l'entrée de la tente. Vous racontez vos voyages ; Xirtex ponctue chaque péripétie d'un rire, souvent avant la chute. Le repas vous rend assez de forces pour reprendre la marche.",
+    "3": "À l'odeur du bol, vous reconnaissez le peyotl et demandez plutôt ce qui mijote dans la petite marmite. Le ragoût vous rend des forces. Xirtex vous ressert, amusé de vous voir gratter le fond de l'écuelle avec un bout de galette.",
+    "4": "Votre scorpion se cale sous l'écuelle de Xirtex, qui n'ose plus y toucher. L'ermite rit de se faire chasser de table et ressort un bol pour chacun. La soupe claire et la galette chaude vous redonnent des forces.",
+    "5": "Après le repas, Xirtex vous indique une passe entre les dunes. Vous suivez les premières traces de pas sans vérifier où elles mènent. Elles se perdent au pied d'un tombeau ; en vous retournant, vous ne distinguez plus la tente."
+   }
+  },
+  "deny": {
+   "text": "Décliner son invitation",
+   "outcomes": {
+    "0": "Vous remerciez Xirtex et déclinez son offre. Il replie le pan de toile qu'il tenait levé pour vous et vous salue de la main. Sans vous retenir, il regagne sa tente pendant que vous reprenez votre traversée.",
+    "1": "Xirtex vous retient par la manche, déjà prêt à remplacer le repas par une tasse de thé. Vous buvez debout, le temps d'échanger deux mots sur le vent qui ensable les pistes, puis vous prenez congé.",
+    "2": "Le vieil homme a entendu dire que vous ne laissez pas les gens en difficulté au bord des pistes. Il n'insiste pas pour vous loger, mais va chercher un objet dans sa collection. Vous acceptez le présent et reprenez votre route.",
+    "3": "Vous déclinez, mais Xirtex vous rappelle pour vous apprendre à vous guider d'un tombeau à l'autre. Vous l'écoutez longuement, jusqu'à ce qu'il se contredise pour la troisième fois. Persuadé qu'il cherche surtout à vous retenir, vous filez.",
+    "4": "Vous prenez congé. Xirtex vous reconnaît au moment où vous tournez les talons et part examiner la corde de sa tente, persuadé que vous y avez touché. Il vous fait patienter pendant qu'il vérifie chaque nœud.",
+    "5": "Vous déclinez l'invitation, mais votre perroquet imite si bien le rire de Xirtex que l'ermite se tourne vers lui pour lui répondre. Vous repartez sans qu'il insiste, tandis que les deux rires se répondent."
+   }
+  },
+  "end": {
+   "outcomes": {
+    "0": "Xirtex vous reconnaît et vous somme de vous écarter de l'eau. Quand il tend le bras, vous le repoussez. Il tombe dans l'oasis et vous détalez tandis qu'il se hisse sur la berge, sa capuche plaquée sur les yeux.",
+    "1": "Xirtex prend votre silence pour du mépris. Il vous lance une poignée de sable au visage, puis s'éloigne en maugréant. Vous vous rincez les yeux au bord de l'eau avant de repartir.",
+    "2": "Votre loutre glisse dans l'eau et refait surface au pied de Xirtex. Il rit de la voir plus à l'aise que vous et vous laisse une écuelle de bouillon. Vous buvez à petites gorgées et reprenez des forces.",
+    "3": "Une rafale emporte le linge que Xirtex a mis à sécher sur la berge. Vous le rattrapez du bout des doigts avant qu'il touche l'eau. L'ermite n'attend plus votre réponse ; il incline la tête quand vous lui rendez son linge.",
+    "4": "Xirtex, faute de réponse, se met à chercher votre familier dans son carnet de bêtes. Comme il ne l'y trouve pas, il en fait le portrait. Vous attendez qu'il termine ses croquis ; il vous glisse quelques pièces pour la pose."
+   }
+  },
+  "steal": {
+   "text": "Le suivre pour le voler",
+   "outcomes": {
+    "0": "Xirtex vous surprend devant ses coffres. Sous votre coup, il recule jusqu'à sa natte et s'y affale, sonné. Il remue déjà quand vous quittez la tente avec une bourse bien pleine et un objet pris dans sa collection.",
+    "1": "Vous vous croyez hors de vue, mais votre ombre tombe en travers de la toile. Xirtex se retourne avant que vous le touchiez et sa dague vous ouvre le flanc. Vous fuyez, une main sur la plaie, tandis que son rire vous suit.",
+    "2": "Xirtex vous laisse près de ses coffres sur la foi des gens de passage. Vous le frappez, puis le remords vous arrête. Vous lui bandez la tête et veillez un moment à son chevet. Quand il se redresse, vous lui laissez des pièces en dédommagement.",
+    "3": "Au bruit de vos pas, Xirtex se retourne et vous surprend à lorgner ses coffres, une pierre à la main. Son poing vous fend la lèvre. Vous abandonnez la pierre et vous éloignez de la tente sans demander votre reste.",
+    "4": "Xirtex vous surprend en train de vider sa coupelle et vous chasse de la tente. Son bâton cogne contre votre brassard sans vous blesser. Vous lâchez la coupelle, mais gardez les pièces déjà glissées dans votre poche.",
+    "5": "Xirtex a entendu parler de vos manières. Il vous laisse partir sans un mot avec la bourse que vous lui avez prise. Il vous faut un bon moment pour trier son contenu : rien que des noyaux. Vous laissez la bourse aux abords de la tente."
+   }
+  },
+  "clearChannel": {
+   "text": "Aider à dégager la rigole",
+   "outcomes": {
+    "0": "Vous proposez de vider la rigole qui alimente la vasque de Xirtex. L'ermite tient sa cruche pendant que vous retirez le sable tassé, poignée après poignée. Quand l'eau recommence à couler, vous avez déjà passé un bon moment au bord de la rigole.",
+    "1": "Une dalle tombée en travers retient le sable dans la rigole. Vous la soulevez sans attendre que Xirtex vienne vous prêter main-forte. L'eau emporte une partie du sable ; vous déblayez vite le reste. Xirtex vous paie quelques pièces pour le coup de main.",
+    "2": "Votre chien gratte le sable où l'eau stagne. Vous dégagez la rigole avec lui, jusqu'à ce que le courant lui mouille le museau. Le travail vous a retenu un moment ; Xirtex partage sa galette avec vous et vous recouvrez quelques forces.",
+    "3": "Sous vos doigts, la pierre au bord de la rigole vibre. Le sable se ride, sauf au-dessus d'une dalle enfouie. Vous la dégagez avec Xirtex et l'eau s'écoule de nouveau. Pour vous remercier, il vous offre un objet de sa collection."
+   }
+  }
+ },
+ "data": {
+  "triggers": [
+   {
+    "mapId": 7
+   }
+  ],
+  "possibilities": {
+   "accept": {
+    "outcomes": {
+     "0": {
+      "effect": "sick",
+      "health": -30
+     },
+     "1": {
+      "requirements": {
+       "karma": {
+        "min": 65
+       }
+      },
+      "health": 40
+     },
+     "2": {
+      "health": 40
+     },
+     "3": {
+      "requirements": {
+       "level": {
+        "min": 60
+       }
+      },
+      "health": 55
+     },
+     "4": {
+      "requirements": {
+       "validPetTypeIds": [
+        44
+       ]
+      },
+      "health": 45
+     },
+     "5": {
+      "requirements": {
+       "level": {
+        "max": 25
+       }
+      },
+      "effect": "lost"
+     }
+    }
+   },
+   "deny": {
+    "outcomes": {
+     "0": {},
+     "1": {},
+     "2": {
+      "requirements": {
+       "karma": {
+        "min": 50
+       }
+      },
+      "randomItem": {}
+     },
+     "3": {
+      "requirements": {
+       "level": {
+        "max": 30
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 10
+     },
+     "4": {
+      "requirements": {
+       "karma": {
+        "max": -30
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 15
+     },
+     "5": {
+      "requirements": {
+       "validPetTypeIds": [
+        54
+       ]
+      }
+     }
+    }
+   },
+   "end": {
+    "outcomes": {
+     "0": {
+      "requirements": {
+       "karma": {
+        "max": -30
+       }
+      },
+      "karma": -3
+     },
+     "1": {},
+     "2": {
+      "requirements": {
+       "validPetTypeIds": [
+        55
+       ]
+      },
+      "health": 15
+     },
+     "3": {
+      "requirements": {
+       "speed": {
+        "min": 220
+       }
+      },
+      "karma": 2
+     },
+     "4": {
+      "requirements": {
+       "petRarity": {
+        "min": 4
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 20,
+      "money": 90
+     }
+    }
+   },
+   "steal": {
+    "outcomes": {
+     "0": {
+      "requirements": {
+       "attack": {
+        "min": 250
+       }
+      },
+      "money": 525,
+      "randomItem": {},
+      "karma": -16
+     },
+     "1": {
+      "requirements": {
+       "level": {
+        "max": 30
+       }
+      },
+      "effect": "hurt",
+      "health": -60,
+      "karma": -5
+     },
+     "2": {
+      "requirements": {
+       "karma": {
+        "min": 50
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 40,
+      "money": -250,
+      "karma": -10
+     },
+     "3": {
+      "health": -15,
+      "karma": -4
+     },
+     "4": {
+      "requirements": {
+       "defense": {
+        "min": 220
+       }
+      },
+      "money": 180,
+      "karma": -5
+     },
+     "5": {
+      "requirements": {
+       "karma": {
+        "max": -50
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 15,
+      "karma": -4
+     }
+    }
+   },
+   "clearChannel": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 20,
+      "karma": 3
+     },
+     "1": {
+      "requirements": {
+       "attack": {
+        "min": 260
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 10,
+      "money": 95,
+      "karma": 4
+     },
+     "2": {
+      "requirements": {
+       "validPetTypeIds": [
+        1
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 10,
+      "health": 20,
+      "karma": 3
+     },
+     "3": {
+      "requirements": {
+       "validClassIds": [
+        24
+       ]
+      },
+      "randomItem": {},
+      "karma": 3
+     }
+    }
+   }
+  }
+ },
+ "icons": {
+  "clearChannel": "💧",
+  "end": {
+   "2": "🦦",
+   "3": "💨",
+   "4": "📓"
+  }
+ },
+ "notes": [
+  "Ancre l'oasis dans les dunes et les tombeaux ensablés de la Vallée des Rois, sans choisir la suite du trajet.",
+  "Garde la soupe de peyotl, le scorpion dans la botte et les sautes d'humeur de Xirtex. Le récit du Célestrum suit sa fiche : il accuse Xetrix du désastre familial, sans que le texte tranche.",
+  "Conserve les quatre branches et toutes les mécaniques d'origine ; distingue les deux repas réparateurs par la confidence de Xirtex et la scène du scorpion.",
+  "Montre les conditions dans les gestes et les réactions : témoignages des voyageurs, ombre sur la toile, brassard, familiers et pierre résonante. Les coups, vols et gestes d'aide ont un effet sur le karma.",
+  "Ajoute une possibilité d'entraide autour de la rigole, à l'échelle de l'oasis. Chaque branche garde au moins une issue sans condition."
+ ]
+}

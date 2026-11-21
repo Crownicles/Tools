@@ -1,0 +1,285 @@
+{
+  "eventId": "56",
+  "model": "claude-haiku-5.5",
+  "text": "Sur la Plage Sentinelle, le sable fin refroidit et l'air iodé se charge de sel. Le soleil plonge derrière les dunes : il vous faut un abri. Au sommet d'une dune, une tente grise abrite Gruffo, alchimiste des marais, qui cherche un cobaye pour ses potions, contre une bourse bien garnie.",
+  "possibilities": {
+    "beach": {
+      "text": "Ignorer l'alchimiste et aller profiter de la plage.",
+      "outcomes": {
+        "0": "Vous laissez vos affaires au bord de l'eau et filez prendre un bain de minuit dans la mer turquoise. Au retour sur le sable, vos sacs ont été fouillés : une partie de vos pièces a disparu, et personne n'a rien vu.",
+        "1": "Dans les rochers, une horde de petits crustacés, célèbres pour leur nombre sur cette plage, s'agite à vos pieds. Vous les observez quelques instants, puis vous reprenez le chemin du retour, le sable encore tiède sous vos semelles.",
+        "2": "Le ventre vide, vous fouillez sous une pierre à la recherche de crustacés. Un grand oiseau fond soudain sur le bernard-l'ermite que vous veniez d'apercevoir. Surpris, vous reculez, votre pied dérape sur les rochers et vous vous foulez la cheville.",
+        "3": "Vous gagnez la mer à grandes brasses. Au retour, un gamin détale avec votre sac : vous le rattrapez avant les rochers, récupérez vos affaires et le laissez partir, penaud. Il vous faut quelques minutes pour reprendre votre souffle.",
+        "4": "Dès que vous posez vos affaires, les vacanciers les surveillent d'un œil méfiant. Un sauveteur vous demande poliment de vous éloigner et vous escorte jusqu'aux rochers. Il vous faut bien vingt minutes pour retrouver un peu de calme."
+      }
+    },
+    "drinkBlack": {
+      "text": "Boire la potion noire.",
+      "outcomes": {
+        "0": "Considérant que c'est de l'argent facile, vous avalez la décoction fumante. Quelques gorgées plus tard, des vomissements vous secouent, puis les convulsions. Vous tenez bon, mais il vous faudra presque quarante minutes pour reprendre vos esprits et poursuivre votre aventure.",
+        "1": "Vous acceptez de servir de cobaye et Gruffo vous tend une fiole contenant un liquide charbonné. Une fois bu, le sommeil vous terrasse. Vous vous réveillez trois heures plus tard, installé sur une branche de cocotier, une bourse remplie d'or au pied de l'arbre.",
+        "2": "Gruffo vous reconnaît et hésite un instant avant de vous tendre une décoction à peine amère. Vous vous endormez paisiblement sur sa paillasse, et vous réveillez en pleine forme.",
+        "3": "Vous avalez la décoction sans trop réfléchir, mais votre corps épuisé la rejette aussitôt. Vomissements et vertiges vous clouent au sol. Gruffo vous couvre d'une couverture avant que vous ne repreniez vos esprits."
+      }
+    },
+    "drinkRandom": {
+      "text": "Boire une potion au hasard.",
+      "outcomes": {
+        "0": "Pensant à la compensation, vous avalez d'un trait la fiole tannée. Une brûlure vous gagne la gorge, puis les mots se mélangent. Pris de nausées, vous tentez de frapper Gruffo, qui esquive sans peine. Au petit matin, il finit par vous payer, en pièces comptées.",
+        "1": "Vous acceptez sans hésiter, et refusez même la somme que Gruffo vous propose : participer à une découverte vous gonfle d'honneur. Une seule gorgée de la minuscule fiole cramoisie suffit, et une agréable chaleur se répand dans tout votre corps. Vous voilà en bien meilleure forme.",
+        "2": "Alléché par l'appât du gain, vous buvez le liquide écarlate d'un trait. Gruffo vous lance un regard dépité : son breuvage agit à l'instant, et il vous promet que vous ne serez pas malade. Il vous pousse dehors de sa tente, sans un sou, et vous restez assis un moment sur le sable.",
+        "3": "Avec méfiance, vous avalez le breuvage couleur saphir. Un froid glacial vous saisit tout entier, jusqu'aux os. Vous apostrophez Gruffo de charlatan racorni ; celui-ci vous installe dans un monceau de couvertures chaudes, sans répondre.",
+        "4": "La fiole vibre doucement entre vos doigts, signe d'une décoction bien dosée. Vous la videz sans crainte. Gruffo, impressionné, vous glisse un objet de sa réserve en guise de remerciement.",
+        "5": "Gruffo vous tend la fiole avec un sourire de connivence. Vous la buvez sans malaise, et il vous confie en plus un objet rare de sa réserve, sans rien vouloir en échange."
+      }
+    },
+    "refuse": {
+      "text": "Refuser la proposition de Gruffo.",
+      "outcomes": {
+        "0": "Vous refusez poliment l'offre et demandez où trouver un endroit sûr pour dormir. Voyant votre mine inquiète, Gruffo vous propose de rester sous sa tente jusqu'au lever du soleil. Vous acceptez de bon cœur et vous endormez, serein, pour vous réveiller reposé.",
+        "1": "Vous refusez de servir de cobaye, mais Gruffo vous propose de préparer votre propre potion. Vous dosez les ingrédients au hasard et buvez la décoction translucide d'un trait. Vertiges et hallucinations : vous croyez voir la princesse Mélisende, dont personne ne connaît le visage.",
+        "2": "Vous refusez l'offre et demandez à voir la potion. Vous reconnaissez les proportions d'une décoction bien dosée : la fiole vibre doucement entre vos doigts, signe que la Résonance tient ses promesses. Vous repartez plus vif.",
+        "3": "Vous refusez poliment, mais Gruffo vous jette un regard méfiant et ferme sa tente à double tour. Vous passez la nuit sur la dune, transi par le vent marin, sans la moindre couverture.",
+        "4": "Vous refusez l'offre, et Gruffo semble déçu. Vous discutez avec lui ; quand vous demandez d'où viennent ses connaissances, il lâche, avec amertume, le nom de son maître : Périssien, ménestrel connu dans tout le pays. Il ne dira rien de l'endroit où le trouver.",
+        "5": "Vous refusez de servir de cobaye, mais Gruffo vous propose de préparer votre propre potion. Vous dosez les ingrédients d'une main sûre et buvez la décoction translucide sans broncher. Un léger étourdissement vous force à vous asseoir un moment avant de reprendre la route."
+      }
+    },
+    "end": {
+      "outcomes": {
+        "0": "Vous finissez par accepter l'offre alléchante de Gruffo. Il vous demande de patienter le temps de préparer la décoction. Alors que vous étudiez attentivement un alambic, un coup puissant s'abat sur votre joli crâne.",
+        "1": "Devant votre air inerte, Gruffo s'impatiente et vous jette hors de sa tente. Il vous facture le temps perdu, qu'il note dans un carnet, à côté de ses propres ingrédients impayés. Vous reprenez votre route sans tarder.",
+        "2": "Devant votre incapacité à vous décider, Gruffo n'insiste pas et vous offre une tasse de thé noir. Vous discutez de longues minutes de tout, sauf d'alchimie. Vous reprenez votre chemin alors que la lune éclaire timidement la plage.",
+        "3": "Gruffo ne vous force pas la main. Il vous laisse dormir sous sa tente, une couverture sur les épaules, et vous réveille au lever du soleil, reposé, en vous souhaitant bonne route.",
+        "4": "Quelque chose remue derrière la toile. Vous vous retournez assez vite pour esquiver la matraque d'un voleur, qui file sur la plage sans rien emporter.",
+        "5": "Dès qu'il vous voit traîner près de sa tente, Gruffo éteint sa lampe sans un mot et ferme la toile. Vous passez la nuit sur la dune, transi, à écouter le ressac."
+      }
+    }
+  },
+  "data": {
+    "triggers": [
+      {
+        "mapId": 1
+      }
+    ],
+    "possibilities": {
+      "beach": {
+        "outcomes": {
+          "0": {
+            "requirements": {
+              "speed": {
+                "max": 249
+              }
+            },
+            "money": -100
+          },
+          "1": {},
+          "2": {
+            "health": -3,
+            "effect": "feetHurt"
+          },
+          "3": {
+            "requirements": {
+              "speed": {
+                "min": 250
+              }
+            },
+            "karma": 2,
+            "effect": "occupied",
+            "lostTime": 10
+          },
+          "4": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 20
+          }
+        }
+      },
+      "drinkBlack": {
+        "outcomes": {
+          "0": {
+            "requirements": {
+              "health": {
+                "min": 100
+              }
+            },
+            "effect": "confounded",
+            "health": -70
+          },
+          "1": {
+            "effect": "sleeping",
+            "money": 400
+          },
+          "2": {
+            "requirements": {
+              "karma": {
+                "min": 50
+              }
+            },
+            "effect": "sleeping",
+            "health": 10
+          },
+          "3": {
+            "requirements": {
+              "health": {
+                "max": 99
+              }
+            },
+            "effect": "confounded",
+            "health": -20
+          }
+        }
+      },
+      "drinkRandom": {
+        "outcomes": {
+          "0": {
+            "effect": "drunk",
+            "money": 200,
+            "tags": [
+              "drinkAlcohol"
+            ],
+            "karma": -3
+          },
+          "1": {
+            "health": 10,
+            "karma": 2
+          },
+          "2": {
+            "effect": "occupied",
+            "lostTime": 20
+          },
+          "3": {
+            "effect": "freezing",
+            "health": -20,
+            "karma": -1
+          },
+          "4": {
+            "requirements": {
+              "validClassIds": [
+                24
+              ]
+            },
+            "randomItem": {}
+          },
+          "5": {
+            "requirements": {
+              "karma": {
+                "min": 80
+              }
+            },
+            "randomItem": {
+              "rarity": {
+                "min": 3
+              }
+            }
+          }
+        }
+      },
+      "refuse": {
+        "outcomes": {
+          "0": {
+            "effect": "sleeping",
+            "health": 15
+          },
+          "1": {
+            "requirements": {
+              "level": {
+                "max": 39
+              }
+            },
+            "effect": "confounded"
+          },
+          "2": {
+            "requirements": {
+              "validClassIds": [
+                24
+              ]
+            },
+            "health": 5
+          },
+          "3": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            },
+            "effect": "freezing"
+          },
+          "4": {},
+          "5": {
+            "requirements": {
+              "level": {
+                "min": 40
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 15
+          }
+        }
+      },
+      "end": {
+        "outcomes": {
+          "0": {
+            "requirements": {
+              "speed": {
+                "max": 249
+              }
+            },
+            "effect": "confounded",
+            "health": -10
+          },
+          "1": {
+            "money": -225
+          },
+          "2": {
+            "effect": "occupied",
+            "health": 5,
+            "lostTime": 20
+          },
+          "3": {
+            "requirements": {
+              "karma": {
+                "min": 50
+              }
+            },
+            "effect": "sleeping",
+            "health": 10
+          },
+          "4": {
+            "requirements": {
+              "speed": {
+                "min": 250
+              }
+            }
+          },
+          "5": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            },
+            "effect": "freezing"
+          }
+        }
+      }
+    }
+  },
+  "icons": {
+    "end": {
+      "3": "😴",
+      "4": "🏃",
+      "5": "🥶"
+    }
+  },
+  "notes": [
+    "Lore : Gruffo est un alchimiste des marais qui doit ses ingrédients ; la note dans un carnet (end.1) renvoie au Grand Livre sans le nommer. Périssien est présenté comme son maître (refuse.4), et la Résonance apparaît chez le mage (refuse.2, drinkRandom.4).",
+    "Canon : l'introduction nomme la Plage Sentinelle et ne suppose que Mergagnan comme voisin, sans destination suivante ni forceStayInCity (le lieu n'est pas une ville).",
+    "Conditions ajoutées : vitesse (vol, rattrapage, esquive du coup), karma (méfiance de Gruffo, confiance, cadeau), vie (potion noire, selon la constitution), niveau (préparation de la potion), classe Mage mystique (lecture de la décoction).",
+    "Cohérence texte et mécanique : feetHurt pour la cheville foulée, santé -10 pour le coup de l'end.0, objet rare en récompense de karma élevé, karma -3 pour la violence envers Gruffo et +2 pour le refus de la somme.",
+    "Conservé : les cinq possibilités d'origine et leurs idées (bain et vol, crabes, pied foulé, potion noire, ivresse, refus, Périssien, fin sans réponse), ainsi que l'humour du charlatan et du joli crâne.",
+    "Style : aucun discours direct, introduction sans points de suspension, tente et bourse retirées des issues quand aucune mécanique ne les portait."
+  ]
+}

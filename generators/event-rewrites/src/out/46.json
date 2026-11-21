@@ -1,0 +1,464 @@
+{
+ "eventId": "46",
+ "model": "claude-fable-5.2",
+ "text": "À Boug-Coton, devant l'Auberge du Seigneur, le célèbre ménestrel Pérotin règle son ardoise en chansons. On dit qu'avec sa mandoline et ses poudres, il fait vivre ses couplets pour de bon à qui les écoute. Il vous repère dans l'attroupement et vous demande le thème du prochain.",
+ "possibilities": {
+  "end": {
+   "outcomes": {
+    "0": "Faute de réponse, Pérotin hausse les épaules, vous oublie et reprend ses rengaines ordinaires, justes et sans âme, celles qui suffisent à payer un souper. L'attroupement se clairsème. Vous reprenez votre chemin sans avoir rien vu de ses prodiges.",
+    "1": "Votre silence fait de vous un cobaye idéal. Pérotin vous souffle sa poudre, vous mène dans la ruelle voisine et chante un laboratoire où vous torturez savamment un cochon magnifique. Votre patron vous offre deux objets ; vous vous réveillez hébété, avec le moins précieux.",
+    "2": "Curieux de ce que cache votre silence, Pérotin vous fait boire de quoi penser tout haut. Vous ne dites rien. Il force la dose et tend l'oreille : toujours rien, pas l'ombre d'une pensée. Pris de panique, il appelle la Garde, qui vous enferme pour folie.",
+    "3": "Pérotin vous fait boire de quoi penser tout haut et n'entend rien, pas l'ombre d'une pensée. Paniqué, il appelle la Garde. Le sergent vous reconnaît, se porte garant de votre tête et vous allonge sur un banc près de l'auberge. Vous y dormez trois heures, le temps que tout passe.",
+    "4": "Vous ne répondez pas, et Pérotin s'approche, une pincée de poudre au bout des doigts. Votre familier gronde ; le ménestrel sursaute et respire toute la pincée. Il vous prend pour un aubergiste impayé, bredouille des excuses et vous règle une ardoise qui n'est pas la vôtre."
+   }
+  },
+  "singCrazyLove": {
+   "text": "Chanter un amour fou.",
+   "outcomes": {
+    "0": "Le premier accord vous couche dans un lit, auprès de votre bien-aimée. Puis vous remarquez la sangle à votre taille, et l'absence de vos bras comme de vos jambes. Pérotin conclut que tout cela n'était qu'un rêve ; vous retrouvez vos membres, mais pas votre calme.",
+    "1": "La chanson vous embarque en mer avec un seul matelot, votre amour. Sur une île déserte, une croix marque un coffre, et vous repartez avec le coffre, sans le matelot. Au réveil, Pérotin a empoché l'or pour prix de la mélodie, mais l'objet du trésor est bien dans vos mains.",
+    "2": "Pérotin a entendu votre nom à propos du Concours, mais renonce à chanter vos noces avec une princesse qui refuse tout le monde. Il entonne la Vieille et le Faux Monstre, où vous tenez le monstre. La poudre est trop légère, vous connaissez la fin : vingt minutes perdues, poliment.",
+    "3": "Votre familier vient se poser sur le manche de la mandoline, et Pérotin, ravi, l'ajoute au refrain. La vision tourne à la noce de village : on danse, on pleure, on trinque. Quand elle se dissipe, l'attroupement ému a rempli le chapeau, et le ménestrel partage.",
+    "4": "Pérotin vous dévisage, sourit, et chante votre passion pour une détrousseuse de grands chemins qui vous ressemble trait pour trait. Vous filez le parfait amour jusqu'au matin. Au réveil, la belle s'est envolée et votre bourse a maigri ; le ménestrel jure n'y être pour rien.",
+    "5": "Pérotin remarque vos bandages et change de couplet : l'amante de sa chanson passe la nuit à panser vos plaies avec une ferveur inquiétante. Au réveil, quelqu'un a bel et bien refait vos pansements, et le ménestrel sifflote en rebouchant un pot d'onguent."
+   }
+  },
+  "singHero": {
+   "text": "Chanter votre vie et vos exploits d'aventurier.",
+   "outcomes": {
+    "0": "Pérotin ne connaît du métier que ce qu'on en dit dans les auberges, et vos deux ou trois étapes ne l'aident guère. Sa chanson vous promène dans une forêt sans histoire, jusqu'à une clairière vide. Vous en ressortez cinq minutes plus tard, déçu de la ballade comme du ménestrel.",
+    "1": "Pérotin vous renvoie deux minutes en arrière, juste avant votre demande. Sa poudre est si fidèle que vous refaites la même demande, et lui la même chanson, en boucle. Seul à s'en apercevoir, il prend pitié à la fin de la journée et vous fait respirer de quoi rompre le charme.",
+    "2": "La chanson vous mène, en rêve ou pour de bon, dans les caves creusées sous l'auberge, par un passage semé de pièges que vous évitez tous. Dans la salle aux coffres, Pérotin détale avec l'essentiel. Il vous reste le coffre principal, son or, un objet, et une nausée tenace.",
+    "3": "La chanson vous fait descendre dans les caves sous l'auberge, entre des pièges que vous enjambez sans ralentir. Quand Pérotin file avec les coffres, vous le rattrapez à la troisième marche. Beau joueur, il rend la moitié des bourses et un objet, et jure que c'était prévu.",
+    "4": "Vous lui racontez vos embuscades déjouées et vos nuits sur les routes. Pérotin n'a rien à inventer : sa chanson fait revivre vos étapes à tout l'attroupement, et les nobles sortis de l'auberge en redemandent. Le chapeau se remplit, et il vous en laisse la moitié.",
+    "5": "Pérotin vous ramène deux minutes plus tôt, et vous voilà à redemander la même chanson, encore et encore. Au vingtième tour, votre familier, excédé, se met à brailler à contretemps. La mandoline déraille, la boucle casse, et vous n'y laissez qu'une petite heure.",
+    "6": "Pérotin n'a pas fini le premier couplet que les villageois ajoutent les leurs : chacun a un service rendu à raconter, et votre nom dedans. La chanson devient la leur plus que la sienne. À la fin, une vieille femme vous met un objet dans les mains et refuse de le reprendre."
+   }
+  },
+  "singLove": {
+   "text": "Chanter un amour terne et redondant.",
+   "outcomes": {
+    "0": "Vous voilà dans une vieille masure, à retourner la terre avec votre amour, récoltant chaque mois juste de quoi tenir. Vous y passez trente ans sans ennui. Pérotin vous réveille six heures plus tard : il a eu la main lourde, et chaque minute de chanson vous a valu un mois.",
+    "1": "Qu'on puisse réclamer un amour sans couleur inquiète Pérotin, qui vous croit au fond du trou. Il range ses poudres et vous chante, tout doucement, une chanson de réconfort. Vous n'étiez pas triste en arrivant, mais elle vous fait un bien fou tout de même.",
+    "2": "Vous voyant si savant en amours sans passion, Pérotin vous chante un couple où votre moitié, c'est vous. La dispute entre vous et vous dégénère devant ses admirateurs. Il arrête tout et réclame un dédommagement ; vous payez, encore tout triste de vous être quitté.",
+    "3": "Pérotin vous chante un couple où votre moitié, c'est vous, et la scène de ménage tourne au pugilat. Vous avez la main lourde : un seul coup, et vous vous étendez vous-même sur le pavé. L'attroupement, qui n'avait jamais vu cela, couvre de pièces votre mâchoire endolorie.",
+    "4": "Pérotin avise votre familier, immobile depuis votre arrivée, et tient son modèle. Sa chanson décrit un amour si lent, si égal, si parfaitement tiède que vous piquez du nez au deuxième couplet. Vous vous réveillez contre le mur de l'auberge, la bête endormie sur vos genoux.",
+    "5": "Pérotin vous chante un couple où votre moitié, c'est vous, et la dispute dégénère devant ses admirateurs. Il réclame un dédommagement, mais ceux-ci, qui vous connaissent de nom, se cotisent à votre place. Le surplus vous revient, pour vous consoler de la rupture."
+   }
+  },
+  "singRoyalty": {
+   "text": "Chanter la royauté et le pouvoir en place.",
+   "outcomes": {
+    "0": "Pérotin sait flatter quand l'ardoise est longue : il chante les louanges des ducs, des comtes et de leurs aïeux. Un seigneur du voisinage, descendu à l'auberge, s'arrête, la main sur le cœur. À la dernière note, il vous remet, à vous comme au ménestrel, une bourse bien ronde.",
+    "1": "Pérotin, qui n'aime guère le pouvoir en place, vous souffle sa poudre et vous fait marcher sur le trône à la tête du peuple. Une corde casse. Vous êtes debout sur une table de l'Auberge du Seigneur, une fourche à la main, devant des nobles muets. La Garde vous enferme pour folie.",
+    "2": "Pérotin vous prête pour une journée les yeux de la reine Aliénor. Vous y gagnez des audiences interminables, des broderies et des ragots sur une fille qui a encore refusé un champion. Rien d'utile, tout sort de ses fioles. Vous revenez à vous quelques instants plus tard.",
+    "3": "Pérotin chante les louanges des ducs et des comtes, et un seigneur descendu à l'auberge s'arrête, conquis. Puis son regard tombe sur vous, et son sourire se fige. La bourse va tout entière au ménestrel, qui hausse les épaules d'un air désolé. Vous repartez les mains vides.",
+    "4": "À la vue de votre harnois, Pérotin ravale un couplet moins prudent et entonne la geste des sept Élus. Le temps d'une chanson, vous chevauchez aux côtés de la reine Ermengarde. À la fin, un vieux noble sorti de l'auberge vous serre la main et vous laisse un objet de sa jeunesse.",
+    "5": "Pérotin vous fait marcher sur le trône à la tête du peuple, puis une corde casse. Vous voilà debout sur une table de l'auberge, fourche en main. Vous sautez par la fenêtre avant que la Garde ait contourné les nobles, et laissez passer l'orage derrière la forge, une petite heure.",
+    "6": "Pérotin trouve sa royauté toute faite : votre familier. La chanson le couronne, lui donne une cour, des impôts et un bouffon, qui est vous. Les nobles, hilares, paient un deuxième couplet, puis un troisième. Vous repartez la bourse plus lourde et l'orgueil plus léger."
+   }
+  },
+  "singWork": {
+   "text": "Chanter le métier de ménestrel.",
+   "outcomes": {
+    "0": "Attristé par la demande, Pérotin vous donne son rôle : vous vous voyez arriver, réclamer cette chanson, et vous vous la chantez, sans fin. Il rompt la boucle d'une gorgée d'antidote. Affolé, vous courez demander au premier passant quel jour on est : le même, mais déjà le soir.",
+    "1": "Nostalgique, Pérotin chante ses débuts. Vous voilà sur les bancs de maître Périssien, bercé par ses leçons et ses fumigations. À la dernière, le vieux maître doit vous léguer sa mandoline ; Pérotin, qui y tient, change la fin, et vous repartez avec un autre objet, bien réel.",
+    "2": "Pérotin chante son rêve : vous jouez seul dans une ruelle du village, une guitare aux doigts, quand un grand seigneur vous commande une ballade sur son amour. Vous l'improvisez. Le seigneur était réel, sa pile d'or aussi ; vous en laissez une part au ménestrel, en guise de don.",
+    "3": "Pérotin chante la misère du métier, et votre familier comprend avant vous : il attrape le chapeau et fait le tour de l'attroupement, en insistant auprès des nobles sortis de l'auberge. Personne n'ose refuser. Le ménestrel, bon prince, vous laisse la part du quêteur.",
+    "4": "Pérotin juge qu'un débutant apprend mieux en pratiquant. Il vous met un tambourin dans les mains et vous fait battre la mesure tout le temps de son tour de chant, sans poudre et sans pitié. Vous y gagnez des ampoules, quelques pièces, et un respect neuf pour le métier.",
+    "5": "Pérotin vous donne son rôle, et vous voilà à vous réclamer cette chanson, puis à vous la chanter, sans fin. Mais vous avez encaissé pire que ses poudres : au bout de deux heures, la vision se fendille toute seule, et vous en sortez avant qu'il ait débouché l'antidote.",
+    "6": "Pérotin chante son rêve : vous jouez dans une ruelle quand un grand seigneur vous commande une ballade sur son amour. Vous l'improvisez. Le seigneur était réel, et il vous a reconnu : sa pile d'or va au ménestrel, qui vous en concède quelques pièces pour la peine."
+   }
+  },
+  "singSober": {
+   "text": "Demander une chanson sans poudre ni fiole.",
+   "outcomes": {
+    "0": "Piqué, Pérotin range ses fioles et joue à sec. La chanson est jolie, juste, et parfaitement ordinaire : rien ne bouge, personne ne s'envole, deux badauds bâillent. Il termine sans vous regarder. Vous avez écouté dix minutes de mandoline, ni plus ni moins.",
+    "1": "Sans ses poudres, Pérotin serre les dents et joue. Pendant trois mesures, la mandoline chante toute seule : la place tangue, les pavés fredonnent, un noble se prend pour une cruche. Puis il perd la note et tout retombe d'un coup. Vous restez un moment à chercher où est le haut.",
+    "2": "Pérotin hésite, puis vous entraîne à l'écart : devant vous, il veut bien essayer. Les mains un peu tremblantes, il joue tout bas un air de son vieux maître. Rien ne s'anime, mais quelque chose se dénoue entre vos épaules, et vos douleurs de route s'effacent avec la dernière note.",
+    "3": "Pérotin vous toise : pour quelqu'un dont on parle ainsi dans les auberges, la chanson sans accessoires se paie d'avance, et double. L'attroupement approuve. Vous payez, il joue un air convenable où rien ne s'anime, et salue avec un sourire que vous n'aimez pas.",
+    "4": "À jeun, Pérotin perd la note à la troisième mesure, et la mandoline se met à vibrer seule. Vous posez la main sur la caisse, comme sur un cristal qui s'emballe, et la vibration se range. La chanson s'anime, sagement, jusqu'au bout. Stupéfait, il vous offre un objet de sa besace.",
+    "5": "Sans poudre, la chanson est jolie et rien de plus, jusqu'à ce que votre familier se mette à hurler en mesure. L'attroupement, qui s'ennuyait, éclate de rire et en redemande. Pérotin, bon comédien, prétend que le duo était prévu et vous laisse une part du chapeau."
+   }
+  }
+ },
+ "data": {
+  "triggers": [
+   {
+    "mapId": 6
+   }
+  ],
+  "possibilities": {
+   "end": {
+    "outcomes": {
+     "0": {},
+     "1": {
+      "effect": "confounded",
+      "randomItem": {}
+     },
+     "2": {
+      "requirements": {
+       "karma": {
+        "max": 49
+       }
+      },
+      "effect": "jailed"
+     },
+     "3": {
+      "requirements": {
+       "karma": {
+        "min": 50
+       }
+      },
+      "effect": "sleeping"
+     },
+     "4": {
+      "requirements": {
+       "validPetTypeIds": [
+        1,
+        28,
+        21,
+        57,
+        56,
+        60,
+        45,
+        65,
+        64
+       ]
+      },
+      "money": 110,
+      "karma": -1
+     }
+    }
+   },
+   "singCrazyLove": {
+    "outcomes": {
+     "0": {
+      "effect": "scared"
+     },
+     "1": {
+      "randomItem": {}
+     },
+     "2": {
+      "requirements": {
+       "level": {
+        "min": 40
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 20
+     },
+     "3": {
+      "requirements": {
+       "validPetTypeIds": [
+        11,
+        62,
+        94,
+        54,
+        26,
+        95
+       ]
+      },
+      "money": 150
+     },
+     "4": {
+      "requirements": {
+       "karma": {
+        "max": -30
+       }
+      },
+      "money": -120
+     },
+     "5": {
+      "requirements": {
+       "health": {
+        "max": 50
+       }
+      },
+      "health": 15
+     }
+    }
+   },
+   "singHero": {
+    "outcomes": {
+     "0": {
+      "requirements": {
+       "level": {
+        "max": 30
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 5
+     },
+     "1": {
+      "effect": "occupied",
+      "lostTime": 480
+     },
+     "2": {
+      "effect": "sick",
+      "money": 200,
+      "randomItem": {}
+     },
+     "3": {
+      "requirements": {
+       "speed": {
+        "min": 220
+       }
+      },
+      "money": 420,
+      "randomItem": {}
+     },
+     "4": {
+      "requirements": {
+       "level": {
+        "min": 50
+       }
+      },
+      "money": 300
+     },
+     "5": {
+      "requirements": {
+       "validPetTypeIds": [
+        54,
+        10,
+        95,
+        97,
+        19,
+        12
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 60
+     },
+     "6": {
+      "requirements": {
+       "karma": {
+        "min": 80
+       }
+      },
+      "randomItem": {}
+     }
+    }
+   },
+   "singLove": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 360
+     },
+     "1": {
+      "health": 20
+     },
+     "2": {
+      "requirements": {
+       "karma": {
+        "max": 49
+       }
+      },
+      "money": -100
+     },
+     "3": {
+      "requirements": {
+       "attack": {
+        "min": 250
+       }
+      },
+      "health": -10,
+      "money": 120
+     },
+     "4": {
+      "requirements": {
+       "validPetTypeIds": [
+        39,
+        14,
+        85,
+        22
+       ]
+      },
+      "effect": "sleeping"
+     },
+     "5": {
+      "requirements": {
+       "karma": {
+        "min": 50
+       }
+      },
+      "money": 60
+     }
+    }
+   },
+   "singRoyalty": {
+    "outcomes": {
+     "0": {
+      "requirements": {
+       "karma": {
+        "min": 0
+       }
+      },
+      "money": 600
+     },
+     "1": {
+      "effect": "jailed",
+      "karma": -2
+     },
+     "2": {},
+     "3": {
+      "requirements": {
+       "karma": {
+        "max": -30
+       }
+      }
+     },
+     "4": {
+      "requirements": {
+       "validClassIds": [
+        12,
+        13,
+        15,
+        16,
+        21,
+        22
+       ]
+      },
+      "randomItem": {}
+     },
+     "5": {
+      "requirements": {
+       "speed": {
+        "min": 220
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 50
+     },
+     "6": {
+      "requirements": {
+       "petRarity": {
+        "min": 4
+       }
+      },
+      "money": 220
+     }
+    }
+   },
+   "singWork": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 480
+     },
+     "1": {
+      "randomItem": {}
+     },
+     "2": {
+      "requirements": {
+       "karma": {
+        "min": 0
+       }
+      },
+      "money": 300,
+      "karma": 2
+     },
+     "3": {
+      "requirements": {
+       "validPetTypeIds": [
+        24,
+        90,
+        91,
+        35
+       ]
+      },
+      "money": 180
+     },
+     "4": {
+      "requirements": {
+       "level": {
+        "max": 25
+       }
+      },
+      "effect": "working",
+      "money": 60
+     },
+     "5": {
+      "requirements": {
+       "defense": {
+        "min": 250
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 120
+     },
+     "6": {
+      "requirements": {
+       "karma": {
+        "max": -30
+       }
+      },
+      "money": 60
+     }
+    }
+   },
+   "singSober": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 10
+     },
+     "1": {
+      "effect": "confounded"
+     },
+     "2": {
+      "requirements": {
+       "karma": {
+        "min": 50
+       }
+      },
+      "health": 25
+     },
+     "3": {
+      "requirements": {
+       "karma": {
+        "max": -30
+       }
+      },
+      "money": -80
+     },
+     "4": {
+      "requirements": {
+       "validClassIds": [
+        24
+       ]
+      },
+      "randomItem": {}
+     },
+     "5": {
+      "requirements": {
+       "validPetTypeIds": [
+        1,
+        2,
+        28
+       ]
+      },
+      "money": 120
+     }
+    }
+   }
+  }
+ },
+ "icons": {
+  "singSober": "🪕",
+  "end": {
+   "3": "😴",
+   "4": "🐾"
+  }
+ },
+ "notes": [
+  "Ancrage au lieu : le « petit village » devient Boug-Coton, devant l'Auberge du Seigneur (nobles de passage, forge, caves creusées sous l'auberge pour la chasse au trésor de singHero) ; plus de « vieux château abandonné » ni de salle du trône, qui déplaçaient le joueur hors du village.",
+  "Lore : Pérotin suit sa fiche (génial, fantasque, séditieux, endetté dans chaque auberge, il paie en chansons ; les poudres sont sa béquille). Le sauvetage de la princesse disparaît (R5) au profit du Concours et de la princesse qui refuse chaque champion ; la journée dans la peau de la reine Aliénor est gardée, puisque la bible s'y réfère. Le monarque et le duc deviennent des seigneurs descendus à l'auberge ; le monastère devient une masure.",
+  "Les 18 issues d'origine sont conservées avec leur mécanique exacte (boucle de 480 minutes, prison pour folie, cochon de laboratoire, dispute avec soi-même, maître Périssien…), resserrées à moins de 300 caractères et passées au style indirect. Le nom de la drogue (acide γ-hydroxybutyrique) est retiré : anachronique et hors ton.",
+  "26 issues ajoutées, presque toutes conditionnelles : karma (on se cotise pour vous, le seigneur vous reconnaît, le sergent se porte garant), niveau (débutant mis au tambourin, vétéran dont la chanson raconte les vraies étapes), vitesse (rattraper Pérotin, fuir la Garde), attaque et défense (s'assommer soi-même, encaisser la poudre), classes (chevaliers, mage) et familiers (oiseaux, singes, chiens, bêtes lentes, bêtes à crocs, rareté).",
+  "Nouvelle possibilité singSober (demander une chanson sans poudre) : elle met en scène le trait central de la fiche, un ménestrel qui ne maîtrise pas sa mandoline, sans nommer son origine célestrine (réservée à la révélation). C'est le choix prudent, aux gains modestes.",
+  "Variance assumée comme trait de caractère (R3) : Pérotin flatte les ducs quand l'ardoise est longue et prêche la révolte le reste du temps. Karma ajouté seulement là où un geste du joueur le justifie (don au ménestrel, ardoise indûment encaissée, appel public à la révolte).",
+  "Paires d'issues différenciées par une condition plutôt que par le hasard seul : end.2/end.3, singLove.2/singLove.5, singRoyalty.0/singRoyalty.3, singWork.2/singWork.6 (karma) ; chaque possibilité garde au moins une issue sans condition."
+ ]
+}

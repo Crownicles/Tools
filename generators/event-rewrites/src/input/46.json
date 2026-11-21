@@ -1,0 +1,227 @@
+{
+ "eventId": "46",
+ "model": "claude-fable-5.2",
+ "mapId": 6,
+ "place": "Boug-Coton",
+ "placeType": "vi",
+ "placeDescription": "Un village paisible réputé pour son auberge accueillante. Sous l'auberge s'étendent de vastes caves secrètes creusées à même la roche.",
+ "neighbours": [
+  {
+   "mapId": 41,
+   "name": "Cour du Château",
+   "minutes": 120,
+   "type": "ci"
+  },
+  {
+   "mapId": 5,
+   "name": "Chemin du Dédale",
+   "minutes": 180,
+   "type": "ro"
+  },
+  {
+   "mapId": 26,
+   "name": "Mergagnan",
+   "minutes": 300,
+   "type": "ci"
+  },
+  {
+   "mapId": 7,
+   "name": "Vallée des Rois",
+   "minutes": 420,
+   "type": "de"
+  }
+ ],
+ "isCity": true,
+ "city": {
+  "homePriceMultiplier": 0.95,
+  "apartmentPrice": 6000,
+  "maps": [
+   6
+  ],
+  "services": [
+   "blacksmith"
+  ],
+  "shops": [
+   "generalShop"
+  ],
+  "inns": [
+   {
+    "id": "lordInn",
+    "meals": [
+     {
+      "id": "breadAndCheese",
+      "price": 50,
+      "energy": 350
+     },
+     {
+      "id": "roastedFowl",
+      "price": 100,
+      "energy": 700
+     },
+     {
+      "id": "roastedBeef",
+      "price": 150,
+      "energy": 900
+     },
+     {
+      "id": "stew",
+      "price": 70,
+      "energy": 520
+     },
+     {
+      "id": "lordPie",
+      "price": 300,
+      "energy": 1300
+     }
+    ],
+    "rooms": [
+     {
+      "id": "simpleRoom",
+      "price": 500,
+      "health": 14
+     },
+     {
+      "id": "comfortableRoom",
+      "price": 1000,
+      "health": 35
+     },
+     {
+      "id": "luxuryRoom",
+      "price": 1500,
+      "health": 60
+     }
+    ]
+   }
+  ]
+ },
+ "canonBlock": "#### Boug-Coton · `6`\n\n- **Type :** village (`vi`) ; biomes : cave\n- **Description du jeu :** « Un village paisible réputé pour son auberge accueillante. Sous l'auberge s'étendent de vastes caves secrètes creusées à même la roche. »\n- **Voisins :** Cour du Château (2 h), Chemin du Dédale (3 h), Mergagnan (5 h), Vallée des Rois (7 h)\n- **Zones d'expédition des familiers :** les Caves Secrètes de Boug-Coton\n- **Auberge :** L'Auberge du Seigneur : « Vous entrez dans l'Auberge du Seigneur. Ici, tout est luxueux, du mobilier aux boissons. Vous pouvez y trouver des aventuriers de renom et des nobles en quête de sensations fortes. Vous avez même déjà entendu dire que le Roi y avait séjourné lors de ses voyages. »\n  - au menu : Pain et fromage, Volaille rôtie, Boeuf rôti, Ragoût, Tourte du Seigneur ; chambres : Chambre Simple, Chambre Confortable, Chambre de Luxe\n- **En ville :** services : Aller chez le forgeron ; boutiques : Boutique générale\n- **Big events qui s'y déclenchent :**\n  - 36 : « Au cours de votre très long périple, vous arrivez aux abords d'un petit village fort charmant. »\n  - 46 : « En passant dans un petit village, vous tombez sur le plus célèbre ménestrel connu dans la région et au-delà des frontières, nommé Pérotin. »\n  - 52 : « Alors que vous faites étape à Boug-Coton, vous êtes interpellé par des enfants vous demandant de jouer avec eux. »\n  - 54 : « Vous apercevez le village Boug-Coton et décidez de vous y rendre. »\n  - 63 : « Au bout d'un certain temps, vous arrivez enfin dans le village de Boug-Coton où une rumeur court que des créatures maléfiques sont à l'œuvre... »\n- **Rattachés dans le graphe :** L'Auberge du Seigneur, Le chevalier étranger, Le démon des encapuchonnés, Le Forgeron, Les encapuchonnés de Boug-Coton, Lucya",
+ "triggers": [
+  {
+   "mapId": 6
+  }
+ ],
+ "original": {
+  "possibilities": {
+   "end": {
+    "outcomes": {
+     "0": "Le ménestrel, ne vous voyant pas répondre, vous ignore et recommence à chanter des chansons basiques sans âmes. Vous continuez donc votre route.",
+     "1": "Ne vous voyant pas réagir, le ménestrel, décidé à gagner de l'argent à ses risques et périls, et voyant devant lui un parfait cobaye, décide de vous droguer et de vous emmener dans la ruelle sombre d'à côté. De là, il commence à chanter une chanson sur une torture de laboratoire, dans laquelle vous êtes le bourreau. Ayant la force de faire cette atroce expérimentation, se déroulant à merveille sur ce magnifique cochon, le ménestrel, ou dans votre hallucination, votre patron, décide de vous offrir deux objets en guise de récompense. Pour donner suite à cela, Pérotin attend votre retour à la normale, prend l'objet ayant le plus de valeur et vous laisse avec l'autre objet, qui pourra vous être utile pour la suite.",
+     "2": "Ne vous voyant pas réagir, Pérotin décide de vous droguer afin que vous révéliez vos pensées par la parole pour voir si quelque chose s'y passe. Il n'y voit rien, même au plus profond de celles-ci. Paniqué, le ménestrel appelle les gardes qui vous internent pour folie."
+    }
+   },
+   "singCrazyLove": {
+    "outcomes": {
+     "0": "Aussitôt demandée, aussitôt réalisée. Vous vous retrouvez dans un lit, déshabillé, à côté de ce qui s'apparente à votre amoureuse. En vous regardant de plus près, vous vous rendez compte que vous êtes attaché à la taille, et... il vous manque l'entièreté de vos membres, que ce soient les bras ou les jambes. Vous n'avez la possibilité de bouger qu'avec le torse. Voyant votre détresse, Pérotin finit sa chanson par \"tout ceci n'était qu'un rêve\" et vous redevenez comme avant, entier et détaché. Il vous faudra cependant vous reposer pour vous remettre de votre traumatisme.",
+     "1": "Aussitôt demandée, aussitôt réalisée. Vous vous retrouvez en mer, loin de tout, accompagné d'un seul et unique matelot, votre amour. Arrivant sur une île déserte, vous voyez une croix au sol. Il s'agit bel et bien d'un trésor, rempli d'un beau butin et d'un objet qui vous sera utile. Cupidité et avarice auront eu raison de vous, et vous décidez de repartir de l'île, seul. En retournant au pays, vous retombez sur Pérotin, qui chante pour faire donner l'argent gagné là-bas, comme pour un don à cette mélodie sans pareille. À la suite de ces péripéties, vous reprenez votre route, accompagné de votre objet trouvé sur l'île.",
+     "2": "Connaissant votre quête héroïque pour le sauvetage de la princesse, le ménestrel décide de raconter une des possibles suites de vos aventures après ce sauvetage. Mais ne connaissant pas grand-chose sur vos liens avec la princesse, il préféra raconter l'histoire de \"La vieille et le faux monstre\", vous incarnant le faux monstre, bien évidemment. Connaissant déjà le synopsis, Pérotin ne réussit pas à vous faire changer, sûrement dû au sous-dosage de ses drogues. N'étant pas rentré dans son conte, vous décidez de le remercier pour cette magnifique histoire et vous continuez votre route, conscient de cette perte de temps inutile."
+    },
+    "text": "Chanter un amour fou."
+   },
+   "singHero": {
+    "outcomes": {
+     "0": "Ce fameux barde, ne connaissant pas grand-chose au métier d'aventurier, décide de conter un voyage banal en forêt comme vous les connaissez bien. Déçu de cette chanson et de Pérotin, vous continuez votre aventure.",
+     "1": "Pérotin décide de vous faire retourner deux minutes juste avant de lui parler. Petit problème, son histoire et ses drogues sont tellement fidèles à l'originale que vous répondez la même réaction à ce rapport, sans que la décision du ménestrel face à cette réaction change. Il se passe donc une boucle hallucino-temporelle, à cause des talents de Pérotin et de votre stupidité. Pérotin, seul conscient de la scène que vous vivez avec lui, eu pitié de vous à la fin de la journée, et vous libéra de cette mauvaise drogue.",
+     "2": "Pérotin décide de vous faire voir l'avenir, qu'il soit véritable ou pure fiction de votre esprit, et par la même occasion de vous aider à gagner un peu d'argent : vous vous rendez sur les alentours d'un vieux château abandonné. En cherchant un peu vous tombez sur un passage secret truffé de pièges. Vous réussissez à tous les éviter et tombez sur une salle aux trésors immense. Mais notre ménestrel favori, juste avant la fin de votre pillage et de votre récolte des trésors hors de la zone des pièges, file avec votre butin, ne vous laissant qu'avec le coffre principal de la pièce, contenant beaucoup d'argent et un objet surprenamment utile pour sauver la princesse. Amusé, vous continuez cette drôle d'aventure, encore un peu sous l'emprise de cette drogue nommée, d'après les rumeurs, acide γ-hydroxybutyrique."
+    },
+    "text": "Chanter sur notre vie, notre histoire héroïque."
+   },
+   "singLove": {
+    "outcomes": {
+     "0": "Reprenant vos dires, vous vous retrouvez dans un vieux monastère, à la campagne, à retourner les terres. Votre amour et vous restez dans cet endroit miteux, et chaque mois, vous réussissez à faire juste assez de récoltes pour y vivre. Vous vous épanouissez tellement dans cette histoire dû au surdosage de ses drogues que vous ne voyez pas le temps passer. Pérotin vient vous réveiller et vous raconte que les drogues ingérées font ressentir à l'utilisateur 1 à 2 minutes de ses histoires comme étant un mois entier de sa vie. Heureusement que c'est le cas, sinon vous seriez mort de vieillesse. Méditatif, vous continuez votre périple.",
+     "1": "Ne comprenant pas votre envie soudaine pour un amour sans couleur, Pérotin vous croit dépressif, il décide donc de vous chanter une chanson réconfortante afin de vous guérir de cette soudaine dépression. Cette chanson vous fit un bien fou.",
+     "2": "Voyant votre connaissance en amours sans passion, le ménestrel s'attache à vous, et vous fait une chanson où votre amour, c'est vous. Pris par une violente dispute de couple entre vous et vous, le ménestrel arrête la chanson, et vous demande une charge pour le combat effréné que vous avez eu avec vous même devant ses admirateurs. Encore dans l'histoire, vous pensez que vous vous quittiez, ce qui vous rend triste, très triste. Vous partez donc en laissant un peu d'argent à Pérotin pour vous faire pardonner pour le dérangement."
+    },
+    "text": "Chanter un amour terne et redondant."
+   },
+   "singRoyalty": {
+    "outcomes": {
+     "0": "Le ménestrel, adorant sa patrie de toujours, accède à votre requête et chante les louanges des ducs et des contes. Le duc de la région voisine passe par ici et entend cette douce mélodie, qui lui berce le cœur. A la fin de la chanson, celui-ci vous récompense vous et votre ami avec une grosse bourse d'or.",
+     "1": "Notre ménestrel, détestant le pouvoir en place, décide par sa chanson de faire une révolution afin d'accéder au trône. Il vous emmène, vous drogue et vous fait croire que le peuple et vous menez chemin dans la salle du roi. Malheureusement, une des cordes de la mandoline casse et la musique s'arrête brusquement. Vous êtes pourtant bel et bien dans la salle du trône, seul, avec une fourche. Vous vous faites de ce pas emprisonner pour folie.",
+     "2": "Pérotin, connaissant un petit peu votre aventure afin de secourir la princesse, décide de vous faire vivre le point de vue de sa mère pendant une journée afin que vous en appreniez plus sur cette damoiselle en détresse. Mais la vie de reine n'est pas très passionnante selon vous, mis à part les quelques ragots et pensées de madame sur sa fille, vous n'en tirez rien d'utile, du fait qu'ils sont créés par les drogues magiques de Pérotin. A la fin de la journée, vous reprenez votre corps et continuez votre route."
+    },
+    "text": "Chanter sur la royauté et sur le pouvoir en place."
+   },
+   "singWork": {
+    "outcomes": {
+     "0": "Pérotin, attristé par cette demande, décide de vous faire vivre le rôle de ménestrel dans sa chanson et... Vous vous voyez arriver vers vous afin de vous demander cette chanson mais vous vous forcez à dire cette même chanson, et ça se répète en boucle très longtemps. Au bout d'un moment, notre ménestrel favori stoppe la boucle en vous donnant l'antidote de ce poison hallucinatoire. Apeuré par ce qui vient de se passer et par la durée de cette boucle, vous partez en courant vers la personne la plus proche afin de savoir quel jour on est. Et... vous vous êtes rendus au soir.",
+     "1": "Pérotin, nostalgique, décide de raconter ses débuts dans le métier via sa chanson. Il racontait comment son ancien maître lui faisait ses cours mélodieux via ses drogues assouplissants. Vous ressentez cette douceur dans les mots du professeur qui vous inhibe de tout votre être. À la fin de sa dernière leçon, Périssien, le maître de Pérotin, décide de vous offrir un cadeau de départ, comme il l'avait reçu de ses prédécesseurs, mais pour éviter que ce soit cet instrument magique, cette mandoline, qui ne le quitte pas depuis ses débuts, Pérotin change la fin afin de vous donner un objet qui pourrait vous être utile pour la suite de votre aventure.",
+     "2": "L'excellent ménestrel Pérotin décide de raconter un rêve qu'il aimerait voir s'exaucer, qu'il soit réel ou halluciné : au départ vous êtes seul, dans la ruelle du village, accompagné de votre guitare. Vous chantez pour vous même les joies du métier et la tristesse de la vie, quand un monarque passe dans l'avenue principale. Celui-ci, entendant la belle mélodie, vient vers vous et demande si vous pourriez lui créer une chanson sur le thème de son amour. À la fin de votre douce ballade tout juste imaginée, il vous remercie et vous fait grâce d'une jolie pile d'or, compte tenu du fait que ce passant était réel. Content de cette musique, vous décidez de partager cette somme avec Pérotin en guise de don."
+    },
+    "text": "Chanter sur le métier de ménestrel."
+   }
+  },
+  "text": "En passant dans un petit village, vous tombez sur le plus célèbre ménestrel connu dans la région et au-delà des frontières, nommé Pérotin. Celui-ci est tellement bon dans son métier qu'il peut vous faire vivre la chanson, littéralement, grâce à ses drogues puissantes. Ayant eu le courage d'aller lui parler, celui-ci aimerait que vous lui proposiez le prochain thème de sa chanson. Que lui suggérez-vous ?"
+ },
+ "outcomeData": {
+  "end": {
+   "0": {},
+   "1": {
+    "effect": "confounded",
+    "randomItem": {}
+   },
+   "2": {
+    "effect": "jailed"
+   }
+  },
+  "singCrazyLove": {
+   "0": {
+    "effect": "scared"
+   },
+   "1": {
+    "randomItem": {}
+   },
+   "2": {
+    "effect": "occupied",
+    "lostTime": 20
+   }
+  },
+  "singHero": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 5
+   },
+   "1": {
+    "effect": "occupied",
+    "lostTime": 480
+   },
+   "2": {
+    "effect": "sick",
+    "money": 200,
+    "randomItem": {}
+   }
+  },
+  "singLove": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 360
+   },
+   "1": {
+    "health": 20
+   },
+   "2": {
+    "money": -100
+   }
+  },
+  "singRoyalty": {
+   "0": {
+    "money": 600
+   },
+   "1": {
+    "effect": "jailed"
+   },
+   "2": {}
+  },
+  "singWork": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 480
+   },
+   "1": {
+    "randomItem": {}
+   },
+   "2": {
+    "money": 300
+   }
+  }
+ }
+}

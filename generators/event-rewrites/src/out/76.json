@@ -1,0 +1,256 @@
+{
+  "eventId": "76",
+  "model": "gpt-6.2-astra",
+  "text": "Depuis des heures, vous suivez la rivière qui descend du mont à travers la Forêt Célestrum. Un cri sort d'une maison au toit crevé. Vous frappez ; un vieil homme entrouvre la porte. Il se présente comme Parziter, puis vous demande si le sol tremble aussi de votre côté.",
+  "possibilities": {
+    "help": {
+      "text": "Proposer son aide.",
+      "outcomes": {
+        "0": "Les poules se tassent dans un coin de la cave. Vous soulevez d'une main le volet gonflé d'eau et laissez filer la drôle de bête qui les affole. Parziter vous donne une bourse de pièces et, après un coup de manche, un objet tiré de sa collection.",
+        "1": "Vous cherchez dans les tiroirs de quoi calmer Parziter sans songer à le prévenir. Au bruit du bois, il se recroqueville et lance son encrier. Vous sortez en pressant un mouchoir sur votre arcade ; bientôt, votre œil commence à enfler.",
+        "2": "Parziter voit des rues entières se fendre chaque fois qu'il prend en main une certaine pierre. Il en a posé un éclat sur le seuil, sans oser y toucher. À sa demande, vous l'enveloppez pour l'emporter. Il vibre jusque dans votre poche.",
+        "3": "Minou manque à l'appel. Le nez dans les feuilles, votre chien suit sa piste jusqu'à un arbre creux. Il vous faut une heure pour décider le chat à sortir : il attend que le chien tourne le dos. Parziter vous compte ses pièces, le chat sur les genoux.",
+        "4": "Parziter vous montre ses dessins que le vent emporte. Vous coupez par le talus, doublez les premiers feuillets et posez le pied sur le dernier juste avant la rivière. L'érudit secoue la terre du papier et vous tend quelques pièces.",
+        "5": "Les tuiles qui tombent dans la cour ont acculé Parziter sous un auvent. Elles se brisent sur votre bouclier sans vous faire plier le bras. Vous restez un quart d'heure à ses côtés avant qu'il ose franchir avec vous les trois pas jusqu'à sa porte."
+      }
+    },
+    "explore": {
+      "text": "Demander à visiter la maison.",
+      "outcomes": {
+        "0": "Sur les rayons de la bibliothèque, un volume est rangé à l'envers. Vous le retournez pour en lire les signes. Parziter aimerait vous l'offrir, mais il surveille vos doigts avec une telle inquiétude que vous le remettez en place, dos au mur.",
+        "1": "Le tapis du couloir tient mieux que les planches qu'il recouvre. L'une d'elles cède ; votre pied passe au travers et la cheville tourne. Parziter pose un cataplasme frais sur l'enflure. Même ainsi bandée, elle vous fait boiter.",
+        "2": "Au grenier, votre rat se glisse entre le mur et un coffre. En lui ménageant une sortie, vous découvrez derrière le coffre un écrin que Parziter croyait vide. Amusé par le museau qui en sort, il vous en laisse le contenu : des pièces et un objet qui luit.",
+        "3": "Vous éprouvez les marches du talon avant de vous engager dans l'escalier. La troisième bascule sur une cache pleine de pièces. Vous appelez Parziter au lieu de vous servir ; il en prélève une poignée qu'il dépose dans votre paume.",
+        "4": "Parziter vous suit des yeux dans son cabinet. Il a entendu parler de vous et garde la clef de son secrétaire au poing. En lui tenant la porte avec un sourire, vous escamotez les quelques pièces qu'il a laissées sur l'appui de fenêtre.",
+        "5": "Vous montez voir la chambre en vous tenant à la rampe. Parziter remarque le sang sur votre manche et vous fait asseoir au bord du lit. Il passe un quart d'heure à panser vos plaies ; Minou, qui occupait déjà les deux oreillers, ne cède pas un pouce."
+      }
+    },
+    "question": {
+      "text": "Interroger Parziter.",
+      "outcomes": {
+        "0": "Parziter connaît votre nom par les voyageurs que vous avez dépannés. Il vous confie qu'il enseignait avant de déterrer la pierre qu'il croit maudite. Il en a recueilli un éclat dans un linge ; vous acceptez de l'emporter pour lui.",
+        "1": "À votre première question, Parziter vous tend une ardoise. Vous passez une demi-heure à noter sous sa dictée les bruits qui montent de sa cave. Quand vous lui demandez de préciser la différence entre deux grincements, il vous claque la porte au nez.",
+        "2": "Parziter se souvient de la taille de sa cache, pas de son emplacement. Vous sondez du talon les dalles usées devant son lit. L'une d'elles sonne creux et bascule ; l'érudit y retrouve ses économies et partage les pièces avec vous.",
+        "3": "Parziter décrit des cris qui reprennent chaque fois qu'il touche son fragment de Pierre-Écho. Vous lui montrez comment en étouffer la vibration du bout des doigts. Il réussit à finir son récit sans sursauter et vous paie la leçon en pièces.",
+        "4": "Au lieu de vous répondre, Parziter vous interroge sur votre compagnon. Dans son bestiaire, une page entière lui est réservée, encore blanche. Vous consacrez vingt minutes à lui décrire ses habitudes pendant qu'il taille sa plume et prend des notes.",
+        "5": "Parziter vous demande si vous entendez aussi des pas. Vous posez l'oreille contre le mur sans remarquer l'éclat de pierre enchâssé dans le plâtre. Une rue s'ouvre sous vos yeux ; même en rouvrant la porte, vous cherchez la berge du mauvais côté."
+      }
+    },
+    "end": {
+      "outcomes": {
+        "0": "Vous saluez Parziter d'un signe de tête et vous reprenez le sentier de la berge. Derrière vous, sa voix descend d'un ton : à travers la fenêtre ouverte, vous l'entendez demander à Minou ce qu'il pense de la visite.",
+        "1": "Votre chat se frotte au chambranle sans entrer. De l'autre côté du seuil, Minou vient flairer la marque, puis y frotte sa joue exactement au même endroit. Parziter vous laisse repartir ; il n'a pas perdu un geste des deux chats.",
+        "2": "Parziter fronce les sourcils en reconnaissant le visage dont des voyageurs lui ont conseillé de se méfier. Il ne vous retient pas. À peine avez-vous tourné les talons que vous entendez le verrou, puis les pieds d'une chaise qu'on cale sous la poignée.",
+        "3": "Une tasse glisse des mains de Parziter. Vous la rattrapez avant qu'elle ne heurte la marche et la posez sur le seuil sans entrer. En reprenant le sentier, vous apercevez le vieil homme qui y trempe enfin les lèvres."
+      }
+    }
+  },
+  "data": {
+    "triggers": [
+      {
+        "mapId": 27
+      }
+    ],
+    "possibilities": {
+      "help": {
+        "outcomes": {
+          "0": {
+            "requirements": {
+              "attack": {
+                "min": 240
+              }
+            },
+            "money": 150,
+            "randomItem": {},
+            "karma": 3
+          },
+          "1": {
+            "requirements": {
+              "level": {
+                "max": 25
+              }
+            },
+            "effect": "hurt",
+            "health": -18
+          },
+          "2": {
+            "randomItem": {},
+            "karma": 2
+          },
+          "3": {
+            "requirements": {
+              "validPetTypeIds": [
+                1,
+                2
+              ]
+            },
+            "effect": "occupied",
+            "lostTime": 60,
+            "money": 50,
+            "karma": 4
+          },
+          "4": {
+            "requirements": {
+              "speed": {
+                "min": 220
+              }
+            },
+            "money": 60,
+            "karma": 2
+          },
+          "5": {
+            "requirements": {
+              "defense": {
+                "min": 210
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 15,
+            "karma": 4
+          }
+        }
+      },
+      "explore": {
+        "outcomes": {
+          "0": {},
+          "1": {
+            "effect": "hurt",
+            "health": -33
+          },
+          "2": {
+            "requirements": {
+              "validPetTypeIds": [
+                93
+              ]
+            },
+            "money": 80,
+            "randomItem": {}
+          },
+          "3": {
+            "requirements": {
+              "level": {
+                "min": 55
+              }
+            },
+            "money": 35,
+            "karma": 3
+          },
+          "4": {
+            "requirements": {
+              "karma": {
+                "max": -40
+              }
+            },
+            "money": 22,
+            "karma": -4
+          },
+          "5": {
+            "requirements": {
+              "health": {
+                "max": 45
+              }
+            },
+            "health": 12,
+            "effect": "occupied",
+            "lostTime": 15
+          }
+        }
+      },
+      "question": {
+        "outcomes": {
+          "0": {
+            "requirements": {
+              "karma": {
+                "min": 50
+              }
+            },
+            "randomItem": {},
+            "karma": 2
+          },
+          "1": {
+            "effect": "occupied",
+            "lostTime": 30
+          },
+          "2": {
+            "requirements": {
+              "level": {
+                "min": 50
+              }
+            },
+            "money": 120,
+            "karma": 3
+          },
+          "3": {
+            "requirements": {
+              "validClassIds": [
+                24
+              ]
+            },
+            "money": 65,
+            "karma": 3
+          },
+          "4": {
+            "requirements": {
+              "petRarity": {
+                "min": 4
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 20,
+            "karma": 2
+          },
+          "5": {
+            "requirements": {
+              "level": {
+                "max": 25
+              }
+            },
+            "effect": "confounded"
+          }
+        }
+      },
+      "end": {
+        "outcomes": {
+          "0": {},
+          "1": {
+            "requirements": {
+              "validPetTypeIds": [
+                3,
+                4
+              ]
+            }
+          },
+          "2": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            }
+          },
+          "3": {
+            "requirements": {
+              "speed": {
+                "min": 200
+              }
+            },
+            "karma": 1
+          }
+        }
+      }
+    }
+  },
+  "icons": {
+    "end": {
+      "1": "🐈",
+      "2": "🔒",
+      "3": "☕"
+    }
+  },
+  "notes": [
+    "La maison en ruine reste sur la berge, dans la Forêt Célestrum qui grimpe sur les pentes du mont.",
+    "Les visions de Parziter rejouent la Brisure. Le joueur peut emporter un éclat de la Pierre-Écho, sans guérir l'érudit ni le séparer de Minou.",
+    "Les quatre choix et les onze issues d'origine sont conservés, du chat dans l'arbre creux à la porte claquée après l'interrogatoire.",
+    "Les réactions varient avec les gestes du joueur, ce que les voyageurs racontent de lui et le familier qui l'accompagne. Un mage peut notamment apaiser la vibration de la pierre.",
+    "L'heure de recherche de Minou et la demi-heure de questions ont leur durée en jeu ; rendre un bien ou le subtiliser influe sur le karma."
+  ]
+}

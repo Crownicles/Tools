@@ -1,0 +1,399 @@
+{
+ "eventId": "30",
+ "model": "claude-opus-5.5",
+ "text": "Sur le Chemin aux Loups, à l'écart des berges glissantes de la Vacarme, un château pavoisé domine les bananeraies du Duc Benatis. Il y fête ses 21 ans, comme chaque année. À l'entrée principale, un garde vous fait signe : le duc veut que tout le monde soit de la fête, et le festin est servi.",
+ "possibilities": {
+  "duke": {
+   "text": "Aller voir le duc.",
+   "outcomes": {
+    "0": "Vous vous frayez un chemin jusqu'au duc et vantez la splendeur de sa fête. Ravi, il claque des doigts : un valet vous mène à une chambre d'amis, où vous vous reposez un moment, loin des musiciens et du grondement de la rivière.",
+    "1": "Vous complimentez le duc sur ses bananeraies, les plus belles de la région selon vous. Flatté, et visiblement content de vous voir parmi ses invités, il vous glisse une bourse en vous priant d'en faire bon usage, puis retourne à sa fête.",
+    "2": "Vous voulez complimenter le duc et lui assurez qu'il ne fait pas du tout ses 30 ans. Le silence tombe sur la salle. Vexé jusqu'à la moustache, le duc vous fait conduire dans un cachot du château, où l'on vous oublie jusqu'au lendemain.",
+    "3": "À peine avez-vous ouvert la bouche qu'un garde se penche à l'oreille du duc : votre visage lui rappelle des voyageurs détroussés sur la route. On vous reconduit par la poterne et l'on vous pousse sur le talus boueux qui descend vers la rivière.",
+    "4": "Votre perroquet vous devance et répète à tue-tête le compliment que vous murmuriez en chemin. Le duc rit aux éclats, le lui fait redire devant toute la salle et vous remet une bourse bien garnie avant de vous laisser profiter de la fête.",
+    "5": "Le duc remarque vos cicatrices et votre équipement usé par les routes. Il en oublie le compliment et vous presse de questions sur les îles et leurs monstres. Pour vous remercier de vos récits, il vous fait remettre une bourse avant de vous laisser filer."
+   }
+  },
+  "gift": {
+   "text": "Lui offrir un cadeau.",
+   "outcomes": {
+    "0": "Vous fouillez votre sac sans rien trouver de digne d'un duc, et lui tendez finalement une bourse de pièces. Il l'accepte avec un large sourire. Derrière lui, un homme en noir la compte déjà et inscrit la somme dans un épais registre.",
+    "1": "Le duc vous voit approcher, devine votre intention et vous arrête d'un geste aimable : votre présence lui suffit. Vous restez un long moment à discuter avec lui de bananes, de chasse et de la Charte, qu'il trouve démodée, puis vous quittez la fête.",
+    "2": "Au moment où vous allez lui tendre votre cadeau, le duc se lève et annonce qu'il en offre un à chacun de ses invités. Le vôtre n'aurait plus guère de sens ; vous le gardez et acceptez le paquet qu'un serviteur vous tend.",
+    "3": "Le duc vous reconnaît avant même que vous n'ouvriez votre sac : on lui a raconté vos services rendus aux voyageurs. Il refuse tout présent, s'absente un instant et revient avec une pièce de sa propre collection, qu'il tient à vous offrir.",
+    "4": "L'intendant du duc vous barre la route et vous dévisage comme un homme qui a déjà entendu parler de vous. Il exige une contribution aux frais de la fête, compte vos pièces lui-même, puis vous fait reconduire sans que vous ayez vu le duc.",
+    "5": "Votre familier vous arrache le paquet des mains, file entre les tables et le dépose sur les genoux du duc avant de s'asseoir sagement. Conquis, le duc veut l'acheter ; vous refusez, et il vous paie le spectacle d'une poignée de pièces.",
+    "6": "N'ayant pas grand-chose à offrir, vous cueillez un bouquet de fleurs sauvages au bord du chemin. Le duc, touché par ce présent sans prétention, vous fait asseoir près de lui et vous fait servir à manger un long moment."
+   }
+  },
+  "party": {
+   "text": "Rester à la fête.",
+   "outcomes": {
+    "0": "Vous vous mêlez aux invités et profitez de la fête : musiciens, jongleurs, plats qui n'en finissent pas. Elle se prolonge tard dans la nuit, et vous ne quittez le château que les jambes lourdes et l'esprit encore plein de musique.",
+    "1": "Le garde de la salle remarque vos bottes couvertes de la boue du chemin et vous prie de revenir dans une tenue convenable. Un jeune cireur posté près de l'entrée vous les fait briller contre quelques pièces, et vous pouvez profiter de la fête.",
+    "2": "Encore éprouvé par la route, vous vous attablez devant le buffet. Bananes rôties, au miel, en beignets : le duc n'a rien laissé au hasard. Vous mangez à votre faim et sentez vos forces revenir peu à peu.",
+    "3": "Les gardes du duc organisent un concours de bras de fer dans la cour, et les paris montent vite. Vous couchez trois adversaires de suite sur la table, sous les acclamations des invités, et repartez avec la cagnotte.",
+    "4": "Partout où vous passez, les invités serrent leur bourse contre eux. Un garde ne vous lâche plus d'une semelle et vous fait comprendre que votre présence gâche la fête. Après un moment de malaise, vous préférez vous éclipser.",
+    "5": "Votre familier repère le buffet de bananes avant vous et le dévalise en quelques instants, pelures comprises. L'intendant vous présente la note avec un sourire pincé, et vous passez un long moment à vous excuser auprès des cuisiniers.",
+    "6": "Des nobles de la Vallée veulent entendre vos aventures et lèvent leur verre à chacune d'elles, puis aux vieilles lignées, puis contre la Charte. Vous ne refusez aucun toast et quittez le château en titubant."
+   }
+  },
+  "steal": {
+   "text": "Aller voler des bananes dans son exploitation.",
+   "outcomes": {
+    "0": "Les bras chargés de régimes, vous vous dirigez vers la sortie de l'exploitation quand un cueilleur vous aperçoit et donne l'alerte. Trop chargé pour courir, vous êtes rattrapé par les gardes, qui vous enferment au château jusqu'au lendemain.",
+    "1": "Vous vous glissez entre les bananiers pendant que tout le monde festoie, remplissez votre sac et ressortez sans croiser personne. Assis au bord du chemin, vous dévorez votre butin et vous sentez nettement mieux.",
+    "2": "Vous remplissez votre sac sans remarquer la pancarte plantée devant le tas : ces bananes avaient été mises de côté, impropres à la vente. Une heure plus tard, votre ventre vous le fait amèrement regretter.",
+    "3": "Un cueilleur vous surprend et donne l'alerte, mais vous êtes déjà loin : vous sautez la clôture, dévalez le talus et semez les gardes sur le chemin. Une fois à l'abri, vous mangez les quelques bananes qui ont survécu à la course.",
+    "4": "Un vieux cueilleur vous surprend, vous observe un long moment puis hausse les épaules : on lui a dit du bien de vous, il ne vous dénoncera pas. Il vous tend un régime bien mûr et vous prie de partir avant le passage des gardes.",
+    "5": "Votre familier grimpe au sommet des bananiers et fait pleuvoir les régimes à vos pieds sans un bruit. Vous filez avant que quiconque ne remarque les arbres dégarnis et festoyez à l'abri d'un rocher, au bord du chemin.",
+    "6": "En ressortant de l'exploitation, vous posez le pied sur une pelure et glissez jusqu'au bas du talus, au ras des eaux de la Vacarme. Vous vous relevez couvert de boue et d'écorchures, le sac à moitié vide."
+   }
+  },
+  "end": {
+   "outcomes": {
+    "0": "Vous n'avez pas le cœur à faire la fête aujourd'hui. Vous saluez le garde, tournez le dos aux lanternes du château et reprenez tranquillement votre route le long de la rivière.",
+    "1": "Vous déclinez l'invitation et reprenez votre route. Quelques pas plus loin, vous glissez sur une banane trop mûre tombée d'une charrette du duc et vous écorchez légèrement le genou sur les cailloux du chemin.",
+    "2": "Vous déclinez l'invitation, mais votre familier, lui, a déjà filé vers le buffet. Il revient un moment plus tard avec un régime de bananes, que vous partagez au bord du chemin en attendant qu'il ait fini de se pourlécher.",
+    "3": "Vous déclinez poliment l'invitation. Le garde, qui vous a reconnu et vous tient en estime, court aux cuisines et revient vous glisser une part de gâteau d'anniversaire pour la route. Vous la mangez en marchant, de bien meilleure humeur."
+   }
+  }
+ },
+ "data": {
+  "triggers": [
+   {
+    "mapId": 16
+   }
+  ],
+  "possibilities": {
+   "duke": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "health": 10,
+      "lostTime": 50,
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "1": {
+      "requirements": {
+       "karma": {
+        "min": 0
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 30,
+      "money": 150,
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "2": {
+      "requirements": {
+       "level": {
+        "max": 25
+       }
+      },
+      "effect": "jailed"
+     },
+     "3": {
+      "requirements": {
+       "karma": {
+        "max": -50
+       }
+      },
+      "health": -10
+     },
+     "4": {
+      "requirements": {
+       "validPetTypeIds": [
+        54
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 30,
+      "money": 250,
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "5": {
+      "requirements": {
+       "level": {
+        "min": 60
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 45,
+      "money": 200,
+      "tags": [
+       "bigFeast"
+      ]
+     }
+    }
+   },
+   "gift": {
+    "outcomes": {
+     "0": {
+      "money": -400,
+      "tags": [
+       "bigFeast",
+       "moneyUsage"
+      ]
+     },
+     "1": {
+      "effect": "occupied",
+      "lostTime": 35,
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "2": {
+      "randomItem": {},
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "3": {
+      "requirements": {
+       "karma": {
+        "min": 80
+       }
+      },
+      "randomItem": {
+       "rarity": {
+        "min": 3
+       }
+      },
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "4": {
+      "requirements": {
+       "karma": {
+        "max": -30
+       }
+      },
+      "money": -250,
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "5": {
+      "requirements": {
+       "validPetTypeIds": [
+        24,
+        91
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 25,
+      "money": 150,
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "6": {
+      "requirements": {
+       "level": {
+        "max": 25
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 30,
+      "health": 10,
+      "tags": [
+       "bigFeast"
+      ]
+     }
+    }
+   },
+   "party": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 155,
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "1": {
+      "effect": "occupied",
+      "lostTime": 85,
+      "money": -100,
+      "tags": [
+       "bigFeast",
+       "moneyUsage"
+      ]
+     },
+     "2": {
+      "requirements": {
+       "health": {
+        "max": 60
+       }
+      },
+      "effect": "occupied",
+      "health": 50,
+      "lostTime": 60,
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "3": {
+      "requirements": {
+       "attack": {
+        "min": 250
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 60,
+      "money": 200,
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "4": {
+      "requirements": {
+       "karma": {
+        "max": -50
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 30,
+      "tags": [
+       "bigFeast"
+      ]
+     },
+     "5": {
+      "requirements": {
+       "validPetTypeIds": [
+        24,
+        91
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 40,
+      "money": -150,
+      "tags": [
+       "bigFeast",
+       "moneyUsage"
+      ]
+     },
+     "6": {
+      "requirements": {
+       "level": {
+        "min": 50
+       }
+      },
+      "effect": "drunk",
+      "tags": [
+       "bigFeast"
+      ]
+     }
+    }
+   },
+   "steal": {
+    "outcomes": {
+     "0": {
+      "requirements": {
+       "speed": {
+        "max": 199
+       }
+      },
+      "effect": "jailed",
+      "karma": -3
+     },
+     "1": {
+      "health": 20,
+      "karma": -3
+     },
+     "2": {
+      "effect": "sick",
+      "karma": -3
+     },
+     "3": {
+      "requirements": {
+       "speed": {
+        "min": 250
+       }
+      },
+      "health": 10,
+      "karma": -3
+     },
+     "4": {
+      "requirements": {
+       "karma": {
+        "min": 80
+       }
+      },
+      "health": 20,
+      "karma": -1
+     },
+     "5": {
+      "requirements": {
+       "validPetTypeIds": [
+        24,
+        91
+       ]
+      },
+      "health": 35,
+      "karma": -3
+     },
+     "6": {
+      "requirements": {
+       "level": {
+        "max": 25
+       }
+      },
+      "health": -10,
+      "karma": -2
+     }
+    }
+   },
+   "end": {
+    "outcomes": {
+     "0": {},
+     "1": {
+      "health": -1
+     },
+     "2": {
+      "requirements": {
+       "validPetTypeIds": [
+        24,
+        91
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 15,
+      "health": 10
+     },
+     "3": {
+      "requirements": {
+       "karma": {
+        "min": 80
+       }
+      },
+      "health": 5
+     }
+    }
+   }
+  }
+ },
+ "icons": {
+  "end": {
+   "2": "🐒",
+   "3": "🍰"
+  }
+ },
+ "notes": [
+  "Situation, personnages et accroche conservés : le château du Duc Benatis, ses 21 ans, ses bananeraies et l'invitation ouverte à tous. L'introduction nomme le Chemin aux Loups et la Vacarme (canon du lieu) ; le château est seulement vu depuis le chemin, sans supposer la destination suivante.",
+  "Présent permanent : le duc fête ses 21 ans comme chaque année, ce qui transforme l'âge figé de sa fiche en running gag compatible avec la 100e lecture.",
+  "Liens discrets avec le lore : l'homme en noir qui inscrit votre don dans un registre renvoie aux dettes infinies du duc (Grand Livre) ; la Charte jugée démodée et les toasts des nobles de la Vallée évoquent le Parti des Lignées, sans en faire le sujet.",
+  "Les quatre possibilités et toutes les issues d'origine sont gardées, avec leur mécanique et leurs tags. Corrigé : la banane de la fin, qui fait perdre 1 PV, devient une glissade ; le mendiant devient un cireur ; l'esclave qui dénonce devient un cueilleur ; la pancarte remplace la citation entre guillemets.",
+  "Ajout de 15 issues conditionnelles (21 sur 31) : niveau bas (compliment maladroit, bouquet de fleurs, glissade), niveau élevé (récits des îles, toasts), karma haut ou bas (cadeau du duc, cueilleur complice, intendant méfiant, garde qui vous suit), attaque (bras de fer), vitesse (fuite ou arrestation), vie basse (buffet), Perroquet, Singe et Gorille (bananes).",
+  "Karma négatif sur toutes les issues du vol (-3 en général, -1 si le cueilleur vous donne lui-même le régime, -2 pour la glissade) ; aucun karma sur la fête, qui n'est pas un choix moral.",
+  "Style : pas de discours direct, typographie corrigée, issues entre 150 et 280 caractères environ, un seul détail d'ambiance par texte."
+ ]
+}
