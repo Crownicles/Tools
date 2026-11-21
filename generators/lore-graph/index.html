@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crownicles — Graphe du lore</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
+</head>
+<body>
+<header>
+    <div>
+        <h1>📜 Graphe du lore de Crownicles</h1>
+        <p id="subtitle">Personnages nommés, lieux et relations extraits des fichiers de langue (fr).</p>
+    </div>
+    <div class="header-actions">
+        <select id="datasetSelect" title="Jeu de données">
+            <option value="actuel">📖 Lore actuel (develop)</option>
+            <option value="proposition">✨ Proposition de refonte</option>
+        </select>
+        <button id="btnFit" title="Recentrer">🎯 Recentrer</button>
+        <button id="btnPhysics" title="Figer / animer la simulation">⏸️ Figer</button>
+        <button id="btnPng">🖼️ PNG</button>
+        <button id="btnJson">💾 JSON</button>
+        <a href="../../index.html" class="home">🏠 Outils</a>
+    </div>
+</header>
+<main>
+    <aside id="controls">
+        <section>
+            <h2>Recherche</h2>
+            <input type="search" id="search" placeholder="Nom, alias, rôle, description…" autocomplete="off">
+            <ul id="searchResults"></ul>
+        </section>
+        <section>
+            <h2>Affichage</h2>
+            <label class="check"><input type="checkbox" id="showPlaces" checked> Lieux</label>
+            <label class="check"><input type="checkbox" id="showPlayer"> <span id="showPlayerLabel">Le joueur</span></label>
+            <label class="check"><input type="checkbox" id="showIsolated"> Personnages sans relation</label>
+            <label class="check"><input type="checkbox" id="showUnnamed" checked> Rôles non nommés (le Roi, la Sorcière…)</label>
+            <label class="check"><input type="checkbox" id="showEdgeLabels"> Libellés des relations</label>
+            <label for="focusDepth">Profondeur du focus (double-clic)</label>
+            <select id="focusDepth">
+                <option value="1">1 — voisins directs</option>
+                <option value="2" selected>2 — voisins de voisins</option>
+                <option value="3">3</option>
+            </select>
+            <button id="btnClearFocus" class="wide" hidden>✖ Quitter le focus</button>
+        </section>
+        <section>
+            <h2>Catégories <small><a href="#" data-toggle-all="cat">tout/rien</a></small></h2>
+            <div id="categoryFilters"></div>
+        </section>
+        <section>
+            <h2>Relations <small><a href="#" data-toggle-all="rel">tout/rien</a></small></h2>
+            <div id="relationFilters"></div>
+        </section>
+        <section>
+            <h2>Statistiques</h2>
+            <div id="stats"></div>
+        </section>
+    </aside>
+    <div id="graphWrap">
+        <div id="graph"></div>
+        <div id="legendHint">Clic : met en évidence ses liens · Double-clic : isole son voisinage · Molette : zoom (les petits noms apparaissent en zoomant)</div>
+    </div>
+    <aside id="details">
+        <div id="detailsEmpty">
+            <h2>Comment l'utiliser</h2>
+            <p>Cliquez sur un nœud pour afficher sa fiche : rôle, description, citations, lieux, sources dans les fichiers de langue et liste de ses liens.</p>
+            <p>Double-cliquez pour isoler son voisinage, pratique pour préparer une quête autour d'un personnage.</p>
+            <h3>Fils narratifs à exploiter</h3>
+            <p class="muted">Personnages nommés qui ne sont reliés à personne : bons candidats pour de nouvelles quêtes.</p>
+            <ul id="orphans"></ul>
+        </div>
+        <div id="detailsContent" hidden></div>
+    </aside>
+</main>
+<script src="lore-data.js"></script>
+<script src="lore-proposal-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

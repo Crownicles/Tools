@@ -1,0 +1,586 @@
+{
+ "characters": [
+  {
+   "id": "talvar",
+   "name": "Talvar",
+   "aliases": [
+    "Talvar le Sage",
+    "Talvar l'Ami-des-Bêtes",
+    "Talvar l'Ami-des-Créatures",
+    "Talvar le Protecteur",
+    "Talvar l'Ancien",
+    "Talvar le Bienveillant",
+    "Talvar le Vénérable",
+    "le nain des montagnes",
+    "le vieux sage"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Vieux nain protecteur et soigneur des animaux",
+   "description": "Vénérable nain aux cheveux d'argent et à la barbe tressée de fils d'or, vivant au pied du Mont Célestrum. Protecteur des créatures, réputé capable de parler aux animaux, patriarche respecté des éleveurs et dresseurs. Il récompense les voyageurs qui lui présentent des familiers épanouis et sermonne violemment ceux qui négligent les leurs ; il se trouble devant les familiers clonés (« à la fois ici et ailleurs »). Il décerne le badge « ami des animaux » et doit certifier la santé des familiers avant toute expédition (vieux pacte avec la tradition de Velanna).",
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "sources": [
+    "smallEvents:dwarfPetFan.intro",
+    "smallEvents:dwarfPetFan.petIsFeisty_m",
+    "smallEvents:dwarfPetFan.allPetsSeen",
+    "smallEvents:dwarfPetFan.petIsClone_m",
+    "smallEvents:dwarfPetFan.badge.0",
+    "smallEvents:expeditionAdvice.conditions.petNotSeenByTalvar.0",
+    "smallEvents:badPet.intro_male.2"
+   ],
+   "quotes": [
+    "Talvar l'Ami-des-Créatures, dont les légendes racontent qu'il peut parler aux animaux sauvages"
+   ]
+  },
+  {
+   "id": "moltiar",
+   "name": "Moltiar",
+   "aliases": [
+    "le nain hostile",
+    "le nain qui déteste les familiers"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Nain haineux envers les familiers, frère de Talvar",
+   "description": "Nain trapu et colérique, couvert de cicatrices et de morsures laissées par des bêtes, qui surgit des rochers pour menacer les familiers des voyageurs avec bâton, massue, hache ou pioche. Frère de Talvar, il méprise son « naïf frère adorateur de bestioles » et l'accuse de corrompre les voyageurs avec ses idées. Amateur de bière, de potages et cupide, il peut être amadoué par de la nourriture, distrait ou intimidé.",
+   "locations": [
+    "terres rocailleuses (ses terres)"
+   ],
+   "sources": [
+    "smallEvents:badPet.intro_male.0",
+    "smallEvents:badPet.intro_male.2",
+    "smallEvents:badPet.intro_male.4",
+    "smallEvents:badPet.intro_male.6",
+    "smallEvents:badPet.intro_male.8",
+    "smallEvents:badPet.outcomes.distract.success_male.0",
+    "smallEvents:badPet.outcomes.giveVegLikes.success_male.0"
+   ],
+   "quotes": [
+    "Moltiar maugrée que contrairement à son frère Talvar, lui sait reconnaître une nuisance."
+   ]
+  },
+  {
+   "id": "sir-rowan",
+   "name": "Sir Rowan",
+   "aliases": [
+    "le vieux chevalier",
+    "maître d'armes"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Ancien capitaine de la garde royale devenu maître d'armes errant",
+   "description": "Chevalier vieillissant aux cheveux argentés et à l'armure patinée, il a commandé la garde royale pendant quinze ans (vingt ans de service) et formé les recrues des casernes royales. Retraité, il parcourt les routes pour enseigner aux aventuriers les techniques de combat (humaines comme monstrueuses) et repérer leur latéralité. Bavard et paternel, il évoque les festins du roi et une aventure avec une courtisane du palais.",
+   "locations": [
+    "routes du royaume",
+    "casernes royales (autrefois)"
+   ],
+   "sources": [
+    "smallEvents:infoFight.intro",
+    "smallEvents:infoFight.handednessDescription.leftHanded",
+    "smallEvents:infoFight.fightActions.54",
+    "smallEvents:infoFight.fightActions.59",
+    "smallEvents:infoFight.fightActions.34"
+   ],
+   "quotes": [
+    "Elle me rappelle une aventure avec une des courtisanes du palais... mais je m'égare !"
+   ]
+  },
+  {
+   "id": "velanna",
+   "name": "Velanna",
+   "aliases": [
+    "la guerrière balafrée"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Guerrière balafrée, experte des expéditions de familiers",
+   "description": "Femme au visage balafré, armure de cuir usée et dague noircie gravée de son nom. Bourrue, silencieuse et brutale mais bienveillante envers les bêtes, elle confie le Talisman d'ancrage qui lie l'âme d'un familier à son maître et prodigue des conseils sur les expéditions (nourriture de guilde, terrain, affection, annulations qui brisent la confiance, clonage spectral). Elle respecte un vieux pacte avec Talvar, qui doit certifier les familiers, et vient d'un clan.",
+   "locations": [
+    "sentiers et carrefours"
+   ],
+   "sources": [
+    "smallEvents:expeditionAdvice.talismanIntro.0",
+    "smallEvents:expeditionAdvice.talismanReceived.0",
+    "smallEvents:expeditionAdvice.conditions.petNotSeenByTalvar.0",
+    "smallEvents:expeditionAdvice.advice.5",
+    "smallEvents:expeditionAdvice.advice.8",
+    "smallEvents:expeditionAdvice.advice.11"
+   ],
+   "quotes": [
+    "le lien entre un maître et sa bête est sacré"
+   ]
+  },
+  {
+   "id": "theobald",
+   "name": "Théobald",
+   "aliases": [
+    "le jardinier itinérant",
+    "maître jardinier ambulant",
+    "le vieux jardinier"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Jardinier itinérant, fournisseur de graines",
+   "description": "Vieil homme au tablier terreux, chapeau fleuri et arrosoir, qui cultive de petits jardins en bord de route et connaît chaque plante par son nom. Il distribue des graines (champignon nocturne, mousse lunaire, plante ardente, plante carnivore...) selon le niveau, les familiers ou l'affinité au feu du voyageur, et conseille sur la maison et le jardin. Sa dernière graine est « le trésor d'une vie ».",
+   "locations": [
+    "bords de chemin"
+   ],
+   "sources": [
+    "smallEvents:gardener.stories.first",
+    "smallEvents:gardener.rewards.seed",
+    "smallEvents:gardener.rewards.advice.needLegendaryHerbivorePet.1",
+    "smallEvents:gardener.rewards.advice.allSeedsObtained.1"
+   ],
+   "quotes": [
+    "la patience est la clé du jardinage"
+   ]
+  },
+  {
+   "id": "mylene",
+   "name": "Mylène",
+   "aliases": [
+    "la fermière"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Fermière généreuse",
+   "description": "Fermière robuste au large sourire et aux joues rougies, qui offre ses salades et légumes aux voyageurs (laisse des paniers sur le chemin) et, si l'entrepôt de guilde déborde, un vieil objet trouvé dans ses champs. Elle garde aussi une vieille recette de famille qu'elle vend.",
+   "locations": [
+    "champs et potagers"
+   ],
+   "sources": [
+    "smallEvents:farmer.stories.0",
+    "smallEvents:farmer.stories.4",
+    "smallEvents:farmer.rewards.item",
+    "smallEvents:recipeShop.offer.farmer"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gaspard-jo",
+   "name": "Gaspard-Jo",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant à roulotte",
+   "description": "Marchand voyageant en roulotte chargée de victuailles, qui vend au joueur des recettes tirées d'un vieux grimoire de cuisine corné, avec un sourire complice.",
+   "locations": [],
+   "sources": [
+    "smallEvents:recipeShop.offer.gaspardJo"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-de-l-autel",
+   "name": "L'Oracle",
+   "aliases": [
+    "l'oracle voilé",
+    "oracle de l'autel"
+   ],
+   "named": false,
+   "category": "spirit",
+   "role": "Gardien voilé de l'autel des bénédictions",
+   "description": "Oracle au visage dissimulé sous un voile de lin sombre, immobile comme une statue devant un autel de pierre couvert de runes. Il recueille les offrandes collectives des voyageurs ; quand la cagnotte atteint son seuil, une bénédiction se répand sur tous les aventuriers. Il grave une marque runique au poignet du joueur et décerne le badge de protecteur de l'Oracle.",
+   "locations": [
+    "Autel des bénédictions"
+   ],
+   "sources": [
+    "smallEvents:altar.intro",
+    "smallEvents:altar.firstEncounter",
+    "smallEvents:altar.badgeAwarded",
+    "smallEvents:altar.blessingTriggered"
+   ],
+   "quotes": [
+    "les esprits anciens savent reconnaître la générosité"
+   ]
+  },
+  {
+   "id": "esprits-anciens",
+   "name": "Les esprits anciens",
+   "aliases": [
+    "les esprits"
+   ],
+   "named": false,
+   "category": "spirit",
+   "role": "Puissances qui récompensent offrandes et confiance",
+   "description": "Forces ancestrales évoquées par l'Oracle et Velanna, qui récompensent la générosité envers l'autel et la confiance envers les familiers.",
+   "locations": [
+    "Autel des bénédictions"
+   ],
+   "sources": [
+    "smallEvents:altar.bonusGems.0",
+    "smallEvents:expeditionAdvice.expeditionBonus.pointsAndMoney"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-roi",
+   "name": "Le Roi",
+   "aliases": [
+    "la couronne"
+   ],
+   "named": false,
+   "category": "royalty",
+   "role": "Souverain du royaume",
+   "description": "Monarque évoqué indirectement : Sir Rowan a servi la couronne et mentionne ses festins ; Velanna note qu'explorer les marais « plaira au roi ».",
+   "locations": [
+    "Palais royal"
+   ],
+   "sources": [
+    "smallEvents:infoFight.fightActions.54",
+    "smallEvents:infoFight.intro.5",
+    "smallEvents:expeditionAdvice.advice.5"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "garde-royale",
+   "name": "La garde royale",
+   "aliases": [
+    "casernes royales"
+   ],
+   "named": false,
+   "category": "faction",
+   "role": "Garde du royaume",
+   "description": "Corps militaire royal que Sir Rowan a commandé ; ses recrues étaient formées dans les casernes royales.",
+   "locations": [
+    "Palais royal"
+   ],
+   "sources": [
+    "smallEvents:infoFight.intro.0",
+    "smallEvents:infoFight.intro.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "courtisane-du-palais",
+   "name": "Une courtisane du palais",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Ancienne aventure de Sir Rowan",
+   "description": "Courtisane du palais royal avec qui Sir Rowan a eu une aventure, évoquée à propos du « baiser gelé ».",
+   "locations": [
+    "Palais royal"
+   ],
+   "sources": [
+    "smallEvents:infoFight.fightActions.59"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "clan-de-velanna",
+   "name": "Le clan de Velanna",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Clan d'origine de Velanna",
+   "description": "Clan de dresseurs auquel appartient Velanna ; un de ses anciens rappelait sans cesse son familier en expédition jusqu'à ce que la bête le haïsse. Ses traditions sont liées à celles de Talvar par un vieux pacte.",
+   "locations": [],
+   "sources": [
+    "smallEvents:expeditionAdvice.advice.11",
+    "smallEvents:expeditionAdvice.conditions.petNotSeenByTalvar.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "alchimistes-du-royaume",
+   "name": "Les alchimistes du royaume",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Créateurs de l'attaque empoisonnée",
+   "description": "Alchimistes les plus doués du royaume, qui ont développé l'attaque empoisonnée ; sa composition est consignée dans les archives de la cour.",
+   "locations": [],
+   "sources": [
+    "smallEvents:infoFight.fightActions.34"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-titan",
+   "name": "Le Titan",
+   "aliases": [],
+   "named": false,
+   "category": "monster",
+   "role": "Créature lançant des boules de feu",
+   "description": "Adversaire monstrueux possédant sa propre « boule de feu du Titan », version contenue de l'attaque feu des mages.",
+   "locations": [],
+   "sources": [
+    "smallEvents:infoFight.fightActions.18"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-gardien",
+   "name": "Le Gardien",
+   "aliases": [],
+   "named": false,
+   "category": "monster",
+   "role": "Adversaire à l'attaque tranchante",
+   "description": "Ennemi singulier doté d'une « attaque tranchante du Gardien » qui ralentit sa cible.",
+   "locations": [],
+   "sources": [
+    "smallEvents:infoFight.fightActions.37"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-kraken",
+   "name": "Le kraken",
+   "aliases": [],
+   "named": false,
+   "category": "monster",
+   "role": "Monstre marin",
+   "description": "Monstre des profondeurs dont la technique de noyade saisit l'adversaire d'un tentacule pour le plonger sous l'eau ; associé aux attaques marines (maelström, déluge, malédiction de la mer).",
+   "locations": [
+    "la mer"
+   ],
+   "sources": [
+    "smallEvents:infoFight.fightActions.83",
+    "smallEvents:infoFight.fightActions.89"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "capitaine-fantome",
+   "name": "Le capitaine à l'équipage fantôme",
+   "aliases": [],
+   "named": false,
+   "category": "monster",
+   "role": "Lanceur de la « mutinerie »",
+   "description": "Créature qui invoque les fantômes de son vieil équipage pour une bataille générale (technique « mutinerie »).",
+   "locations": [
+    "la mer"
+   ],
+   "sources": [
+    "smallEvents:infoFight.fightActions.90"
+   ],
+   "quotes": []
+  }
+ ],
+ "relations": [
+  {
+   "from": "moltiar",
+   "to": "talvar",
+   "type": "family",
+   "label": "frères ; Moltiar méprise son frère « adorateur de bestioles »",
+   "source": "smallEvents:badPet.intro_male.0"
+  },
+  {
+   "from": "moltiar",
+   "to": "talvar",
+   "type": "rival",
+   "label": "s'opposent sur l'amour des animaux",
+   "source": "smallEvents:badPet.intro_male.8"
+  },
+  {
+   "from": "velanna",
+   "to": "talvar",
+   "type": "ally",
+   "label": "vieux pacte : Talvar certifie les familiers avant expédition",
+   "source": "smallEvents:expeditionAdvice.conditions.petNotSeenByTalvar.0"
+  },
+  {
+   "from": "velanna",
+   "to": "clan-de-velanna",
+   "type": "member",
+   "label": "issue de ce clan",
+   "source": "smallEvents:expeditionAdvice.advice.11"
+  },
+  {
+   "from": "talvar",
+   "to": "clan-de-velanna",
+   "type": "ally",
+   "label": "pacte entre leurs traditions",
+   "source": "smallEvents:expeditionAdvice.conditions.petNotSeenByTalvar.0"
+  },
+  {
+   "from": "sir-rowan",
+   "to": "garde-royale",
+   "type": "member",
+   "label": "ancien capitaine",
+   "source": "smallEvents:infoFight.intro.0"
+  },
+  {
+   "from": "sir-rowan",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "a servi la couronne",
+   "source": "smallEvents:infoFight.intro.5"
+  },
+  {
+   "from": "garde-royale",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "protège la couronne",
+   "source": "smallEvents:infoFight.intro.1"
+  },
+  {
+   "from": "sir-rowan",
+   "to": "courtisane-du-palais",
+   "type": "love",
+   "label": "aventure passée",
+   "source": "smallEvents:infoFight.fightActions.59"
+  },
+  {
+   "from": "sir-rowan",
+   "to": "player",
+   "type": "mentor",
+   "label": "enseigne les techniques de combat",
+   "source": "smallEvents:infoFight.intro.0"
+  },
+  {
+   "from": "talvar",
+   "to": "player",
+   "type": "mentor",
+   "label": "récompense ceux qui soignent leurs familiers",
+   "source": "smallEvents:dwarfPetFan.allPetsSeen.0"
+  },
+  {
+   "from": "moltiar",
+   "to": "player",
+   "type": "enemy",
+   "label": "menace les familiers du joueur",
+   "source": "smallEvents:badPet.intro_male.0"
+  },
+  {
+   "from": "velanna",
+   "to": "player",
+   "type": "mentor",
+   "label": "confie le Talisman d'ancrage et conseille sur les expéditions",
+   "source": "smallEvents:expeditionAdvice.talismanReceived.0"
+  },
+  {
+   "from": "theobald",
+   "to": "player",
+   "type": "trades",
+   "label": "donne/vend des graines et plantes",
+   "source": "smallEvents:gardener.rewards.seed.paid.0"
+  },
+  {
+   "from": "mylene",
+   "to": "player",
+   "type": "trades",
+   "label": "offre des salades, vend une recette familiale",
+   "source": "smallEvents:farmer.stories.0"
+  },
+  {
+   "from": "gaspard-jo",
+   "to": "player",
+   "type": "trades",
+   "label": "vend des recettes",
+   "source": "smallEvents:recipeShop.offer.gaspardJo"
+  },
+  {
+   "from": "oracle-de-l-autel",
+   "to": "player",
+   "type": "other",
+   "label": "reçoit les offrandes, marque le joueur d'une rune",
+   "source": "smallEvents:altar.firstEncounter"
+  },
+  {
+   "from": "oracle-de-l-autel",
+   "to": "esprits-anciens",
+   "type": "serves",
+   "label": "veille l'autel des esprits anciens",
+   "source": "smallEvents:altar.bonusGems.0"
+  },
+  {
+   "from": "velanna",
+   "to": "esprits-anciens",
+   "type": "knows",
+   "label": "« les esprits récompensent ceux qui font confiance à leurs compagnons »",
+   "source": "smallEvents:expeditionAdvice.expeditionBonus.pointsAndMoney"
+  },
+  {
+   "from": "alchimistes-du-royaume",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "alchimistes du royaume, archives de la cour",
+   "source": "smallEvents:infoFight.fightActions.34"
+  },
+  {
+   "from": "talvar",
+   "to": "mont-celestrum",
+   "type": "located",
+   "label": "vit au pied du Mont Célestrum",
+   "source": "smallEvents:dwarfPetFan.intro.0"
+  },
+  {
+   "from": "moltiar",
+   "to": "mont-celestrum",
+   "type": "located",
+   "label": "terres rocailleuses (probablement les mêmes contrées que Talvar)",
+   "source": "smallEvents:badPet.intro_male.4"
+  },
+  {
+   "from": "oracle-de-l-autel",
+   "to": "autel-des-benedictions",
+   "type": "located",
+   "label": "garde l'autel",
+   "source": "smallEvents:altar.intro.0"
+  },
+  {
+   "from": "le-roi",
+   "to": "palais-royal",
+   "type": "rules",
+   "label": "palais et festins royaux",
+   "source": "smallEvents:infoFight.fightActions.54"
+  },
+  {
+   "from": "velanna",
+   "to": "player",
+   "type": "other",
+   "label": "lui apprend que les marais plaisent au roi",
+   "source": "smallEvents:expeditionAdvice.advice.5"
+  }
+ ],
+ "places": [
+  {
+   "id": "mont-celestrum",
+   "name": "Mont Célestrum",
+   "description": "Montagne sacrée et légendaire dominant plaines, plateaux et vallées ; terres de Talvar (et de son frère Moltiar).",
+   "sources": [
+    "smallEvents:dwarfPetFan.intro"
+   ]
+  },
+  {
+   "id": "autel-des-benedictions",
+   "name": "Autel des bénédictions",
+   "description": "Autel de pierre couvert de runes, dans une clairière brumeuse, où l'Oracle collecte les offrandes collectives pour éveiller des bénédictions mondiales.",
+   "sources": [
+    "smallEvents:altar.intro",
+    "smallEvents:altar.firstEncounter"
+   ]
+  },
+  {
+   "id": "sentier-brumeux",
+   "name": "Le sentier hanté dans la brume",
+   "description": "Lieu sans fin noyé d'une brume blanche où les repères se dissolvent ; on y entend un battement de cœur sous la terre et des murmures.",
+   "sources": [
+    "smallEvents:haunted"
+   ]
+  },
+  {
+   "id": "palais-royal",
+   "name": "Palais royal",
+   "description": "Siège du roi, avec ses courtisanes, ses festins, ses archives de la cour et ses casernes où Sir Rowan formait les recrues.",
+   "sources": [
+    "smallEvents:infoFight.fightActions.59",
+    "smallEvents:infoFight.intro.3"
+   ]
+  },
+  {
+   "id": "marais",
+   "name": "Les marais",
+   "description": "Terrain d'expédition qui « plaira au roi » ; abrite les gobelins des marais.",
+   "sources": [
+    "smallEvents:expeditionAdvice.advice.5",
+    "smallEvents:petFood.foodNames.badSmell.1"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,846 @@
+{
+ "characters": [
+  {
+   "id": "mernil",
+   "name": "Mernil",
+   "aliases": [
+    "l'enchanteur"
+   ],
+   "named": true,
+   "category": "merchant",
+   "role": "Enchanteur itinérant",
+   "description": "Enchanteur itinérant aux mains couvertes d'enchantements lumineux, hautain et suffisant, qui se proclame le seul et le meilleur enchanteur de toutes les contrées. Il voyage de ville en ville, proposant chaque jour un enchantement différent, et annonce sa prochaine étape. Il désenchante gratuitement, jugeant certains enchantements indignes de son art, et fait parfois des réductions à ceux qui s'intéressent à la magie.",
+   "locations": [
+    "Villes du royaume (itinérant)"
+   ],
+   "sources": [
+    "commands:report.city.enchanter.story",
+    "commands:report.city.enchanter.tomorrowStory",
+    "commands:report.city.enchanter.disenchantOffer",
+    "commands:report.city.enchanter.enchantmentWithReduction",
+    "commands:report.city.reactions.enchanter.description",
+    "commands:report.city.enchanter.disenchantSuccessStory"
+   ],
+   "quotes": [
+    "il est le seul et le meilleur enchanteur de toutes les contrées",
+    "débarrasser le monde d'enchantements qu'il juge indignes de son art"
+   ]
+  },
+  {
+   "id": "gorim-le-brise-fer",
+   "name": "Gorim le Brise-Fer",
+   "aliases": [
+    "Gorim",
+    "le ferrailleur"
+   ],
+   "named": true,
+   "category": "merchant",
+   "role": "Ferrailleur",
+   "description": "Ferrailleur dont l'atelier résonne du choc des marteaux. Il démonte méthodiquement les équipements de réserve non enchantés pour les convertir en matériaux et rachète les chutes en pièces.",
+   "locations": [
+    "Atelier du ferrailleur (ville)"
+   ],
+   "sources": [
+    "commands:report.city.scrapDealer.menuDescription",
+    "commands:report.city.scrapDealer.description",
+    "commands:report.city.scrapDealer.recycleSuccess",
+    "commands:report.city.buttons.meetScrapDealer"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-forgeron",
+   "name": "Le Forgeron",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Forgeron de ville",
+   "description": "Colosse aux bras marqués par des années de labeur, il améliore armes et armures contre or et matériaux et sait détacher un enchantement sans le briser pour le sceller sur un autre équipement (pinces d'argent, cristal de transfert). Peu bavard, il salue d'un hochement de tête.",
+   "locations": [
+    "Forge (ville)"
+   ],
+   "sources": [
+    "commands:report.city.blacksmith.descriptionBoth",
+    "commands:report.city.blacksmith.enchantmentTransferSuccess",
+    "commands:report.city.reactions.blacksmith.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-forgeron-royal",
+   "name": "Le Forgeron royal",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Forgeron du château",
+   "description": "Silhouette imposante travaillant sous les bannières du château, seul à savoir forger des pièces de niveau 5. Il ne sert que les aventuriers de niveau 100 et exige or, matériaux et gemmes ; son marteau est serti de runes. Il tient un grand registre des « curiosités sentimentales » pour ceux qui lui font améliorer d'humbles babioles.",
+   "locations": [
+    "Château"
+   ],
+   "sources": [
+    "commands:report.city.royalBlacksmith.menuDescription",
+    "commands:report.city.royalBlacksmith.descriptionNotWorthy",
+    "commands:report.city.royalBlacksmith.descriptionReady",
+    "commands:report.city.royalBlacksmith.mockBadgeGiven"
+   ],
+   "quotes": [
+    "revenez quand vous serez digne de sa forge"
+   ]
+  },
+  {
+   "id": "l-archiviste-des-iles",
+   "name": "L'Archiviste des îles",
+   "aliases": [
+    "l'archiviste"
+   ],
+   "named": false,
+   "category": "npc",
+   "role": "Archiviste des combats de boss",
+   "description": "Sous les voûtes du château, il rassemble les récits des aventuriers ayant triomphé des souverains des îles mystérieuses. Il réserve ses classements royaux aux aventuriers d'une classe du dernier palier.",
+   "locations": [
+    "Château",
+    "Archives des îles"
+   ],
+   "sources": [
+    "commands:report.city.bossArchivist.serviceDescription",
+    "commands:report.city.bossArchivist.introduction",
+    "commands:report.city.bossArchivist.leaderboard.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-maitre-des-quetes",
+   "name": "Le Maître des quêtes",
+   "aliases": [
+    "l'érudit"
+   ],
+   "named": false,
+   "category": "npc",
+   "role": "Érudit gestionnaire des quêtes",
+   "description": "Érudit au regard perçant qui compulse de lourds registres reliés de cuir ; il connaît chaque quête en cours dans le royaume et peut en troquer une contre une autre. Il tient aussi les registres des quêtes au Marché royal du château.",
+   "locations": [
+    "Château (Marché royal)",
+    "Ville"
+   ],
+   "sources": [
+    "commands:report.city.shops.missionManager.description",
+    "commands:report.city.shops.royalMarket.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-notaire",
+   "name": "Le Notaire",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Notaire immobilier",
+   "description": "Notaire chaleureux et consciencieux qui gère les transactions immobilières : achat, amélioration et déménagement de maisons, vente de logis et perception des loyers. Il tient un grand registre des logis.",
+   "locations": [
+    "Bureau du notaire (ville)"
+   ],
+   "sources": [
+    "commands:report.city.homes.notaryIntroduction",
+    "commands:report.city.homes.apartmentNotary.sectionTitle",
+    "commands:report.city.homes.notaryMaxLevel"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-notaire-de-guilde",
+   "name": "Le Notaire de guilde",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Clerc des domaines de guilde",
+   "description": "Clerc en toge sombre qui gère les titres de propriété des domaines de guilde ; il installe gratuitement les domaines (la ville encourage le développement de la région) et organise leurs déménagements contre la trésorerie.",
+   "locations": [
+    "Étude du notaire (ville)"
+   ],
+   "sources": [
+    "commands:report.city.guildDomain.notaryDescription",
+    "commands:report.city.guildDomain.notaryPurchaseDescription",
+    "commands:report.city.guildDomain.purchaseDescription"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "l-intendant-de-guilde",
+   "name": "L'Intendant de guilde",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Intendant du domaine de guilde",
+   "description": "Gère les approvisionnements de la guilde derrière son comptoir : vend la nourriture pour familiers sur la trésorerie, accepte les dons d'or (avec commission) et réapprovisionne l'entrepôt chaque nuit à minuit.",
+   "locations": [
+    "Domaine de guilde"
+   ],
+   "sources": [
+    "commands:report.city.guildDomain.buildingSummary.shop.built",
+    "commands:report.city.guildDomain.subMenus.shop.description",
+    "commands:report.city.guildDomain.subMenus.pantry.autoFillHeader"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "l-ancien-dresseur-royal",
+   "name": "L'Ancien dresseur royal",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Dresseur de la ménagerie",
+   "description": "Ancien dresseur royal qui supervise les exercices quotidiens des familiers dans la ménagerie du domaine de guilde.",
+   "locations": [
+    "Ménagerie (domaine de guilde)"
+   ],
+   "sources": [
+    "commands:report.city.guildDomain.subMenus.training.descriptionActive"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-gardien-du-refuge",
+   "name": "Le Gardien du refuge",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Gardien des familiers",
+   "description": "Veille d'un œil attentif sur les familiers de la guilde dans le refuge.",
+   "locations": [
+    "Refuge (domaine de guilde)"
+   ],
+   "sources": [
+    "commands:report.city.guildDomain.subMenus.shelter.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-marchand-de-jetons",
+   "name": "Le Marchand de jetons",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Marchand ambulant de jetons",
+   "description": "Marchand ambulant qui surgit au détour du chemin pour échanger des jetons scintillants contre de l'or, avec des limites quotidiennes et hebdomadaires. Généreux, il fait l'aumône d'un jeton aux aventuriers démunis, une fois par semaine.",
+   "locations": [
+    "Routes du royaume"
+   ],
+   "sources": [
+    "commands:report.tokenMerchant.description",
+    "commands:report.tokenMerchant.charityDescription_one",
+    "commands:report.tokenMerchant.charityAlreadyUsedDescription"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-marchand-itinerant-de-nourriture",
+   "name": "Le Marchand itinérant de nourriture",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Ravitailleur de guilde",
+   "description": "Marchand itinérant présent en ville qui vend de la nourriture pour familiers réglée sur la trésorerie de la guilde.",
+   "locations": [
+    "Ville"
+   ],
+   "sources": [
+    "commands:report.city.guildFoodShop.menuDescription"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-tanneur",
+   "name": "Le Tanneur",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Artisan du cuir",
+   "description": "Artisan qui fabrique des sacoches agrandissant l'inventaire.",
+   "locations": [
+    "Ville"
+   ],
+   "sources": [
+    "commands:report.city.shops.tanner.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "l-herboriste",
+   "name": "L'Herboriste",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Vendeur de plantes",
+   "description": "Tient une échoppe parfumée de plantes soigneusement cultivées, renouvelées chaque semaine.",
+   "locations": [
+    "Ville"
+   ],
+   "sources": [
+    "commands:report.city.shops.herbalist.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-bucheron",
+   "name": "Le Bûcheron",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Vendeur de bois",
+   "description": "Colosse taillé comme un chêne qui empile des bûches devant son étal ; son bois est réputé pour alimenter les fourneaux.",
+   "locations": [
+    "Ville"
+   ],
+   "sources": [
+    "commands:report.city.shops.lumberjack.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-veterinaire",
+   "name": "Le Vétérinaire",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Soigneur de familiers",
+   "description": "Praticien attentionné qui examine les familiers et peut leur redonner de l'affection.",
+   "locations": [
+    "Ville"
+   ],
+   "sources": [
+    "commands:report.city.shops.veterinarian.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-marchand-de-materiaux",
+   "name": "Le Marchand de matériaux",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Négociant baroudeur",
+   "description": "Négociant baroudeur qui vend des caisses-surprises de matériaux récupérés aux quatre coins du royaume.",
+   "locations": [
+    "Ville"
+   ],
+   "sources": [
+    "commands:report.city.shops.materialMerchant.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "les-courtiers-de-la-bourse",
+   "name": "Les Courtiers de la Bourse",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Courtiers",
+   "description": "Courtiers affairés devant les tableaux de cours ; ils vendent le badge de fortune et des études de marché sur l'argent du roi et le prix des plantes.",
+   "locations": [
+    "La Bourse"
+   ],
+   "sources": [
+    "commands:report.city.shops.stockExchange.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-roi",
+   "name": "Le Roi",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Souverain du royaume",
+   "description": "Souverain du royaume ; on dit qu'il a séjourné à l'Auberge du Seigneur lors de ses voyages. Le château abrite son marché privé, son forgeron et ses archives ; la Bourse étudie les tendances de « l'argent du roi ».",
+   "locations": [
+    "Château"
+   ],
+   "sources": [
+    "commands:report.city.inns.stories.lordInn",
+    "commands:report.city.shops.stockExchange.description",
+    "commands:report.city.shops.royalMarket.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "guilde-du-joueur",
+   "name": "Guilde (du joueur)",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Fraternité d'aventuriers",
+   "description": "Fraternité dont le domaine fortifié (boutique, refuge, entrepôt, ménagerie) peut être installé dans une ville via le notaire de guilde.",
+   "locations": [
+    "Domaine de guilde"
+   ],
+   "sources": [
+    "commands:report.city.guildDomain.menuIntro"
+   ],
+   "quotes": []
+  }
+ ],
+ "relations": [
+  {
+   "from": "auberge-du-seigneur",
+   "to": "ville",
+   "type": "located",
+   "label": "auberge en ville",
+   "source": "commands:report.city.inns.names.lordInn"
+  },
+  {
+   "from": "halte-des-braves",
+   "to": "ville",
+   "type": "located",
+   "label": "auberge en ville",
+   "source": "commands:report.city.inns.names.bravesStop"
+  },
+  {
+   "from": "gorgee-brulante",
+   "to": "ville",
+   "type": "located",
+   "label": "auberge en ville",
+   "source": "commands:report.city.inns.names.hotSwallow"
+  },
+  {
+   "from": "au-coin-du-feu",
+   "to": "ville",
+   "type": "located",
+   "label": "auberge en ville",
+   "source": "commands:report.city.inns.names.fireside"
+  },
+  {
+   "from": "chope-sanglante",
+   "to": "ville",
+   "type": "located",
+   "label": "auberge en ville",
+   "source": "commands:report.city.inns.names.bloodyTankard"
+  },
+  {
+   "from": "pavillon-royal",
+   "to": "chateau",
+   "type": "located",
+   "label": "salon privé du château",
+   "source": "commands:report.city.inns.stories.royalPavilion"
+  },
+  {
+   "from": "marche-royal",
+   "to": "chateau",
+   "type": "located",
+   "label": "boutique privée du château",
+   "source": "commands:report.city.shops.royalMarket.description"
+  },
+  {
+   "from": "archives-des-iles",
+   "to": "chateau",
+   "type": "located",
+   "label": "sous les voûtes du château",
+   "source": "commands:report.city.bossArchivist.serviceDescription"
+  },
+  {
+   "from": "le-roi",
+   "to": "chateau",
+   "type": "rules",
+   "label": "demeure royale",
+   "source": "commands:report.city.shops.royalMarket.description"
+  },
+  {
+   "from": "le-roi",
+   "to": "auberge-du-seigneur",
+   "type": "located",
+   "label": "y aurait séjourné",
+   "source": "commands:report.city.inns.stories.lordInn"
+  },
+  {
+   "from": "le-forgeron-royal",
+   "to": "chateau",
+   "type": "located",
+   "label": "forge sous les bannières du château",
+   "source": "commands:report.city.royalBlacksmith.menuDescription"
+  },
+  {
+   "from": "le-forgeron-royal",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "forgeron royal",
+   "source": "commands:report.city.royalBlacksmith.menuDescription"
+  },
+  {
+   "from": "l-archiviste-des-iles",
+   "to": "archives-des-iles",
+   "type": "located",
+   "label": "tient les archives",
+   "source": "commands:report.city.bossArchivist.introduction"
+  },
+  {
+   "from": "l-archiviste-des-iles",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "tient les registres royaux",
+   "source": "commands:report.city.bossArchivist.leaderboard.description"
+  },
+  {
+   "from": "l-archiviste-des-iles",
+   "to": "iles-mysterieuses",
+   "type": "knows",
+   "label": "consigne les combats contre leurs souverains",
+   "source": "commands:report.city.bossArchivist.introduction"
+  },
+  {
+   "from": "le-maitre-des-quetes",
+   "to": "marche-royal",
+   "type": "located",
+   "label": "tient les registres de quêtes",
+   "source": "commands:report.city.shops.royalMarket.description"
+  },
+  {
+   "from": "le-maitre-des-quetes",
+   "to": "player",
+   "type": "trades",
+   "label": "troque des quêtes",
+   "source": "commands:report.city.shops.missionManager.description"
+  },
+  {
+   "from": "mernil",
+   "to": "player",
+   "type": "trades",
+   "label": "enchante et désenchante gratuitement",
+   "source": "commands:report.city.enchanter.story"
+  },
+  {
+   "from": "mernil",
+   "to": "le-forgeron",
+   "type": "rival",
+   "label": "tous deux manipulent les enchantements",
+   "source": "commands:report.city.blacksmith.enchantmentTransferSuccess"
+  },
+  {
+   "from": "mernil",
+   "to": "ville",
+   "type": "located",
+   "label": "voyage de ville en ville",
+   "source": "commands:report.city.enchanter.tomorrowStory"
+  },
+  {
+   "from": "gorim-le-brise-fer",
+   "to": "atelier-de-gorim",
+   "type": "located",
+   "label": "son atelier",
+   "source": "commands:report.city.scrapDealer.description"
+  },
+  {
+   "from": "gorim-le-brise-fer",
+   "to": "player",
+   "type": "trades",
+   "label": "recycle les équipements",
+   "source": "commands:report.city.scrapDealer.recycleSuccess"
+  },
+  {
+   "from": "le-forgeron",
+   "to": "forge",
+   "type": "located",
+   "label": "travaille à la forge",
+   "source": "commands:report.city.blacksmith.menuDescription"
+  },
+  {
+   "from": "le-forgeron",
+   "to": "player",
+   "type": "trades",
+   "label": "améliore l'équipement",
+   "source": "commands:report.city.blacksmith.upgradeSuccess"
+  },
+  {
+   "from": "le-forgeron-royal",
+   "to": "player",
+   "type": "trades",
+   "label": "porte l'équipement au niveau 5",
+   "source": "commands:report.city.royalBlacksmith.descriptionReady"
+  },
+  {
+   "from": "le-notaire",
+   "to": "bureau-du-notaire",
+   "type": "located",
+   "label": "son bureau",
+   "source": "commands:report.city.homes.notaryIntroduction"
+  },
+  {
+   "from": "le-notaire",
+   "to": "player",
+   "type": "trades",
+   "label": "vend maisons et logis",
+   "source": "commands:report.city.homes.notaryNewHomeEnoughMoney"
+  },
+  {
+   "from": "le-notaire-de-guilde",
+   "to": "domaine-de-guilde",
+   "type": "other",
+   "label": "gère les titres de propriété",
+   "source": "commands:report.city.guildDomain.notaryDescription"
+  },
+  {
+   "from": "le-notaire-de-guilde",
+   "to": "guilde-du-joueur",
+   "type": "trades",
+   "label": "installe/déplace le domaine",
+   "source": "commands:report.city.guildDomain.notaryPurchaseDescription"
+  },
+  {
+   "from": "l-intendant-de-guilde",
+   "to": "guilde-du-joueur",
+   "type": "serves",
+   "label": "intendant de la guilde",
+   "source": "commands:report.city.guildDomain.subMenus.shop.description"
+  },
+  {
+   "from": "l-intendant-de-guilde",
+   "to": "domaine-de-guilde",
+   "type": "located",
+   "label": "boutique de guilde",
+   "source": "commands:report.city.guildDomain.buildingSummary.shop.built"
+  },
+  {
+   "from": "l-ancien-dresseur-royal",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "ancien dresseur royal",
+   "source": "commands:report.city.guildDomain.subMenus.training.descriptionActive"
+  },
+  {
+   "from": "l-ancien-dresseur-royal",
+   "to": "domaine-de-guilde",
+   "type": "located",
+   "label": "supervise la ménagerie",
+   "source": "commands:report.city.guildDomain.subMenus.training.descriptionActive"
+  },
+  {
+   "from": "le-gardien-du-refuge",
+   "to": "domaine-de-guilde",
+   "type": "located",
+   "label": "veille sur le refuge",
+   "source": "commands:report.city.guildDomain.subMenus.shelter.description"
+  },
+  {
+   "from": "player",
+   "to": "guilde-du-joueur",
+   "type": "member",
+   "label": "membre de la guilde",
+   "source": "commands:report.city.guildDomain.menuIntro"
+  },
+  {
+   "from": "guilde-du-joueur",
+   "to": "domaine-de-guilde",
+   "type": "located",
+   "label": "domaine de la guilde",
+   "source": "commands:report.city.guildDomain.menuIntro"
+  },
+  {
+   "from": "le-marchand-de-jetons",
+   "to": "player",
+   "type": "trades",
+   "label": "vend des jetons, fait l'aumône",
+   "source": "commands:report.tokenMerchant.charityDescription_one"
+  },
+  {
+   "from": "le-marchand-itinerant-de-nourriture",
+   "to": "guilde-du-joueur",
+   "type": "trades",
+   "label": "vend nourriture pour familiers",
+   "source": "commands:report.city.guildFoodShop.menuDescription"
+  },
+  {
+   "from": "les-courtiers-de-la-bourse",
+   "to": "la-bourse",
+   "type": "located",
+   "label": "travaillent à la Bourse",
+   "source": "commands:report.city.shops.stockExchange.description"
+  },
+  {
+   "from": "les-courtiers-de-la-bourse",
+   "to": "le-roi",
+   "type": "knows",
+   "label": "étudient l'argent du roi",
+   "source": "commands:report.city.shops.stockExchange.description"
+  },
+  {
+   "from": "le-tanneur",
+   "to": "ville",
+   "type": "located",
+   "label": "échoppe en ville",
+   "source": "commands:report.city.shops.tanner.description"
+  },
+  {
+   "from": "l-herboriste",
+   "to": "ville",
+   "type": "located",
+   "label": "échoppe en ville",
+   "source": "commands:report.city.shops.herbalist.description"
+  },
+  {
+   "from": "le-bucheron",
+   "to": "ville",
+   "type": "located",
+   "label": "échoppe en ville",
+   "source": "commands:report.city.shops.lumberjack.description"
+  },
+  {
+   "from": "le-veterinaire",
+   "to": "ville",
+   "type": "located",
+   "label": "échoppe en ville",
+   "source": "commands:report.city.shops.veterinarian.description"
+  },
+  {
+   "from": "le-marchand-de-materiaux",
+   "to": "ville",
+   "type": "located",
+   "label": "échoppe en ville",
+   "source": "commands:report.city.shops.materialMerchant.description"
+  },
+  {
+   "from": "le-bucheron",
+   "to": "player",
+   "type": "trades",
+   "label": "vend du bois pour les fourneaux",
+   "source": "commands:report.city.shops.lumberjack.description"
+  }
+ ],
+ "places": [
+  {
+   "id": "auberge-du-seigneur",
+   "name": "L'Auberge du Seigneur",
+   "description": "Auberge luxueuse fréquentée par des aventuriers de renom et des nobles ; le Roi y aurait séjourné. Spécialité : Tourte du Seigneur.",
+   "sources": [
+    "commands:report.city.inns.names.lordInn",
+    "commands:report.city.inns.stories.lordInn"
+   ]
+  },
+  {
+   "id": "halte-des-braves",
+   "name": "La Halte des Braves",
+   "description": "Plus vieille et plus célèbre auberge de la région, bondée, couverte de trophées de chasse et d'armes anciennes. Spécialité : Poêlon des Braves.",
+   "sources": [
+    "commands:report.city.inns.names.bravesStop",
+    "commands:report.city.inns.stories.bravesStop"
+   ]
+  },
+  {
+   "id": "gorgee-brulante",
+   "name": "La Gorgée Brûlante",
+   "description": "Petite auberge de village au nom tiré de sa bière épicée, décorée de souvenirs de voyageurs.",
+   "sources": [
+    "commands:report.city.inns.names.hotSwallow",
+    "commands:report.city.inns.stories.hotSwallow"
+   ]
+  },
+  {
+   "id": "au-coin-du-feu",
+   "name": "Au Coin du Feu",
+   "description": "Auberge de marins et pêcheurs où l'on partage des histoires autour du feu, odeur de poisson grillé.",
+   "sources": [
+    "commands:report.city.inns.names.fireside",
+    "commands:report.city.inns.stories.fireside"
+   ]
+  },
+  {
+   "id": "chope-sanglante",
+   "name": "La Chope Sanglante",
+   "description": "Auberge sombre aux boissons fortes, pleine de trophées de monstres ; nourriture et lits médiocres.",
+   "sources": [
+    "commands:report.city.inns.names.bloodyTankard",
+    "commands:report.city.inns.stories.bloodyTankard"
+   ]
+  },
+  {
+   "id": "pavillon-royal",
+   "name": "Le Pavillon Royal",
+   "description": "Salon privé du château réservé aux invités de marque, servi sur argenterie gravée (Suite Royale, Appartement Impérial).",
+   "sources": [
+    "commands:report.city.inns.names.royalPavilion",
+    "commands:report.city.inns.stories.royalPavilion",
+    "commands:report.city.inns.roomsStories.royalSuite"
+   ]
+  },
+  {
+   "id": "chateau",
+   "name": "Le Château",
+   "description": "Demeure royale abritant le Marché royal, le Pavillon Royal, le forgeron royal et les archives des îles.",
+   "sources": [
+    "commands:report.city.shops.royalMarket.description",
+    "commands:report.city.royalBlacksmith.menuDescription",
+    "commands:report.city.bossArchivist.serviceDescription"
+   ]
+  },
+  {
+   "id": "marche-royal",
+   "name": "Le Marché royal",
+   "description": "Boutique privée du château : gemmes contre or, objets rares et troc de quêtes.",
+   "sources": [
+    "commands:report.city.shops.royalMarket.description"
+   ]
+  },
+  {
+   "id": "archives-des-iles",
+   "name": "Les Archives des îles",
+   "description": "Rayonnages sous les voûtes du château consignant les combats contre les souverains des îles mystérieuses.",
+   "sources": [
+    "commands:report.city.bossArchivist.introduction"
+   ]
+  },
+  {
+   "id": "iles-mysterieuses",
+   "name": "Les Îles mystérieuses",
+   "description": "Îles où règnent de redoutables créatures finales (« souverains des îles »).",
+   "sources": [
+    "commands:report.city.bossArchivist.serviceDescription",
+    "commands:report.city.bossArchivist.introduction"
+   ]
+  },
+  {
+   "id": "la-bourse",
+   "name": "La Bourse",
+   "description": "Lieu des courtiers : badge de fortune et études de marché.",
+   "sources": [
+    "commands:report.city.shops.stockExchange.description"
+   ]
+  },
+  {
+   "id": "forge",
+   "name": "La Forge",
+   "description": "Forge de ville du forgeron.",
+   "sources": [
+    "commands:report.city.blacksmith.menuDescription"
+   ]
+  },
+  {
+   "id": "atelier-de-gorim",
+   "name": "L'Atelier de Gorim",
+   "description": "Atelier du ferrailleur Gorim le Brise-Fer.",
+   "sources": [
+    "commands:report.city.scrapDealer.description"
+   ]
+  },
+  {
+   "id": "bureau-du-notaire",
+   "name": "Le Bureau du notaire",
+   "description": "Bureau gérant maisons et logis.",
+   "sources": [
+    "commands:report.city.homes.notaryIntroduction"
+   ]
+  },
+  {
+   "id": "domaine-de-guilde",
+   "name": "Le Domaine de guilde",
+   "description": "Enceinte fortifiée avec donjon, boutique, refuge, entrepôt et ménagerie.",
+   "sources": [
+    "commands:report.city.guildDomain.menuIntro"
+   ]
+  },
+  {
+   "id": "ville",
+   "name": "La Ville (générique)",
+   "description": "Rues pavées animées de marchands, aventuriers et artisans ; les villes réelles sont définies dans models:map_locations.",
+   "sources": [
+    "commands:report.city.description"
+   ]
+  }
+ ]
+}

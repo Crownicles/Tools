@@ -1,0 +1,770 @@
+{
+ "characters": [
+  {
+   "id": "duc-benatis",
+   "name": "Duc Benatis",
+   "aliases": [
+    "le Duc",
+    "le duc"
+   ],
+   "named": true,
+   "category": "royalty",
+   "role": "Duc, exploitant de bananes",
+   "description": "Noble connu pour ses exploitations de bananes, il fête ses 21 ans dans son château en invitant tout le monde à un immense festin. Généreux (distribue cadeaux et pièces) mais susceptible : un compliment maladroit peut vous faire enfermer. Ses exploitations emploient des esclaves.",
+   "locations": [
+    "Château du Duc Benatis"
+   ],
+   "sources": [
+    "events:30.text",
+    "events:30.possibilities.gift.outcomes.0",
+    "events:30.possibilities.duke.outcomes.2",
+    "events:30.possibilities.steal.outcomes.0"
+   ],
+   "quotes": [
+    "Il organise une fête en l'honneur de ses 21 ans."
+   ]
+  },
+  {
+   "id": "price",
+   "name": "Price",
+   "aliases": [],
+   "named": true,
+   "category": "npc",
+   "role": "Mercenaire",
+   "description": "Homme rencontré dans une ville en bord de mer, se présentant comme mercenaire. Escorte l'aventurier contre paiement ; capable de retirer une épée plantée dans un rocher, redoutable contre les voleurs, mais parfois traître (vole l'argent du héros pendant la nuit). Sympathique autour d'un repas, il part honorer ses contrats.",
+   "locations": [
+    "Ville en bord de mer"
+   ],
+   "sources": [
+    "events:39.text",
+    "events:39.possibilities.convoy.outcomes.0",
+    "events:39.possibilities.convoy.outcomes.3",
+    "events:39.possibilities.meal.outcomes.0"
+   ],
+   "quotes": [
+    "disant s'appeler Price et être mercenaire"
+   ]
+  },
+  {
+   "id": "xetrix",
+   "name": "Xetrix",
+   "aliases": [
+    "l'ermite"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Ermite de la forêt sombre",
+   "description": "Ermite vivant dans une maison portant l'inscription « Xetrix » au cœur d'une forêt sombre, sorti pour la cueillette. Il peut donner de bons conseils culinaires, inviter à dîner ou se jouer du voyageur en lui indiquant une mauvaise direction ; il défend sa maison contre les cambrioleurs.",
+   "locations": [
+    "Forêt sombre"
+   ],
+   "sources": [
+    "events:40.text",
+    "events:40.possibilities.askAdvices.outcomes.0",
+    "events:40.possibilities.breakIn.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "askeriel",
+   "name": "Askeriel",
+   "aliases": [
+    "le Grand Dieu"
+   ],
+   "named": true,
+   "category": "deity",
+   "role": "Le Grand Dieu, créateur",
+   "description": "Grand Dieu vénéré par les Kyutistes, qui créa l'existence, la matière, la terre, puis les humains et les animaux. Célébré lors des « Louanges à Askeriel » murmurées en chœur dans les églises.",
+   "locations": [],
+   "sources": [
+    "events:43.possibilities.shelter.outcomes.0"
+   ],
+   "quotes": [
+    "Askeriel, le Grand Dieu, créa l'existence, la matière, la terre"
+   ]
+  },
+  {
+   "id": "yahnor",
+   "name": "Y'ahnor",
+   "aliases": [],
+   "named": true,
+   "category": "deity",
+   "role": "Puissance démoniaque",
+   "description": "Entité maléfique évoquée par un prêtre kyutiste : des créatures démoniaques terrifiantes seraient à ses ordres.",
+   "locations": [],
+   "sources": [
+    "events:43.possibilities.shelter.outcomes.3"
+   ],
+   "quotes": [
+    "une terrible créature démoniaque aux ordres de Y'ahnor"
+   ]
+  },
+  {
+   "id": "orthgard",
+   "name": "Orthgard",
+   "aliases": [],
+   "named": true,
+   "category": "deity",
+   "role": "L'un des Trois dieux protecteurs",
+   "description": "Dieu protecteur célébré lors de l'Ode aux Trois avec Fenrir et Iatneh ; les Trois guident l'humanité et lui inspirent les plus grandes inventions et découvertes.",
+   "locations": [],
+   "sources": [
+    "events:43.possibilities.shelter.outcomes.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "fenrir",
+   "name": "Fenrir",
+   "aliases": [],
+   "named": true,
+   "category": "deity",
+   "role": "L'un des Trois dieux protecteurs",
+   "description": "Dieu protecteur célébré lors de l'Ode aux Trois avec Orthgard et Iatneh ; guide l'humanité et inspire ses découvertes. (Nom emprunté à la mythologie nordique.)",
+   "locations": [],
+   "sources": [
+    "events:43.possibilities.shelter.outcomes.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "iatneh",
+   "name": "Iatneh",
+   "aliases": [],
+   "named": true,
+   "category": "deity",
+   "role": "L'une des Trois divinités protectrices",
+   "description": "Divinité protectrice célébrée lors de l'Ode aux Trois avec Orthgard et Fenrir ; guide l'humanité et lui inspire inventions et découvertes.",
+   "locations": [],
+   "sources": [
+    "events:43.possibilities.shelter.outcomes.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "les-trois",
+   "name": "Les Trois",
+   "aliases": [
+    "l'Ode aux Trois"
+   ],
+   "named": true,
+   "category": "faction",
+   "role": "Panthéon des dieux protecteurs",
+   "description": "Trio divin (Orthgard, Fenrir, Iatneh) honoré lors de la cérémonie de l'Ode aux Trois dans les églises kyutistes.",
+   "locations": [],
+   "sources": [
+    "events:43.possibilities.shelter.outcomes.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "kyutistes",
+   "name": "Kyutistes",
+   "aliases": [
+    "Église Kyutiste",
+    "kyutiste"
+   ],
+   "named": true,
+   "category": "faction",
+   "role": "Fidèles / clergé de l'Église kyutiste",
+   "description": "Religion dont les églises accueillent les voyageurs avec bonté (repas, abri pour la nuit). Ils vénèrent Askeriel le Grand Dieu et les Trois dieux protecteurs, et redoutent les créatures de Y'ahnor.",
+   "locations": [
+    "Église kyutiste"
+   ],
+   "sources": [
+    "events:43.possibilities.shelter.text",
+    "events:43.possibilities.shelter.outcomes.0",
+    "events:43.possibilities.shelter.outcomes.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "l-eglise",
+   "name": "L'Église",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Institution religieuse",
+   "description": "Autorité religieuse assez puissante pour faire pendre publiquement un homme condamné pour « propos contraires aux valeurs de l'Église ».",
+   "locations": [
+    "Village de la pendaison"
+   ],
+   "sources": [
+    "events:26.text"
+   ],
+   "quotes": [
+    "propos contraires aux valeurs de l'Église"
+   ]
+  },
+  {
+   "id": "precheurs-des-dieux",
+   "name": "Prêcheurs de la parole des dieux",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Groupe de prédicateurs itinérants",
+   "description": "Groupe d'hommes « prêchant la parole des dieux » qui invite les voyageurs à rejoindre leur cause ; leurs cérémonies durent des heures et ils deviennent agressifs face aux sceptiques.",
+   "locations": [],
+   "sources": [
+    "events:28.text",
+    "events:28.possibilities.accept.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "la-princesse",
+   "name": "La Princesse",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Princesse à sauver / à épouser",
+   "description": "Objectif ultime de l'aventurier : il a commencé son voyage pour prouver sa valeur et épouser la princesse, qu'il doit sauver. Souvent rappelée comme motivation pour ne pas perdre de temps.",
+   "locations": [],
+   "sources": [
+    "events:5.possibilities.keepGoing.outcomes.1",
+    "events:28.possibilities.accept.outcomes.1",
+    "events:34.possibilities.end.outcomes.0",
+    "events:37.text"
+   ],
+   "quotes": [
+    "Pas de temps pour le repos ! Il y a une princesse à sauver !"
+   ]
+  },
+  {
+   "id": "chevalier-noir",
+   "name": "Le chevalier à l'armure noire",
+   "aliases": [
+    "cavalier ténébreux",
+    "mystérieux chevalier"
+   ],
+   "named": false,
+   "category": "npc",
+   "role": "Chevalier mystérieux",
+   "description": "Cavalier ténébreux à l'armure noire et au blason inconnu, galopant sur les routes. Imprévisible : parfois aimable (offre de l'eau, discute), parfois brutal (renverse ou détrousse le voyageur).",
+   "locations": [],
+   "sources": [
+    "events:31.text",
+    "events:31.possibilities.wave.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "inconnue-du-raccourci",
+   "name": "L'inconnue du raccourci",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Inconnue donnant des indications",
+   "description": "Femme inconnue rencontrée à l'orée d'une forêt, qui indique un raccourci par l'ouest — parfois réel, parfois menant à une embuscade de brigands.",
+   "locations": [
+    "Forêt"
+   ],
+   "sources": [
+    "events:11.text",
+    "events:11.possibilities.followHint.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "jeune-femme-de-la-grotte",
+   "name": "La jeune femme de la grotte",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Demoiselle demandant de l'aide",
+   "description": "Jeune femme demandant de l'aide pour explorer une grotte. Peut être appât d'un piège tendu par une quinzaine de complices (auberge-grotte à herse, soupe droguée), porteuse de la peste, ou sincère. Prétend tenir une auberge.",
+   "locations": [
+    "Grotte",
+    "Tardans (environs)"
+   ],
+   "sources": [
+    "events:42.text",
+    "events:42.possibilities.ask.outcomes.0",
+    "events:42.possibilities.help.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "bijoutier-vieillard",
+   "name": "Le vieux bijoutier",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Bijoutier de village",
+   "description": "Vieillard tenant la bijouterie d'un petit village charmant, réalisant de magnifiques bijoux et colliers. Excellent marchand qui ne baisse jamais ses prix, protégé par un garde personnel ; peut se lier d'amitié avec le héros.",
+   "locations": [
+    "Petit village charmant"
+   ],
+   "sources": [
+    "events:36.text",
+    "events:36.possibilities.talkJeweler.outcomes.1",
+    "events:36.possibilities.stealJeweler.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "couple-aubergiste",
+   "name": "Le couple d'aubergistes",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Aubergistes",
+   "description": "Couple tenant l'auberge à grand succès du petit village de la bijouterie.",
+   "locations": [
+    "Petit village charmant"
+   ],
+   "sources": [
+    "events:36.text"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "barman-experimentateur",
+   "name": "Le barman expérimentateur",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Barman",
+   "description": "Barman qui veut « tester de nouvelles boissons » sur ses clients : mélanges d'alcools et d'extraits de plantes, parfois délicieux, parfois infects.",
+   "locations": [
+    "Bar"
+   ],
+   "sources": [
+    "events:35.text",
+    "events:35.possibilities.deny.outcomes.2"
+   ],
+   "quotes": [
+    "tester de nouvelles boissons"
+   ]
+  },
+  {
+   "id": "marchand-itinerant",
+   "name": "Le marchand itinérant",
+   "aliases": [
+    "l'arnaqueur"
+   ],
+   "named": false,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand itinérant vantant des objets à prix abordables ; parfois honnête et amical, parfois arnaqueur (épée rouillée repeinte) qui s'enfuit.",
+   "locations": [],
+   "sources": [
+    "events:38.text",
+    "events:38.possibilities.buyExpensive.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "chasseur-nordique",
+   "name": "Le chasseur nordique",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Chasseur",
+   "description": "Grand homme pâle vêtu de noir, pris de nuit pour une créature démoniaque ; en réalité un chasseur nordique relevant ses pièges, hospitalier (gigot au coin du feu).",
+   "locations": [
+    "Route de l'Est"
+   ],
+   "sources": [
+    "events:43.text",
+    "events:43.possibilities.continue.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "pretre-kyutiste",
+   "name": "Le prêtre jovial",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Prêtre kyutiste",
+   "description": "Prêtre accueillant d'une église kyutiste qui attribue les créatures démoniaques à Y'ahnor et invite à l'Ode aux Trois.",
+   "locations": [
+    "Église kyutiste"
+   ],
+   "sources": [
+    "events:43.possibilities.shelter.outcomes.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "paysan-suicidaire",
+   "name": "Le paysan à la pierre",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Paysan désespéré",
+   "description": "Paysan au bord d'une large rivière, une lourde pierre liée à la jambe, prêt à se noyer. Peut être sauvé, mourir, ou se révéler un piégeur qui drogue son invité.",
+   "locations": [
+    "Large rivière"
+   ],
+   "sources": [
+    "events:44.text",
+    "events:44.possibilities.watch.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "garde-vereux",
+   "name": "Le garde véreux",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Garde corrompu",
+   "description": "Garde de village surpris en train de voler une pauvre femme ; ses collègues le couvrent parfois.",
+   "locations": [
+    "Village"
+   ],
+   "sources": [
+    "events:20.text",
+    "events:20.possibilities.alert.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "bourreau",
+   "name": "Le bourreau",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Exécuteur",
+   "description": "Bourreau d'une pendaison publique ordonnée pour hérésie ; peut condamner à mort celui qui s'interpose.",
+   "locations": [
+    "Village de la pendaison"
+   ],
+   "sources": [
+    "events:26.possibilities.trySave.outcomes.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "paysan-fourche",
+   "name": "Le paysan à la fourche",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Paysan",
+   "description": "Paysan ayant perdu sa fourche au milieu d'un champ.",
+   "locations": [
+    "Champ"
+   ],
+   "sources": [
+    "events:9.text"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "pecheur",
+   "name": "Le pêcheur",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Pêcheur",
+   "description": "Homme en difficulté lors d'une partie de pêche près d'un plan d'eau.",
+   "locations": [
+    "Plan d'eau"
+   ],
+   "sources": [
+    "events:10.text"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "ouvrier-forgeron",
+   "name": "L'ouvrier de la prairie",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Forgeron isolé",
+   "description": "Homme travaillant le métal dans une petite maison au milieu d'une prairie ; peut forger un objet avec le héros ou l'héberger.",
+   "locations": [
+    "Petite prairie"
+   ],
+   "sources": [
+    "events:14.text",
+    "events:14.possibilities.chatWorker.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "fermier-pommier",
+   "name": "Le fermier au pommier",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Fermier",
+   "description": "Fermier propriétaire d'un pommier aux fruits appétissants ; vend des pommes (parfois empoisonnées) et rosse les voleurs.",
+   "locations": [
+    "Propriété du fermier"
+   ],
+   "sources": [
+    "events:22.text",
+    "events:22.possibilities.buy.outcomes.0"
+   ],
+   "quotes": []
+  }
+ ],
+ "relations": [
+  {
+   "from": "duc-benatis",
+   "to": "chateau-du-duc-benatis",
+   "type": "located",
+   "label": "réside dans son château",
+   "source": "events:30.text"
+  },
+  {
+   "from": "duc-benatis",
+   "to": "player",
+   "type": "other",
+   "label": "invite à sa fête d'anniversaire",
+   "source": "events:30.text"
+  },
+  {
+   "from": "price",
+   "to": "player",
+   "type": "ally",
+   "label": "escorte contre paiement (parfois trahit)",
+   "source": "events:39.possibilities.convoy.text"
+  },
+  {
+   "from": "xetrix",
+   "to": "foret-sombre",
+   "type": "located",
+   "label": "vit en ermite",
+   "source": "events:40.text"
+  },
+  {
+   "from": "kyutistes",
+   "to": "askeriel",
+   "type": "worships",
+   "label": "Louanges à Askeriel",
+   "source": "events:43.possibilities.shelter.outcomes.0"
+  },
+  {
+   "from": "kyutistes",
+   "to": "les-trois",
+   "type": "worships",
+   "label": "Ode aux Trois",
+   "source": "events:43.possibilities.shelter.outcomes.3"
+  },
+  {
+   "from": "orthgard",
+   "to": "les-trois",
+   "type": "member",
+   "label": "l'un des Trois",
+   "source": "events:43.possibilities.shelter.outcomes.3"
+  },
+  {
+   "from": "fenrir",
+   "to": "les-trois",
+   "type": "member",
+   "label": "l'un des Trois",
+   "source": "events:43.possibilities.shelter.outcomes.3"
+  },
+  {
+   "from": "iatneh",
+   "to": "les-trois",
+   "type": "member",
+   "label": "l'une des Trois",
+   "source": "events:43.possibilities.shelter.outcomes.3"
+  },
+  {
+   "from": "askeriel",
+   "to": "player",
+   "type": "created",
+   "label": "créa les humains",
+   "source": "events:43.possibilities.shelter.outcomes.0"
+  },
+  {
+   "from": "kyutistes",
+   "to": "yahnor",
+   "type": "enemy",
+   "label": "redoutent ses créatures démoniaques",
+   "source": "events:43.possibilities.shelter.outcomes.3"
+  },
+  {
+   "from": "pretre-kyutiste",
+   "to": "kyutistes",
+   "type": "member",
+   "label": "prêtre",
+   "source": "events:43.possibilities.shelter.outcomes.3"
+  },
+  {
+   "from": "player",
+   "to": "la-princesse",
+   "type": "love",
+   "label": "veut la sauver et l'épouser",
+   "source": "events:37.text"
+  },
+  {
+   "from": "bourreau",
+   "to": "l-eglise",
+   "type": "serves",
+   "label": "exécute les condamnés pour hérésie",
+   "source": "events:26.text"
+  },
+  {
+   "from": "precheurs-des-dieux",
+   "to": "player",
+   "type": "other",
+   "label": "tentent de le convertir",
+   "source": "events:28.text"
+  },
+  {
+   "from": "bijoutier-vieillard",
+   "to": "petit-village-charmant",
+   "type": "located",
+   "label": "tient la bijouterie",
+   "source": "events:36.text"
+  },
+  {
+   "from": "couple-aubergiste",
+   "to": "petit-village-charmant",
+   "type": "located",
+   "label": "tient l'auberge",
+   "source": "events:36.text"
+  },
+  {
+   "from": "jeune-femme-de-la-grotte",
+   "to": "player",
+   "type": "enemy",
+   "label": "peut l'attirer dans un piège",
+   "source": "events:42.possibilities.ask.outcomes.0"
+  },
+  {
+   "from": "inconnue-du-raccourci",
+   "to": "player",
+   "type": "other",
+   "label": "indique un raccourci (parfois une embuscade)",
+   "source": "events:11.text"
+  },
+  {
+   "from": "chevalier-noir",
+   "to": "player",
+   "type": "other",
+   "label": "croise sa route",
+   "source": "events:31.text"
+  },
+  {
+   "from": "marchand-itinerant",
+   "to": "player",
+   "type": "trades",
+   "label": "vend (ou arnaque)",
+   "source": "events:38.text"
+  },
+  {
+   "from": "pretre-kyutiste",
+   "to": "player",
+   "type": "ally",
+   "label": "l'abrite pour la nuit",
+   "source": "events:43.possibilities.shelter.outcomes.3"
+  },
+  {
+   "from": "price",
+   "to": "ville-en-bord-de-mer",
+   "type": "located",
+   "label": "rencontré ici",
+   "source": "events:39.text"
+  },
+  {
+   "from": "kyutistes",
+   "to": "eglise-kyutiste",
+   "type": "located",
+   "label": "lieux de culte",
+   "source": "events:43.possibilities.shelter.text"
+  }
+ ],
+ "places": [
+  {
+   "id": "route-des-merveilles",
+   "name": "Route des Merveilles",
+   "description": "Route où l'on peut trouver un coffret verrouillé.",
+   "sources": [
+    "events:3.text"
+   ]
+  },
+  {
+   "id": "ville-forte",
+   "name": "Ville Forte",
+   "description": "Cité en ruines où subsiste une maison abandonnée encore debout.",
+   "sources": [
+    "events:7.text"
+   ]
+  },
+  {
+   "id": "tardans",
+   "name": "Tardans",
+   "description": "Petite bourgade « au très joli nom » où l'on trouve une sacoche pleine de pièces.",
+   "sources": [
+    "events:42.possibilities.end.outcomes.0"
+   ]
+  },
+  {
+   "id": "route-grimpante",
+   "name": "La route grimpante",
+   "description": "Route escarpée en pierre reliant plusieurs lieux importants, sur une pente raide de montagne.",
+   "sources": [
+    "events:37.text"
+   ]
+  },
+  {
+   "id": "chateau-du-duc-benatis",
+   "name": "Château du Duc Benatis",
+   "description": "Demeure du Duc Benatis, entourée d'exploitations de bananes.",
+   "sources": [
+    "events:30.text"
+   ]
+  },
+  {
+   "id": "foret-sombre",
+   "name": "Forêt sombre (maison de Xetrix)",
+   "description": "Forêt sombre où vit l'ermite Xetrix.",
+   "sources": [
+    "events:40.text"
+   ]
+  },
+  {
+   "id": "eglise-kyutiste",
+   "name": "Église kyutiste",
+   "description": "Églises du culte kyutiste qui accueillent les voyageurs ; certaines sont abandonnées.",
+   "sources": [
+    "events:43.possibilities.shelter.text",
+    "events:43.possibilities.shelter.outcomes.1"
+   ]
+  },
+  {
+   "id": "sanctuaire-hante",
+   "name": "Le sanctuaire hanté",
+   "description": "Sanctuaire réputé hanté à une heure au sud d'un village animé ; parfois une simple grotte, parfois un magnifique sanctuaire.",
+   "sources": [
+    "events:45.text",
+    "events:45.possibilities.goAlone.outcomes.3"
+   ]
+  },
+  {
+   "id": "chateau-abandonne",
+   "name": "Vieux château au bord de la rivière",
+   "description": "Château délabré et apparemment abandonné, contenant une ancienne armurerie ; des bruits y résonnent.",
+   "sources": [
+    "events:16.text",
+    "events:16.possibilities.enterCastle.outcomes.2"
+   ]
+  },
+  {
+   "id": "petit-village-charmant",
+   "name": "Petit village à la bijouterie",
+   "description": "Village modeste ne comptant qu'une bijouterie et une auberge à succès.",
+   "sources": [
+    "events:36.text"
+   ]
+  },
+  {
+   "id": "ville-en-bord-de-mer",
+   "name": "Ville en bord de mer",
+   "description": "Ville côtière où l'on rencontre le mercenaire Price.",
+   "sources": [
+    "events:39.text"
+   ]
+  }
+ ]
+}

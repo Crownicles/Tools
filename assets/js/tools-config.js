@@ -278,5 +278,15 @@ const toolsConfig = [
         tags: ['Matériaux', 'Loot', 'Upgrades', 'Équilibrage', 'Probabilités'],
         icon: '🎁',
         status: 'active'
+    },
+    {
+        id: 'lore-graph',
+        title: 'Graphe du lore',
+        description: 'Tous les personnages nommés de Crownicles, leurs lieux et leurs relations sous forme de graphe interactif. Utile pour réécrire l\'histoire et concevoir des quêtes.',
+        path: 'generators/lore-graph/index.html',
+        category: 'Visualisation',
+        tags: ['Lore', 'Personnages', 'Graphe', 'Quêtes', 'Écriture'],
+        icon: '📜',
+        status: 'active'
     }
 ];

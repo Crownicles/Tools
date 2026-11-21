@@ -1,0 +1,2579 @@
+{
+ "characters": [
+  {
+   "id": "talvar",
+   "name": "Talvar",
+   "aliases": [
+    "Talvar des montagnes",
+    "Talvar des cimes",
+    "Talvar des hauteurs",
+    "Talvar le nain",
+    "le nain du mont Célestrum"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Nain collectionneur d'animaux du Mont Célestrum",
+   "description": "Nain excentrique des montagnes du Mont Célestrum, passionné au point d'être obsédé par les animaux : il écrit des lettres, poèmes et ballades sur les familiers qu'il croise, leur construit des maisons, leur tricote des écharpes et rêve de tous les voir. On lui présente ses familiers (badge « animal_lover » pour les avoir tous montrés) ; présenter son familier à Talvar est requis pour les expéditions. Il a une femme, un clan, une forge, et réside avec d'autres nains ; les rumeurs disent qu'il possède un surplus de gemmes.",
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "sources": [
+    "models:missions.meetTalvar",
+    "models:missions.showPetsToTalvar_one",
+    "models:missions.showCloneToTalvar",
+    "advices:advices.220",
+    "advices:advices.221",
+    "advices:advices.226",
+    "advices:advices.249",
+    "advices:advices.271",
+    "commands:shop.shopItems.lovePointsValue.dwarf.0",
+    "commands:shop.shopItems.lovePointsValue.dwarf.17",
+    "commands:profile.badges.animal_lover",
+    "commands:missions.quests.list.expeditionTalismans.description"
+   ],
+   "quotes": [
+    "Ce nain devient vraiment étrange avec l'âge..."
+   ]
+  },
+  {
+   "id": "moltiar",
+   "name": "Moltiar",
+   "aliases": [
+    "le nain hostile"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Nain hostile, frère de Talvar",
+   "description": "Frère de Talvar, mais à l'opposé de lui il déteste les animaux et peut s'en prendre au familier de l'aventurier lors d'un petit événement où il faut réagir face à lui.",
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "sources": [
+    "advices:advices.271",
+    "error:blockedContext.badPetSmallEvent"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "femme-de-talvar",
+   "name": "Femme de Talvar",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Épouse de Talvar",
+   "description": "Épouse de Talvar, peu ravie qu'il ait peint un portrait géant d'un animal sur le mur de leur maison.",
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "sources": [
+    "commands:shop.shopItems.lovePointsValue.dwarf.17"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "velanna",
+   "name": "Velanna",
+   "aliases": [
+    "la mystérieuse guerrière",
+    "la guerrière balafrée"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Guerrière balafrée, gardienne des talismans d'expédition",
+   "description": "Mystérieuse guerrière balafrée qui arpente les routes du continent (dès le niveau 5) et s'intéresse aux familiers des voyageurs. Elle confie le Talisman d'Ancrage aux aventuriers prêts (niveau suffisant, membre d'une guilde, familier rassasié, docile et déjà présenté à Talvar). La croiser pendant une expédition peut rapporter des points bonus et des surprises.",
+   "locations": [
+    "routes du continent"
+   ],
+   "sources": [
+    "models:missions.meetVelanna",
+    "advices:advices.247",
+    "advices:advices.265",
+    "commands:missions.quests.list.expeditionTalismans.steps.meetVelanna.hint",
+    "commands:missions.quests.list.expeditionTalismans.steps.anchorTalisman.hint"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "alderic",
+   "name": "Aldéric",
+   "aliases": [
+    "l'antiquaire"
+   ],
+   "named": true,
+   "category": "merchant",
+   "role": "Antiquaire itinérant",
+   "description": "Antiquaire rencontré lors de petits événements, le seul marchand ambulant à vendre exclusivement des équipements légendaires ou épiques ; si l'on refuse, ses objets peuvent être reproposés plus tard.",
+   "locations": [],
+   "sources": [
+    "models:missions.buyItemFromAlderic",
+    "advices:advices.72",
+    "advices:advices.419"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gruffo",
+   "name": "Gruffo",
+   "aliases": [],
+   "named": true,
+   "category": "npc",
+   "role": "PNJ à rencontrer (mission)",
+   "description": "Personnage qu'une mission demande de rencontrer ; aucune autre information dans ce fichier.",
+   "locations": [],
+   "sources": [
+    "models:missions.meetGruffo"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "sir-rowan",
+   "name": "Sir Rowan",
+   "aliases": [],
+   "named": true,
+   "category": "npc",
+   "role": "Chevalier donneur de conseils de combat",
+   "description": "Chevalier qui prodigue des conseils de combat aux aventuriers (mission : recevoir ses conseils).",
+   "locations": [],
+   "sources": [
+    "models:missions.meetSirRowan_one",
+    "models:missions.meetSirRowan_other"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "mernil",
+   "name": "Mernil",
+   "aliases": [
+    "l'enchanteur"
+   ],
+   "named": true,
+   "category": "merchant",
+   "role": "Enchanteur itinérant",
+   "description": "Enchanteur itinérant qui visite différentes villes, ne propose qu'une seule rune par jour et désenchante gratuitement les équipements.",
+   "locations": [
+    "villes du royaume"
+   ],
+   "sources": [
+    "advices:advices.349",
+    "advices:advices.352",
+    "advices:advices.381"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gaspard-joe",
+   "name": "Gaspard-Joe",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Vendeur de recettes de cuisine",
+   "description": "Personnage chez qui l'on peut acheter certaines recettes de cuisine (comme auprès de fermiers).",
+   "locations": [],
+   "sources": [
+    "advices:advices.474"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gorim",
+   "name": "Gorim le Brise-Fer",
+   "aliases": [
+    "Gorim",
+    "le Brise-Fer"
+   ],
+   "named": true,
+   "category": "merchant",
+   "role": "Recycleur d'équipements de Ville Forte",
+   "description": "Artisan installé à Ville Forte qui recycle les équipements contre une partie de leur prix et des matériaux.",
+   "locations": [
+    "Ville Forte"
+   ],
+   "sources": [
+    "advices:advices.476"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "theobald",
+   "name": "Théobald",
+   "aliases": [
+    "le jardinier"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Jardinier itinérant",
+   "description": "Jardinier itinérant croisé sur les routes forestières ; il confie gratuitement ou contre paiement ses graines les plus rares aux aventuriers qui ont fait pousser les précédentes, parfois sous conditions (voyager de nuit, familier spécifique...). Quête « Les graines du jardinier ».",
+   "locations": [
+    "routes forestières"
+   ],
+   "sources": [
+    "commands:missions.quests.list.seeds.description",
+    "commands:missions.quests.list.seeds.steps.commonHerb.hint",
+    "advices:advices.303",
+    "advices:advices.423"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-roi",
+   "name": "Le Roi",
+   "aliases": [
+    "le roi"
+   ],
+   "named": false,
+   "category": "royalty",
+   "role": "Souverain du royaume",
+   "description": "Souverain du royaume, résidant dans son château fortifié. Il lance chaque lundi le « défi du roi » et récompense les aventuriers, prélève une taxe sur l'échange des gemmes (« argent du roi »), possède une salle aux trésors, accorde sa « ferveur » et organise parfois de grands festins. Ses gardes affrontent les aventuriers en combat classé.",
+   "locations": [
+    "Château du roi"
+   ],
+   "sources": [
+    "notifications:kingChallenge.rewards",
+    "commands:missions.kingChallenge.description",
+    "commands:shop.shopItems.money.info",
+    "commands:shop.shopItems.treasure.info",
+    "commands:shop.shopItems.kingsFavor.info",
+    "commands:shop.shopItems.marketAnalysis.kingsMoney.tomorrow.bigRise",
+    "models:map_locations.28",
+    "models:map_locations.32",
+    "models:missions.kingsMoneyValue"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "la-princesse",
+   "name": "La Princesse",
+   "aliases": [
+    "la princesse"
+   ],
+   "named": false,
+   "category": "royalty",
+   "role": "Objet de la quête des aventuriers",
+   "description": "Princesse évoquée comme but ultime de la quête : les autres aventuriers sont des rivaux dans « la quête pour la princesse ».",
+   "locations": [],
+   "sources": [
+    "advices:advices.207"
+   ],
+   "quotes": [
+    "Les autres aventuriers sont vos rivaux dans la quête pour la princesse !"
+   ]
+  },
+  {
+   "id": "gardes-du-roi",
+   "name": "Gardes du roi",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Garde royale",
+   "description": "Gardes nommés individuellement (« Garde X ») que l'on affronte quand aucun adversaire classé n'est disponible ; ils gagnent ou perdent en renommée, avec un tableau d'honneur de la garde.",
+   "locations": [
+    "Château du roi"
+   ],
+   "sources": [
+    "commands:fight.kingGuard.displayName",
+    "commands:fightHistory.kingGuardStats.bestDefeatedGuardHint",
+    "advices:advices.471",
+    "commands:help.commands.FIGHT_HISTORY.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "tresorier-royal",
+   "name": "Trésorier royal",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Trésorier du roi",
+   "description": "Gère les coffres royaux ; ses prévisions influencent le cours de l'argent du roi.",
+   "locations": [
+    "Château du roi"
+   ],
+   "sources": [
+    "commands:shop.shopItems.marketAnalysis.kingsMoney.tomorrow.drop"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "conseiller-du-marche",
+   "name": "Conseiller du marché",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Analyste du Marché royal",
+   "description": "Conseiller à lunettes qui remet, contre paiement, un parchemin d'analyse des cours de l'argent du roi et des prix des plantes.",
+   "locations": [
+    "Marché royal"
+   ],
+   "sources": [
+    "commands:shop.shopItems.marketAnalysis.info",
+    "commands:shop.shopItems.marketAnalysis.intro",
+    "commands:shop.shopItems.marketAnalysis.outro"
+   ],
+   "quotes": [
+    "Le conseiller ajuste ses lunettes et déroule un long parchemin..."
+   ]
+  },
+  {
+   "id": "erudit-du-marche-royal",
+   "name": "L'érudit du Marché royal",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Gestionnaire des missions du royaume",
+   "description": "Érudit qui officie au Marché royal : contrats de mission alternative (change-mission) et récompenses contre des gemmes.",
+   "locations": [
+    "Marché royal"
+   ],
+   "sources": [
+    "advices:advices.406",
+    "advices:advices.407"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "archiviste-des-iles",
+   "name": "L'archiviste des îles",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Archiviste du château",
+   "description": "Archiviste du château qui tient le catalogue des exploits contre les boss finaux des îles.",
+   "locations": [
+    "Château du roi"
+   ],
+   "sources": [
+    "advices:advices.475"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "forgeron-royal",
+   "name": "Le forgeron royal",
+   "aliases": [
+    "le forgeron"
+   ],
+   "named": false,
+   "category": "npc",
+   "role": "Forgeron",
+   "description": "Forgeron (en ville et au château) qui améliore armes et armures jusqu'au niveau 4 contre matériaux et argent et transfère les enchantements ; badge pour avoir fait améliorer une humble relique au maximum.",
+   "locations": [],
+   "sources": [
+    "commands:profile.badges.sentimental_crafter",
+    "advices:advices.342",
+    "advices:advices.450",
+    "advices:advices.470"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "veterinaire-de-la-cour",
+   "name": "Le vétérinaire de la cour",
+   "aliases": [
+    "le vétérinaire"
+   ],
+   "named": false,
+   "category": "npc",
+   "role": "Vétérinaire du royaume",
+   "description": "Vétérinaire à lunettes installé à Mergagnan et Claire de Ville : il examine les familiers (amour, régime, force, âge, effets de combat, affinités d'expédition) et les soigne. Correspondant et ami de Talvar, qui lui envoie sans cesse des lettres sur les animaux ; il a un cousin forgeron.",
+   "locations": [
+    "Mergagnan",
+    "Claire de Ville"
+   ],
+   "sources": [
+    "commands:shop.shopItems.lovePointsValue.name",
+    "commands:shop.shopItems.lovePointsValue.giveDesc",
+    "commands:shop.shopItems.lovePointsValue.dwarf.10",
+    "commands:shop.shopItems.lovePointsValue.dwarf.14",
+    "advices:advices.325",
+    "advices:advices.464"
+   ],
+   "quotes": [
+    "Ce nain m'a transmis sa passion des animaux, mais il manque parfois de rigueur..."
+   ]
+  },
+  {
+   "id": "oracle",
+   "name": "L'Oracle",
+   "aliases": [
+    "les deux oracles",
+    "un oracle"
+   ],
+   "named": false,
+   "category": "spirit",
+   "role": "Gardien d'un ancien autel, dispensateur de bénédictions",
+   "description": "Oracle (il en existe deux) gardant un ancien autel sur les routes. Il collecte les contributions des aventuriers dans une cagnotte ; une fois pleine, une bénédiction globale s'active (Rage amplifiée, Butin de combat, Régénération d'énergie, Bourse dorée, Gloire accrue, Amour des familiers, Potions curatives, Jeton d'expédition, Mission quotidienne bénie). Il récompense parfois les généreux de gemmes ou d'un objet mystérieux.",
+   "locations": [
+    "Autel de l'Oracle"
+   ],
+   "sources": [
+    "models:missions.meetOracle",
+    "models:missions.meetAllOracles",
+    "advices:advices.282",
+    "advices:advices.287",
+    "advices:advices.296",
+    "commands:help.commands.BLESSING.description",
+    "bot:blessingAnnouncement_one",
+    "bot:blessingNames.1",
+    "error:oracleNotMet",
+    "commands:profile.badges.oracle_patron"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "sorciere",
+   "name": "La Sorcière",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Sorcière des routes",
+   "description": "Sorcière rencontrée en chemin qui offre une potion convenable ou des effets inattendus selon le choix de l'aventurier.",
+   "locations": [],
+   "sources": [
+    "advices:advices.418",
+    "error:blockedContext.witchChoose"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "ermite",
+   "name": "L'ermite",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Ermite",
+   "description": "Ermite qu'une mission demande de rencontrer.",
+   "locations": [],
+   "sources": [
+    "models:missions.meetHermit"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-de-jetons",
+   "name": "Le marchand de jetons",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Vendeur de jetons",
+   "description": "Marchand qui surgit lorsqu'on tente d'avancer sans assez de jetons ; il limite ses ventes à 10 jetons par jour et 30 par semaine.",
+   "locations": [],
+   "sources": [
+    "models:missions.buyTokensFromShop_one",
+    "advices:advices.267",
+    "advices:advices.274"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "voyageur-encapuchonne",
+   "name": "Le voyageur encapuchonné",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Voyageur posant des questions",
+   "description": "Voyageur mystérieux qui pose des questions (énigmes/tests) à l'aventurier lors d'un petit événement.",
+   "locations": [],
+   "sources": [
+    "error:blockedContext.limogesSmallEvent",
+    "advices:advices.416"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "herboriste",
+   "name": "L'Herboriste",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Herboriste du Village Coco",
+   "description": "Herboriste installé au Village Coco : propose chaque semaine trois plantes et vend le Cœur Sylvestre (refuse de le vendre à qui n'a pas de jardin).",
+   "locations": [
+    "Village Coco"
+   ],
+   "sources": [
+    "advices:advices.469",
+    "advices:advices.302",
+    "advices:advices.323",
+    "commands:shop.noGardenForRemoteHarvestTalisman",
+    "commands:help.commands.GARDEN.description"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "bucheron",
+   "name": "Le bûcheron",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Bûcheron du Village Coco",
+   "description": "Vend du bois par paquets de différentes qualités au Village Coco.",
+   "locations": [
+    "Village Coco"
+   ],
+   "sources": [
+    "advices:advices.463",
+    "advices:advices.324"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "tanneur",
+   "name": "Le Tanneur",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Tanneur de Mergagnan",
+   "description": "Vend sacoches et extensions d'inventaire et d'emplacements de plantes à Mergagnan.",
+   "locations": [
+    "Mergagnan"
+   ],
+   "sources": [
+    "advices:advices.465",
+    "advices:advices.335",
+    "advices:advices.422"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "notaire",
+   "name": "Le notaire",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Notaire immobilier",
+   "description": "Gère l'achat et l'amélioration des maisons et verse la rente quotidienne du logis.",
+   "locations": [],
+   "sources": [
+    "advices:advices.301",
+    "advices:advices.427"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-de-materiaux",
+   "name": "Le marchand de matériaux",
+   "aliases": [],
+   "named": false,
+   "category": "merchant",
+   "role": "Marchand de Ville Forte",
+   "description": "Propose des ressources de fabrication, majoritairement communes, à Ville Forte.",
+   "locations": [
+    "Ville Forte"
+   ],
+   "sources": [
+    "advices:advices.468",
+    "advices:advices.326",
+    "advices:advices.334"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "capitaine-du-bateau",
+   "name": "Le capitaine du bateau",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Capitaine des traversées vers les îles",
+   "description": "Capitaine du vieux bateau qui emmène les aventuriers vers les îles mystérieuses et les ramène sur le continent.",
+   "locations": [
+    "Bateau pour quitter l'île"
+   ],
+   "sources": [
+    "commands:joinBoat.confirmationMessage.description.confirmation.text",
+    "models:players.leavePVEIslandDescEnd",
+    "models:map_locations.1999"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "esprit-du-bonneteau",
+   "name": "L'esprit chasseur de bonneteurs",
+   "aliases": [],
+   "named": false,
+   "category": "spirit",
+   "role": "Esprit rôdeur",
+   "description": "Esprit qui rôderait autour de la route des Merveilles, de la route Marécageuse et du Mont Célestrum et s'attaquerait spécifiquement aux joueurs de bonneteau.",
+   "locations": [
+    "Route des Merveilles",
+    "Route Marécageuse",
+    "Mont Célestrum"
+   ],
+   "sources": [
+    "advices:advices.211"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "celestrum",
+   "name": "Celestrum",
+   "aliases": [
+    "l'ancienne déesse"
+   ],
+   "named": true,
+   "category": "deity",
+   "role": "Ancienne déesse",
+   "description": "Ancienne déesse qui aurait donné son nom au Mont Célestrum, la montagne dominante de la région.",
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "sources": [
+    "models:map_locations.15"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "m-b",
+   "name": "M-B",
+   "aliases": [],
+   "named": true,
+   "category": "legend",
+   "role": "Seul alpiniste du Mont Célestrum",
+   "description": "Unique personne à être parvenue au sommet du Mont Célestrum ; on ne retient que ses initiales.",
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "sources": [
+    "models:map_locations.15"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "divinite-des-portes-sacrees",
+   "name": "Divinité des Portes sacrées",
+   "aliases": [],
+   "named": false,
+   "category": "deity",
+   "role": "Divinité honorée par une civilisation ancienne",
+   "description": "Divinité inconnue en l'honneur de laquelle une civilisation ancienne a bâti les Portes sacrées de l'île de glace.",
+   "locations": [
+    "Portes sacrées"
+   ],
+   "sources": [
+    "models:map_locations.1103"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "civilisation-ancienne",
+   "name": "Civilisation ancienne",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Bâtisseurs des Portes sacrées",
+   "description": "Civilisation disparue, à l'écriture inconnue, qui a construit les Portes sacrées et leurs statues gardiennes.",
+   "locations": [
+    "Portes sacrées"
+   ],
+   "sources": [
+    "models:map_locations.1103",
+    "models:pveMapsStory.1103.celestialGuardian"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "anciens-rois",
+   "name": "Les anciens rois de la région",
+   "aliases": [],
+   "named": false,
+   "category": "legend",
+   "role": "Rois défunts",
+   "description": "Anciens rois dont la Vallée des Rois porte le nom ; leurs tombeaux à demi ensevelis parsèment les dunes.",
+   "locations": [
+    "Vallée des Rois"
+   ],
+   "sources": [
+    "models:map_locations.7",
+    "commands:petExpedition.mapLocationExpeditions.7_ruins"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "nobles-de-la-vallee",
+   "name": "Les nobles de la Vallée des Rois",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Noblesse",
+   "description": "Nobles qui viennent chercher la fraîcheur au Village Coco.",
+   "locations": [
+    "Vallée des Rois",
+    "Village Coco"
+   ],
+   "sources": [
+    "models:map_locations.17"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "brigands",
+   "name": "Brigands et hors-la-loi",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Bandits",
+   "description": "Bandits terrés dans les grottes du Bois Hurlant et qui empruntent le Grand Axe pour leurs embuscades.",
+   "locations": [
+    "Bois Hurlant",
+    "Grand Axe"
+   ],
+   "sources": [
+    "models:map_locations.22",
+    "models:map_locations.11",
+    "commands:petExpedition.mapLocationExpeditions.22",
+    "commands:petExpedition.mapLocationExpeditions.11"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "nains-du-mont-celestrum",
+   "name": "Les nains du Mont Célestrum",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Peuple nain",
+   "description": "Nains vivant dans les montagnes du Mont Célestrum, réputés pour leur amour des animaux ; Talvar et Moltiar en font partie.",
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "sources": [
+    "advices:advices.221",
+    "advices:advices.220",
+    "commands:shop.shopItems.lovePointsValue.dwarf.8"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "premiers-dresseurs",
+   "name": "Les premiers dresseurs",
+   "aliases": [],
+   "named": false,
+   "category": "legend",
+   "role": "Créateurs du Talisman d'Ancrage",
+   "description": "Selon les légendes, ils ont forgé le Talisman d'Ancrage, créant un lien indéfectible entre familier et maître.",
+   "locations": [],
+   "sources": [
+    "commands:petExpedition.noTalisman_male.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchands-ambulants",
+   "name": "Marchands ambulants",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Commerçants itinérants",
+   "description": "Marchands des routes aux prix attractifs, parmi lesquels se cachent quelques arnaqueurs ; certains chariots ne sont pas pilotés par des marchands honnêtes.",
+   "locations": [
+    "Route des Merveilles"
+   ],
+   "sources": [
+    "advices:advices.85",
+    "advices:advices.120",
+    "advices:advices.133",
+    "advices:advices.415",
+    "models:map_locations.21"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "esprits-de-la-nature",
+   "name": "Les esprits de la nature",
+   "aliases": [],
+   "named": false,
+   "category": "spirit",
+   "role": "Esprits",
+   "description": "Esprits évoqués comme veillant sur les expéditions de familiers.",
+   "locations": [],
+   "sources": [
+    "commands:petExpedition.errors.noPet"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "capitaine-crow",
+   "name": "Capitaine Crow",
+   "aliases": [],
+   "named": true,
+   "category": "monster",
+   "role": "Spectre de pirate, boss",
+   "description": "Âme damnée du plus redouté des pirates, il hante la Crique du Revenant depuis sa mort tragique, entre carcasses de navires et feux follets. Regard de braise, rire sinistre et sabre crépitant d'énergie maudite : il n'a pas fini de réclamer des âmes.",
+   "locations": [
+    "Crique du Revenant"
+   ],
+   "sources": [
+    "models:monsters.captainCrow",
+    "models:pveMapsStory.1203.captainCrow"
+   ],
+   "quotes": [
+    "Il n'a pas fini de réclamer des âmes."
+   ]
+  },
+  {
+   "id": "yuki-onna",
+   "name": "Yuki-Onna",
+   "aliases": [],
+   "named": true,
+   "category": "spirit",
+   "role": "Esprit vengeur des neiges, boss",
+   "description": "Esprit vengeur des montagnes enneigées, femme d'une beauté saisissante en kimono blanc aux yeux de néant glacé ; elle attire par son chant cristallin et gèle ses proies d'un regard. Hante le Village dévasté.",
+   "locations": [
+    "Village dévasté"
+   ],
+   "sources": [
+    "models:monsters.yukiOnna",
+    "models:pveMapsStory.1106.yukiOnna"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "seigneur-des-glaces",
+   "name": "Seigneur des glaces",
+   "aliases": [],
+   "named": false,
+   "category": "monster",
+   "role": "Dragon de glace mâle, boss",
+   "description": "Dragon colossal aux écailles cristallines qui règne sur les sommets du Pic enneigé ; compagnon de la Reine des glaces.",
+   "locations": [
+    "Pic enneigé"
+   ],
+   "sources": [
+    "models:monsters.maleIceDragon",
+    "models:pveMapsStory.1104.maleIceDragon"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "reine-des-glaces",
+   "name": "Reine des glaces",
+   "aliases": [],
+   "named": false,
+   "category": "monster",
+   "role": "Dragonne de glace, boss",
+   "description": "Dragonne gigantesque, plus agressive que son compagnon, qui protège férocement son trésor et un œuf nacré dans sa nurserie du Nid glacé.",
+   "locations": [
+    "Nid glacé"
+   ],
+   "sources": [
+    "models:monsters.femaleIceDragon",
+    "models:pveMapsStory.1107.femaleIceDragon",
+    "models:map_locations.1107"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "titan-de-magma",
+   "name": "Titan de magma",
+   "aliases": [],
+   "named": false,
+   "category": "monster",
+   "role": "Colosse du volcan, boss",
+   "description": "Monstre le plus puissant de l'île volcanique, né du magma figé au sommet du Volcan grondant ; ultime bataille de l'île.",
+   "locations": [
+    "Volcan grondant"
+   ],
+   "sources": [
+    "models:monsters.magmaTitan",
+    "models:pveMapsStory.1005.magmaTitan"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gardien-celeste",
+   "name": "Gardien céleste",
+   "aliases": [],
+   "named": false,
+   "category": "monster",
+   "role": "Statue gardienne des Portes sacrées",
+   "description": "Statue géante qui s'anime avec un marteau divin pour empêcher les aventuriers de franchir les Portes sacrées.",
+   "locations": [
+    "Portes sacrées"
+   ],
+   "sources": [
+    "models:monsters.celestialGuardian",
+    "models:pveMapsStory.1103.celestialGuardian"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "leviathan",
+   "name": "Léviathan",
+   "aliases": [],
+   "named": true,
+   "category": "legend",
+   "role": "Seigneur des océans, bête primordiale",
+   "description": "Seigneur incontesté des océans qui sommeillerait depuis l'aube des temps dans le Ravin des Abysses, gardien des secrets les plus anciens du monde ; il invoque la foudre et des maelströms.",
+   "locations": [
+    "Ravin des Abysses"
+   ],
+   "sources": [
+    "models:monsters.leviathan",
+    "models:pveMapsStory.1206.leviathan",
+    "models:map_locations.1206"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "kraken",
+   "name": "Kraken",
+   "aliases": [],
+   "named": true,
+   "category": "legend",
+   "role": "Titan des profondeurs",
+   "description": "Titan tentaculaire du Gouffre des Profondeurs, aux yeux jaunes d'une intelligence malveillante.",
+   "locations": [
+    "Gouffre des Profondeurs"
+   ],
+   "sources": [
+    "models:monsters.kraken",
+    "models:pveMapsStory.1205.kraken",
+    "models:map_locations.1205"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "tortue-geante",
+   "name": "Tortue Géante",
+   "aliases": [],
+   "named": false,
+   "category": "monster",
+   "role": "Tortue millénaire du lagon",
+   "description": "Tortue géante millénaire, grande comme un petit navire, gardienne paisible mais territoriale du Creux du Lagon.",
+   "locations": [
+    "Creux du Lagon"
+   ],
+   "sources": [
+    "models:monsters.turtle",
+    "models:pveMapsStory.1201.turtle"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "esprit-des-mers",
+   "name": "Esprit des mers",
+   "aliases": [],
+   "named": false,
+   "category": "spirit",
+   "role": "Gardien évanescent de la caverne maritime",
+   "description": "Entité mi-brume mi-eau qui garde son sanctuaire de la Caverne Maritime ; ne peut être brûlée.",
+   "locations": [
+    "Caverne Maritime"
+   ],
+   "sources": [
+    "models:monsters.waterSpirit",
+    "models:pveMapsStory.1202.waterSpirit",
+    "advices:advices.231"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "sirene",
+   "name": "La Sirène",
+   "aliases": [],
+   "named": false,
+   "category": "monster",
+   "role": "Sirène de la Cave des murmures",
+   "description": "Créature mi-femme mi-poisson au chant envoûtant qui piège les aventuriers dans la Cave des murmures.",
+   "locations": [
+    "Cave des murmures"
+   ],
+   "sources": [
+    "models:monsters.mermaid",
+    "models:pveMapsStory.1204.mermaid"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "mutant-vaseux",
+   "name": "Mutant Vaseux",
+   "aliases": [],
+   "named": false,
+   "category": "monster",
+   "role": "Mimétique de la Forêt de la pénombre",
+   "description": "Masse gélatineuse qui copie l'apparence de son adversaire, rencontrée dans la Forêt de la pénombre.",
+   "locations": [
+    "Forêt de la pénombre"
+   ],
+   "sources": [
+    "models:monsters.slimyMutant",
+    "models:pveMapsStory.1001.slimyMutant"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "equipe-crownicles",
+   "name": "L'équipe de Crownicles",
+   "aliases": [
+    "staff",
+    "l'équipe du Bot"
+   ],
+   "named": false,
+   "category": "meta",
+   "role": "Développeurs et staff du bot",
+   "description": "Équipe de développement et staff du bot Discord Crownicles (anciennement DraftBot), open-source ; elle invite la communauté à aider à écrire l'histoire du jeu.",
+   "locations": [],
+   "sources": [
+    "advices:advices.128",
+    "advices:advices.141",
+    "advices:advices.227",
+    "bot:command404"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "draftbot",
+   "name": "DraftBot",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Ancien nom du bot",
+   "description": "Crownicles est le nouveau nom de DraftBot.",
+   "locations": [],
+   "sources": [
+    "advices:advices.227"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "pere-noel",
+   "name": "Le Père Noël",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Figure de Noël",
+   "description": "Passe à Noël et remplit le stock de jetons de tous les joueurs.",
+   "locations": [],
+   "sources": [
+    "bot:christmasBonusApplied"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "zeus",
+   "name": "Zeus",
+   "aliases": [],
+   "named": true,
+   "category": "deity",
+   "role": "Dieu grec (référence)",
+   "description": "Référencé par l'arme « Foudre de Zeus ».",
+   "locations": [],
+   "sources": [
+    "models:weapons.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "brennus",
+   "name": "Brennus",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Référence (bouclier de Brennus, rugby)",
+   "description": "Référencé par l'armure « Bouclier de Brennus ».",
+   "locations": [],
+   "sources": [
+    "models:armors.26"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "franklin",
+   "name": "Franklin",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Tortue de dessin animé (référence)",
+   "description": "Référencé par l'armure « Carapace de Franklin ».",
+   "locations": [],
+   "sources": [
+    "models:armors.40"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-major",
+   "name": "Le Major",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Référence (Ghost in the Shell)",
+   "description": "Référencé par l'armure « Blindage du Major ».",
+   "locations": [],
+   "sources": [
+    "models:armors.39"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "icare",
+   "name": "Icare",
+   "aliases": [],
+   "named": true,
+   "category": "legend",
+   "role": "Figure mythologique",
+   "description": "Référencé par « Aile droite d'Icare » (armure) et « Aile gauche d'Icare » (arme).",
+   "locations": [],
+   "sources": [
+    "models:armors.57",
+    "models:weapons.88"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "l-archimage",
+   "name": "L'Archimage",
+   "aliases": [],
+   "named": false,
+   "category": "legend",
+   "role": "Mage légendaire",
+   "description": "Référencé par l'armure « Tenue de l'Archimage ».",
+   "locations": [],
+   "sources": [
+    "models:armors.96"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "ragnell",
+   "name": "Ragnell",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Épée légendaire (Fire Emblem)",
+   "description": "Référencé par l'arme « Épée de Ragnell ».",
+   "locations": [],
+   "sources": [
+    "models:weapons.71"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "mojaro",
+   "name": "Mojaro",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Référence (Majora, Zelda)",
+   "description": "Référencé par « Masque Mojaro » (arme) et « Lune de Mojaro » (objet).",
+   "locations": [],
+   "sources": [
+    "models:weapons.86",
+    "models:objects.5"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "fibonacci",
+   "name": "Fibonacci",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Mathématicien",
+   "description": "Référencé par l'arme « Baguette de Fibonacci ».",
+   "locations": [],
+   "sources": [
+    "models:weapons.91"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "nayru",
+   "name": "Nayru",
+   "aliases": [],
+   "named": true,
+   "category": "deity",
+   "role": "Déesse (Zelda)",
+   "description": "Référencée par l'objet « Pouvoir de Nayru ».",
+   "locations": [],
+   "sources": [
+    "models:objects.39"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "midas",
+   "name": "Midas",
+   "aliases": [],
+   "named": true,
+   "category": "legend",
+   "role": "Roi mythologique",
+   "description": "Référencé par l'objet « Amulette de Midas ».",
+   "locations": [],
+   "sources": [
+    "models:objects.45"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "fatalis",
+   "name": "Fatalis",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Dragon de Monster Hunter",
+   "description": "Référencé par l'objet « Œil de Fatalis ».",
+   "locations": [],
+   "sources": [
+    "models:objects.62"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "buzz-l-eclair",
+   "name": "Buzz l'éclair",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Toy Story",
+   "description": "Référencé par l'objet « Figurine Buzz l'éclair ».",
+   "locations": [],
+   "sources": [
+    "models:objects.71"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "easy",
+   "name": "Easy",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Référence probable à un membre de la communauté",
+   "description": "Référencé par l'objet « Script de Easy ».",
+   "locations": [],
+   "sources": [
+    "models:objects.82"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "ines",
+   "name": "Ines",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Référence probable à une personne",
+   "description": "Référencée par l'arme « Ines'word ».",
+   "locations": [],
+   "sources": [
+    "models:weapons.69"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "nariwa",
+   "name": "Nariwa",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Référence probable à un membre de la communauté",
+   "description": "Référencé par la potion « Super Nariwa ».",
+   "locations": [],
+   "sources": [
+    "models:potions.71"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "kyu",
+   "name": "Kyu",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Référence probable (jeu de mots récurrent)",
+   "description": "Référencé par « Kyuillère », « Kyuran », « Kyurburant ».",
+   "locations": [],
+   "sources": [
+    "models:objects.32",
+    "models:objects.47",
+    "models:potions.35"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "pegase",
+   "name": "Pégase",
+   "aliases": [],
+   "named": true,
+   "category": "legend",
+   "role": "Cheval ailé mythologique",
+   "description": "Référencé par l'objet « Bottes de Pégase ».",
+   "locations": [],
+   "sources": [
+    "models:objects.50"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "minotaure",
+   "name": "Le Minotaure",
+   "aliases": [],
+   "named": false,
+   "category": "legend",
+   "role": "Créature mythologique",
+   "description": "Référencé par l'objet « Urne ornée du minotaure ».",
+   "locations": [],
+   "sources": [
+    "models:objects.41"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "la-faucheuse",
+   "name": "La Faucheuse",
+   "aliases": [],
+   "named": false,
+   "category": "legend",
+   "role": "Personnification de la mort",
+   "description": "Référencée par l'arme « Sentence de la Faucheuse ».",
+   "locations": [],
+   "sources": [
+    "models:weapons.100"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "kars",
+   "name": "Kars",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "JoJo's Bizarre Adventure",
+   "description": "Référencé par l'objet « Kars ».",
+   "locations": [],
+   "sources": [
+    "models:objects.67"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-docteur",
+   "name": "Le Docteur",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Doctor Who",
+   "description": "Référencé par « Tardis » et « Tournevis sonique ».",
+   "locations": [],
+   "sources": [
+    "models:objects.68",
+    "models:weapons.84"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "giga-chad",
+   "name": "Giga Chad",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Mème internet",
+   "description": "Référencé par l'armure « Giga Chad ».",
+   "locations": [],
+   "sources": [
+    "models:armors.60"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "stitch",
+   "name": "Stitch et Angel",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Lilo & Stitch",
+   "description": "Familier n°66 : Stitch (mâle) / Angel (femelle).",
+   "locations": [],
+   "sources": [
+    "models:pets.66_male",
+    "models:pets.66_female"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "lapin-blanc",
+   "name": "Le lapin (Alice)",
+   "aliases": [],
+   "named": false,
+   "category": "reference",
+   "role": "Lapin blanc d'Alice au pays des merveilles",
+   "description": "Référencé par l'objet « Horloge du lapin ».",
+   "locations": [],
+   "sources": [
+    "models:objects.42"
+   ],
+   "quotes": []
+  }
+ ],
+ "relations": [
+  {
+   "from": "talvar",
+   "to": "moltiar",
+   "type": "family",
+   "label": "frères (Moltiar est le frère de Talvar)",
+   "source": "advices:advices.271"
+  },
+  {
+   "from": "moltiar",
+   "to": "talvar",
+   "type": "rival",
+   "label": "déteste les animaux, contrairement à son frère",
+   "source": "advices:advices.271"
+  },
+  {
+   "from": "talvar",
+   "to": "femme-de-talvar",
+   "type": "family",
+   "label": "époux",
+   "source": "commands:shop.shopItems.lovePointsValue.dwarf.17"
+  },
+  {
+   "from": "talvar",
+   "to": "veterinaire-de-la-cour",
+   "type": "knows",
+   "label": "correspondant et ami, lui écrit sans cesse sur les animaux",
+   "source": "commands:shop.shopItems.lovePointsValue.dwarf.10"
+  },
+  {
+   "from": "talvar",
+   "to": "nains-du-mont-celestrum",
+   "type": "member",
+   "label": "nain des montagnes",
+   "source": "commands:shop.shopItems.lovePointsValue.dwarf.8"
+  },
+  {
+   "from": "moltiar",
+   "to": "nains-du-mont-celestrum",
+   "type": "member",
+   "label": "nain",
+   "source": "error:blockedContext.badPetSmallEvent"
+  },
+  {
+   "from": "talvar",
+   "to": "mont-celestrum",
+   "type": "located",
+   "label": "vit dans les montagnes du Mont Célestrum",
+   "source": "advices:advices.220"
+  },
+  {
+   "from": "moltiar",
+   "to": "player",
+   "type": "enemy",
+   "label": "peut s'en prendre au familier de l'aventurier",
+   "source": "advices:advices.271"
+  },
+  {
+   "from": "talvar",
+   "to": "player",
+   "type": "other",
+   "label": "l'aventurier lui présente ses familiers",
+   "source": "models:missions.showPetsToTalvar_one"
+  },
+  {
+   "from": "velanna",
+   "to": "talvar",
+   "type": "knows",
+   "label": "exige que le familier ait été présenté à Talvar avant de confier le talisman",
+   "source": "commands:missions.quests.list.expeditionTalismans.steps.anchorTalisman.hint"
+  },
+  {
+   "from": "velanna",
+   "to": "player",
+   "type": "mentor",
+   "label": "confie le Talisman d'Ancrage",
+   "source": "commands:missions.quests.list.expeditionTalismans.steps.anchorTalisman.hint"
+  },
+  {
+   "from": "nains-du-mont-celestrum",
+   "to": "mont-celestrum",
+   "type": "located",
+   "label": "habitent les montagnes",
+   "source": "advices:advices.221"
+  },
+  {
+   "from": "alderic",
+   "to": "player",
+   "type": "trades",
+   "label": "vend des équipements légendaires/épiques",
+   "source": "advices:advices.419"
+  },
+  {
+   "from": "mernil",
+   "to": "player",
+   "type": "trades",
+   "label": "enchante et désenchante",
+   "source": "advices:advices.349"
+  },
+  {
+   "from": "gaspard-joe",
+   "to": "player",
+   "type": "trades",
+   "label": "vend des recettes",
+   "source": "advices:advices.474"
+  },
+  {
+   "from": "gorim",
+   "to": "ville-forte",
+   "type": "located",
+   "label": "installé à Ville Forte",
+   "source": "advices:advices.476"
+  },
+  {
+   "from": "theobald",
+   "to": "player",
+   "type": "mentor",
+   "label": "confie ses graines",
+   "source": "commands:missions.quests.list.seeds.description"
+  },
+  {
+   "from": "sir-rowan",
+   "to": "player",
+   "type": "mentor",
+   "label": "donne des conseils de combat",
+   "source": "models:missions.meetSirRowan_one"
+  },
+  {
+   "from": "le-roi",
+   "to": "chateau-du-roi",
+   "type": "located",
+   "label": "réside au château",
+   "source": "models:map_locations.28"
+  },
+  {
+   "from": "le-roi",
+   "to": "continent-principal",
+   "type": "rules",
+   "label": "règne sur le royaume",
+   "source": "commands:missions.kingChallenge.description"
+  },
+  {
+   "from": "le-roi",
+   "to": "gardes-du-roi",
+   "type": "employs",
+   "label": "ses gardes affrontent les aventuriers",
+   "source": "commands:fight.kingGuard.outcome.win"
+  },
+  {
+   "from": "le-roi",
+   "to": "player",
+   "type": "other",
+   "label": "lance le défi du roi et récompense les aventuriers",
+   "source": "notifications:kingChallenge.rewards"
+  },
+  {
+   "from": "player",
+   "to": "la-princesse",
+   "type": "other",
+   "label": "quête pour la princesse, rivalité entre aventuriers",
+   "source": "advices:advices.207"
+  },
+  {
+   "from": "tresorier-royal",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "gère les coffres royaux",
+   "source": "commands:shop.shopItems.marketAnalysis.kingsMoney.tomorrow.drop"
+  },
+  {
+   "from": "conseiller-du-marche",
+   "to": "marche-royal",
+   "type": "located",
+   "label": "analyste du marché",
+   "source": "commands:shop.shopItems.marketAnalysis.info"
+  },
+  {
+   "from": "erudit-du-marche-royal",
+   "to": "marche-royal",
+   "type": "located",
+   "label": "officie au Marché royal",
+   "source": "advices:advices.406"
+  },
+  {
+   "from": "archiviste-des-iles",
+   "to": "chateau-du-roi",
+   "type": "located",
+   "label": "catalogue des exploits des îles au château",
+   "source": "advices:advices.475"
+  },
+  {
+   "from": "forgeron-royal",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "forgeron royal",
+   "source": "commands:profile.badges.sentimental_crafter"
+  },
+  {
+   "from": "veterinaire-de-la-cour",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "vétérinaire de la cour",
+   "source": "commands:shop.shopItems.lovePointsValue.name"
+  },
+  {
+   "from": "veterinaire-de-la-cour",
+   "to": "mergagnan",
+   "type": "located",
+   "label": "vétérinaire à Mergagnan",
+   "source": "advices:advices.464"
+  },
+  {
+   "from": "veterinaire-de-la-cour",
+   "to": "claire-de-ville",
+   "type": "located",
+   "label": "vétérinaire à Claire de Ville",
+   "source": "advices:advices.464"
+  },
+  {
+   "from": "oracle",
+   "to": "autel-de-l-oracle",
+   "type": "located",
+   "label": "garde l'ancien autel",
+   "source": "advices:advices.282"
+  },
+  {
+   "from": "oracle",
+   "to": "player",
+   "type": "other",
+   "label": "accorde des bénédictions contre contributions",
+   "source": "advices:advices.282"
+  },
+  {
+   "from": "herboriste",
+   "to": "village-coco",
+   "type": "located",
+   "label": "installé au Village Coco",
+   "source": "advices:advices.469"
+  },
+  {
+   "from": "bucheron",
+   "to": "village-coco",
+   "type": "located",
+   "label": "bûcheron du Village Coco",
+   "source": "advices:advices.463"
+  },
+  {
+   "from": "tanneur",
+   "to": "mergagnan",
+   "type": "located",
+   "label": "Tanneur de Mergagnan",
+   "source": "advices:advices.465"
+  },
+  {
+   "from": "marchand-de-materiaux",
+   "to": "ville-forte",
+   "type": "located",
+   "label": "marchand de Ville Forte",
+   "source": "advices:advices.468"
+  },
+  {
+   "from": "marchand-de-jetons",
+   "to": "player",
+   "type": "trades",
+   "label": "vend des jetons",
+   "source": "advices:advices.267"
+  },
+  {
+   "from": "sorciere",
+   "to": "player",
+   "type": "other",
+   "label": "propose des potions",
+   "source": "advices:advices.418"
+  },
+  {
+   "from": "voyageur-encapuchonne",
+   "to": "player",
+   "type": "other",
+   "label": "pose des questions",
+   "source": "error:blockedContext.limogesSmallEvent"
+  },
+  {
+   "from": "capitaine-du-bateau",
+   "to": "bateau-pour-quitter-l-ile",
+   "type": "located",
+   "label": "pilote le bateau des îles",
+   "source": "commands:joinBoat.confirmationMessage.description.confirmation.text"
+  },
+  {
+   "from": "esprit-du-bonneteau",
+   "to": "route-des-merveilles",
+   "type": "located",
+   "label": "rôde dans les environs",
+   "source": "advices:advices.211"
+  },
+  {
+   "from": "esprit-du-bonneteau",
+   "to": "route-marecageuse",
+   "type": "located",
+   "label": "rôde dans les environs",
+   "source": "advices:advices.211"
+  },
+  {
+   "from": "esprit-du-bonneteau",
+   "to": "mont-celestrum",
+   "type": "located",
+   "label": "rôde dans les environs",
+   "source": "advices:advices.211"
+  },
+  {
+   "from": "celestrum",
+   "to": "mont-celestrum",
+   "type": "other",
+   "label": "a donné son nom à la montagne",
+   "source": "models:map_locations.15"
+  },
+  {
+   "from": "m-b",
+   "to": "mont-celestrum",
+   "type": "located",
+   "label": "seule personne à en avoir atteint le sommet",
+   "source": "models:map_locations.15"
+  },
+  {
+   "from": "civilisation-ancienne",
+   "to": "portes-sacrees",
+   "type": "created",
+   "label": "a construit les Portes sacrées",
+   "source": "models:map_locations.1103"
+  },
+  {
+   "from": "civilisation-ancienne",
+   "to": "divinite-des-portes-sacrees",
+   "type": "worships",
+   "label": "portes érigées en son honneur",
+   "source": "models:map_locations.1103"
+  },
+  {
+   "from": "gardien-celeste",
+   "to": "portes-sacrees",
+   "type": "located",
+   "label": "garde les portes",
+   "source": "models:monsters.celestialGuardian"
+  },
+  {
+   "from": "civilisation-ancienne",
+   "to": "gardien-celeste",
+   "type": "created",
+   "label": "statue gardienne bâtie avec les portes",
+   "source": "models:pveMapsStory.1103.celestialGuardian"
+  },
+  {
+   "from": "anciens-rois",
+   "to": "vallee-des-rois",
+   "type": "located",
+   "label": "tombeaux dans les dunes",
+   "source": "models:map_locations.7"
+  },
+  {
+   "from": "nobles-de-la-vallee",
+   "to": "village-coco",
+   "type": "located",
+   "label": "y cherchent la fraîcheur",
+   "source": "models:map_locations.17"
+  },
+  {
+   "from": "brigands",
+   "to": "bois-hurlant",
+   "type": "located",
+   "label": "repaire de bandits",
+   "source": "models:map_locations.22"
+  },
+  {
+   "from": "brigands",
+   "to": "grand-axe",
+   "type": "located",
+   "label": "utilisent le Grand Axe",
+   "source": "models:map_locations.11"
+  },
+  {
+   "from": "capitaine-crow",
+   "to": "crique-du-revenant",
+   "type": "located",
+   "label": "hante la crique",
+   "source": "models:monsters.captainCrow"
+  },
+  {
+   "from": "yuki-onna",
+   "to": "village-devaste",
+   "type": "located",
+   "label": "hante le village dévasté",
+   "source": "models:pveMapsStory.1106.yukiOnna"
+  },
+  {
+   "from": "seigneur-des-glaces",
+   "to": "reine-des-glaces",
+   "type": "love",
+   "label": "compagnons dragons",
+   "source": "models:monsters.femaleIceDragon"
+  },
+  {
+   "from": "seigneur-des-glaces",
+   "to": "pic-enneige",
+   "type": "located",
+   "label": "règne sur les cimes",
+   "source": "models:monsters.maleIceDragon"
+  },
+  {
+   "from": "reine-des-glaces",
+   "to": "nid-glace",
+   "type": "located",
+   "label": "nurserie et œuf",
+   "source": "models:pveMapsStory.1107.femaleIceDragon"
+  },
+  {
+   "from": "titan-de-magma",
+   "to": "volcan-grondant",
+   "type": "located",
+   "label": "surgit du volcan",
+   "source": "models:pveMapsStory.1005.magmaTitan"
+  },
+  {
+   "from": "leviathan",
+   "to": "ravin-des-abysses",
+   "type": "located",
+   "label": "sommeille dans le ravin",
+   "source": "models:map_locations.1206"
+  },
+  {
+   "from": "kraken",
+   "to": "gouffre-des-profondeurs",
+   "type": "located",
+   "label": "émerge du gouffre",
+   "source": "models:pveMapsStory.1205.kraken"
+  },
+  {
+   "from": "tortue-geante",
+   "to": "creux-du-lagon",
+   "type": "located",
+   "label": "territoire du lagon",
+   "source": "models:pveMapsStory.1201.turtle"
+  },
+  {
+   "from": "esprit-des-mers",
+   "to": "caverne-maritime",
+   "type": "located",
+   "label": "gardien du sanctuaire",
+   "source": "models:pveMapsStory.1202.waterSpirit"
+  },
+  {
+   "from": "sirene",
+   "to": "cave-des-murmures",
+   "type": "located",
+   "label": "chante dans la cave",
+   "source": "models:pveMapsStory.1204.mermaid"
+  },
+  {
+   "from": "mutant-vaseux",
+   "to": "foret-de-la-penombre",
+   "type": "located",
+   "label": "rôde dans la forêt",
+   "source": "models:pveMapsStory.1001.slimyMutant"
+  },
+  {
+   "from": "capitaine-crow",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.captainCrow.name"
+  },
+  {
+   "from": "yuki-onna",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.yukiOnna.name"
+  },
+  {
+   "from": "seigneur-des-glaces",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.maleIceDragon.name"
+  },
+  {
+   "from": "reine-des-glaces",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.femaleIceDragon.name"
+  },
+  {
+   "from": "titan-de-magma",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.magmaTitan.name"
+  },
+  {
+   "from": "leviathan",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.leviathan.name"
+  },
+  {
+   "from": "kraken",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.kraken.name"
+  },
+  {
+   "from": "gardien-celeste",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.celestialGuardian.name"
+  },
+  {
+   "from": "tortue-geante",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.turtle.name"
+  },
+  {
+   "from": "esprit-des-mers",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.waterSpirit.name"
+  },
+  {
+   "from": "sirene",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.mermaid.name"
+  },
+  {
+   "from": "mutant-vaseux",
+   "to": "player",
+   "type": "enemy",
+   "label": "boss affronté sur les îles mystérieuses",
+   "source": "models:monsters.slimyMutant.name"
+  },
+  {
+   "from": "equipe-crownicles",
+   "to": "draftbot",
+   "type": "created",
+   "label": "DraftBot renommé Crownicles",
+   "source": "advices:advices.227"
+  },
+  {
+   "from": "pere-noel",
+   "to": "player",
+   "type": "other",
+   "label": "offre des jetons à Noël",
+   "source": "bot:christmasBonusApplied"
+  },
+  {
+   "from": "archiviste-des-iles",
+   "to": "player",
+   "type": "other",
+   "label": "catalogue ses victoires contre les boss d'îles",
+   "source": "advices:advices.475"
+  }
+ ],
+ "places": [
+  {
+   "id": "plage-sentinelle",
+   "name": "Plage Sentinelle",
+   "description": "Une grande plage de sable fin au bord de la ville.",
+   "sources": [
+    "models:map_locations.1",
+    "commands:petExpedition.mapLocationExpeditions.1"
+   ]
+  },
+  {
+   "id": "voie-champetre",
+   "name": "Voie champêtre",
+   "description": "Une petite route qui permet de se rendre à la campagne à partir de Mergagnan et inversement.",
+   "sources": [
+    "models:map_locations.2",
+    "commands:petExpedition.mapLocationExpeditions.2"
+   ]
+  },
+  {
+   "id": "le-berceau",
+   "name": "Le Berceau",
+   "description": "Grande plaine de l'ouest de la contrée bordée d'une grande forêt et traversée par une grande route.",
+   "sources": [
+    "models:map_locations.3",
+    "commands:petExpedition.mapLocationExpeditions.3"
+   ]
+  },
+  {
+   "id": "foret-du-vieillard",
+   "name": "Forêt Du Vieillard",
+   "description": "Immense forêt au sud du Berceau. On raconte que beaucoup de voyageurs s'y sont perdus.",
+   "sources": [
+    "models:map_locations.4",
+    "commands:petExpedition.mapLocationExpeditions.4"
+   ]
+  },
+  {
+   "id": "chemin-du-dedale",
+   "name": "Chemin du Dédale",
+   "description": "Chemin tirant son surnom de son sillonement au sein de la nature foisonnant du sud de la forêt du vieillard. Sous la végétation se devinent encore les murets d'un ancien labyrinthe oublié.",
+   "sources": [
+    "models:map_locations.5",
+    "commands:petExpedition.mapLocationExpeditions.5_forest",
+    "commands:petExpedition.mapLocationExpeditions.5_ruins"
+   ]
+  },
+  {
+   "id": "boug-coton",
+   "name": "Boug-Coton",
+   "description": "Un village paisible réputé pour son auberge accueillante. Sous l'auberge s'étendent de vastes caves secrètes creusées à même la roche.",
+   "sources": [
+    "models:map_locations.6",
+    "commands:petExpedition.mapLocationExpeditions.6"
+   ]
+  },
+  {
+   "id": "vallee-des-rois",
+   "name": "Vallée des Rois",
+   "description": "Désert de sable chaud nommé en l'honneur des anciens rois de la région. Leurs tombeaux à demi ensevelis parsèment encore les dunes. Expéditions : Dunes Brûlantes et Tombeaux Oubliés.",
+   "sources": [
+    "models:map_locations.7",
+    "commands:petExpedition.mapLocationExpeditions.7_desert",
+    "commands:petExpedition.mapLocationExpeditions.7_ruins"
+   ]
+  },
+  {
+   "id": "croisement-des-destins",
+   "name": "Croisement des Destins",
+   "description": "Un très grand carrefour qui relie les principaux chemins à l'ouest du Mont Célestrum.",
+   "sources": [
+    "models:map_locations.8",
+    "commands:petExpedition.mapLocationExpeditions.8"
+   ]
+  },
+  {
+   "id": "grande-rue",
+   "name": "Grande Rue",
+   "description": "Ancienne grande route commerciale reliant le Berceau et Ville forte, il ne reste de la Grande Rue que de vieux pavés ébréchés.",
+   "sources": [
+    "models:map_locations.9",
+    "commands:petExpedition.mapLocationExpeditions.9_plains",
+    "commands:petExpedition.mapLocationExpeditions.9_ruins"
+   ]
+  },
+  {
+   "id": "ville-forte",
+   "name": "Ville Forte",
+   "description": "Ancienne grande ville fortifiée, Ville Forte n'est plus que l'ombre d'elle-même. Ravagée par l'ancienne guerre, il ne reste qu'une dizaine de maisons et de paysans. Le reste des anciennes fortifications est en ruines, et sous les remparts effondrés, d'anciennes galeries souterraines s'enfoncent dans la roche. Expéditions : Catacombes Perdues et Remparts Effondrés. Abrite Gorim le Brise-Fer et un marchand de matériaux.",
+   "sources": [
+    "models:map_locations.10",
+    "commands:petExpedition.mapLocationExpeditions.10_cave",
+    "commands:petExpedition.mapLocationExpeditions.10_ruins"
+   ]
+  },
+  {
+   "id": "grand-axe",
+   "name": "Grand Axe",
+   "description": "Dernière vraie route qui permet encore de contourner le Mont Célestrum par le nord, le grand axe est encore très utilisé aujourd'hui, principalement par les brigands.",
+   "sources": [
+    "models:map_locations.11",
+    "commands:petExpedition.mapLocationExpeditions.11"
+   ]
+  },
+  {
+   "id": "l-etendue",
+   "name": "L'Étendue",
+   "description": "Une grande plaine vide nordique sans grand intérêt.",
+   "sources": [
+    "models:map_locations.12",
+    "commands:petExpedition.mapLocationExpeditions.12"
+   ]
+  },
+  {
+   "id": "route-marecageuse",
+   "name": "Route Marécageuse",
+   "description": "Un chemin difficile d'accès, boueux et humide. La Route Marécageuse relie l'Étendue à la Rivière aux crabes.",
+   "sources": [
+    "models:map_locations.13",
+    "commands:petExpedition.mapLocationExpeditions.13"
+   ]
+  },
+  {
+   "id": "lac-mirage",
+   "name": "Lac Mirage",
+   "description": "Un grand lac où les familles aiment bien se réunir. La rivière Vacarme vient s'y jeter, et ses rives les plus reculées se perdent en marécages couverts de roseaux.",
+   "sources": [
+    "models:map_locations.14",
+    "commands:petExpedition.mapLocationExpeditions.14_coast",
+    "commands:petExpedition.mapLocationExpeditions.14_swamp"
+   ]
+  },
+  {
+   "id": "mont-celestrum",
+   "name": "Mont Célestrum",
+   "description": "Le Mont Celestrum est la montagne dominante de la région. Haute de plusieurs kilomètres, Celestrum est visible de tous. On raconte qu'elle porte le nom de l'ancienne déesse. Par ailleurs, une seule personne est parvenue à grimper jusqu'au sommet. On ne retient d'elle que ses initiales : M-B. Ses flancs sont percés de grottes dont personne n'a jamais trouvé le fond. Les nains (dont Talvar) vivent dans ses montagnes.",
+   "sources": [
+    "models:map_locations.15",
+    "commands:petExpedition.mapLocationExpeditions.15_cave",
+    "commands:petExpedition.mapLocationExpeditions.15_mountain"
+   ]
+  },
+  {
+   "id": "chemin-aux-loups",
+   "name": "Chemin aux Loups",
+   "description": "Petit chemin dangereux bordant la rivière Vacarme. Attention à ne pas tomber.",
+   "sources": [
+    "models:map_locations.16",
+    "commands:petExpedition.mapLocationExpeditions.16"
+   ]
+  },
+  {
+   "id": "village-coco",
+   "name": "Village Coco",
+   "description": "Village-oasis prisé par les nobles de la Vallée des Rois en quête de fraîcheur. Les noix de coco qu'on y récolte sont réputées dans tout le pays et s'échangent à prix d'or sur les marchés du royaume. La rareté des terrains constructibles autour de la source en fait l'un des lieux les plus convoités. Un herboriste (vendeur du Cœur Sylvestre) et un bûcheron s'y sont installés.",
+   "sources": [
+    "models:map_locations.17",
+    "commands:petExpedition.mapLocationExpeditions.17"
+   ]
+  },
+  {
+   "id": "riviere-vacarme",
+   "name": "Rivière Vacarme",
+   "description": "Cette rivière doit son nom au bruit produit par son fort courant qui a fait perdre la vie à de nombreux villageois.",
+   "sources": [
+    "models:map_locations.18",
+    "commands:petExpedition.mapLocationExpeditions.18"
+   ]
+  },
+  {
+   "id": "la-dune",
+   "name": "La Dune",
+   "description": "Plage créée par les forts vents de la Vallée des Rois. La Dune protège les terres voisines de la chaleur et amène l'eau de la rivière Vacarme.",
+   "sources": [
+    "models:map_locations.19",
+    "commands:petExpedition.mapLocationExpeditions.19_coast",
+    "commands:petExpedition.mapLocationExpeditions.19_desert"
+   ]
+  },
+  {
+   "id": "route-des-merveilles",
+   "name": "Route des Merveilles",
+   "description": "Une route très empruntée par les villageois. Beaucoup de petits vendeurs ambulants s'y installent le temps d'une journée pour au final créer un immense marché. Plus loin, d'anciennes échoppes désertées depuis longtemps tombent en ruines sous le sable.",
+   "sources": [
+    "models:map_locations.21",
+    "commands:petExpedition.mapLocationExpeditions.21"
+   ]
+  },
+  {
+   "id": "bois-hurlant",
+   "name": "Bois Hurlant",
+   "description": "Forêt mal famée au bord de Claire de Ville, Bois Hurlant a une très mauvaise réputation. Repaire de bandits et hors la loi en tout genre, elle tient surtout son nom de ces pratiques douteuses il y a de ça des centaines d'années. Les brigands se terrent encore dans les grottes qui creusent ses collines.",
+   "sources": [
+    "models:map_locations.22",
+    "commands:petExpedition.mapLocationExpeditions.22"
+   ]
+  },
+  {
+   "id": "claire-de-ville",
+   "name": "Claire de Ville",
+   "description": "Grande ville marchande et carrefour économique, Claire de Ville n'a pas toujours été aussi accueillante. Au début très pauvre, elle a su se développer rapidement grâce à ses nombreux commerces et hôtels offrant un large choix aux voyageurs de la région. Claire de Ville est aussi réputée pour son calme et son respect de l'ordre. Sous ses rues, les souterrains creusés au temps de sa misère serpentent encore dans la roche. Possède une Bourse (spéculation) et un vétérinaire ; on dit que personne n'y manque d'énergie pour combattre.",
+   "sources": [
+    "models:map_locations.23",
+    "commands:petExpedition.mapLocationExpeditions.23"
+   ]
+  },
+  {
+   "id": "route-grimpante",
+   "name": "Route Grimpante",
+   "description": "Une route très raide qui mène jusqu'à Claire de Ville. Tout dépend dans quel sens vous l'empruntez.",
+   "sources": [
+    "models:map_locations.24",
+    "commands:petExpedition.mapLocationExpeditions.24"
+   ]
+  },
+  {
+   "id": "riviere-aux-crabes",
+   "name": "Rivière aux Crabes",
+   "description": "Tout est dans le nom. Une rivière très appréciée des poissonniers de Claire de Ville. En aval, ses rives se perdent en vasières boueuses où pullulent les crabes.",
+   "sources": [
+    "models:map_locations.25",
+    "commands:petExpedition.mapLocationExpeditions.25_coast",
+    "commands:petExpedition.mapLocationExpeditions.25_swamp"
+   ]
+  },
+  {
+   "id": "mergagnan",
+   "name": "Mergagnan",
+   "description": "Une paisible ville au bord de la Plage Sentinelle. Possède un port, des jardins, un Tanneur et un vétérinaire.",
+   "sources": [
+    "models:map_locations.26",
+    "commands:petExpedition.mapLocationExpeditions.26_coast",
+    "commands:petExpedition.mapLocationExpeditions.26_plains"
+   ]
+  },
+  {
+   "id": "foret-celestrum",
+   "name": "Forêt Célestrum",
+   "description": "Une forêt au bord du Mont Célestrum. Ses lisières grimpent sur les pentes escarpées de la montagne.",
+   "sources": [
+    "models:map_locations.27",
+    "commands:petExpedition.mapLocationExpeditions.27_forest",
+    "commands:petExpedition.mapLocationExpeditions.27_mountain"
+   ]
+  },
+  {
+   "id": "portes-du-chateau",
+   "name": "Portes du château",
+   "description": "Entrée du château du roi. Entouré d'une épaisse muraille, il semble pouvoir résister à toutes les attaques imaginables.",
+   "sources": [
+    "models:map_locations.28",
+    "commands:petExpedition.mapLocationExpeditions.28"
+   ]
+  },
+  {
+   "id": "salle-de-reception",
+   "name": "Salle de réception",
+   "description": "Immense salle ornée de nombreuses oeuvres d'art.",
+   "sources": [
+    "models:map_locations.29",
+    "commands:petExpedition.mapLocationExpeditions.29"
+   ]
+  },
+  {
+   "id": "route-vers-le-chateau-du-roi",
+   "name": "Route vers le château du Roi",
+   "description": "La route qui mène au château du Roi.",
+   "sources": [
+    "models:map_locations.32",
+    "commands:petExpedition.mapLocationExpeditions.32"
+   ]
+  },
+  {
+   "id": "continent-principal",
+   "name": "Continent principal",
+   "description": "Le royaume continental où se déroule l'essentiel de l'aventure ; seule terre où fonctionne le Talisman d'Ancrage.",
+   "sources": [
+    "models:map_locations.33",
+    "commands:petExpedition.errors.notOnContinent"
+   ]
+  },
+  {
+   "id": "sentier-brumeux",
+   "name": "Sentier brumeux",
+   "description": "Sentier noyé dans une brume épaisse, immobile et sans origine. Ni repère ni forme ne permet de situer cet endroit.",
+   "sources": [
+    "models:map_locations.39"
+   ]
+  },
+  {
+   "id": "maison-hantee",
+   "name": "Maison hantée",
+   "description": "Une vieille demeure délabrée se dressant dans une brume épaisse, comme suspendue entre deux mondes. Impossible de dire d’où elle vient, ni même si elle appartient encore au nôtre. Ses fenêtres fissurées laissent danser des ombres indistinctes, tandis qu’un grincement sourd s’échappe de l’intérieur, écho d’une présence oubliée.",
+   "sources": [
+    "models:map_locations.40",
+    "commands:petExpedition.mapLocationExpeditions.40"
+   ]
+  },
+  {
+   "id": "cour-du-chateau",
+   "name": "Cour du Château",
+   "description": "Esplanade pavée reliant Boug-Coton aux portes du château royal. Les messagers s’y croisent avant d’accéder aux appartements du roi. Sous ses pavés courent des passages secrets creusés dans la roche jusqu'aux fondations du château.",
+   "sources": [
+    "models:map_locations.41",
+    "commands:petExpedition.mapLocationExpeditions.41_cave",
+    "commands:petExpedition.mapLocationExpeditions.41_plains"
+   ]
+  },
+  {
+   "id": "plage-noire",
+   "name": "Plage noire",
+   "description": "Une grande plage de sable volcanique noir. Elle tient son nom de sa couleur très particulière. Les premiers hommes à avoir posé le pied sur la plage noire redoutaient une grande malédiction. Il n'en est évidemment rien. Attention cependant, le sable noir tache les pieds et les habits.",
+   "sources": [
+    "models:map_locations.1000"
+   ]
+  },
+  {
+   "id": "foret-de-la-penombre",
+   "name": "Forêt de la pénombre",
+   "description": "Une immense forêt qui recouvre pratiquement l'entièreté de l'île. De fines particules de cendres tombent du Volcan Grondant, ce qui rend la visibilité dans cette forêt plutôt difficile. Elle est de ce fait que très peu explorée.",
+   "sources": [
+    "models:map_locations.1001"
+   ]
+  },
+  {
+   "id": "village-en-ruines",
+   "name": "Village en ruines",
+   "description": "Un petit village d'une vingtaine de maisons, partiellement détruit, qui se trouve à proximité de la forêt de la pénombre. Personne ne sait exactement pourquoi ce village est en ruines. Beaucoup pensent qu'il s'agit du village des anciens habitants qui auraient succombé aux coulées de lave du Volcan Grondant. Mais d'autres avancent la théorie d'une maladie, la peste et de nombreux rats. Il ne reste plus un seul habitant ici...",
+   "sources": [
+    "models:map_locations.1002"
+   ]
+  },
+  {
+   "id": "mine-brumeuse",
+   "name": "Mine brumeuse",
+   "description": "Cette ancienne mine abandonnée passe sous le chemin escarpé et les montagnes. Elle est tellement grande et labyrinthique qu'elle finit au cœur du volcan. Il est cependant difficile d'arriver jusque là. Attention toutefois à ne pas glisser, certains auraient retrouvé de vieux restes de bananes dans la mine brumeuse.",
+   "sources": [
+    "models:map_locations.1003"
+   ]
+  },
+  {
+   "id": "chemin-escarpe",
+   "name": "Chemin escarpé",
+   "description": "Ce chemin est le seul vrai chemin existant permettant d'aller jusqu'au sommet du Volcan Grondant. Il est très difficile de l'utiliser et surtout très dangereux. De nombreux hommes sont morts en voulant y grimper. À vos risques et périls.",
+   "sources": [
+    "models:map_locations.1004"
+   ]
+  },
+  {
+   "id": "volcan-grondant",
+   "name": "Volcan grondant",
+   "description": "Pièce maîtresse de l'île volcanique, ce volcan est toujours en activité. Il déverse plusieurs tonnes de cendres par an sur cette petite île qui de ce fait ne fait que grandir. La lave qui coule en son centre est en si grande quantité qu'un canal souterrain qu'on appelle Canal Lavique circule sur plusieurs kilomètres. Depuis les bateaux sur l'eau, on peut apercevoir ce canal faire bouillir l'eau en profondeur. Ce volcan serait même le créateur de plusieurs petites îles aux alentours comme l'île de glace. Le Titan de magma y surgit.",
+   "sources": [
+    "models:map_locations.1005"
+   ]
+  },
+  {
+   "id": "rivage-gla-gla",
+   "name": "Rivage gla-gla",
+   "description": "Ce rivage est la première chose que l'on voit quand on arrive sur l'île de glace. Il tire son nom du bruit que faisaient les marins quand ils ont accosté. Évidemment, ils revenaient de l'île volcanique où la température est beaucoup plus chaude.",
+   "sources": [
+    "models:map_locations.1100"
+   ]
+  },
+  {
+   "id": "toundra",
+   "name": "Toundra",
+   "description": "Une étendue de terre gelée où le climat est sans pitié. Une tempête permanente de neige rend difficile la progression et la cartographie du lieu. On peut y croiser tous types d’animaux arctiques.",
+   "sources": [
+    "models:map_locations.1101"
+   ]
+  },
+  {
+   "id": "caverne-de-cristal",
+   "name": "Caverne de cristal",
+   "description": "Une grande caverne dans laquelle le moindre rayon de soleil qui rentre est démultiplié par les cristaux rendant celle-ci très lumineuse. Des stalactites pointus et des stalagmites tranchantes, synonymes de blessures graves voir mortelles si l’une d’elle nous tombe dessus ou que l’on fait un pas de travers, forment le décor de la caverne. Si vous osez vous aventurez plus loin, vous devrez choisir entre sortir vers le sommet du pic enneigée ou vous enfoncer encore plus profond.",
+   "sources": [
+    "models:map_locations.1102"
+   ]
+  },
+  {
+   "id": "portes-sacrees",
+   "name": "Portes sacrées",
+   "description": "Deux majestueuses portes se dressent en haut d’une longue série de marches. Les monter ne sera pas de tout repos. On raconte qu’elles ont été construites par une civilisation ancienne en l’honneur d’une divinité.",
+   "sources": [
+    "models:map_locations.1103"
+   ]
+  },
+  {
+   "id": "pic-enneige",
+   "name": "Pic enneigé",
+   "description": "Dans la chaîne de montagnes, ce pic se démarque par la violence de ses tempêtes de neige et la vitesse de ses vents. Il est si haut que l’oxygène y est rare et que le risque de mourir de froid est élevé si vous n’avez pas déjà succombé aux animaux sauvages…",
+   "sources": [
+    "models:map_locations.1104"
+   ]
+  },
+  {
+   "id": "lac-souterrain",
+   "name": "Lac souterrain",
+   "description": "Un grand lac au cœur de la montagne dont la traversée n’est pas sans risque. Comme la température est glaciale, le fait qu’il ne soit pas gelé reste un mystère. Nul n’en connait sa profondeur ni sa faune.",
+   "sources": [
+    "models:map_locations.1105"
+   ]
+  },
+  {
+   "id": "village-devaste",
+   "name": "Village dévasté",
+   "description": "Un village riche abandonné dont il ne reste que ruines et désolations. On peut y voir le toit d’un manoir qui a plié sous le poids de la cloche de l’église effondrée. Il y règne un silence pesant parfois interrompu par les cris de souffrance des âmes égarés.",
+   "sources": [
+    "models:map_locations.1106"
+   ]
+  },
+  {
+   "id": "nid-glace",
+   "name": "Nid glacé",
+   "description": "Personne ne s'est encore aventuré jusque là. Au loin, vous voyez une gigantesque silhouette se réfléchir sur un mur de glace. Nid de la Reine des glaces et de son œuf.",
+   "sources": [
+    "models:map_locations.1107"
+   ]
+  },
+  {
+   "id": "plage-de-coquillage",
+   "name": "Plage de coquillage",
+   "description": "Une plage paradisiaque recouverte de coquillages de toutes les couleurs. On dit que chaque coquillage garde en lui l'écho de l'océan. Le sable fin et blanc contraste avec les eaux turquoise du lagon voisin. Attention où vous mettez les pieds, certains coquillages sont tranchants comme des lames.",
+   "sources": [
+    "models:map_locations.1200"
+   ]
+  },
+  {
+   "id": "creux-du-lagon",
+   "name": "Creux du Lagon",
+   "description": "Un lagon aux eaux d'un bleu cristallin protégé par une barrière de corail. Derrière la limpidité de l'onde, des courants sournois, nés des battements de l'océan, guettent la moindre imprudence pour entraîner les égarés vers l'abysse. Dans ce fragile écrin marin, les tortues millénaires viennent chercher un repos que l'agitation du large leur refuse.",
+   "sources": [
+    "models:map_locations.1201"
+   ]
+  },
+  {
+   "id": "caverne-maritime",
+   "name": "Caverne Maritime",
+   "description": "Une grotte marine qui ne se laisse conquérir qu'à marée basse, révélant une gueule de calcaire aux parois ruisselantes. À l'intérieur, des lueurs éthérées naissent de la roche, jetant des reflets d'azur sur les voûtes. Entre les ondes et les ombres, des silhouettes de brume et d'écume dansent un ballet muet, comme si l'âme de la mer elle-même s'était réfugiée dans ce sanctuaire.",
+   "sources": [
+    "models:map_locations.1202"
+   ]
+  },
+  {
+   "id": "crique-du-revenant",
+   "name": "Crique du Revenant",
+   "description": "Une crique isolée qui déploie ses récifs comme des lames de granit noir, à peine dissimulées sous un ressac écumeux qui ne s'apaise jamais. La nuit, des feux follets d'un bleu spectral flottent au-dessus des vagues comme les âmes de marins perdus, esquissant une danse macabre. Une aura sinistre plane sur ce lieu maudit. Hantée par le Capitaine Crow.",
+   "sources": [
+    "models:map_locations.1203"
+   ]
+  },
+  {
+   "id": "cave-des-murmures",
+   "name": "Cave des murmures",
+   "description": "Une cathédrale sous-marine sculptée pour amplifier le souffle des marées en un coeur envoûtant. Ce n'est pas le vent, c'est l'appel d'un chant mélodieux qui s'adresse directement à votre âme. Dans cette pénombre sonore, la frontière entre vos propres pensées et les murmures de la roche s'efface doucement, et ceux qui s'y attardent n'en ressortent jamais tout à fait seuls.",
+   "sources": [
+    "models:map_locations.1204"
+   ]
+  },
+  {
+   "id": "gouffre-des-profondeurs",
+   "name": "Gouffre des Profondeurs",
+   "description": "À mesure que l'on s'approche du bord, l'eau vire au noir d'encre, un miroir sombre qui ne reflète que votre propre peur. Parfois, une ondulation démesurée brise la surface, passage fugace d'un tentacule géant qui remonte des tréfonds avant de replonger dans l'oubli. Nul n'a jamais sondé le coeur de cette fosse, car le Gouffre n'accepte aucun témoin. Repaire du Kraken.",
+   "sources": [
+    "models:map_locations.1205"
+   ]
+  },
+  {
+   "id": "ravin-des-abysses",
+   "name": "Ravin des Abysses",
+   "description": "Le point le plus profond de ces eaux, un ravin sous-marin qui plonge dans les ténèbres absolues. La pression y est telle que peu de créatures peuvent y survivre. On murmure qu'une bête primordiale y sommeille depuis l'aube des temps, gardienne des secrets les plus anciens de ce monde. Seuls les plus téméraires osent s'en approcher. Repaire du Léviathan.",
+   "sources": [
+    "models:map_locations.1206"
+   ]
+  },
+  {
+   "id": "bateau-pour-quitter-l-ile",
+   "name": "Bateau pour quitter l'île",
+   "description": "Un vieux bateau en bois, il a l'air de tenir le coup grâce aux réparations des ouvriers. Il est prêt à partir et n'attend plus que votre arrivée.",
+   "sources": [
+    "models:map_locations.1999"
+   ]
+  },
+  {
+   "id": "ile-volcanique",
+   "name": "Île volcanique",
+   "description": "Île mystérieuse dominée par le Volcan grondant (lieux 1000-1005) ; boss final : le Titan de magma. Le volcan aurait créé l'île de glace.",
+   "sources": [
+    "models:map_locations.1005",
+    "models:monsters.magmaTitan"
+   ]
+  },
+  {
+   "id": "ile-de-glace",
+   "name": "Île de glace",
+   "description": "Île mystérieuse glacée (lieux 1100-1107), née du Volcan grondant ; peuplée de dragons de glace, d'une Yuki-Onna et d'un gardien céleste.",
+   "sources": [
+    "models:map_locations.1100",
+    "models:map_locations.1005"
+   ]
+  },
+  {
+   "id": "ile-maritime",
+   "name": "Île maritime (sans nom)",
+   "description": "Troisième île mystérieuse (lieux 1200-1206) : lagon, grottes marines, crique hantée et abysses où sommeillent Kraken et Léviathan.",
+   "sources": [
+    "models:map_locations.1200",
+    "models:map_locations.1206"
+   ]
+  },
+  {
+   "id": "canal-lavique",
+   "name": "Canal Lavique",
+   "description": "Canal souterrain de lave qui circule sur plusieurs kilomètres sous l'île volcanique et fait bouillir la mer.",
+   "sources": [
+    "models:map_locations.1005"
+   ]
+  },
+  {
+   "id": "chateau-du-roi",
+   "name": "Château du roi",
+   "description": "Château royal entouré d'une épaisse muraille, avec salle de réception, cour, passages secrets et salle aux trésors ; abrite le Marché royal.",
+   "sources": [
+    "models:map_locations.28",
+    "models:map_locations.41",
+    "commands:shop.shopItems.treasure.info"
+   ]
+  },
+  {
+   "id": "marche-royal",
+   "name": "Marché royal",
+   "description": "Carrefour central du château : échange de gemmes (argent du roi), registres des quêtes du royaume, ferveur du roi, trésor du roi, change-mission.",
+   "sources": [
+    "advices:advices.374",
+    "advices:advices.156",
+    "advices:advices.406",
+    "commands:shop.shopItems.money.info"
+   ]
+  },
+  {
+   "id": "salle-aux-tresors-du-roi",
+   "name": "Salle aux trésors du roi",
+   "description": "Salle du château d'où proviennent les objets de valeur du « Trésor du roi ».",
+   "sources": [
+    "commands:shop.shopItems.treasure.info",
+    "advices:advices.148"
+   ]
+  },
+  {
+   "id": "bourse-de-claire-de-ville",
+   "name": "Bourse de Claire de Ville",
+   "description": "Établissement de spéculation de Claire de Ville (badge « rich »).",
+   "sources": [
+    "advices:advices.466",
+    "commands:profile.badges.rich"
+   ]
+  },
+  {
+   "id": "auberge-du-seigneur",
+   "name": "Auberge du Seigneur",
+   "description": "Auberge luxueuse et élégante, fréquentée par des aventuriers de renom qui partagent leurs conseils au bar.",
+   "sources": [
+    "advices:advices.375",
+    "advices:advices.400"
+   ]
+  },
+  {
+   "id": "halte-des-braves",
+   "name": "Halte des Braves",
+   "description": "La plus ancienne auberge de la région, festive, pleine de soldats et d'aventuriers expérimentés.",
+   "sources": [
+    "advices:advices.401"
+   ]
+  },
+  {
+   "id": "gorgee-brulante",
+   "name": "Gorgée Brûlante",
+   "description": "Auberge chaleureuse nommée d'après sa bière épicée distinctive.",
+   "sources": [
+    "advices:advices.375",
+    "advices:advices.402"
+   ]
+  },
+  {
+   "id": "chope-sanglante",
+   "name": "Chope Sanglante",
+   "description": "Auberge sombre à la nourriture rudimentaire, prisée des guerriers endurcis.",
+   "sources": [
+    "advices:advices.403"
+   ]
+  },
+  {
+   "id": "autel-de-l-oracle",
+   "name": "Autel de l'Oracle",
+   "description": "Ancien autel gardé par un oracle sur les routes ; on y verse des pièces dans une cagnotte qui déclenche des bénédictions globales.",
+   "sources": [
+    "advices:advices.282",
+    "error:blockedContext.altarSmallEvent"
+   ]
+  }
+ ]
+}

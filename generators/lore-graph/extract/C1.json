@@ -1,0 +1,2233 @@
+{
+ "characters": [
+  {
+   "id": "princesse",
+   "name": "La princesse",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Princesse, enjeu de la compétition",
+   "description": "Fille (implicite) du roi, dont la main est l'enjeu de la grande compétition entre aventuriers. Elle voyage en carrosse protégé par un cortège de cavaliers et reste inaccessible au joueur.",
+   "locations": [
+    "Le royaume"
+   ],
+   "sources": [
+    "smallEvents:advanceTime.stories.2",
+    "smallEvents:goToPVEIsland.stories.2",
+    "smallEvents:interactOtherPlayers.top10.2",
+    "smallEvents:interactOtherPlayers.beginner.0",
+    "smallEvents:doNothing.stories.9",
+    "smallEvents:winHealth.stories.10"
+   ],
+   "quotes": [
+    "La princesse se rapproche de vous ! Du moins c'est l'impression que vous avez..."
+   ]
+  },
+  {
+   "id": "roi",
+   "name": "Le roi",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Souverain du royaume, organisateur de la compétition",
+   "description": "Souverain du royaume qui organise la compétition pour la main de la princesse. Il envoie des missives et missions aux aventuriers, prononce des discours, et ses marins envoient des concurrents sur l'île mystérieuse pour en débarrasser le royaume de ses monstres.",
+   "locations": [
+    "Le royaume"
+   ],
+   "sources": [
+    "smallEvents:botFacts.stories.0",
+    "smallEvents:botFacts.stories.3",
+    "smallEvents:findMission.intrigue.0",
+    "smallEvents:goToPVEIsland.stories.2",
+    "smallEvents:staffMember.members.Voltou"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "perotin",
+   "name": "Pérotin",
+   "aliases": [],
+   "named": true,
+   "category": "npc",
+   "role": "Personnage connu du joueur",
+   "description": "Personnage que le joueur semble connaître et chercher : il croit l'apercevoir sur la route et court vers lui, avant de réaliser son erreur.",
+   "locations": [],
+   "sources": [
+    "smallEvents:advanceTime.stories.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gruffo",
+   "name": "Gruffo",
+   "aliases": [],
+   "named": true,
+   "category": "npc",
+   "role": "Personnage connu du joueur",
+   "description": "Personnage connu du joueur ; un sosie de Gruffo fuit le héros qui lui court après sur la route.",
+   "locations": [],
+   "sources": [
+    "smallEvents:advanceTime.stories.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "hilda",
+   "name": "Hilda la guérisseuse",
+   "aliases": [
+    "la guérisseuse",
+    "la rebouteuse"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Guérisseuse itinérante",
+   "description": "Jeune guérisseuse qui teste ses derniers remèdes sur les voyageurs et leur rend toute leur énergie. Des guérisseuses/rebouteuses similaires (dont une accompagnée d'une chèvre, une vêtue de blanc) parcourent les routes vers les pâturages.",
+   "locations": [],
+   "sources": [
+    "smallEvents:winEnergy.stories.0",
+    "smallEvents:winEnergy.stories.2",
+    "smallEvents:winEnergy.stories.4",
+    "smallEvents:winEnergy.stories.5"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "sorciere",
+   "name": "La sorcière maladroite",
+   "aliases": [
+    "la vieille dame"
+   ],
+   "named": false,
+   "category": "npc",
+   "role": "Vieille sorcière errante",
+   "description": "Vieille dame frêle, voûtée, muette, au long nez et à la peau presque grise, vêtue de lambeaux. Rumeur d'une sorcière maladroite parcourant le royaume, dont la maladresse lui a valu des ennuis avec des nobles. Elle prépare des potions ratées dans sa cabane et le joueur peut y ajouter des ingrédients (plume de phénix, écaille de dragon...).",
+   "locations": [],
+   "sources": [
+    "smallEvents:witch.intro.0",
+    "smallEvents:witch.description.4",
+    "smallEvents:witch.description.5",
+    "smallEvents:witch.description.6",
+    "smallEvents:witch.situation.0",
+    "smallEvents:witch.witchEventResults.outcomes.3.1"
+   ],
+   "quotes": [
+    "Vous vous souvenez de rumeurs concernant une sorcière maladroite qui se baladerait à travers le royaume."
+   ]
+  },
+  {
+   "id": "oracle",
+   "name": "L'Oracle",
+   "aliases": [],
+   "named": false,
+   "category": "spirit",
+   "role": "Entité mystique des bénédictions",
+   "description": "Entité mystique à laquelle les aventuriers contribuent via la cagnotte des bénédictions. Ses plus généreux donateurs portent sa marque sur le bras et sont appelés « protecteurs de l'Oracle ».",
+   "locations": [],
+   "sources": [
+    "smallEvents:interactOtherPlayers.oracle_patron.0",
+    "smallEvents:interactOtherPlayers.oracle_patron.1",
+    "smallEvents:interactOtherPlayers.oracle_patron.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "capitaine-ile",
+   "name": "Le capitaine du navire de l'île",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Capitaine faisant la liaison vers l'île",
+   "description": "Capitaine d'un navire reliant le continent à l'île mystérieuse ; il propose aux aventuriers une aventure trépidante sur l'île infestée de monstres. Son équipage donne des conseils pendant la traversée.",
+   "locations": [
+    "L'île mystérieuse",
+    "Le continent"
+   ],
+   "sources": [
+    "smallEvents:goToPVEIsland.stories.0",
+    "smallEvents:goToPVEIsland.stories.1",
+    "smallEvents:boatAdvice.intro.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marin-du-roi",
+   "name": "Le marin à l'emblème du roi",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Recruteur royal pour l'île",
+   "description": "Homme en habits de marin arborant l'emblème du roi, chargé d'envoyer des concurrents à la main de la princesse sur l'île pleine de monstres dont le royaume veut se débarrasser.",
+   "locations": [],
+   "sources": [
+    "smallEvents:goToPVEIsland.stories.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "chef-mercenaires",
+   "name": "Le chef des mercenaires",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Chef d'un groupe de mercenaires",
+   "description": "Grand homme barbu, chef d'un groupe de mercenaires réputé, qui recrute des chasseurs de monstres pour l'île mystérieuse.",
+   "locations": [],
+   "sources": [
+    "smallEvents:goToPVEIsland.stories.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "homme-loterie",
+   "name": "L'homme à la loterie",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Organisateur de jeux de hasard",
+   "description": "Commerçant itinérant qui propose aux voyageurs un jeu de hasard de sa création à plusieurs niveaux de récompense, et rejette sans ménagement ceux qui ne peuvent prouver leur richesse.",
+   "locations": [],
+   "sources": [
+    "smallEvents:lottery.intro",
+    "smallEvents:lottery.poor"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "conteur-porcelaine",
+   "name": "Le conteur de la cité de porcelaine",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Étranger encapuchonné, chantre d'une cité",
+   "description": "Mystérieux étranger (encapuchonné, masqué ou au chapeau à large bord) qui vante passionnément une cité de porcelaine et d'émail. Il récompense l'enthousiasme mais se vexe des réponses tièdes, réclamant parfois une obole « pour l'entretien des fours sacrés ».",
+   "locations": [
+    "La cité de la porcelaine (Limoges)"
+   ],
+   "sources": [
+    "smallEvents:limoges.stories.0",
+    "smallEvents:limoges.stories.7",
+    "smallEvents:limoges.successStories.1",
+    "smallEvents:limoges.penalties.money"
+   ],
+   "quotes": [
+    "accepteriez-vous [...] de cheminer un jour jusqu'à cette cité suspendue entre lumière et kaolin ?"
+   ]
+  },
+  {
+   "id": "gaspard-jo",
+   "name": "Gaspard-Jo",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand de soupe",
+   "description": "Marchand de soupe fort sympathique et généreux, voyageant dans une petite roulotte à cheminée. Il récompense le talent des joueurs en offrant des soupes ultimes, ou de simples friandises aux moins puissants.",
+   "locations": [],
+   "sources": [
+    "smallEvents:ultimateFoodMerchant.stories.0",
+    "smallEvents:ultimateFoodMerchant.stories.1",
+    "smallEvents:ultimateFoodMerchant.rewards.commonFood_one.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "roublard-charrette",
+   "name": "Le roublard à la charrette",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Conducteur de charrette douteux",
+   "description": "Homme aux cheveux hirsutes et au regard rusé, au passé mystérieux, connu pour ses voyages imprévisibles à travers le royaume. Il propose de conduire les voyageurs contre paiement, mais les arnaque parfois en les déposant ailleurs.",
+   "locations": [],
+   "sources": [
+    "smallEvents:cart.knownDestination.0",
+    "smallEvents:cart.knownDestination.1",
+    "smallEvents:cart.knownDestination.5",
+    "smallEvents:cart.scamTravelDone.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "arnaqueur-gobelets",
+   "name": "L'arnaqueur aux gobelets",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Escroc du jeu des gobelets",
+   "description": "Homme suspect et étonnamment fort qui force les passants à jouer à son jeu des quatre gobelets (métal, grand, scintillant en bois bleu enchanté, fissuré), souvent tous vides, et tente de les voler.",
+   "locations": [],
+   "sources": [
+    "smallEvents:gobletsGame.intro",
+    "smallEvents:gobletsGame.results.nothing",
+    "smallEvents:gobletsGame.results.end"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "alderic",
+   "name": "Aldéric l'antiquaire",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Antiquaire ambulant",
+   "description": "Marchand itinérant d'âge mûr, distingué et chaleureux, vêtu de tissus anciens ; il transporte dans sa charrette des antiquités chargées d'histoires qu'il aime raconter. Il promet de meilleures offres à qui le retrouvera sur la Route des Merveilles.",
+   "locations": [
+    "La Route des Merveilles"
+   ],
+   "sources": [
+    "smallEvents:epicItemShop.intro.0",
+    "smallEvents:epicItemShop.intro.9",
+    "smallEvents:epicItemShop.reductionTip"
+   ],
+   "quotes": [
+    "Si vous avez l'intention de vous aventurer jusqu'à la Route des Merveilles et que vous réussissez à me trouver là-bas, soyez assuré que je vous réserverai une offre des plus avantageuses."
+   ]
+  },
+  {
+   "id": "dieu",
+   "name": "Dieu",
+   "aliases": [],
+   "named": false,
+   "category": "deity",
+   "role": "Divinité priée par les aventuriers",
+   "description": "Divinité que l'aventurier peut prier pour être protégé lors d'un combat contre une bête ; elle répond parfois.",
+   "locations": [],
+   "sources": [
+    "smallEvents:fightPet.fightPetActions.prayGod.success",
+    "smallEvents:fightPet.fightPetActions.prayGod.failure"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "titan-de-magma",
+   "name": "Le Titan de magma",
+   "aliases": [],
+   "named": true,
+   "category": "monster",
+   "role": "Boss de feu",
+   "description": "Boss redoutable de feu, dont le combat laisse des brûlures sur les armures des héros qui l'ont vaincu.",
+   "locations": [],
+   "sources": [
+    "smallEvents:interactOtherPlayers.beaten_magma_titan.0",
+    "smallEvents:interactOtherPlayers.beaten_magma_titan.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "seigneur-des-glaces",
+   "name": "Le Seigneur des glaces",
+   "aliases": [],
+   "named": true,
+   "category": "monster",
+   "role": "Dragon de glace mâle (boss)",
+   "description": "Dragon de glace mâle, boss redoutable ; ses vainqueurs gardent des cristaux de glace sur leur armure.",
+   "locations": [],
+   "sources": [
+    "smallEvents:interactOtherPlayers.beaten_male_ice_dragon.0",
+    "smallEvents:interactOtherPlayers.beaten_male_ice_dragon.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "reine-des-glaces",
+   "name": "La Reine des glaces",
+   "aliases": [],
+   "named": true,
+   "category": "monster",
+   "role": "Dragon de glace femelle (boss)",
+   "description": "Dragon de glace femelle, l'un des combats les plus difficiles qui existent ; peu peuvent se vanter de l'avoir vaincue.",
+   "locations": [],
+   "sources": [
+    "smallEvents:interactOtherPlayers.beaten_female_ice_dragon.0",
+    "smallEvents:interactOtherPlayers.beaten_female_ice_dragon.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "kraken",
+   "name": "Le Kraken",
+   "aliases": [],
+   "named": true,
+   "category": "monster",
+   "role": "Monstre des abysses (boss)",
+   "description": "Monstre marin à tentacules et encre noire, vaincu dans les profondeurs océaniques.",
+   "locations": [],
+   "sources": [
+    "smallEvents:interactOtherPlayers.beaten_kraken.0",
+    "smallEvents:interactOtherPlayers.beaten_kraken.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "leviathan",
+   "name": "Le Léviathan",
+   "aliases": [],
+   "named": true,
+   "category": "monster",
+   "role": "Monstre marin colossal (boss)",
+   "description": "Monstre marin aux écailles colossales dont le rugissement domine les mers profondes ; le vaincre fait de vous une légende vivante.",
+   "locations": [],
+   "sources": [
+    "smallEvents:interactOtherPlayers.beaten_leviathan.0",
+    "smallEvents:interactOtherPlayers.beaten_leviathan.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "picsou",
+   "name": "Picsou",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Référence pop-culture (richesse)",
+   "description": "Référence à l'oncle Picsou, évoqué quand le héros croise un joueur couvert d'or.",
+   "locations": [],
+   "sources": [
+    "smallEvents:interactOtherPlayers.rich.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-claude",
+   "name": "Claude",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom probablement inspiré d'un astronome réel.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.0",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-pierre-alphonse",
+   "name": "Pierre Alphonse",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom probablement inspiré d'un astronome réel.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.1",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-friedrich",
+   "name": "Friedrich",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom en référence probable à l'astronome Friedrich Bessel.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.2",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-wilhelm",
+   "name": "Wilhelm",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom en référence probable à l'astronome Wilhelm Herschel.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.3",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-nicolas",
+   "name": "Nicolas",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom en référence probable à l'astronome Nicolas Copernic.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.4",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-clyde",
+   "name": "Clyde",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom en référence probable à l'astronome Clyde Tombaugh.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.5",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-tycho",
+   "name": "Tycho",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom en référence probable à l'astronome Tycho Brahe.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.6",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-giordano",
+   "name": "Giordano",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom en référence probable à l'astronome Giordano Bruno.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.7",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-johannes",
+   "name": "Johannes",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom en référence probable à l'astronome Johannes Kepler.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.8",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-jean-dominique",
+   "name": "Jean-Dominique",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom en référence probable à l'astronome Jean-Dominique Cassini.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.9",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-isaac",
+   "name": "Isaac",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom en référence probable à l'astronome Isaac Newton.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.10",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-edwin",
+   "name": "Edwin",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom en référence probable à l'astronome Edwin Hubble.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.11",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle-albert",
+   "name": "Albert",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Oracle astronome itinérant",
+   "description": "Oracle (ou étranger) qui lit dans les étoiles et renseigne les voyageurs sur la Lune, les éclipses et les astéroïdes. Prénom en référence probable à l'astronome Albert Einstein.",
+   "locations": [],
+   "sources": [
+    "smallEvents:space.names.12",
+    "smallEvents:space.intro.0",
+    "smallEvents:space.search.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-terry",
+   "name": "Terry",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.0",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-marco",
+   "name": "Marco",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.1",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-didier",
+   "name": "Didier",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.2",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-bernard",
+   "name": "Bernard",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.3",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-georges",
+   "name": "Georges",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.4",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-louis",
+   "name": "Louis",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.5",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-kilton",
+   "name": "Kilton",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet). possible clin d'œil au marchand de Zelda: Breath of the Wild.",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.6",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-kikolou",
+   "name": "Kikolou",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.7",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-araj",
+   "name": "Araj",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.8",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-lavio",
+   "name": "Lavio",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.9",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-bugri",
+   "name": "Bugri",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.10",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-faras",
+   "name": "Faras",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.11",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-finn",
+   "name": "Finn",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.12",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-russel",
+   "name": "Russel",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.13",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-ullure",
+   "name": "Ullure",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet). Nom porté aussi par une marchande.",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.14",
+    "smallEvents:shop.intro_m.0",
+    "smallEvents:shop.names_f.7"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-vivian",
+   "name": "Vivian",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet).",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.15",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-belethor",
+   "name": "Belethor",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchand ambulant",
+   "description": "Marchand(e) ambulant(e) qui propose aux voyageurs une offre spéciale (arme, armure, potion ou objet). possible clin d'œil au marchand de Skyrim.",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_m.16",
+    "smallEvents:shop.intro_m.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchande-karine",
+   "name": "Karine",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchande ambulante",
+   "description": "Marchande ambulante, souvent en charrette, qui propose aux aventuriers des objets utiles pour leur aventure.",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_f.0",
+    "smallEvents:shop.intro_f.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchande-cremia",
+   "name": "Cremia",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchande ambulante",
+   "description": "Marchande ambulante, souvent en charrette, qui propose aux aventuriers des objets utiles pour leur aventure. possible clin d'œil à Zelda: Majora's Mask.",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_f.1",
+    "smallEvents:shop.intro_f.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchande-fouyaya",
+   "name": "Fouyaya",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchande ambulante",
+   "description": "Marchande ambulante, souvent en charrette, qui propose aux aventuriers des objets utiles pour leur aventure.",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_f.2",
+    "smallEvents:shop.intro_f.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchande-ember",
+   "name": "Ember",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchande ambulante",
+   "description": "Marchande ambulante, souvent en charrette, qui propose aux aventuriers des objets utiles pour leur aventure.",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_f.3",
+    "smallEvents:shop.intro_f.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchande-embry",
+   "name": "Embry",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchande ambulante",
+   "description": "Marchande ambulante, souvent en charrette, qui propose aux aventuriers des objets utiles pour leur aventure.",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_f.4",
+    "smallEvents:shop.intro_f.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchande-emirel",
+   "name": "Emirel",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchande ambulante",
+   "description": "Marchande ambulante, souvent en charrette, qui propose aux aventuriers des objets utiles pour leur aventure.",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_f.5",
+    "smallEvents:shop.intro_f.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchande-fressah",
+   "name": "Fressah",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Marchande ambulante",
+   "description": "Marchande ambulante, souvent en charrette, qui propose aux aventuriers des objets utiles pour leur aventure.",
+   "locations": [],
+   "sources": [
+    "smallEvents:shop.names_f.6",
+    "smallEvents:shop.intro_f.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "kyutisme",
+   "name": "Le Kyutisme",
+   "aliases": [],
+   "named": true,
+   "category": "faction",
+   "role": "Religion / culte",
+   "description": "Culte dont Kyusaki est le premier Grand prêtre et dont Ines est une fidèle partisane.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Kyusaki",
+    "smallEvents:staffMember.members.Ines"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "spac",
+   "name": "SPAC (Société Protectrice des Animaux de la Contrée)",
+   "aliases": [
+    "SPAC"
+   ],
+   "named": true,
+   "category": "faction",
+   "role": "Association de protection animale",
+   "description": "Société qui milite pour une meilleure vie des animaux fielleux, recense les animaux et félicite les dresseurs.",
+   "locations": [],
+   "sources": [
+    "smallEvents:botFacts.possibleInfo.feistyPets",
+    "smallEvents:botFacts.possibleInfo.trainedPets_other"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "agc",
+   "name": "AGC (Agence des Guildes de la Contrée)",
+   "aliases": [
+    "AGC"
+   ],
+   "named": true,
+   "category": "faction",
+   "role": "Administration des guildes",
+   "description": "Agence qui suit le niveau des guildes de la contrée.",
+   "locations": [],
+   "sources": [
+    "smallEvents:botFacts.possibleInfo.guildLevelMean"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "safac",
+   "name": "SAFAC (Service Anti-Fraude des Aventuriers de la Contrée)",
+   "aliases": [
+    "SAFAC"
+   ],
+   "named": true,
+   "category": "faction",
+   "role": "Service anti-fraude",
+   "description": "Service qui traque les aventuriers volatilisés juste après avoir obtenu leur licence d'aventurier.",
+   "locations": [],
+   "sources": [
+    "smallEvents:botFacts.possibleInfo.nbPlayersHaventStartedTheAdventure_other"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "banque-du-pays",
+   "name": "La banque du pays",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Institution financière",
+   "description": "Banque qui compte l'argent en circulation et la fortune des aventuriers.",
+   "locations": [],
+   "sources": [
+    "smallEvents:botFacts.possibleInfo.sumAllMoney",
+    "smallEvents:botFacts.possibleInfo.richestPlayer"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "organisateurs-competition",
+   "name": "Les organisateurs de la compétition",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Organisateurs du concours pour la princesse",
+   "description": "Organisateurs qui comptent les points des candidats à la main de la princesse et recensent les aventuriers.",
+   "locations": [],
+   "sources": [
+    "smallEvents:botFacts.possibleInfo.nbMeanPoints",
+    "smallEvents:botFacts.possibleInfo.levelMean"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "protecteurs-oracle",
+   "name": "Les protecteurs de l'Oracle",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Donateurs de l'Oracle",
+   "description": "Aventuriers généreux envers la cagnotte des bénédictions, marqués du signe de l'Oracle.",
+   "locations": [],
+   "sources": [
+    "smallEvents:interactOtherPlayers.oracle_patron.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "mercenaires",
+   "name": "Le groupe de mercenaires",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Compagnie de mercenaires",
+   "description": "Groupe de mercenaires réputé dans la région, recrutant des chasseurs de monstres pour l'île.",
+   "locations": [],
+   "sources": [
+    "smallEvents:goToPVEIsland.stories.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "chevaliers-gardes",
+   "name": "Les gardes et chevaliers du royaume",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Forces de l'ordre",
+   "description": "Gardes qui arrêtent les criminels recherchés (parfois par erreur) et chevaliers qui surveillent les routes.",
+   "locations": [],
+   "sources": [
+    "smallEvents:bigBad.alterationStories.mistakenIdentity",
+    "smallEvents:botFacts.possibleInfo.nbPlayersOnYourMap_other",
+    "smallEvents:interactOtherPlayers.effect.jailed.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "staff-crownicles",
+   "name": "Le staff de Crownicles",
+   "aliases": [],
+   "named": false,
+   "category": "meta",
+   "role": "Équipe du jeu",
+   "description": "Membres de l'équipe du jeu, légendifiés dans le monde par des bardes, affiches et livres ; ils donnent des conseils aux aventuriers.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.context.0",
+    "smallEvents:interactOtherPlayers.staff_member.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "nysvaa",
+   "name": "Nysvaa",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Prétendant à la main de la princesse misant sur la réflexion (et beaucoup de chance) plutôt que le combat.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Nysvaa"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "thero1st",
+   "name": "Thero1st",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : L'un des premiers compétiteurs pour la princesse, grand chef cuisinier spécialiste des brochettes au poulpe, qui préfère ses stands et ses animaux au concours.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Thero1st"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oscar",
+   "name": "Oscar",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Piètre guerrier qui, en un temps révolu, dominait le classement par ses points et ses connaissances.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Oscar"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "qqtin",
+   "name": "QQtin",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Fidèle chevalier terrassant de nombreux ennemis grâce au « cadeau du ciel », ayant contribué à rendre ce monde meilleur.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.QQtin"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "lepourfendeur",
+   "name": "LePourfendeur",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Aventurier expérimenté, très (trop) économe ; jadis très actif, désormais discret mais parmi les meilleurs.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.LePourfendeur"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "ines",
+   "name": "Ines",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Combattante des débuts du monde, se battant de moins en moins faute de temps ; dans la course au prince plutôt qu'à la princesse. Fidèle partisane du Kyutisme.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Ines"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "romain22222",
+   "name": "romain22222",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Grand intellect qui résout autant qu'il crée les situations ; bavarde trop avec ménestrels et adorateurs et évite les tentes dans les forêts.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.romain22222"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "asemerald",
+   "name": "Asemerald",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Aventurier porté par sa chance, à la puissance de feu inimaginable.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Asemerald"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "izuku",
+   "name": "Izuku",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Riche inventeur qui créa une potion d'amour pour la princesse, mais se la fit voler par un marchand.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Izuku"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "draft",
+   "name": "Draft",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Ancien dieu créateur du monde ; épaté par son peuple, il erre parmi eux en perfectionnant leur expérience.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Draft"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "royal",
+   "name": "Royal",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Entrepreneur aguerri privilégiant l'argent à la morale, friand de tournois et prêt à se battre pour la princesse.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Royal"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "max",
+   "name": "Max",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Inventeur fou amoureux du voyage, seul à avoir parcouru la terre des dragons ; ses projets ont presque tous mené l'humanité au bord de l'extinction.",
+   "locations": [
+    "La terre des dragons"
+   ],
+   "sources": [
+    "smallEvents:staffMember.members.Max"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "eagle",
+   "name": "Eagle",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Éleveur de dragon qui a mené les premiers coups d'État du royaume.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Eagle"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "deadangelv6",
+   "name": "DeadAngelV6",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Humain banal aimant la vie et passionné de nourriture ; il faut lui donner à manger quand on le croise.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.DeadAngelV6"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "kyusaki",
+   "name": "Kyusaki",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Premier Grand prêtre du Kyutisme, il médite incognito parmi les aventuriers et conseille ceux qui le demandent.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Kyusaki"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "greninja-san",
+   "name": "Greninja_san",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Batracien à l'intellect hors norme intégré à la vie humaine pour apprendre leur magie.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Greninja_san"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "nwcubeok",
+   "name": "nwcubeok",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Célèbre magicien parcourant la contrée pour promouvoir ses talents, espérant séduire la princesse.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.nwcubeok"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "superbananeninja",
+   "name": "SuperBananeNinja",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Mage discret et solitaire, souvent salutaire, aux tours déconcertants mais toujours droit dans ses bottes.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.SuperBananeNinja"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "hitori",
+   "name": "Hitori",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Artiste incohérente et dynamique qui demande où se cachent les Dieux ; sa malchance a détruit de nombreux édifices. Elle cherche à « acquérir » KirIcare.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Hitori"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "pietagorh",
+   "name": "Pietagorh",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Directeur d'une association aidant les jeunes aventuriers ; il saurait déterminer les limites de ce monde.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Pietagorh"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "doctor",
+   "name": "Doctor",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Grand aventurier cherchant un adversaire à sa taille ; peu survivent à son premier coup.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Doctor"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "kiricare",
+   "name": "KirIcare",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Personnage discret mais intrigant, convoité par une artiste et un chasseur de dragon de renom qui veulent l'acquérir.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.KirIcare"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "symsym",
+   "name": "symsym",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Jeune aventurier curieux qui aurait fondé une taverne au fin fond de la route marécageuse.",
+   "locations": [
+    "La route marécageuse"
+   ],
+   "sources": [
+    "smallEvents:staffMember.members.symsym"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "pagotortoise",
+   "name": "Pagotortoise",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Kaijū bienveillant explorant la contrée pour aider et guider les voyageurs.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Pagotortoise"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "voltou",
+   "name": "Voltou",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Plus grand voleur du monde, dont la fortune égalerait celle du roi, cachée aux quatre coins du royaume.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Voltou"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "aiko",
+   "name": "Aiko",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Patate sauvage qui réduit ses ennemis en purée et vise les plus hautes étoiles.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Aiko"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "ntalcme",
+   "name": "Ntalcme",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Voyageur infatigable porté par un idéal, en quête de ce qui manque à son âme, marchant vers un rêve insaisissable.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Ntalcme"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "bananeplantain",
+   "name": "BananePlantain",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Simple banane mûrie par ses aventures, adepte des défis et combats, menant tranquillement sa petite troupe.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.BananePlantain"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "aureochocob0n",
+   "name": "aureochocob0n",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Riche marchand qui, sur les dires d'un alchimiste, plongea dans un bain d'or en fusion ; seuls ses os, désormais dorés, survécurent.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.aureochocob0n"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "ravenclaw",
+   "name": "Ravenclaw",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Sentinelle discrète toujours accompagnée d'un corbeau, qui apparaît pour prêter main-forte puis s'efface avec le vent.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.Ravenclaw"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gabrielre",
+   "name": "GabrieLre",
+   "aliases": [],
+   "named": true,
+   "category": "meta",
+   "role": "Membre du staff, légende du monde",
+   "description": "Membre réel du staff de Crownicles, présenté en jeu comme figure légendaire : Guerrier avide de savoir qui a consigné toute sa connaissance pour aider les autres ; il en saurait autant que le créateur.",
+   "locations": [],
+   "sources": [
+    "smallEvents:staffMember.members.GabrieLre"
+   ],
+   "quotes": []
+  }
+ ],
+ "relations": [
+  {
+   "from": "oracle-claude",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-pierre-alphonse",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-friedrich",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-wilhelm",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-nicolas",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-clyde",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-tycho",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-giordano",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-johannes",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-jean-dominique",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-isaac",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-edwin",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "oracle-albert",
+   "to": "player",
+   "type": "knows",
+   "label": "lui révèle des nouvelles du ciel",
+   "source": "smallEvents:space.intro.5"
+  },
+  {
+   "from": "nysvaa",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Nysvaa"
+  },
+  {
+   "from": "thero1st",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Thero1st"
+  },
+  {
+   "from": "oscar",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Oscar"
+  },
+  {
+   "from": "qqtin",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.QQtin"
+  },
+  {
+   "from": "lepourfendeur",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.LePourfendeur"
+  },
+  {
+   "from": "ines",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Ines"
+  },
+  {
+   "from": "romain22222",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.romain22222"
+  },
+  {
+   "from": "asemerald",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Asemerald"
+  },
+  {
+   "from": "izuku",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Izuku"
+  },
+  {
+   "from": "draft",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Draft"
+  },
+  {
+   "from": "royal",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Royal"
+  },
+  {
+   "from": "max",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Max"
+  },
+  {
+   "from": "eagle",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Eagle"
+  },
+  {
+   "from": "deadangelv6",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.DeadAngelV6"
+  },
+  {
+   "from": "kyusaki",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Kyusaki"
+  },
+  {
+   "from": "greninja-san",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Greninja_san"
+  },
+  {
+   "from": "nwcubeok",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.nwcubeok"
+  },
+  {
+   "from": "superbananeninja",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.SuperBananeNinja"
+  },
+  {
+   "from": "hitori",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Hitori"
+  },
+  {
+   "from": "pietagorh",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Pietagorh"
+  },
+  {
+   "from": "doctor",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Doctor"
+  },
+  {
+   "from": "kiricare",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.KirIcare"
+  },
+  {
+   "from": "symsym",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.symsym"
+  },
+  {
+   "from": "pagotortoise",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Pagotortoise"
+  },
+  {
+   "from": "voltou",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Voltou"
+  },
+  {
+   "from": "aiko",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Aiko"
+  },
+  {
+   "from": "ntalcme",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Ntalcme"
+  },
+  {
+   "from": "bananeplantain",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.BananePlantain"
+  },
+  {
+   "from": "aureochocob0n",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.aureochocob0n"
+  },
+  {
+   "from": "ravenclaw",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.Ravenclaw"
+  },
+  {
+   "from": "gabrielre",
+   "to": "staff-crownicles",
+   "type": "member",
+   "label": "membre du staff",
+   "source": "smallEvents:staffMember.members.GabrieLre"
+  },
+  {
+   "from": "roi",
+   "to": "royaume",
+   "type": "rules",
+   "label": "règne sur le royaume",
+   "source": "smallEvents:botFacts.stories.3"
+  },
+  {
+   "from": "roi",
+   "to": "princesse",
+   "type": "family",
+   "label": "père (implicite) ; offre sa main au vainqueur",
+   "source": "smallEvents:botFacts.stories.0"
+  },
+  {
+   "from": "player",
+   "to": "princesse",
+   "type": "love",
+   "label": "concourt pour sa main",
+   "source": "smallEvents:goToPVEIsland.stories.2"
+  },
+  {
+   "from": "roi",
+   "to": "player",
+   "type": "employs",
+   "label": "envoie missives et missions",
+   "source": "smallEvents:findMission.intrigue.0"
+  },
+  {
+   "from": "marin-du-roi",
+   "to": "roi",
+   "type": "serves",
+   "label": "porte l'emblème du roi",
+   "source": "smallEvents:goToPVEIsland.stories.2"
+  },
+  {
+   "from": "capitaine-ile",
+   "to": "ile-mysterieuse",
+   "type": "located",
+   "label": "fait la liaison vers l'île",
+   "source": "smallEvents:goToPVEIsland.stories.1"
+  },
+  {
+   "from": "marin-du-roi",
+   "to": "ile-mysterieuse",
+   "type": "other",
+   "label": "envoie des aventuriers sur l'île",
+   "source": "smallEvents:goToPVEIsland.stories.2"
+  },
+  {
+   "from": "chef-mercenaires",
+   "to": "mercenaires",
+   "type": "rules",
+   "label": "chef du groupe",
+   "source": "smallEvents:goToPVEIsland.stories.3"
+  },
+  {
+   "from": "chef-mercenaires",
+   "to": "ile-mysterieuse",
+   "type": "other",
+   "label": "recrute des chasseurs de monstres pour l'île",
+   "source": "smallEvents:goToPVEIsland.stories.3"
+  },
+  {
+   "from": "conteur-porcelaine",
+   "to": "cite-de-la-porcelaine",
+   "type": "other",
+   "label": "chante les louanges de la cité",
+   "source": "smallEvents:limoges.stories.0"
+  },
+  {
+   "from": "hilda",
+   "to": "player",
+   "type": "ally",
+   "label": "soigne et rend l'énergie",
+   "source": "smallEvents:winEnergy.stories.0"
+  },
+  {
+   "from": "sorciere",
+   "to": "player",
+   "type": "other",
+   "label": "prépare des potions avec l'aide du joueur",
+   "source": "smallEvents:witch.situation.0"
+  },
+  {
+   "from": "protecteurs-oracle",
+   "to": "oracle",
+   "type": "worships",
+   "label": "contribuent à la cagnotte des bénédictions",
+   "source": "smallEvents:interactOtherPlayers.oracle_patron.1"
+  },
+  {
+   "from": "gaspard-jo",
+   "to": "player",
+   "type": "trades",
+   "label": "offre des soupes ultimes",
+   "source": "smallEvents:ultimateFoodMerchant.stories.0"
+  },
+  {
+   "from": "roublard-charrette",
+   "to": "player",
+   "type": "trades",
+   "label": "transport payant parfois arnaqueur",
+   "source": "smallEvents:cart.scamTravelDone.0"
+  },
+  {
+   "from": "arnaqueur-gobelets",
+   "to": "player",
+   "type": "enemy",
+   "label": "force à jouer et tente de voler",
+   "source": "smallEvents:gobletsGame.results.end"
+  },
+  {
+   "from": "alderic",
+   "to": "route-des-merveilles",
+   "type": "located",
+   "label": "offre spéciale sur cette route",
+   "source": "smallEvents:epicItemShop.reductionTip"
+  },
+  {
+   "from": "alderic",
+   "to": "player",
+   "type": "trades",
+   "label": "vend des objets épiques",
+   "source": "smallEvents:epicItemShop.intro.0"
+  },
+  {
+   "from": "player",
+   "to": "dieu",
+   "type": "worships",
+   "label": "prière en combat",
+   "source": "smallEvents:fightPet.fightPetActions.prayGod.name"
+  },
+  {
+   "from": "seigneur-des-glaces",
+   "to": "reine-des-glaces",
+   "type": "family",
+   "label": "couple de dragons de glace (mâle/femelle)",
+   "source": "smallEvents:interactOtherPlayers.beaten_female_ice_dragon.0"
+  },
+  {
+   "from": "player",
+   "to": "perotin",
+   "type": "knows",
+   "label": "croit le reconnaître sur la route",
+   "source": "smallEvents:advanceTime.stories.0"
+  },
+  {
+   "from": "player",
+   "to": "gruffo",
+   "type": "knows",
+   "label": "croit le reconnaître sur la route",
+   "source": "smallEvents:advanceTime.stories.4"
+  },
+  {
+   "from": "chevaliers-gardes",
+   "to": "roi",
+   "type": "serves",
+   "label": "gardes du royaume",
+   "source": "smallEvents:bigBad.alterationStories.mistakenIdentity"
+  },
+  {
+   "from": "organisateurs-competition",
+   "to": "princesse",
+   "type": "other",
+   "label": "organisent le concours pour sa main",
+   "source": "smallEvents:botFacts.possibleInfo.nbMeanPoints"
+  },
+  {
+   "from": "kyusaki",
+   "to": "kyutisme",
+   "type": "rules",
+   "label": "premier Grand prêtre",
+   "source": "smallEvents:staffMember.members.Kyusaki"
+  },
+  {
+   "from": "ines",
+   "to": "kyutisme",
+   "type": "member",
+   "label": "fidèle partisane",
+   "source": "smallEvents:staffMember.members.Ines"
+  },
+  {
+   "from": "izuku",
+   "to": "princesse",
+   "type": "love",
+   "label": "lui destinait une potion d'amour",
+   "source": "smallEvents:staffMember.members.Izuku"
+  },
+  {
+   "from": "draft",
+   "to": "royaume",
+   "type": "created",
+   "label": "dieu créateur du monde",
+   "source": "smallEvents:staffMember.members.Draft"
+  },
+  {
+   "from": "gabrielre",
+   "to": "draft",
+   "type": "rival",
+   "label": "en saurait autant que le créateur",
+   "source": "smallEvents:staffMember.members.GabrieLre"
+  },
+  {
+   "from": "voltou",
+   "to": "roi",
+   "type": "rival",
+   "label": "fortune égale à celle du roi",
+   "source": "smallEvents:staffMember.members.Voltou"
+  },
+  {
+   "from": "eagle",
+   "to": "roi",
+   "type": "enemy",
+   "label": "a mené les premiers coups d'État du royaume",
+   "source": "smallEvents:staffMember.members.Eagle"
+  },
+  {
+   "from": "max",
+   "to": "terre-des-dragons",
+   "type": "located",
+   "label": "seul à l'avoir parcourue",
+   "source": "smallEvents:staffMember.members.Max"
+  },
+  {
+   "from": "symsym",
+   "to": "route-marecageuse",
+   "type": "located",
+   "label": "y aurait fondé une taverne",
+   "source": "smallEvents:staffMember.members.symsym"
+  },
+  {
+   "from": "hitori",
+   "to": "kiricare",
+   "type": "other",
+   "label": "cherche à l'acquérir",
+   "source": "smallEvents:staffMember.members.KirIcare"
+  },
+  {
+   "from": "nysvaa",
+   "to": "princesse",
+   "type": "love",
+   "label": "prétendant à sa main",
+   "source": "smallEvents:staffMember.members.Nysvaa"
+  },
+  {
+   "from": "thero1st",
+   "to": "princesse",
+   "type": "love",
+   "label": "prétendant à sa main",
+   "source": "smallEvents:staffMember.members.Thero1st"
+  },
+  {
+   "from": "royal",
+   "to": "princesse",
+   "type": "love",
+   "label": "prétendant à sa main",
+   "source": "smallEvents:staffMember.members.Royal"
+  },
+  {
+   "from": "nwcubeok",
+   "to": "princesse",
+   "type": "love",
+   "label": "prétendant à sa main",
+   "source": "smallEvents:staffMember.members.nwcubeok"
+  },
+  {
+   "from": "player",
+   "to": "titan-de-magma",
+   "type": "enemy",
+   "label": "boss à vaincre",
+   "source": "smallEvents:interactOtherPlayers.beaten_magma_titan.0"
+  },
+  {
+   "from": "player",
+   "to": "kraken",
+   "type": "enemy",
+   "label": "boss à vaincre",
+   "source": "smallEvents:interactOtherPlayers.beaten_kraken.0"
+  },
+  {
+   "from": "player",
+   "to": "leviathan",
+   "type": "enemy",
+   "label": "boss à vaincre",
+   "source": "smallEvents:interactOtherPlayers.beaten_leviathan.0"
+  }
+ ],
+ "places": [
+  {
+   "id": "royaume",
+   "name": "Le royaume",
+   "description": "Royaume gouverné par le roi, théâtre de la compétition des aventuriers pour la main de la princesse.",
+   "sources": [
+    "smallEvents:botFacts.stories.0",
+    "smallEvents:goToPVEIsland.stories.2",
+    "smallEvents:staffMember.members.Voltou"
+   ]
+  },
+  {
+   "id": "ile-mysterieuse",
+   "name": "L'île mystérieuse",
+   "description": "Île infestée de monstres et de créatures possédées, accessible par bateau depuis le continent une fois par semaine gratuitement ; elle change chaque semaine et se parcourt en guilde.",
+   "sources": [
+    "smallEvents:goToPVEIsland.stories.1",
+    "smallEvents:boatAdvice.advices.11",
+    "smallEvents:fightPet.rageUpDescriptions.0",
+    "smallEvents:bonusGuildPVEIsland.events.1.intro"
+   ]
+  },
+  {
+   "id": "continent",
+   "name": "Le continent",
+   "description": "Terre principale du royaume, d'où partent les bateaux vers l'île mystérieuse.",
+   "sources": [
+    "smallEvents:goToPVEIsland.stories.1",
+    "smallEvents:boatAdvice.advices.5"
+   ]
+  },
+  {
+   "id": "cite-de-la-porcelaine",
+   "name": "La cité de la porcelaine (Limoges)",
+   "description": "Cité lointaine sur un plateau rocheux, au bord d'une rivière, célèbre pour ses fours sacrés, sa porcelaine (« l'or blanc »), ses émaux, ses carrières de kaolin, ses cloches de cuivre et sa grande halle à coupole et vitraux (gare). Ses artisans jeûnent et prient avant chaque cuisson.",
+   "sources": [
+    "smallEvents:limoges.stories.0",
+    "smallEvents:limoges.stories.1",
+    "smallEvents:limoges.stories.2",
+    "smallEvents:limoges.stories.3",
+    "smallEvents:limoges.stories.6",
+    "smallEvents:limoges.successStories.2"
+   ]
+  },
+  {
+   "id": "claire-de-ville",
+   "name": "Claire de Ville",
+   "description": "Ville réputée pour ses meilleurs ouvriers forgerons.",
+   "sources": [
+    "smallEvents:class.defense.winObject.2"
+   ]
+  },
+  {
+   "id": "route-des-merveilles",
+   "name": "La Route des Merveilles",
+   "description": "Route où l'on peut retrouver Aldéric l'antiquaire, qui y réserve des offres avantageuses.",
+   "sources": [
+    "smallEvents:epicItemShop.reductionTip"
+   ]
+  },
+  {
+   "id": "terre-des-dragons",
+   "name": "La terre des dragons",
+   "description": "Contrée légendaire que seul Max aurait parcourue.",
+   "sources": [
+    "smallEvents:staffMember.members.Max"
+   ]
+  },
+  {
+   "id": "route-marecageuse",
+   "name": "La route marécageuse",
+   "description": "Route au fin fond de laquelle symsym aurait fondé une taverne.",
+   "sources": [
+    "smallEvents:staffMember.members.symsym"
+   ]
+  },
+  {
+   "id": "arene",
+   "name": "L'arène",
+   "description": "Lieu des combats de ligues et du classement de gloire entre aventuriers.",
+   "sources": [
+    "smallEvents:interactOtherPlayers.high_league.1",
+    "smallEvents:interactOtherPlayers.top_glory.0"
+   ]
+  }
+ ]
+}

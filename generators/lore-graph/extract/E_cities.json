@@ -1,0 +1,202 @@
+{
+ "characters": [],
+ "relations": [
+  {
+   "from": "auberge-du-seigneur",
+   "to": "boug-coton",
+   "type": "located",
+   "label": "auberge de la ville",
+   "source": "Core/resources/cities/boug_coton.json"
+  },
+  {
+   "from": "le-forgeron",
+   "to": "boug-coton",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/boug_coton.json"
+  },
+  {
+   "from": "halte-des-braves",
+   "to": "claire-de-ville",
+   "type": "located",
+   "label": "auberge de la ville",
+   "source": "Core/resources/cities/claire_de_ville.json"
+  },
+  {
+   "from": "les-courtiers-de-la-bourse",
+   "to": "claire-de-ville",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/claire_de_ville.json"
+  },
+  {
+   "from": "le-veterinaire",
+   "to": "claire-de-ville",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/claire_de_ville.json"
+  },
+  {
+   "from": "le-forgeron",
+   "to": "claire-de-ville",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/claire_de_ville.json"
+  },
+  {
+   "from": "gorgee-brulante",
+   "to": "village-coco",
+   "type": "located",
+   "label": "auberge de la ville",
+   "source": "Core/resources/cities/coco_village.json"
+  },
+  {
+   "from": "l-herboriste",
+   "to": "village-coco",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/coco_village.json"
+  },
+  {
+   "from": "le-bucheron",
+   "to": "village-coco",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/coco_village.json"
+  },
+  {
+   "from": "pavillon-royal",
+   "to": "cour-du-chateau",
+   "type": "located",
+   "label": "auberge de la ville",
+   "source": "Core/resources/cities/royal_castle.json"
+  },
+  {
+   "from": "le-maitre-des-quetes",
+   "to": "cour-du-chateau",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/royal_castle.json"
+  },
+  {
+   "from": "le-forgeron-royal",
+   "to": "cour-du-chateau",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/royal_castle.json"
+  },
+  {
+   "from": "l-archiviste-des-iles",
+   "to": "cour-du-chateau",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/royal_castle.json"
+  },
+  {
+   "from": "au-coin-du-feu",
+   "to": "mergagnan",
+   "type": "located",
+   "label": "auberge de la ville",
+   "source": "Core/resources/cities/seawynne.json"
+  },
+  {
+   "from": "le-tanneur",
+   "to": "mergagnan",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/seawynne.json"
+  },
+  {
+   "from": "le-veterinaire",
+   "to": "mergagnan",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/seawynne.json"
+  },
+  {
+   "from": "le-forgeron",
+   "to": "mergagnan",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/seawynne.json"
+  },
+  {
+   "from": "chope-sanglante",
+   "to": "ville-forte",
+   "type": "located",
+   "label": "auberge de la ville",
+   "source": "Core/resources/cities/ville_forte.json"
+  },
+  {
+   "from": "le-marchand-de-materiaux",
+   "to": "ville-forte",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/ville_forte.json"
+  },
+  {
+   "from": "le-forgeron",
+   "to": "ville-forte",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/ville_forte.json"
+  },
+  {
+   "from": "gorim-le-brise-fer",
+   "to": "ville-forte",
+   "type": "located",
+   "label": "tient boutique ici",
+   "source": "Core/resources/cities/ville_forte.json"
+  }
+ ],
+ "places": [
+  {
+   "id": "boug-coton",
+   "name": "Boug-Coton",
+   "description": "Ville (map 6). Commerces : generalShop. Services : blacksmith. Appartement : 6000 pièces.",
+   "sources": [
+    "models:map_locations.6"
+   ]
+  },
+  {
+   "id": "claire-de-ville",
+   "name": "Claire de Ville",
+   "description": "Ville (map 23). Commerces : generalShop, stockExchange, veterinarian. Services : blacksmith. Appartement : 12000 pièces.",
+   "sources": [
+    "models:map_locations.23"
+   ]
+  },
+  {
+   "id": "village-coco",
+   "name": "Village Coco",
+   "description": "Ville (map 17). Commerces : generalShop, herbalist, lumberjack. Services : aucun. Appartement : 50000 pièces.",
+   "sources": [
+    "models:map_locations.17"
+   ]
+  },
+  {
+   "id": "cour-du-chateau",
+   "name": "Cour du Château",
+   "description": "Ville (map 41). Commerces : royalMarket, generalShop. Services : royalBlacksmith, bossArchivist. Appartement : 25000 pièces.",
+   "sources": [
+    "models:map_locations.41"
+   ]
+  },
+  {
+   "id": "mergagnan",
+   "name": "Mergagnan",
+   "description": "Ville (map 26). Commerces : generalShop, tanner, veterinarian. Services : blacksmith. Appartement : 18000 pièces.",
+   "sources": [
+    "models:map_locations.26"
+   ]
+  },
+  {
+   "id": "ville-forte",
+   "name": "Ville Forte",
+   "description": "Ville (map 10). Commerces : generalShop, materialMerchant. Services : blacksmith, scrapDealer. Appartement : 9000 pièces.",
+   "sources": [
+    "models:map_locations.10"
+   ]
+  }
+ ]
+}

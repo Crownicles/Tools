@@ -1,0 +1,2268 @@
+{
+ "characters": [
+  {
+   "id": "aubéric",
+   "name": "Le roi Aubéric",
+   "category": "royalty",
+   "role": "Septième Élu de la Chronique",
+   "description": "Ancien aventurier, vainqueur du 7e Concours ; vieillit, la Couronne lui échappe.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "melisende",
+   "name": "La princesse Mélisende",
+   "category": "royalty",
+   "role": "Héritière de la lignée de la Charte",
+   "description": "Refuse chaque champion de saison (Concours perpétuel) ; incognito, elle est la jeune femme guide qui accueille les aventuriers.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "alienor",
+   "name": "La reine Aliénor",
+   "category": "royalty",
+   "role": "Héritière du 6e Élu",
+   "description": "Veut que sa fille ait un vrai choix ; soupçonne le Trésorier.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "ermengarde",
+   "name": "La reine Ermengarde",
+   "category": "legend",
+   "role": "Fondatrice de la Charte",
+   "description": "A mis fin à la Guerre des Héritiers, retrouvé la Couronne et écrit le premier volume de la Chronique.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "couronne",
+   "name": "La Couronne",
+   "category": "legend",
+   "role": "Artefact célestrin",
+   "description": "Tient les Îles Errantes à distance tant que son porteur est fort. Origine du Concours.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "sir-rowan",
+   "name": "Sir Rowan",
+   "category": "npc",
+   "role": "Ancien capitaine de la Garde, maître d'armes errant",
+   "description": "Compagnon d'Aubéric au 7e Concours ; soupçonne le Trésorier ; maître d'armes secret de Mélisende.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "isaure",
+   "name": "Isaure",
+   "category": "npc",
+   "role": "Courtisane du palais",
+   "description": "Amour de jeunesse de Sir Rowan.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "vautre",
+   "name": "Ancelin Vautre, Trésorier royal",
+   "category": "royalty",
+   "role": "Antagoniste — chef secret de la Main Grise",
+   "description": "Affable, fixe le cours de l'argent du roi ; jamais démasqué publiquement. Révélation : dirige la Main Grise et cherche le Grand Livre.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "hardouin",
+   "name": "Maître Hardouin",
+   "category": "merchant",
+   "role": "Forgeron royal",
+   "description": "Seul forgeron du niveau 5 ; maître de tous les forgerons de ville ; méprise Mernil.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "clotaire",
+   "name": "Clotaire",
+   "category": "npc",
+   "role": "Archiviste des îles",
+   "description": "Consigne les combats contre les Colosses ; donne l'alerte sur l'accélération des affleurements.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "anselme",
+   "name": "Anselme",
+   "category": "npc",
+   "role": "Maître des quêtes",
+   "description": "Connaît toutes les quêtes du royaume ; porte d'entrée des chaînes de quêtes.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "garde-royale",
+   "name": "La Garde royale",
+   "category": "faction",
+   "role": "Armée d'élite",
+   "description": "Commandée quinze ans par Sir Rowan ; gardes du roi et défi du roi.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "chancellerie",
+   "name": "La Chancellerie",
+   "category": "faction",
+   "role": "Administration du royaume",
+   "description": "Bureau du Concours, AGC, SAFAC, SPAC, Banque, jetons de route.",
+   "named": true,
+   "locations": [
+    "Hautecouronne"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "parti-des-lignees",
+   "name": "Le Parti des Lignées",
+   "category": "faction",
+   "role": "Noblesse héréditariste",
+   "description": "Veut abolir la Charte et rétablir les dynasties.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "main-grise",
+   "name": "La Main Grise",
+   "category": "faction",
+   "role": "Réseau conspirateur",
+   "description": "Tunnel de contrebande, attentat royal, fausse secte démoniaque de Boug-Coton.",
+   "named": true,
+   "locations": [
+    "Boug-Coton"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "chevalier-sans-blason",
+   "name": "Le Chevalier sans Blason",
+   "category": "npc",
+   "role": "Héritier de l'ancienne dynastie",
+   "description": "Le chevalier à l'armure noire ; la Main Grise veut le couronner ; déchiré.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "price",
+   "name": "Price",
+   "category": "npc",
+   "role": "Mercenaire, ami du héros",
+   "description": "Homme de main de la Main Grise pour racheter les terres familiales ; son choix clôt l'acte III.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "fer-rouge",
+   "name": "La Compagnie du Fer-Rouge",
+   "category": "faction",
+   "role": "Mercenaires",
+   "description": "Recrute pour les îles ; a chassé Price ; loue le chevalier étranger.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "chevalier-etranger",
+   "name": "Le chevalier étranger",
+   "category": "npc",
+   "role": "Champion loué",
+   "description": "Champion du seigneur voisin de Boug-Coton.",
+   "named": true,
+   "locations": [
+    "Boug-Coton"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "seigneur-boug-coton",
+   "name": "Seigneur de Boug-Coton",
+   "category": "royalty",
+   "role": "Seigneur",
+   "description": "Se dispute l'Auberge du Seigneur avec son voisin.",
+   "named": true,
+   "locations": [
+    "Boug-Coton"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "seigneur-voisin",
+   "name": "Seigneur voisin de Boug-Coton",
+   "category": "royalty",
+   "role": "Seigneur rival",
+   "description": "Membre du Parti des Lignées.",
+   "named": true,
+   "locations": [
+    "Boug-Coton"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gauvain",
+   "name": "Seigneur Gauvain de Claire",
+   "category": "royalty",
+   "role": "Seigneur de Claire de Ville",
+   "description": "Loyal à la Charte ; organise le tournoi.",
+   "named": true,
+   "locations": [
+    "Claire de Ville"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "yseldia",
+   "name": "Dame Yseldia",
+   "category": "royalty",
+   "role": "Épouse de Gauvain",
+   "description": "Remet les prix du tournoi.",
+   "named": true,
+   "locations": [
+    "Claire de Ville"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "yvain",
+   "name": "Yvain",
+   "category": "npc",
+   "role": "Chevalier de renom",
+   "description": "Champion du tournoi de Claire de Ville.",
+   "named": true,
+   "locations": [
+    "Claire de Ville"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "ermesinde",
+   "name": "Dame Ermesinde",
+   "category": "npc",
+   "role": "Bibliothécaire de Claire de Ville",
+   "description": "Garde l'unique copie complète du premier volume de la Chronique.",
+   "named": true,
+   "locations": [
+    "Claire de Ville"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "benatis",
+   "name": "Duc Benatis",
+   "category": "royalty",
+   "role": "Héritier aux bananes",
+   "description": "21 ans, plantations esclavagistes, endetté ; argent du Parti des Lignées.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "celestrins",
+   "name": "Les Célestrins",
+   "category": "faction",
+   "role": "Civilisation disparue",
+   "description": "Maîtres de la Résonance ; ont provoqué la Brisure.",
+   "named": true,
+   "locations": [
+    "Célestrum (cité perdue)"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "talvar",
+   "name": "Talvar l'Ami-des-Créatures",
+   "category": "npc",
+   "role": "Nain protecteur des bêtes",
+   "description": "A pardonné à la bête qui a défiguré son frère.",
+   "named": true,
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "moltiar",
+   "name": "Moltiar",
+   "category": "npc",
+   "role": "Nain ennemi des familiers",
+   "description": "L'« ancien du clan » qui a brisé le lien avec sa bête.",
+   "named": true,
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "ysgerd",
+   "name": "Ysgerd",
+   "category": "npc",
+   "role": "Épouse de Talvar",
+   "description": "Excédée par les portraits d'animaux.",
+   "named": true,
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "velanna",
+   "name": "Velanna",
+   "category": "npc",
+   "role": "Guerrière du Clan des Liants",
+   "description": "Gardienne du Talisman d'Ancrage ; pacte avec Talvar.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "liants",
+   "name": "Le Clan des Liants",
+   "category": "faction",
+   "role": "Héritiers des premiers dresseurs",
+   "description": "Gardent le savoir célestrin de la liaison.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "nains",
+   "name": "Les Nains du Célestrum",
+   "category": "faction",
+   "role": "Peuple nain",
+   "description": "Éleveurs et dresseurs dans les galeries célestrines.",
+   "named": true,
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "amblard",
+   "name": "Lucien Amblard",
+   "category": "npc",
+   "role": "Vétérinaire de la cour",
+   "description": "Correspondant de Talvar ; cousin du forgeron de Ville Forte.",
+   "named": true,
+   "locations": [
+    "Mergagnan",
+    "Claire de Ville"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "perissien",
+   "name": "Périssien",
+   "category": "legend",
+   "role": "Maître ménestrel et alchimiste",
+   "description": "Caché sous le capuchon du conteur de la cité de porcelaine ; a légué la mandoline célestrine.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "perotin",
+   "name": "Pérotin",
+   "category": "npc",
+   "role": "Ménestrel célèbre",
+   "description": "Chansons séditieuses contre le Parti des Lignées ; héraut possible de Mélisende.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gruffo",
+   "name": "Gruffo",
+   "category": "npc",
+   "role": "Alchimiste des marais",
+   "description": "Élève amer de Périssien.",
+   "named": true,
+   "locations": [
+    "Route Marécageuse"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "margot",
+   "name": "La Vieille Margot",
+   "category": "npc",
+   "role": "Sorcière muette",
+   "description": "Ancienne alchimiste du royaume, chassée après la mort d'un enfant ; accusée à tort.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "hilda",
+   "name": "Hilda la guérisseuse",
+   "category": "npc",
+   "role": "Guérisseuse des routes",
+   "description": "Ancienne apprentie de Margot, témoigne pour elle.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "seigneur-accusateur",
+   "name": "Seigneur au fils malade",
+   "category": "royalty",
+   "role": "Accusateur de Margot",
+   "description": "Manipulé par de faux témoins de la Main Grise.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "parziter",
+   "name": "Parziter",
+   "category": "npc",
+   "role": "Érudit maudit",
+   "description": "Ses visions sont des souvenirs de la Brisure (fragment de Pierre-Écho).",
+   "named": true,
+   "locations": [
+    "Forêt Célestrum"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "minou",
+   "name": "Minou",
+   "category": "pet",
+   "role": "Chat de Parziter",
+   "description": "",
+   "named": true,
+   "locations": [
+    "Forêt Célestrum"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "mernil",
+   "name": "Mernil",
+   "category": "merchant",
+   "role": "Enchanteur vaniteux",
+   "description": "Utilise des éclats de cristal célestrin achetés à Gorim.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gorim",
+   "name": "Gorim le Brise-Fer",
+   "category": "merchant",
+   "role": "Ferrailleur",
+   "description": "Possède sans le savoir le carnet de son arrière-grand-mère M-B.",
+   "named": true,
+   "locations": [
+    "Ville Forte"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "m-b",
+   "name": "Mathilde Brise-Fer (« M-B »)",
+   "category": "legend",
+   "role": "Seule alpiniste du sommet",
+   "description": "A atteint Célestrum ; son carnet ouvre l'acte IV.",
+   "named": true,
+   "locations": [
+    "Célestrum (cité perdue)"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "xetrix",
+   "name": "Xetrix",
+   "category": "npc",
+   "role": "Ermite de la Forêt du Vieillard",
+   "description": "Survivant de l'expédition familiale vers le sommet.",
+   "named": true,
+   "locations": [
+    "Forêt Célestrum"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "xirtex",
+   "name": "Xirtex",
+   "category": "npc",
+   "role": "Ermite de l'oasis",
+   "description": "Frère de Xetrix ; cache des bijoux du premier camp célestrin.",
+   "named": true,
+   "locations": [
+    "Vallée des Rois"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "donia",
+   "name": "Donia",
+   "category": "spirit",
+   "role": "Prétendue Fae",
+   "description": "Poudres et visions ; ambiguïté assumée.",
+   "named": true,
+   "locations": [
+    "Forêt du Vieillard"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "alderic",
+   "name": "Aldéric l'antiquaire",
+   "category": "merchant",
+   "role": "Antiquaire",
+   "description": "Revend sans le savoir des objets du tunnel de contrebande.",
+   "named": true,
+   "locations": [
+    "Route des Merveilles"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gaspard-jo",
+   "name": "Gaspard-Jo",
+   "category": "merchant",
+   "role": "Marchand de soupe",
+   "description": "Possède le grimoire de cuisine de la famille de Lucya.",
+   "named": true,
+   "locations": [
+    "Route des Merveilles"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "lucya",
+   "name": "Lucya",
+   "category": "merchant",
+   "role": "Cuisinière voyageuse",
+   "description": "Rêve d'ouvrir son auberge.",
+   "named": true,
+   "locations": [
+    "Boug-Coton"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "foire-des-roues",
+   "name": "La Foire des Roues",
+   "category": "faction",
+   "role": "Confrérie des marchands ambulants",
+   "description": "Se retrouve sur la Route des Merveilles.",
+   "named": true,
+   "locations": [
+    "Route des Merveilles"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "marchand-jetons",
+   "name": "Le Marchand de jetons",
+   "category": "merchant",
+   "role": "Fonctionnaire déguisé",
+   "description": "Vend les jetons de route officiels du Concours.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "theobald",
+   "name": "Théobald",
+   "category": "npc",
+   "role": "Jardinier itinérant",
+   "description": "Sa dernière graine est une graine d'arbre célestrin.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "mylene",
+   "name": "Mylène",
+   "category": "npc",
+   "role": "Fermière",
+   "description": "Nièce de Théobald ; recette de famille.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "oracle",
+   "name": "Ombeline, l'« Oracle »",
+   "category": "npc",
+   "role": "Gardienne d'une Pierre-Écho",
+   "description": "Savante, pas prêtresse ; voile contre l'éclat de la pierre.",
+   "named": true,
+   "locations": [
+    "Pierres-Échos (autels)"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gardiens-des-pierres",
+   "name": "Les Gardiens des Pierres",
+   "category": "faction",
+   "role": "Ordre savant",
+   "description": "Une gardienne par Pierre-Écho ; enregistrent les protecteurs.",
+   "named": true,
+   "locations": [
+    "Pierres-Échos (autels)"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "annonciateurs",
+   "name": "Les Annonciateurs",
+   "category": "faction",
+   "role": "Colporteurs de fin du monde",
+   "description": "Prédisent la chute des îles et vendent des amulettes.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "morgat",
+   "name": "Le capitaine Morgat",
+   "category": "npc",
+   "role": "Passeur vers les îles",
+   "description": "Traversée hebdomadaire financée par la Couronne.",
+   "named": true,
+   "locations": [
+    "Mergagnan"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "pirate-tricorne",
+   "name": "Le pirate au tricorne",
+   "category": "npc",
+   "role": "Petit-fils de Capitaine Crow",
+   "description": "Cherche le trésor de son aïeul.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "capitaine-crow",
+   "name": "Capitaine Crow",
+   "category": "monster",
+   "role": "Écho de pirate",
+   "description": "Mort en cherchant les îles.",
+   "named": true,
+   "locations": [
+    "Île des Marées"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "leviathan",
+   "name": "Le Léviathan",
+   "category": "monster",
+   "role": "Plus ancien Colosse",
+   "description": "Son sommeil maintient l'Île des Marées à flot.",
+   "named": true,
+   "locations": [
+    "Île des Marées"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "kraken",
+   "name": "Le Kraken",
+   "category": "monster",
+   "role": "Prédateur du Léviathan",
+   "description": "",
+   "named": true,
+   "locations": [
+    "Île des Marées"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "sirene",
+   "name": "La Sirène",
+   "category": "monster",
+   "role": "Créature de la Cave des murmures",
+   "description": "Attirée par l'ancienne alarme des marées.",
+   "named": true,
+   "locations": [
+    "Île des Marées"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "titan-de-magma",
+   "name": "Le Titan de magma",
+   "category": "monster",
+   "role": "Colosse de Braise",
+   "description": "Reste de la tentative d'enchaîner le volcan.",
+   "named": true,
+   "locations": [
+    "Braise (île volcanique)"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "seigneur-glaces",
+   "name": "Le Seigneur des glaces",
+   "category": "monster",
+   "role": "Dragon de Givre",
+   "description": "Compagnon de la Reine des glaces.",
+   "named": true,
+   "locations": [
+    "Givre (île de glace)"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "reine-glaces",
+   "name": "La Reine des glaces",
+   "category": "monster",
+   "role": "Dragonne de Givre",
+   "description": "Protège un œuf nacré.",
+   "named": true,
+   "locations": [
+    "Givre (île de glace)"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "yuki-onna",
+   "name": "Yuki-Onna (dame Neigeline)",
+   "category": "spirit",
+   "role": "Écho de la dernière dame de Givre",
+   "description": "Chante une berceuse célestrine.",
+   "named": true,
+   "locations": [
+    "Givre (île de glace)"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gardien-portes",
+   "name": "Le Gardien des Portes",
+   "category": "monster",
+   "role": "Automate célestrin",
+   "description": "Garde les Portes Scellées.",
+   "named": true,
+   "locations": [
+    "Portes Scellées"
+   ],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "grand-livre",
+   "name": "Le Grand Livre de Liard",
+   "category": "legend",
+   "role": "Registre célestrin des créances",
+   "description": "Se remplit seul de chaque dette contractée devant témoin : ligne de quêtes infinie du joueur (Recouvreur).",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "maison-liard",
+   "name": "La maison Liard",
+   "category": "faction",
+   "role": "Prêteurs de la Contrée depuis 3 siècles",
+   "description": "A prêté à tous, jusqu'à la Couronne. Le dernier Liard a disparu.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "barnabe-liard",
+   "name": "Barnabé Liard",
+   "category": "legend",
+   "role": "Premier prêteur de la maison",
+   "description": "A financé la reconstruction d'Ermengarde.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "dernier-liard",
+   "name": "Le dernier Liard",
+   "category": "npc",
+   "role": "Prêteur disparu",
+   "description": "Introuvable ; mystère permanent de la ligne des créances.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "recouvreurs-rivaux",
+   "name": "Les recouvreurs rivaux",
+   "category": "faction",
+   "role": "Faux huissiers",
+   "description": "Réclament les mêmes dettes avec de fausses lettres.",
+   "named": true,
+   "locations": [],
+   "aliases": [],
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "almerac",
+   "name": "Le baron Almerac",
+   "category": "royalty",
+   "role": "Baron défunt de Mergagnan, débiteur de la maison Liard",
+   "description": "Mort en laissant une halle de pierre inachevée et des intérêts impayés. Son chantier abandonné (event 18) et ses registres restés sur place en font une page toute prête du Grand Livre : la dette court toujours, et ses héritiers ou ses anciens compagnons la doivent.",
+   "named": true,
+   "locations": [
+    "Mergagnan"
+   ],
+   "aliases": [
+    "Almerac"
+   ],
+   "sources": [
+    "documents/crownicles-lore-proposition.md",
+    "outcomerequirements/events:18.text"
+   ],
+   "quotes": []
+  }
+ ],
+ "relations": [
+  {
+   "from": "aubéric",
+   "to": "alienor",
+   "type": "love",
+   "label": "époux",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "aubéric",
+   "to": "melisende",
+   "type": "family",
+   "label": "père",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "alienor",
+   "to": "melisende",
+   "type": "family",
+   "label": "mère",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "aubéric",
+   "to": "couronne",
+   "type": "rules",
+   "label": "porte la Couronne",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "ermengarde",
+   "to": "couronne",
+   "type": "created",
+   "label": "retrouve la Couronne, fonde la Charte",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "couronne",
+   "to": "iles-errantes",
+   "type": "rules",
+   "label": "tient les îles à distance",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "celestrins",
+   "to": "couronne",
+   "type": "created",
+   "label": "ont forgé",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "sir-rowan",
+   "to": "aubéric",
+   "type": "ally",
+   "label": "frère d'armes (7e Concours)",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "sir-rowan",
+   "to": "melisende",
+   "type": "mentor",
+   "label": "maître d'armes secret",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "sir-rowan",
+   "to": "isaure",
+   "type": "love",
+   "label": "amour de jeunesse",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "sir-rowan",
+   "to": "vautre",
+   "type": "enemy",
+   "label": "le soupçonne",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "alienor",
+   "to": "vautre",
+   "type": "enemy",
+   "label": "le soupçonne",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "vautre",
+   "to": "main-grise",
+   "type": "rules",
+   "label": "dirige en secret",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "vautre",
+   "to": "aubéric",
+   "type": "serves",
+   "label": "trahit",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "parti-des-lignees",
+   "to": "main-grise",
+   "type": "employs",
+   "label": "finance",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "benatis",
+   "to": "parti-des-lignees",
+   "type": "member",
+   "label": "argent des plantations",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "seigneur-voisin",
+   "to": "parti-des-lignees",
+   "type": "member",
+   "label": "membre",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "main-grise",
+   "to": "chevalier-sans-blason",
+   "type": "other",
+   "label": "veut le couronner",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "price",
+   "to": "main-grise",
+   "type": "serves",
+   "label": "homme de main",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "price",
+   "to": "fer-rouge",
+   "type": "rival",
+   "label": "chassé de la compagnie",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "chevalier-etranger",
+   "to": "fer-rouge",
+   "type": "member",
+   "label": "loué par",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "chevalier-etranger",
+   "to": "seigneur-voisin",
+   "type": "serves",
+   "label": "champion",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "seigneur-boug-coton",
+   "to": "seigneur-voisin",
+   "type": "rival",
+   "label": "querelle de l'Auberge du Seigneur",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "gauvain",
+   "to": "yseldia",
+   "type": "love",
+   "label": "époux",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "yvain",
+   "to": "gauvain",
+   "type": "serves",
+   "label": "champion du tournoi",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "gauvain",
+   "to": "couronne",
+   "type": "ally",
+   "label": "loyal à la Charte",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "hardouin",
+   "to": "aubéric",
+   "type": "serves",
+   "label": "Forgeron royal",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "clotaire",
+   "to": "aubéric",
+   "type": "serves",
+   "label": "Archiviste",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "anselme",
+   "to": "aubéric",
+   "type": "serves",
+   "label": "Maître des quêtes",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "garde-royale",
+   "to": "aubéric",
+   "type": "serves",
+   "label": "protège",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "chancellerie",
+   "to": "aubéric",
+   "type": "serves",
+   "label": "administre le Concours",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "marchand-jetons",
+   "to": "chancellerie",
+   "type": "member",
+   "label": "fonctionnaire déguisé",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "ermesinde",
+   "to": "ermengarde",
+   "type": "other",
+   "label": "garde le 1er volume de sa Chronique",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "main-grise",
+   "to": "margot",
+   "type": "enemy",
+   "label": "faux témoins",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "seigneur-accusateur",
+   "to": "margot",
+   "type": "enemy",
+   "label": "l'accuse",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "hilda",
+   "to": "margot",
+   "type": "mentor",
+   "label": "ancienne apprentie",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "perissien",
+   "to": "perotin",
+   "type": "mentor",
+   "label": "maître (musique)",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "perissien",
+   "to": "gruffo",
+   "type": "mentor",
+   "label": "maître (alchimie)",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "gruffo",
+   "to": "perotin",
+   "type": "rival",
+   "label": "jaloux de la mandoline",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "perotin",
+   "to": "melisende",
+   "type": "ally",
+   "label": "chansons qu'elle aime",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "perotin",
+   "to": "parti-des-lignees",
+   "type": "enemy",
+   "label": "chansons séditieuses",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "main-grise",
+   "to": "perotin",
+   "type": "enemy",
+   "label": "veut le faire taire",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "talvar",
+   "to": "moltiar",
+   "type": "family",
+   "label": "frère",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "talvar",
+   "to": "ysgerd",
+   "type": "love",
+   "label": "époux",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "talvar",
+   "to": "velanna",
+   "type": "ally",
+   "label": "pacte d'examen des familiers",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "moltiar",
+   "to": "liants",
+   "type": "member",
+   "label": "ancien élève, a brisé le lien",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "velanna",
+   "to": "liants",
+   "type": "member",
+   "label": "gardienne du Talisman",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "liants",
+   "to": "celestrins",
+   "type": "other",
+   "label": "héritiers des premiers dresseurs",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "talvar",
+   "to": "nains",
+   "type": "member",
+   "label": "patriarche",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "moltiar",
+   "to": "nains",
+   "type": "member",
+   "label": "",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "amblard",
+   "to": "talvar",
+   "type": "knows",
+   "label": "correspondant",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "gorim",
+   "to": "m-b",
+   "type": "family",
+   "label": "arrière-petit-fils",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "mernil",
+   "to": "gorim",
+   "type": "trades",
+   "label": "achète des éclats célestrins",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "hardouin",
+   "to": "mernil",
+   "type": "rival",
+   "label": "méprise ses méthodes",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "xetrix",
+   "to": "xirtex",
+   "type": "family",
+   "label": "frères brouillés",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "xetrix",
+   "to": "m-b",
+   "type": "other",
+   "label": "ont tenté de refaire son ascension",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "donia",
+   "to": "xetrix",
+   "type": "rival",
+   "label": "voisins chamailleurs",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "gaspard-jo",
+   "to": "lucya",
+   "type": "rival",
+   "label": "détient son grimoire familial",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "alderic",
+   "to": "main-grise",
+   "type": "other",
+   "label": "recèle sans le savoir",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "alderic",
+   "to": "foire-des-roues",
+   "type": "member",
+   "label": "",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "gaspard-jo",
+   "to": "foire-des-roues",
+   "type": "member",
+   "label": "",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "theobald",
+   "to": "mylene",
+   "type": "family",
+   "label": "oncle",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "oracle",
+   "to": "gardiens-des-pierres",
+   "type": "member",
+   "label": "gardienne",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "gardiens-des-pierres",
+   "to": "celestrins",
+   "type": "other",
+   "label": "étudient leurs pierres",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "parziter",
+   "to": "celestrins",
+   "type": "other",
+   "label": "visions de la Brisure",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "minou",
+   "to": "parziter",
+   "type": "serves",
+   "label": "chat",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "clotaire",
+   "to": "iles-errantes",
+   "type": "knows",
+   "label": "note l'accélération",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "annonciateurs",
+   "to": "iles-errantes",
+   "type": "other",
+   "label": "prédisent leur chute",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "morgat",
+   "to": "iles-errantes",
+   "type": "trades",
+   "label": "traversée hebdomadaire",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "pirate-tricorne",
+   "to": "capitaine-crow",
+   "type": "family",
+   "label": "petit-fils",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "kraken",
+   "to": "leviathan",
+   "type": "enemy",
+   "label": "prédateur",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "seigneur-glaces",
+   "to": "reine-glaces",
+   "type": "love",
+   "label": "couple",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "celestrins",
+   "to": "titan-de-magma",
+   "type": "created",
+   "label": "tentative d'enchaînement",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "celestrins",
+   "to": "gardien-portes",
+   "type": "created",
+   "label": "automate",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "celestrins",
+   "to": "seigneur-glaces",
+   "type": "enemy",
+   "label": "ont tenté de les enchaîner",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "melisende",
+   "to": "couronne",
+   "type": "other",
+   "label": "veut réformer la Charte",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "chevalier-sans-blason",
+   "to": "ermengarde",
+   "type": "enemy",
+   "label": "dynastie déchue par la Charte",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "braise",
+   "to": "iles-errantes",
+   "type": "located",
+   "label": "fait partie de",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "givre",
+   "to": "iles-errantes",
+   "type": "located",
+   "label": "fait partie de",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "ile-des-marees",
+   "to": "iles-errantes",
+   "type": "located",
+   "label": "fait partie de",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "portes-scellees",
+   "to": "givre",
+   "type": "located",
+   "label": "fait partie de",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "celestrum",
+   "to": "mont-celestrum",
+   "type": "located",
+   "label": "fait partie de",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "hautecouronne",
+   "to": "contree",
+   "type": "located",
+   "label": "fait partie de",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "morgat",
+   "to": "auberic",
+   "type": "serves",
+   "label": "traversées financées par la Couronne",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "annonciateurs",
+   "to": "clotaire",
+   "type": "rival",
+   "label": "l'archiviste confirme malgré lui leurs prédictions",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "sirene",
+   "to": "leviathan",
+   "type": "other",
+   "label": "attirée par l'alarme des marées qui veille sur le Colosse",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "yuki-onna",
+   "to": "celestrins",
+   "type": "other",
+   "label": "dernière dame célestrine de Givre",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "barnabe-liard",
+   "to": "maison-liard",
+   "type": "member",
+   "label": "fondateur",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "dernier-liard",
+   "to": "maison-liard",
+   "type": "member",
+   "label": "dernier héritier",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "maison-liard",
+   "to": "grand-livre",
+   "type": "created",
+   "label": "tient le registre",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "celestrins",
+   "to": "grand-livre",
+   "type": "created",
+   "label": "registre résonant",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "anselme",
+   "to": "grand-livre",
+   "type": "other",
+   "label": "délivre les lettres de recouvrement",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "chancellerie",
+   "to": "grand-livre",
+   "type": "other",
+   "label": "assermente les Recouvreurs",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "main-grise",
+   "to": "grand-livre",
+   "type": "enemy",
+   "label": "veut le Livre (chantage des nobles)",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "vautre",
+   "to": "grand-livre",
+   "type": "enemy",
+   "label": "propose de le « garder en lieu sûr »",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "recouvreurs-rivaux",
+   "to": "grand-livre",
+   "type": "rival",
+   "label": "réclament les mêmes dettes",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "ermengarde",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "emprunt de la reconstruction",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "couronne",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "doit encore le solde d'Ermengarde",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "benatis",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "débiteur infini",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "mernil",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "débiteur chronique",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "perotin",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "doit dans chaque auberge",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "gruffo",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "doit ses ingrédients",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "lucya",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "a emprunté pour ses fourneaux",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "moltiar",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "une bête rachetée au clan, jamais remboursée",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "m-b",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "matériel d'ascension, remboursé",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "vautre",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "12 000, garant : Benatis père",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "talvar",
+   "to": "maison-liard",
+   "type": "other",
+   "label": "prête sans jamais vouloir être remboursé",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "seigneur-boug-coton",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "emprunte pour payer des champions",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "morgat",
+   "to": "grand-livre",
+   "type": "other",
+   "label": "transporte les cargaisons à escorter",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "aldéric",
+   "to": "grand-livre",
+   "type": "trades",
+   "label": "rachète parfois des créances",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "fer-rouge",
+   "to": "maison-liard",
+   "type": "other",
+   "label": "gros bras des débiteurs récalcitrants",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "xetrix",
+   "to": "xirtex",
+   "type": "trades",
+   "label": "se doivent une somme absurde",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "almerac",
+   "to": "maison-liard",
+   "type": "trades",
+   "label": "débiteur (intérêts impayés de la halle)",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "almerac",
+   "to": "mergagnan",
+   "type": "located",
+   "label": "chantier abandonné",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "almerac",
+   "to": "grand-livre",
+   "type": "other",
+   "label": "une page du Livre",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "player",
+   "to": "grand-livre",
+   "type": "other",
+   "label": "trouve le Livre et en recouvre les pages",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "chancellerie",
+   "to": "player",
+   "type": "employs",
+   "label": "fait de vous un Recouvreur assermenté, à la commission",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "anselme",
+   "to": "player",
+   "type": "other",
+   "label": "remet la lettre de recouvrement, propose les quêtes",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "aubéric",
+   "to": "player",
+   "type": "other",
+   "label": "organise le Concours auquel vous participez",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "melisende",
+   "to": "player",
+   "type": "knows",
+   "label": "vous accueille, déguisée en guide, et vous observe",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "sir-rowan",
+   "to": "player",
+   "type": "mentor",
+   "label": "leçons de combat sur les routes",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "hardouin",
+   "to": "player",
+   "type": "trades",
+   "label": "forge vos pièces de niveau 5",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "clotaire",
+   "to": "player",
+   "type": "other",
+   "label": "consigne vos victoires contre les Colosses",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "vautre",
+   "to": "player",
+   "type": "rival",
+   "label": "vous salue courtoisement, convoite le Livre",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "main-grise",
+   "to": "player",
+   "type": "enemy",
+   "label": "convoite le Livre que vous portez",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "recouvreurs-rivaux",
+   "to": "player",
+   "type": "rival",
+   "label": "réclament les mêmes dettes",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "price",
+   "to": "player",
+   "type": "other",
+   "label": "vous escorte ou vous vole",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "morgat",
+   "to": "player",
+   "type": "trades",
+   "label": "traversées vers les îles, cargaisons à escorter",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "benatis",
+   "to": "player",
+   "type": "trades",
+   "label": "débiteur infini",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "almerac",
+   "to": "player",
+   "type": "trades",
+   "label": "dette héritée, réclamée à ses héritiers",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "talvar",
+   "to": "player",
+   "type": "knows",
+   "label": "s'extasie devant vos familiers",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "gorim",
+   "to": "player",
+   "type": "trades",
+   "label": "rachète vos fragments et démonte vos équipements",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "mernil",
+   "to": "player",
+   "type": "trades",
+   "label": "enchante vos équipements, de ville en ville",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "parziter",
+   "to": "player",
+   "type": "knows",
+   "label": "déchiffre vos fragments célestrins",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "oracle",
+   "to": "player",
+   "type": "other",
+   "label": "garde la Pierre-Écho où vous déposez votre or",
+   "source": "documents/crownicles-lore-proposition.md"
+  },
+  {
+   "from": "marchand-jetons",
+   "to": "player",
+   "type": "trades",
+   "label": "vous vend les jetons de route",
+   "source": "documents/crownicles-lore-proposition.md"
+  }
+ ],
+ "places": [
+  {
+   "id": "contree",
+   "name": "La Contrée",
+   "description": "Royaume bâti sur les ruines des Célestrins.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "hautecouronne",
+   "name": "Hautecouronne",
+   "description": "Nom proposé pour la cité royale qui entoure le château du roi (muraille, rues, Cour du Château, Portes, Salle de réception), au-delà de Boug-Coton ; fondée par Ermengarde.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "celestrum",
+   "name": "Célestrum (cité perdue)",
+   "description": "Ancienne capitale célestrine au sommet du Mont Célestrum ; seule M-B l'a atteinte.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "mont-celestrum",
+   "name": "Mont Célestrum",
+   "description": "Montagne dominante ; on raconte qu'elle porte le nom d'une ancienne déesse (en fait la cité célestrine) ; grottes sans fond, nains.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "ville-forte",
+   "name": "Ville Forte",
+   "description": "Ancienne grande ville fortifiée (et ancienne capitale) rasée pendant la Guerre des Héritiers ; une dizaine de maisons, galeries sous les remparts, économie de récupération.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "claire-de-ville",
+   "name": "Claire de Ville",
+   "description": "Grande ville marchande réputée pour son calme et son respect de l'ordre ; Bourse, tournoi devant les murailles, bibliothèque de dame Ermesinde, souterrains.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "boug-coton",
+   "name": "Boug-Coton",
+   "description": "Village paisible réputé pour l'Auberge du Seigneur, que se disputent les seigneurs ; la grange de la Main Grise rejoint les caves secrètes de l'auberge.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "mergagnan",
+   "name": "Mergagnan",
+   "description": "Paisible ville au bord de la Plage Sentinelle ; port, départ des traversées vers les îles.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "vallee-des-rois",
+   "name": "Vallée des Rois",
+   "description": "Désert des tombeaux des Rois-Guerriers.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "foret-du-vieillard",
+   "name": "Forêt du Vieillard",
+   "description": "Forêt au sud du Berceau, où l'on se perd ; Donia y rôde.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "foret-celestrum",
+   "name": "Forêt Célestrum",
+   "description": "Refuge de Parziter.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "route-des-merveilles",
+   "name": "Route des Merveilles",
+   "description": "Lieu de la Foire des Roues.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "marais",
+   "name": "Route Marécageuse",
+   "description": "Hutte de Gruffo.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "iles-errantes",
+   "name": "Les Îles Errantes",
+   "description": "Fragments du territoire célestrin arrachés par la Brisure ; affleurent chaque semaine.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "braise",
+   "name": "Braise (île volcanique)",
+   "description": "Anciennes forges célestrines, Canal Lavique.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "givre",
+   "name": "Givre (île de glace)",
+   "description": "Cité-jardin gelée en une nuit ; Portes Scellées.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "ile-des-marees",
+   "name": "Île des Marées",
+   "description": "Port et observatoires des marées ; Cave des murmures.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "portes-scellees",
+   "name": "Portes Scellées",
+   "description": "Salle d'où les Célestrins tentaient d'enchaîner les dragons.",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  },
+  {
+   "id": "pierres-echos",
+   "name": "Pierres-Échos (autels)",
+   "description": "Pierres célestrines qui amplifient les offrandes collectives : les « bénédictions ».",
+   "sources": [
+    "documents/crownicles-lore-proposition.md"
+   ]
+  }
+ ]
+}

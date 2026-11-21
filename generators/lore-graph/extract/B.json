@@ -1,0 +1,1418 @@
+{
+ "characters": [
+  {
+   "id": "perotin",
+   "name": "Pérotin",
+   "aliases": [
+    "le ménestrel",
+    "le barde"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Ménestrel célèbre et drogueur",
+   "description": "Le plus célèbre ménestrel de la région et au-delà des frontières. Grâce à ses drogues puissantes et à sa mandoline magique, il fait littéralement vivre ses chansons à ses auditeurs (amour, héroïsme, royauté...). Fantasque et opportuniste, il dépouille parfois ses cobayes ; il déteste parfois le pouvoir en place et rêve de révolution ou de chanter pour un monarque.",
+   "locations": [
+    "un petit village"
+   ],
+   "sources": [
+    "events:46.text",
+    "events:46.possibilities.singWork.outcomes.1",
+    "events:46.possibilities.singRoyalty.outcomes.1",
+    "events:46.possibilities.singHero.outcomes.2",
+    "events:46.possibilities.end.outcomes.1"
+   ],
+   "quotes": [
+    "Il peut vous faire vivre la chanson, littéralement, grâce à ses drogues puissantes."
+   ]
+  },
+  {
+   "id": "perissien",
+   "name": "Périssien",
+   "aliases": [],
+   "named": true,
+   "category": "legend",
+   "role": "Ancien maître ménestrel",
+   "description": "Célèbre ménestrel connu à travers tout le pays, maître de Pérotin à qui il enseignait via des drogues « assouplissantes » ; il lui a légué une mandoline magique reçue de ses prédécesseurs. Gruffo le cite avec amertume comme la source de ses connaissances alchimiques ; sa localisation reste un secret.",
+   "locations": [],
+   "sources": [
+    "events:46.possibilities.singWork.outcomes.1",
+    "events:56.possibilities.refuse.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "gruffo",
+   "name": "Gruffo",
+   "aliases": [],
+   "named": true,
+   "category": "npc",
+   "role": "Alchimiste à la recherche de cobayes",
+   "description": "Alchimiste qui teste ses nouvelles potions (noire, cramoisie, saphir...) sur des voyageurs contre de l'argent. Traité de « charlatan rabougri », il est pourtant bonhomme : il héberge, offre du thé et vend des potions de rétablissement. Formé par Périssien, dont il parle avec amertume.",
+   "locations": [
+    "Plage Sentinelle",
+    "Route marécageuse"
+   ],
+   "sources": [
+    "events:56.text",
+    "events:56.possibilities.refuse.outcomes.2",
+    "events:56.possibilities.drinkRandom.outcomes.0",
+    "events:58.possibilities.goAlchemist.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "lucya",
+   "name": "Lucya",
+   "aliases": [],
+   "named": true,
+   "category": "merchant",
+   "role": "Cuisinière voyageuse",
+   "description": "Voyageuse métisse à la recherche de nouvelles saveurs culinaires, généreuse (tourte, hydromel aux épices, oublies au miel). Elle a travaillé à la célèbre auberge de Boug-Coton mais avait trop soif d'aventure ; elle tient une cuisine de rue et compte un jour ouvrir sa propre auberge.",
+   "locations": [
+    "Mont Célestrum",
+    "Claire de Ville",
+    "Boug-Coton"
+   ],
+   "sources": [
+    "events:51.possibilities.goBack.outcomes.2",
+    "events:72.possibilities.searchFood.outcomes.0",
+    "events:72.possibilities.searchFood.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "xetrix",
+   "name": "Xetrix",
+   "aliases": [],
+   "named": true,
+   "category": "legend",
+   "role": "Ermite mystérieux",
+   "description": "Nom figurant sur un vieux papyrus trouvé au pied du Mont Célestrum, avec les mots « escalier », « grotte », « campement » (un ancien campement abandonné existe dans une grotte en haut de l'escalier). Probablement le frère ermite de Xirtex (« un autre ermite dont le nom commence par un X »).",
+   "locations": [
+    "Mont Célestrum"
+   ],
+   "sources": [
+    "events:51.possibilities.search.outcomes.1",
+    "events:51.possibilities.stairs.outcomes.0",
+    "events:71.possibilities.accept.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "xirtex",
+   "name": "Xirtex",
+   "aliases": [],
+   "named": true,
+   "category": "npc",
+   "role": "Ermite fou de l'oasis",
+   "description": "Vieil homme barbu encapuchonné vivant dans une tente près d'une oasis de la Vallée des Rois. Hospitalier mais inquiétant (soupe de peyotl, rires déments, dague dans la manche), il cache des coffres de bijoux. Seul rescapé avec son frère d'un désastre ayant tué toute leur famille, les deux frères se sont séparés pour vivre en ermites.",
+   "locations": [
+    "Vallée des Rois"
+   ],
+   "sources": [
+    "events:71.text",
+    "events:71.possibilities.accept.outcomes.1",
+    "events:71.possibilities.steal.outcomes.0",
+    "events:71.possibilities.steal.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "donia",
+   "name": "Donia",
+   "aliases": [
+    "la Fae"
+   ],
+   "named": true,
+   "category": "spirit",
+   "role": "Fae de la forêt",
+   "description": "Femme magnifique aux cheveux couleur d'écume, robe d'argent ornée de saphirs et bâton d'aubépine, se disant Fae. Elle offre sa bénédiction pour la quête de la princesse, mais use de poudres hallucinogènes (bleue, rouge) ; dans un cauchemar elle apparaît en sorcière voulant cuire le héros. Susceptible, elle bat ceux qui nient l'existence des fées.",
+   "locations": [
+    "Forêt du Vieillard"
+   ],
+   "sources": [
+    "events:69.text",
+    "events:69.possibilities.deny.outcomes.0",
+    "events:69.possibilities.compromise.outcomes.1",
+    "events:69.possibilities.accept.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "yseldia",
+   "name": "Yseldia",
+   "aliases": [],
+   "named": true,
+   "category": "royalty",
+   "role": "Dame du Seigneur local",
+   "description": "Belle épouse du Seigneur local de Claire de Ville, portant une couronne sertie de rubis. Elle remet en personne les récompenses aux vainqueurs du tournoi seigneurial (tir à l'arc, joute, mêlée, poésie).",
+   "locations": [
+    "Claire de Ville"
+   ],
+   "sources": [
+    "events:72.possibilities.joinArchery.outcomes.0",
+    "events:72.possibilities.joinJoust.outcomes.0",
+    "events:72.possibilities.joinMelee.outcomes.1",
+    "events:72.possibilities.joinPoetry.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "seigneur-claire-de-ville",
+   "name": "Seigneur local de Claire de Ville",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Seigneur organisateur du tournoi",
+   "description": "Seigneur local de Claire de Ville, époux d'Yseldia, dont le tournoi seigneurial attire bouffons, troubadours, hérauts et chevaliers hors des murailles.",
+   "locations": [
+    "Claire de Ville"
+   ],
+   "sources": [
+    "events:72.text",
+    "events:72.possibilities.joinJoust.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "yvain",
+   "name": "Yvain",
+   "aliases": [],
+   "named": true,
+   "category": "npc",
+   "role": "Chevalier de renom",
+   "description": "Chevalier réputé participant à l'épreuve de joute du tournoi de Claire de Ville ; il désarçonne le héros avec aisance.",
+   "locations": [
+    "Claire de Ville"
+   ],
+   "sources": [
+    "events:72.possibilities.joinJoust.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "comte-region-voisine",
+   "name": "Comte de la région voisine",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Champion de joute",
+   "description": "Comte voisin qui atteint la finale de la joute du tournoi de Claire de Ville et désarçonne le héros avec une facilité ahurissante.",
+   "locations": [
+    "Claire de Ville"
+   ],
+   "sources": [
+    "events:72.possibilities.joinJoust.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "parziter",
+   "name": "Parziter",
+   "aliases": [],
+   "named": true,
+   "category": "npc",
+   "role": "Érudit maudit",
+   "description": "Vieil homme hagard vivant dans une maison en ruine près d'une rivière de la Forêt Celestrum. Ancien érudit respecté, frappé d'une malédiction et de visions après avoir déterré un artefact maudit ; il possède une bibliothèque de grimoires aux symboles étranges et un trésor caché qu'il a oublié. Il panique, crie des incantations.",
+   "locations": [
+    "Forêt Celestrum"
+   ],
+   "sources": [
+    "events:76.text",
+    "events:76.possibilities.question.outcomes.0",
+    "events:76.possibilities.help.outcomes.2",
+    "events:76.possibilities.explore.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "minou",
+   "name": "Minou",
+   "aliases": [],
+   "named": true,
+   "category": "pet",
+   "role": "Chat de Parziter",
+   "description": "Chat de Parziter, disparu dans les bois et retrouvé coincé dans un arbre creux.",
+   "locations": [
+    "Forêt Celestrum"
+   ],
+   "sources": [
+    "events:76.possibilities.help.outcomes.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "price",
+   "name": "Price",
+   "aliases": [
+    "Price le mercenaire"
+   ],
+   "named": true,
+   "category": "npc",
+   "role": "Mercenaire louche",
+   "description": "Mercenaire connu et ami du héros (discussions sur le cours des gemmes et l'inflation des loyers, repas au pavillon royal). Il sort d'un tunnel secret dans la muraille de la cité royale et achète le silence ; il est entendu complotant (marchandises, quelqu'un à éliminer, passage, réseau) le jour d'un attentat contre la famille royale.",
+   "locations": [
+    "Cité royale"
+   ],
+   "sources": [
+    "events:82.possibilities.moveOn.outcomes.2",
+    "events:82.possibilities.end.outcomes.0",
+    "events:89.possibilities.otherAlley.outcomes.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "maurice",
+   "name": "Maurice",
+   "aliases": [],
+   "named": true,
+   "category": "monster",
+   "role": "Crabe noir géant légendaire",
+   "description": "Bête rare du port : un grand crabe noir presque aussi large qu'un bouclier, effrayant, que l'on peut pêcher lors du concours de crabes.",
+   "locations": [
+    "Port (quais)"
+   ],
+   "sources": [
+    "events:84.possibilities.compete.outcomes.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "maitre-concours-crabes",
+   "name": "Maître du concours de crabes",
+   "aliases": [
+    "le pêcheur roux",
+    "le maître pêcheur"
+   ],
+   "named": false,
+   "category": "npc",
+   "role": "Pêcheur roux organisateur",
+   "description": "Homme trapu à la barbe rousse qui harangue les passants sur les quais et organise un concours de pêche au crabe à la ligne, récompensé de chopes de rhum.",
+   "locations": [
+    "Port (quais)"
+   ],
+   "sources": [
+    "events:84.text",
+    "events:84.possibilities.compete.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "le-roi",
+   "name": "Le Roi",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Roi du royaume",
+   "description": "Souverain qui cherche un noble chevalier pour épouser sa fille et organise le concours (points, classements, missions). Il donne des fêtes dans son château (dont une de Noël), défile à cheval blanc avec sa Garde royale et récompense ceux qui déjouent les attentats. Lui seul juge de la légitimité de la sorcellerie.",
+   "locations": [
+    "Château royal",
+    "Cité royale"
+   ],
+   "sources": [
+    "events:60.text",
+    "events:61.text",
+    "events:64.text",
+    "events:65.text",
+    "events:89.possibilities.ignore.outcomes.3",
+    "events:89.possibilities.otherAlley.outcomes.0",
+    "events:83.possibilities.help.outcomes.1"
+   ],
+   "quotes": [
+    "Le roi est à la recherche d'un noble chevalier pour marier sa fille"
+   ]
+  },
+  {
+   "id": "la-princesse",
+   "name": "La Princesse",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Fille du roi, objet de la quête",
+   "description": "Fille du roi, « damoiselle en détresse » que le héros cherche à sauver/épouser. Son apparence réelle est inconnue du héros ; on n'aperçoit que ses fins doigts saluant le peuple depuis le carrosse royal.",
+   "locations": [
+    "Château royal"
+   ],
+   "sources": [
+    "events:61.text",
+    "events:46.possibilities.singRoyalty.outcomes.2",
+    "events:69.possibilities.accept.outcomes.2",
+    "events:89.possibilities.bow.outcomes.0",
+    "events:72.possibilities.joinPoetry.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "la-reine",
+   "name": "La Reine",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Mère de la princesse",
+   "description": "Mère de la princesse ; dans une hallucination de Pérotin, sa vie de reine paraît peu passionnante, faite de ragots et de pensées sur sa fille.",
+   "locations": [
+    "Château royal"
+   ],
+   "sources": [
+    "events:46.possibilities.singRoyalty.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "guide-du-chateau",
+   "name": "La jeune femme guide",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Guide d'accueil des aventuriers",
+   "description": "Jeune femme qui accueille les nouveaux aventuriers à l'entrée du château et leur donne leurs premiers conseils (commande report).",
+   "locations": [
+    "Château royal"
+   ],
+   "sources": [
+    "events:61.text",
+    "events:61.possibilities.follow.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "vieille-sorciere",
+   "name": "La vieille sorcière",
+   "aliases": [
+    "la sorcière"
+   ],
+   "named": false,
+   "category": "npc",
+   "role": "Sorcière guérisseuse accusée",
+   "description": "Vieille sorcière que le héros a souvent aidée à préparer ses potions. Régulièrement traînée devant la justice, elle est accusée par un seigneur d'avoir empoisonné son fils malade alors qu'elle tentait de le soigner ; elle peut disparaître dans un nuage de gaz ou maudire ceux qui la trahissent.",
+   "locations": [
+    "Château (aile ouest)"
+   ],
+   "sources": [
+    "events:83.text",
+    "events:83.possibilities.help.outcomes.1",
+    "events:83.possibilities.observe.outcomes.2",
+    "events:83.possibilities.accuse.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "bailli",
+   "name": "Le bailli",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Juge du seigneur",
+   "description": "Bailli qui rend la justice du seigneur dans l'aile ouest du château ; il refuse de juger la sorcellerie, prérogative du roi, et exige des témoignages en bonne et due forme.",
+   "locations": [
+    "Château (aile ouest)"
+   ],
+   "sources": [
+    "events:83.text",
+    "events:83.possibilities.help.outcomes.1",
+    "events:83.possibilities.accuse.outcomes.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "seigneur-accusateur",
+   "name": "Seigneur au fils malade",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Accusateur de la sorcière",
+   "description": "Seigneur qui accuse la vieille sorcière d'avoir aggravé l'état de son fils souffrant ; il récompense ceux qui témoignent en sa faveur.",
+   "locations": [
+    "Château (aile ouest)"
+   ],
+   "sources": [
+    "events:83.possibilities.help.outcomes.1",
+    "events:83.possibilities.accuse.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "seigneur-boug-coton",
+   "name": "Seigneur de Boug-Coton",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Seigneur du village",
+   "description": "Seigneur de Boug-Coton, en conflit avec le seigneur du village voisin ; faute de bons combattants, il cherche un champion pour un duel (parfois à mort) et propose d'adouber les vainqueurs.",
+   "locations": [
+    "Boug-Coton"
+   ],
+   "sources": [
+    "events:54.text",
+    "events:54.possibilities.help.text",
+    "events:54.possibilities.look.outcomes.6"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "seigneur-voisin-boug-coton",
+   "name": "Seigneur du village voisin de Boug-Coton",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Rival de Boug-Coton",
+   "description": "Seigneur rival dont le chevalier étranger, champion quasi invincible, affronte Boug-Coton en duel ; il peut être convaincu de négocier.",
+   "locations": [],
+   "sources": [
+    "events:54.text",
+    "events:54.possibilities.help.outcomes.3"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "chevalier-etranger",
+   "name": "Le chevalier étranger",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Champion du seigneur voisin",
+   "description": "Chevalier redoutable et arrogant, champion du seigneur voisin dans le duel de Boug-Coton ; il gagne en quelques secondes et humilie ses adversaires.",
+   "locations": [
+    "Boug-Coton"
+   ],
+   "sources": [
+    "events:54.possibilities.end.outcomes.0",
+    "events:54.possibilities.look.outcomes.5"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "chatelain-tyran",
+   "name": "Le châtelain tyrannique",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Seigneur oppresseur",
+   "description": "Châtelain d'un château voisin d'un village dont les habitants veulent se débarrasser ; il exécute les dissidents et est gardé par une trentaine d'hommes.",
+   "locations": [
+    "Village anonyme (événement 47)"
+   ],
+   "sources": [
+    "events:47.text",
+    "events:47.possibilities.tell.outcomes.1",
+    "events:47.possibilities.help.outcomes.4"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "chevalier-gardien-tour",
+   "name": "Le chevalier gardien de la tour",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Gardien d'un artefact",
+   "description": "Colosse en armure, souvent muet, gardant une tour qui renferme un artefact légendaire offrant richesse et pouvoir ; il récompense parfois le courage.",
+   "locations": [
+    "Tour de l'artefact"
+   ],
+   "sources": [
+    "events:48.text",
+    "events:48.possibilities.meetHim.outcomes.0",
+    "events:48.possibilities.fight.outcomes.5"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "duc-region-voisine",
+   "name": "Le duc de la région voisine",
+   "aliases": [],
+   "named": false,
+   "category": "royalty",
+   "role": "Duc mélomane",
+   "description": "Duc qui, touché par une chanson de Pérotin louant la royauté, récompense le héros d'une bourse d'or.",
+   "locations": [],
+   "sources": [
+    "events:46.possibilities.singRoyalty.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "capitaine-navire-ile",
+   "name": "Le capitaine du navire de l'île",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Passeur vers l'île",
+   "description": "Capitaine qui emmène les aventuriers vers une île mystérieuse et peu hospitalière, donne des conseils, puis les rapatrie en offrant bière ou lit dans sa cabine (ou les jette par-dessus bord).",
+   "locations": [
+    "L'île"
+   ],
+   "sources": [
+    "events:66.text",
+    "events:66.possibilities.hints.outcomes.0",
+    "events:67.text",
+    "events:67.possibilities.deny.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "capitaine-pirate",
+   "name": "Le capitaine pirate au tricorne",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Capitaine pirate",
+   "description": "Capitaine d'un bateau aux voiles noires et usées amarré à la Plage Sentinelle ; il invite à des fêtes au rhum et à des jeux douteux, et n'hésite pas à faire tirer au canon sur ceux qui refusent.",
+   "locations": [
+    "Plage Sentinelle"
+   ],
+   "sources": [
+    "events:75.text",
+    "events:75.possibilities.accept.outcomes.2",
+    "events:75.possibilities.refuse.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "homme-costume-rouge",
+   "name": "L'homme en costume rouge",
+   "aliases": [],
+   "named": false,
+   "category": "reference",
+   "role": "Père Noël (référence)",
+   "description": "Homme en costume rouge aperçu de nuit au château du Roi, laissant des milliers de cadeaux nominatifs sous un gigantesque sapin : clin d'œil au Père Noël.",
+   "locations": [
+    "Château royal"
+   ],
+   "sources": [
+    "events:65.text"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "dresseur-de-fauves",
+   "name": "Le dresseur de fauves",
+   "aliases": [],
+   "named": false,
+   "category": "reference",
+   "role": "Escroc de spectacle (parodie de Superman)",
+   "description": "Homme corpulent en costume rouge moulant à épaulettes jaunes, slip bleu par-dessus et écusson bleu roi (parodie de Superman). Il prétend dresser des bébés tigres qui sont en fait des chatons et fait payer pour les caresser.",
+   "locations": [
+    "Route des Merveilles"
+   ],
+   "sources": [
+    "events:73.text",
+    "events:73.possibilities.end.outcomes.0",
+    "events:73.possibilities.shame.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "femme-fruits-de-mer",
+   "name": "La femme aux fruits de mer",
+   "aliases": [],
+   "named": false,
+   "category": "spirit",
+   "role": "Mystérieuse cuisinière marine",
+   "description": "Étrange femme en robe à motifs d'écailles, cheveux emmêlés d'algues, au sourire édenté ; elle force les passants à goûter son plat de la mer, qui les transporte mystérieusement à bord d'un navire, et bombarde de poissons morts ceux qui refusent.",
+   "locations": [],
+   "sources": [
+    "events:74.text",
+    "events:74.possibilities.smell.outcomes.0",
+    "events:74.possibilities.run.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "aventurier-fouet",
+   "name": "L'aventurier au chapeau et au fouet",
+   "aliases": [],
+   "named": false,
+   "category": "reference",
+   "role": "Pilleur de tombes (référence à Indiana Jones)",
+   "description": "Individu coiffé d'un chapeau marron et portant un fouet à la ceinture qui attaque les intrus dans le labyrinthe-tombeau sous La Dune.",
+   "locations": [
+    "La Dune"
+   ],
+   "sources": [
+    "events:70.possibilities.explore.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "pilleuse-piolet",
+   "name": "La pilleuse au piolet",
+   "aliases": [],
+   "named": false,
+   "category": "reference",
+   "role": "Pilleuse de tombes (référence à Lara Croft)",
+   "description": "Femme armée d'un piolet et d'un arc qui surgit de la trappe du labyrinthe de La Dune et assomme le héros.",
+   "locations": [
+    "La Dune"
+   ],
+   "sources": [
+    "events:70.possibilities.end.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "freres-grimm",
+   "name": "Les frères Grimm",
+   "aliases": [],
+   "named": true,
+   "category": "reference",
+   "role": "Auteurs de contes (référence réelle)",
+   "description": "Auteurs du livre « Hansel et Gretel » lu par un habitué de la bibliothèque de Claire de Ville.",
+   "locations": [
+    "Claire de Ville"
+   ],
+   "sources": [
+    "events:68.possibilities.end.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "bibliothecaire-claire-de-ville",
+   "name": "La bibliothécaire de Claire de Ville",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Bibliothécaire",
+   "description": "Gardienne de la bibliothèque de Claire de Ville (entrée encadrée de hiboux de pierre) ; elle surprend les voleurs de livres et exige compensation.",
+   "locations": [
+    "Claire de Ville"
+   ],
+   "sources": [
+    "events:68.possibilities.steal.outcomes.2",
+    "events:68.possibilities.end.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "paysan-fourche",
+   "name": "Le paysan à la fourche",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Fermier",
+   "description": "Paysan dont la ferme aux abords de l'Étendue compte pâturages, vignoble et champ de blé ; il a perdu sa fourche préférée et récompense qui la retrouve.",
+   "locations": [
+    "L'Étendue"
+   ],
+   "sources": [
+    "events:62.text"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "berger-route-grimpante",
+   "name": "Le berger aux chèvres",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Berger transhumant",
+   "description": "Berger menant un grand troupeau de chèvres avec ses chiens sur la route grimpante, entre Claire de Ville, le Bois Hurlant et la Rivière aux Crabes.",
+   "locations": [
+    "Route grimpante"
+   ],
+   "sources": [
+    "events:79.text",
+    "events:79.possibilities.ask.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "coursier-lac-mirage",
+   "name": "Le coursier épuisé",
+   "aliases": [],
+   "named": false,
+   "category": "npc",
+   "role": "Coursier",
+   "description": "Coursier mal en point au bord du lac Mirage qui supplie de livrer un colis (une toile destinée à un peintre) à une maison isolée.",
+   "locations": [
+    "Lac Mirage"
+   ],
+   "sources": [
+    "events:53.text",
+    "events:53.possibilities.steal.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "garde-royale",
+   "name": "La Garde royale",
+   "aliases": [],
+   "named": true,
+   "category": "faction",
+   "role": "Armée d'élite du roi",
+   "description": "Cohorte de soldats et chevaliers escortant le roi et le carrosse de la famille royale dans la capitale ; elle emprisonne pour outrage et le roi propose d'y recruter les héros.",
+   "locations": [
+    "Cité royale"
+   ],
+   "sources": [
+    "events:89.text",
+    "events:89.possibilities.ignore.outcomes.2",
+    "events:89.possibilities.otherAlley.outcomes.0"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "culte-encapuchonne-boug-coton",
+   "name": "Les encapuchonnés de Boug-Coton",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Secte démoniaque",
+   "description": "Hommes en robes noires encapuchonnés se réunissant dans le sous-sol d'une grange de Boug-Coton ; selon les versions, simples parieurs de combats de coqs ou hérétiques sacrifiant la force vitale des habitants à un démon qu'ils vénèrent.",
+   "locations": [
+    "Boug-Coton"
+   ],
+   "sources": [
+    "events:63.text",
+    "events:63.possibilities.helpThem.outcomes.2",
+    "events:63.possibilities.warnEveryone.outcomes.1"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "demon-venere",
+   "name": "Le démon des encapuchonnés",
+   "aliases": [],
+   "named": false,
+   "category": "deity",
+   "role": "Démon vénéré",
+   "description": "Démon innommé auquel la secte de Boug-Coton veut sacrifier la force vitale des habitants ; les sacrifices restent sans effet.",
+   "locations": [
+    "Boug-Coton"
+   ],
+   "sources": [
+    "events:63.possibilities.helpThem.outcomes.2"
+   ],
+   "quotes": []
+  },
+  {
+   "id": "reseau-conspirateurs",
+   "name": "Le réseau des conspirateurs",
+   "aliases": [],
+   "named": false,
+   "category": "faction",
+   "role": "Conspiration anti-royale",
+   "description": "Réseau clandestin (marchandises, passage secret, quelqu'un à éliminer) lié à un attentat à l'arbalète contre la famille royale ; la voix de Price y est reconnue.",
+   "locations": [
+    "Cité royale"
+   ],
+   "sources": [
+    "events:89.possibilities.otherAlley.outcomes.4",
+    "events:89.possibilities.otherAlley.outcomes.0",
+    "events:82.possibilities.enterOpening.outcomes.1"
+   ],
+   "quotes": []
+  }
+ ],
+ "relations": [
+  {
+   "from": "perissien",
+   "to": "perotin",
+   "type": "mentor",
+   "label": "maître ménestrel de Pérotin",
+   "source": "events:46.possibilities.singWork.outcomes.1"
+  },
+  {
+   "from": "perissien",
+   "to": "gruffo",
+   "type": "mentor",
+   "label": "source des savoirs alchimiques de Gruffo",
+   "source": "events:56.possibilities.refuse.outcomes.2"
+  },
+  {
+   "from": "perotin",
+   "to": "gruffo",
+   "type": "other",
+   "label": "disciples du même maître Périssien",
+   "source": "events:56.possibilities.refuse.outcomes.2"
+  },
+  {
+   "from": "perotin",
+   "to": "player",
+   "type": "other",
+   "label": "drogue et fait vivre ses chansons au héros",
+   "source": "events:46.text"
+  },
+  {
+   "from": "perotin",
+   "to": "le-roi",
+   "type": "enemy",
+   "label": "rêve parfois de renverser le pouvoir en place",
+   "source": "events:46.possibilities.singRoyalty.outcomes.1"
+  },
+  {
+   "from": "perotin",
+   "to": "duc-region-voisine",
+   "type": "other",
+   "label": "sa chanson charme le duc",
+   "source": "events:46.possibilities.singRoyalty.outcomes.0"
+  },
+  {
+   "from": "gruffo",
+   "to": "player",
+   "type": "trades",
+   "label": "teste ses potions sur le héros",
+   "source": "events:56.text"
+  },
+  {
+   "from": "gruffo",
+   "to": "plage-sentinelle",
+   "type": "located",
+   "label": "tente sur une dune",
+   "source": "events:56.text"
+  },
+  {
+   "from": "lucya",
+   "to": "boug-coton",
+   "type": "located",
+   "label": "ancienne employée de la célèbre auberge",
+   "source": "events:72.possibilities.searchFood.outcomes.0"
+  },
+  {
+   "from": "lucya",
+   "to": "player",
+   "type": "ally",
+   "label": "offre nourriture au héros",
+   "source": "events:51.possibilities.goBack.outcomes.2"
+  },
+  {
+   "from": "xirtex",
+   "to": "xetrix",
+   "type": "family",
+   "label": "frères ermites séparés (implicite)",
+   "source": "events:71.possibilities.accept.outcomes.1"
+  },
+  {
+   "from": "xirtex",
+   "to": "vallee-des-rois",
+   "type": "located",
+   "label": "vit dans une oasis",
+   "source": "events:71.text"
+  },
+  {
+   "from": "xetrix",
+   "to": "mont-celestrum",
+   "type": "located",
+   "label": "papyrus et campement de la grotte",
+   "source": "events:51.possibilities.search.outcomes.1"
+  },
+  {
+   "from": "donia",
+   "to": "foret-du-vieillard",
+   "type": "located",
+   "label": "rôde dans la forêt",
+   "source": "events:69.text"
+  },
+  {
+   "from": "donia",
+   "to": "player",
+   "type": "other",
+   "label": "offre sa bénédiction pour la quête",
+   "source": "events:69.text"
+  },
+  {
+   "from": "donia",
+   "to": "la-princesse",
+   "type": "other",
+   "label": "offre une rose rouge pour la princesse",
+   "source": "events:69.possibilities.compromise.outcomes.0"
+  },
+  {
+   "from": "yseldia",
+   "to": "seigneur-claire-de-ville",
+   "type": "love",
+   "label": "épouse du Seigneur local",
+   "source": "events:72.possibilities.joinJoust.outcomes.0"
+  },
+  {
+   "from": "seigneur-claire-de-ville",
+   "to": "claire-de-ville",
+   "type": "rules",
+   "label": "seigneur local",
+   "source": "events:72.text"
+  },
+  {
+   "from": "yvain",
+   "to": "seigneur-claire-de-ville",
+   "type": "other",
+   "label": "jouteur du tournoi",
+   "source": "events:72.possibilities.joinJoust.outcomes.1"
+  },
+  {
+   "from": "comte-region-voisine",
+   "to": "player",
+   "type": "rival",
+   "label": "finale de joute",
+   "source": "events:72.possibilities.joinJoust.outcomes.0"
+  },
+  {
+   "from": "minou",
+   "to": "parziter",
+   "type": "serves",
+   "label": "chat de Parziter",
+   "source": "events:76.possibilities.help.outcomes.3"
+  },
+  {
+   "from": "parziter",
+   "to": "foret-celestrum",
+   "type": "located",
+   "label": "maison en ruine près d'une rivière",
+   "source": "events:76.text"
+  },
+  {
+   "from": "price",
+   "to": "player",
+   "type": "knows",
+   "label": "ami du héros, achète son silence",
+   "source": "events:82.possibilities.end.outcomes.0"
+  },
+  {
+   "from": "price",
+   "to": "reseau-conspirateurs",
+   "type": "member",
+   "label": "voix reconnue dans le complot",
+   "source": "events:89.possibilities.otherAlley.outcomes.4"
+  },
+  {
+   "from": "reseau-conspirateurs",
+   "to": "le-roi",
+   "type": "enemy",
+   "label": "attentat contre la famille royale",
+   "source": "events:89.possibilities.otherAlley.outcomes.0"
+  },
+  {
+   "from": "maurice",
+   "to": "port-quais",
+   "type": "located",
+   "label": "bête rare des quais",
+   "source": "events:84.possibilities.compete.outcomes.3"
+  },
+  {
+   "from": "maitre-concours-crabes",
+   "to": "maurice",
+   "type": "other",
+   "label": "récompense qui pêche Maurice",
+   "source": "events:84.possibilities.compete.outcomes.3"
+  },
+  {
+   "from": "le-roi",
+   "to": "la-princesse",
+   "type": "family",
+   "label": "père ; cherche un chevalier pour la marier",
+   "source": "events:61.text"
+  },
+  {
+   "from": "la-reine",
+   "to": "la-princesse",
+   "type": "family",
+   "label": "mère",
+   "source": "events:46.possibilities.singRoyalty.outcomes.2"
+  },
+  {
+   "from": "la-reine",
+   "to": "le-roi",
+   "type": "love",
+   "label": "reine",
+   "source": "events:46.possibilities.singRoyalty.outcomes.2"
+  },
+  {
+   "from": "le-roi",
+   "to": "player",
+   "type": "employs",
+   "label": "organise le concours et confie des missions",
+   "source": "events:60.text"
+  },
+  {
+   "from": "player",
+   "to": "la-princesse",
+   "type": "love",
+   "label": "quête pour la main de la princesse",
+   "source": "events:61.text"
+  },
+  {
+   "from": "guide-du-chateau",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "accueille les candidats au château",
+   "source": "events:61.text"
+  },
+  {
+   "from": "le-roi",
+   "to": "chateau-royal",
+   "type": "rules",
+   "label": "château et fêtes royales",
+   "source": "events:64.text"
+  },
+  {
+   "from": "homme-costume-rouge",
+   "to": "le-roi",
+   "type": "other",
+   "label": "dépose des cadeaux au château",
+   "source": "events:65.text"
+  },
+  {
+   "from": "garde-royale",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "escorte le roi",
+   "source": "events:89.possibilities.ignore.outcomes.3"
+  },
+  {
+   "from": "vieille-sorciere",
+   "to": "player",
+   "type": "ally",
+   "label": "le héros l'a souvent aidée à préparer ses potions",
+   "source": "events:83.text"
+  },
+  {
+   "from": "seigneur-accusateur",
+   "to": "vieille-sorciere",
+   "type": "enemy",
+   "label": "l'accuse d'avoir empoisonné son fils",
+   "source": "events:83.possibilities.help.outcomes.1"
+  },
+  {
+   "from": "bailli",
+   "to": "vieille-sorciere",
+   "type": "other",
+   "label": "la juge",
+   "source": "events:83.text"
+  },
+  {
+   "from": "bailli",
+   "to": "le-roi",
+   "type": "serves",
+   "label": "la sorcellerie relève de la seule volonté du roi",
+   "source": "events:83.possibilities.help.outcomes.1"
+  },
+  {
+   "from": "seigneur-boug-coton",
+   "to": "boug-coton",
+   "type": "rules",
+   "label": "seigneur des lieux",
+   "source": "events:54.text"
+  },
+  {
+   "from": "seigneur-boug-coton",
+   "to": "seigneur-voisin-boug-coton",
+   "type": "rival",
+   "label": "conflit réglé par duel",
+   "source": "events:54.text"
+  },
+  {
+   "from": "chevalier-etranger",
+   "to": "seigneur-voisin-boug-coton",
+   "type": "serves",
+   "label": "champion",
+   "source": "events:54.possibilities.help.outcomes.3"
+  },
+  {
+   "from": "culte-encapuchonne-boug-coton",
+   "to": "demon-venere",
+   "type": "worships",
+   "label": "sacrifices au démon",
+   "source": "events:63.possibilities.helpThem.outcomes.2"
+  },
+  {
+   "from": "culte-encapuchonne-boug-coton",
+   "to": "boug-coton",
+   "type": "located",
+   "label": "sous-sol d'une grange",
+   "source": "events:63.text"
+  },
+  {
+   "from": "chatelain-tyran",
+   "to": "player",
+   "type": "enemy",
+   "label": "les villageois demandent au héros de l'éliminer",
+   "source": "events:47.text"
+  },
+  {
+   "from": "chevalier-gardien-tour",
+   "to": "tour-artefact",
+   "type": "located",
+   "label": "garde l'entrée",
+   "source": "events:48.text"
+  },
+  {
+   "from": "capitaine-navire-ile",
+   "to": "ile-mysterieuse",
+   "type": "other",
+   "label": "fait la traversée vers l'île",
+   "source": "events:66.text"
+  },
+  {
+   "from": "capitaine-pirate",
+   "to": "plage-sentinelle",
+   "type": "located",
+   "label": "navire aux voiles noires amarré",
+   "source": "events:75.text"
+  },
+  {
+   "from": "dresseur-de-fauves",
+   "to": "route-des-merveilles",
+   "type": "located",
+   "label": "spectacle de « tigres »",
+   "source": "events:73.text"
+  },
+  {
+   "from": "aventurier-fouet",
+   "to": "labyrinthe-la-dune",
+   "type": "located",
+   "label": "attaque les intrus",
+   "source": "events:70.possibilities.explore.outcomes.2"
+  },
+  {
+   "from": "pilleuse-piolet",
+   "to": "labyrinthe-la-dune",
+   "type": "located",
+   "label": "surgit de la trappe",
+   "source": "events:70.possibilities.end.outcomes.2"
+  },
+  {
+   "from": "bibliothecaire-claire-de-ville",
+   "to": "claire-de-ville",
+   "type": "located",
+   "label": "bibliothèque aux hiboux",
+   "source": "events:68.text"
+  },
+  {
+   "from": "paysan-fourche",
+   "to": "l-etendue",
+   "type": "located",
+   "label": "ferme aux abords",
+   "source": "events:62.text"
+  },
+  {
+   "from": "coursier-lac-mirage",
+   "to": "lac-mirage",
+   "type": "located",
+   "label": "au bord du lac",
+   "source": "events:53.text"
+  },
+  {
+   "from": "lucya",
+   "to": "claire-de-ville",
+   "type": "located",
+   "label": "cuisine de rue pendant le tournoi",
+   "source": "events:72.possibilities.searchFood.outcomes.0"
+  }
+ ],
+ "places": [
+  {
+   "id": "boug-coton",
+   "name": "Boug-Coton",
+   "description": "Village doté d'une célèbre auberge (où travailla Lucya) et d'un seigneur en conflit avec le village voisin ; théâtre de rumeurs de rituels démoniaques dans une grange.",
+   "sources": [
+    "events:52.text",
+    "events:54.text",
+    "events:63.text",
+    "events:72.possibilities.searchFood.outcomes.0"
+   ]
+  },
+  {
+   "id": "village-coco",
+   "name": "Village Coco",
+   "description": "Petit hameau-oasis chaud planté de cocotiers, dont les villageois récoltent des noix de coco au jus réputé dans tout le pays.",
+   "sources": [
+    "events:50.text"
+   ]
+  },
+  {
+   "id": "mont-celestrum",
+   "name": "Mont Célestrum",
+   "description": "Mont au flanc duquel est taillé un escalier tortueux et coupant menant à une grotte abritant un très ancien campement (lié à Xetrix).",
+   "sources": [
+    "events:51.text",
+    "events:51.possibilities.stairs.outcomes.0"
+   ]
+  },
+  {
+   "id": "foret-celestrum",
+   "name": "Forêt Celestrum",
+   "description": "Forêt aux sentiers sinueux, avec une rivière scintillante, la maison en ruine de Parziter et des ruines où des bandits se disputent des coffres.",
+   "sources": [
+    "events:76.text",
+    "events:77.text"
+   ]
+  },
+  {
+   "id": "lac-mirage",
+   "name": "Lac Mirage",
+   "description": "Vaste lac aux reflets changeants et brumeux, avec ponton, cabane abandonnée, créatures aquatiques étranges et reflets qui parlent ; ne pas pêcher à la pleine lune.",
+   "sources": [
+    "events:53.text",
+    "events:86.text",
+    "events:86.possibilities.cabin.outcomes.0"
+   ]
+  },
+  {
+   "id": "plage-sentinelle",
+   "name": "Plage Sentinelle",
+   "description": "Plage iodée de dunes et rochers peuplée de bernard-l'hermite ; Gruffo y plante sa tente et un navire pirate y mouille.",
+   "sources": [
+    "events:49.text",
+    "events:56.text",
+    "events:75.text"
+   ]
+  },
+  {
+   "id": "route-marecageuse",
+   "name": "Route marécageuse",
+   "description": "Route à travers les marais menant à un carrefour, vers la hutte de l'alchimiste Gruffo ou un raccourci au pont délabré.",
+   "sources": [
+    "events:58.text"
+   ]
+  },
+  {
+   "id": "chateau-royal",
+   "name": "Château du Roi",
+   "description": "Château aux immenses murailles où le roi accueille les candidats au concours, donne des fêtes et où le bailli rend la justice (aile ouest).",
+   "sources": [
+    "events:60.text",
+    "events:61.text",
+    "events:64.text",
+    "events:65.text",
+    "events:83.text"
+   ]
+  },
+  {
+   "id": "cite-royale",
+   "name": "Cité royale (capitale)",
+   "description": "Ville fortifiée entourant le château royal, avec rue marchande, pavillon royal, parades de la Garde royale ; une fissure de la muraille cache un tunnel de contrebande.",
+   "sources": [
+    "events:82.text",
+    "events:89.text"
+   ]
+  },
+  {
+   "id": "claire-de-ville",
+   "name": "Claire de Ville",
+   "description": "Ville à grandes murailles avec une bibliothèque gardée par deux hiboux de pierre (calendrier : laponaire, 6e mois, saison des herboristes ; Foire des conteurs) ; accueille un tournoi seigneurial.",
+   "sources": [
+    "events:68.text",
+    "events:68.possibilities.checkDate.outcomes.1",
+    "events:68.possibilities.checkDate.outcomes.3",
+    "events:72.text"
+   ]
+  },
+  {
+   "id": "foret-du-vieillard",
+   "name": "Forêt du Vieillard",
+   "description": "Forêt où l'on croise Donia la Fae et des clairières pleines de guêpes.",
+   "sources": [
+    "events:69.text"
+   ]
+  },
+  {
+   "id": "la-dune",
+   "name": "La Dune",
+   "description": "Désert de sable et de tempêtes cachant une trappe vers un immense labyrinthe-tombeau.",
+   "sources": [
+    "events:70.text"
+   ]
+  },
+  {
+   "id": "labyrinthe-la-dune",
+   "name": "Labyrinthe-tombeau de La Dune",
+   "description": "Dédale funéraire souterrain aux couloirs changeants, avec une salle tout en or et un sphinx doré piégé.",
+   "sources": [
+    "events:70.possibilities.explore.outcomes.1",
+    "events:70.possibilities.explore.outcomes.5"
+   ]
+  },
+  {
+   "id": "vallee-des-rois",
+   "name": "Vallée des Rois",
+   "description": "Région désertique avec une oasis où vit l'ermite Xirtex.",
+   "sources": [
+    "events:71.text"
+   ]
+  },
+  {
+   "id": "route-des-merveilles",
+   "name": "Route des Merveilles",
+   "description": "Route où se produisent des saltimbanques comme le dresseur de « tigres ».",
+   "sources": [
+    "events:73.text"
+   ]
+  },
+  {
+   "id": "riviere-aux-crabes",
+   "name": "Rivière aux Crabes",
+   "description": "Rivière enjambée par un pont, peuplée de crabes géants (rouge-orangé non comestibles, rouge et noir), au pied de la route grimpante.",
+   "sources": [
+    "events:57.possibilities.findMeal.outcomes.1",
+    "events:78.text"
+   ]
+  },
+  {
+   "id": "bois-hurlant",
+   "name": "Bois Hurlant",
+   "description": "Bois accessible depuis la route grimpante, destination de transhumance.",
+   "sources": [
+    "events:78.possibilities.prudent.outcomes.1",
+    "events:79.possibilities.ask.outcomes.1"
+   ]
+  },
+  {
+   "id": "route-grimpante",
+   "name": "Route grimpante",
+   "description": "Route reliant la Rivière aux Crabes, Claire de Ville et le Bois Hurlant, sujette au brouillard.",
+   "sources": [
+    "events:78.text",
+    "events:79.text"
+   ]
+  },
+  {
+   "id": "l-etendue",
+   "name": "L'Étendue",
+   "description": "Région agricole de pâturages, vignobles et champs de blé.",
+   "sources": [
+    "events:62.text"
+   ]
+  },
+  {
+   "id": "ile-mysterieuse",
+   "name": "L'île",
+   "description": "Île à la fois minuscule et immense, chaleureuse et glaciale, peu hospitalière, rejointe en bateau.",
+   "sources": [
+    "events:66.text",
+    "events:67.text"
+   ]
+  },
+  {
+   "id": "port-quais",
+   "name": "Le port (quais)",
+   "description": "Quais bruyants où se tient un concours de pêche au crabe ; repaire de Maurice.",
+   "sources": [
+    "events:84.text"
+   ]
+  },
+  {
+   "id": "tour-artefact",
+   "name": "Tour de l'artefact",
+   "description": "Tour gardée par un chevalier, censée renfermer un artefact légendaire offrant richesse et pouvoir.",
+   "sources": [
+    "events:48.text"
+   ]
+  },
+  {
+   "id": "maison-hantee-brume",
+   "name": "Demeure hantée dans la brume",
+   "description": "Vieille demeure délabrée hors de la réalité, peuplée de spectres, citrouille animée, créatures de feu et de glace, chauves-souris.",
+   "sources": [
+    "events:80.text",
+    "events:81.text"
+   ]
+  },
+  {
+   "id": "corridor-marchand",
+   "name": "Corridor marchand abandonné",
+   "description": "Ancien passage rocheux de marchands, désormais repaire de bandits qui tendent des pièges de chaînes.",
+   "sources": [
+    "events:85.text"
+   ]
+  }
+ ]
+}

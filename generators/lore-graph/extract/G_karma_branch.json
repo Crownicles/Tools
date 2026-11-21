@@ -1,0 +1,58 @@
+{
+ "characters": [
+  {
+   "id": "baron-almerac",
+   "name": "Baron Almerac",
+   "aliases": [
+    "le baron Almerac",
+    "Almerac"
+   ],
+   "named": true,
+   "category": "royalty",
+   "role": "Baron de Mergagnan (défunt)",
+   "description": "Faisait bâtir une halle de pierre dans les ruelles de Mergagnan. À sa mort, l'argent a cessé de rentrer, les compagnons ont déserté et le chantier est resté à l'abandon avec ses registres. Ses comptes parlent de deniers coupés et d'intérêts impayés. Une fièvre des marais a peut-être aussi frappé le chantier. Introduit par la réécriture de l'event 18 (branche outcomerequirements, pas encore sur develop).",
+   "locations": [
+    "Chantier d'Almerac"
+   ],
+   "sources": [
+    "outcomerequirements/events:18.text",
+    "outcomerequirements/events:18.possibilities.investigate.outcomes.0",
+    "outcomerequirements/events:18.possibilities.investigate.outcomes.1"
+   ],
+   "quotes": []
+  }
+ ],
+ "places": [
+  {
+   "id": "chantier-almerac",
+   "name": "Chantier d'Almerac",
+   "description": "Chantier abandonné d'une halle de pierre dans les ruelles de Mergagnan : poutres noircies, échafauds grinçants, outils rouillés, registres restés sur place. (Event 18 réécrit, branche outcomerequirements.)",
+   "sources": [
+    "outcomerequirements/events:18.text"
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "from": "chantier-almerac",
+   "to": "mergagnan",
+   "type": "located",
+   "label": "dans les ruelles de Mergagnan",
+   "source": "outcomerequirements/events:18.text"
+  },
+  {
+   "from": "baron-almerac",
+   "to": "chantier-almerac",
+   "type": "created",
+   "label": "faisait bâtir la halle",
+   "source": "outcomerequirements/events:18.text"
+  },
+  {
+   "from": "sir-rowan",
+   "to": "chevaliers-gardes",
+   "type": "mentor",
+   "label": "a formé un garde de Claire de Ville (sa patience)",
+   "source": "outcomerequirements/events:13.possibilities.helpCityGuards.outcomes.7"
+  }
+ ]
+}

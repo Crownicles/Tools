@@ -1,0 +1,230 @@
+{
+ "characters": [],
+ "places": [],
+ "relations": [
+  {
+   "from": "cour-du-chateau",
+   "to": "chateau-royal",
+   "type": "located",
+   "label": "cour intérieure du château",
+   "source": "models:map_locations.41"
+  },
+  {
+   "from": "portes-du-chateau",
+   "to": "chateau-royal",
+   "type": "located",
+   "label": "entrée du château",
+   "source": "models:map_locations.28"
+  },
+  {
+   "from": "salle-de-reception",
+   "to": "chateau-royal",
+   "type": "located",
+   "label": "salle du château",
+   "source": "models:map_locations.29"
+  },
+  {
+   "from": "salle-aux-tresors-du-roi",
+   "to": "chateau-royal",
+   "type": "located",
+   "label": "salle du château",
+   "source": "models:map_locations"
+  },
+  {
+   "from": "chateau-royal",
+   "to": "cite-royale",
+   "type": "located",
+   "label": "au cœur de la cité royale",
+   "source": "events:82.text"
+  },
+  {
+   "from": "ile-volcanique",
+   "to": "iles-mysterieuses",
+   "type": "located",
+   "label": "une des îles mystérieuses",
+   "source": "models:map_locations.1000"
+  },
+  {
+   "from": "ile-de-glace",
+   "to": "iles-mysterieuses",
+   "type": "located",
+   "label": "une des îles mystérieuses",
+   "source": "models:map_locations.1100"
+  },
+  {
+   "from": "ile-maritime",
+   "to": "iles-mysterieuses",
+   "type": "located",
+   "label": "une des îles mystérieuses",
+   "source": "models:map_locations.1200"
+  },
+  {
+   "from": "marchand-araj",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-belethor",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-bernard",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-bugri",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-didier",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-faras",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-finn",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-georges",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-kikolou",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-kilton",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-lavio",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-louis",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-marco",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-russel",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-terry",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-ullure",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchand-vivian",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible du marchand ambulant",
+   "source": "smallEvents:shop.names_m"
+  },
+  {
+   "from": "marchande-cremia",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible de la marchande ambulante",
+   "source": "smallEvents:shop.names_f"
+  },
+  {
+   "from": "marchande-ember",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible de la marchande ambulante",
+   "source": "smallEvents:shop.names_f"
+  },
+  {
+   "from": "marchande-embry",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible de la marchande ambulante",
+   "source": "smallEvents:shop.names_f"
+  },
+  {
+   "from": "marchande-emirel",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible de la marchande ambulante",
+   "source": "smallEvents:shop.names_f"
+  },
+  {
+   "from": "marchande-fouyaya",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible de la marchande ambulante",
+   "source": "smallEvents:shop.names_f"
+  },
+  {
+   "from": "marchande-fressah",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible de la marchande ambulante",
+   "source": "smallEvents:shop.names_f"
+  },
+  {
+   "from": "marchande-karine",
+   "to": "marchands-ambulants",
+   "type": "member",
+   "label": "nom possible de la marchande ambulante",
+   "source": "smallEvents:shop.names_f"
+  }
+ ]
+}
