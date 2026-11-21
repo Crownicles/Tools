@@ -13,7 +13,27 @@
 
 Plages `{"min": x, "max": y}` (bornes incluses, l'une ou l'autre facultative) : `level`, `karma`, `health` (vie actuelle), `attack`, `defense`, `speed` (statistiques avec l'équipement). Listes : `validClassIds`, `validPetTypeIds` (le joueur doit avoir un familier de ce type). `petRarity` : plage sur la rareté du familier (il en faut un). `campaignCurrentMissionId` : n'y touche pas.
 
-Seuils utilisés par les events déjà réécrits : niveau `min` 40 à 80 ou `max` 25 à 30 ; attaque `min` 200 à 350 ; vitesse `min` 200 à 300 ; défense `min` 200 à 400 ; karma `min` 0, 50, 80 ou 100, `max` -30 ou -50 ; rareté de familier `min` 2 à 4.
+### Seuils calés sur les joueurs réguliers en production
+
+Mesuré le 21/11/2026 sur les **130 joueurs réguliers** (au moins 3 jours de jeu sur les 14 derniers), stats calculées par le code du jeu, équipement et potion compris. Médianes : niveau 96, attaque 440, défense 340, vitesse 135.
+
+**L'échelle est exigeante** : être dans le premier quart, c'est juste « correct » ; « fort » veut dire vraiment fort (premier dixième) ; « exceptionnel », les tout meilleurs. Choisis le mot du texte en fonction du seuil, et inversement.
+
+| Le texte décrit… | niveau | attaque | défense | vitesse | joueurs réguliers |
+|---|---|---|---|---|---|
+| un débutant | `max` 30 | `max` 90 | `max` 60 | `max` 10 | 10 % |
+| un joueur encore faible | `max` 55 | `max` 230 | `max` 180 | `max` 40 | 25 % |
+| un joueur correct, pas nul | `min` 120 | `min` 600 | `min` 520 | `min` 350 | 25 % |
+| un joueur fort, un vétéran | `min` 130 | `min` 700 | `min` 740 | `min` 500 | 10 % |
+| un joueur exceptionnel, une légende | `min` 140 | `min` 780 | `min` 860 | `min` 560 | 5 % |
+
+Un niveau 60 est encore le début du jeu pour un joueur régulier : ne le décris jamais comme expérimenté.
+
+Autres repères :
+- **Beaucoup de joueurs sont encore Recrue** (classe 0). Une condition sur une seule classe avancée concerne 1 à 3 % des joueurs : c'est voulu, des issues rares rendent l'event plus riche.
+- **51 % des joueurs ont un familier.** Un type précis (Chien, Perroquet, Singe…) concerne 0 à 2 % des joueurs : c'est voulu aussi, une part de joueurs concernés très variable d'une issue à l'autre est une bonne chose. Les plus fréquents chez les joueurs : Fantôme (100), Tigre (56), Vampire (101), Jack-o'-lantern (99), Licorne (63), Stitch (66), Bœuf (8), Lion (57), Caniche (2), Porc (9), T-Rex (65), Rongeur (5), Alien (70), Chat noir (4), Chauve-souris (27), Loup (28), Serpent (15), Léopard (60).
+- **Le karma n'existe pas encore en production : tout le monde partira de 0.** Une issue rapporte en général 1 à 5 points. Les seuils de karma restent ceux des events déjà réécrits (`min` 0, 50, 80 ou 100, `max` -30 ou -50) : ces issues se débloquent avec le temps.
+- Les seuils de niveau et de statistiques suivent l'échelle ci-dessus et correspondent au texte. Le script `reach.py` (hors dépôt) donne, pour un event, la part des joueurs réguliers qui peuvent obtenir chaque issue.
 
 ## Karma
 

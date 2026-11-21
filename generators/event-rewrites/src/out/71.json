@@ -9,7 +9,7 @@
     "0": "Sous la tente, Xirtex vous sert une soupe de peyotl. Vous la buvez par politesse. Bientôt, le sol se met à tanguer. En cherchant la sortie, vous vous cognez l'épaule contre un piquet. Dehors, la nausée vous cloue au sol et une migraine tenace s'installe.",
     "1": "Xirtex a entendu du bien de vous et se confie pendant le repas. Son frère Xetrix et lui sont les seuls de leur famille à être revenus du Célestrum. Il accuse Xetrix de ce désastre. Vous dormez bien et reprenez des forces. Au réveil, vous secouez un scorpion hors de votre botte.",
     "2": "Vous partagez une galette et un ragoût avec Xirtex à l'entrée de sa tente. Vous lui racontez vos voyages. Il rit à chaque histoire, souvent avant la fin. Le repas vous rend des forces pour la suite de la traversée.",
-    "3": "À l'odeur, vous reconnaissez le peyotl dans le bol que Xirtex vous tend. Vous demandez plutôt ce qui mijote dans la petite marmite : un ragoût, qui vous rend des forces. Amusé de vous voir saucer avec un bout de galette, Xirtex vous ressert.",
+    "3": "Vous avez beaucoup voyagé. À l'odeur, vous reconnaissez le peyotl dans le bol que Xirtex vous tend. Vous demandez plutôt ce qui mijote dans la petite marmite : un ragoût, qui vous rend des forces. Amusé de vous voir saucer avec un bout de galette, Xirtex vous ressert.",
     "4": "Pendant le repas, votre scorpion se glisse sous le bol de Xirtex. L'ermite n'ose plus y toucher. Il éclate de rire et va chercher un autre bol. Vous partagez avec lui une soupe claire et une galette chaude qui vous redonnent des forces.",
     "5": "Après le repas, Xirtex vous indique un passage entre les dunes. Vous suivez les premières traces de pas venues, sans vérifier où elles mènent. Elles s'arrêtent au pied d'un tombeau. Quand vous vous retournez, la tente a disparu derrière les dunes."
    }
@@ -82,7 +82,7 @@
      "3": {
       "requirements": {
        "level": {
-        "min": 60
+        "min": 130
        }
       },
       "health": 55
@@ -98,7 +98,7 @@
      "5": {
       "requirements": {
        "level": {
-        "max": 25
+        "max": 30
        }
       },
       "effect": "lost"
@@ -120,7 +120,7 @@
      "3": {
       "requirements": {
        "level": {
-        "max": 30
+        "max": 55
        }
       },
       "effect": "occupied",
@@ -166,7 +166,7 @@
      "3": {
       "requirements": {
        "speed": {
-        "min": 220
+        "min": 350
        }
       },
       "karma": 2
@@ -188,7 +188,7 @@
      "0": {
       "requirements": {
        "attack": {
-        "min": 250
+        "min": 700
        }
       },
       "money": 525,
@@ -223,7 +223,7 @@
      "4": {
       "requirements": {
        "defense": {
-        "min": 220
+        "min": 520
        }
       },
       "money": 180,
@@ -251,7 +251,7 @@
      "1": {
       "requirements": {
        "attack": {
-        "min": 260
+        "min": 700
        }
       },
       "effect": "occupied",
@@ -297,6 +297,7 @@
   "Conserve les quatre branches et toutes les mécaniques d'origine ; distingue les deux repas réparateurs par la confidence de Xirtex et la scène du scorpion.",
   "Montre les conditions dans les gestes et les réactions : témoignages des voyageurs, ombre sur la toile, brassard, familiers et pierre résonante. Les coups, vols et gestes d'aide ont un effet sur le karma.",
   "Ajoute une possibilité d'entraide autour de la rigole, à l'échelle de l'oasis. Chaque branche garde au moins une issue sans condition.",
-  "Relecture : mots rares ou ambigus remplacés (gîte, montant, écuelle, passe, vasque, somme, maugréer, carnet de bêtes), phrases alambiquées découpées (ponctuer chaque péripétie, sur la foi des gens de passage, bol pour chacun), scènes rendues plus crédibles (fouille du sac au lieu des nœuds de la tente, bouillon et croquis mieux amenés, bourse de noyaux claire), décor superflu retiré du refus poli ; aucune donnée modifiée, les conditions collant déjà aux textes."
+  "Relecture : mots rares ou ambigus remplacés (gîte, montant, écuelle, passe, vasque, somme, maugréer, carnet de bêtes), phrases alambiquées découpées (ponctuer chaque péripétie, sur la foi des gens de passage, bol pour chacun), scènes rendues plus crédibles (fouille du sac au lieu des nœuds de la tente, bouillon et croquis mieux amenés, bourse de noyaux claire), décor superflu retiré du refus poli ; aucune donnée modifiée, les conditions collant déjà aux textes.",
+  "Seuils : niveau et statistiques calés sur le barème des joueurs réguliers. Voyageur qui reconnaît le peyotl : vétéran, niveau 130 et plus (au lieu de 60), le texte le dit. Débutant qui suit de fausses traces ou trahit son vol par son ombre : niveau 30 et moins (au lieu de 25 et 30). Joueur encore faible à qui Xirtex fait la leçon : niveau 55 et moins (au lieu de 30). Coup qui assomme et dalle soulevée seul : joueur fort, attaque 700 (au lieu de 250 et 260). Brassard qui arrête les coups : défense correcte, 520 (au lieu de 220). Linge rattrapé de justesse : vitesse correcte, 350 (au lieu de 220). Karma, familiers et classe inchangés."
  ]
 }

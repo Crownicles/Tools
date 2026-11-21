@@ -119,7 +119,7 @@
           "5": {
             "requirements": {
               "attack": {
-                "min": 250
+                "min": 700
               }
             },
             "money": 220,
@@ -157,7 +157,7 @@
           "3": {
             "requirements": {
               "level": {
-                "max": 25
+                "max": 30
               }
             },
             "randomItem": {},
@@ -188,7 +188,7 @@
           "1": {
             "requirements": {
               "level": {
-                "max": 40
+                "max": 30
               }
             },
             "karma": -3
@@ -196,7 +196,7 @@
           "2": {
             "requirements": {
               "speed": {
-                "min": 250
+                "min": 350
               }
             },
             "money": 180,
@@ -224,7 +224,7 @@
           "5": {
             "requirements": {
               "defense": {
-                "min": 250
+                "min": 520
               }
             },
             "karma": -5,
@@ -241,7 +241,7 @@
           "1": {
             "requirements": {
               "speed": {
-                "min": 220
+                "min": 350
               }
             },
             "randomItem": {},
@@ -251,7 +251,7 @@
           "2": {
             "requirements": {
               "level": {
-                "max": 25
+                "max": 55
               }
             },
             "money": 30,
@@ -277,7 +277,7 @@
           "1": {
             "requirements": {
               "level": {
-                "max": 50
+                "max": 55
               }
             },
             "money": -300
@@ -294,7 +294,7 @@
           "3": {
             "requirements": {
               "attack": {
-                "min": 250
+                "min": 600
               }
             },
             "money": 60,
@@ -320,6 +320,7 @@
     "Vol : karma négatif sur chaque tentative ; vitesse haute (butin), familier singe/corbeau, défense haute (coup encaissé), karma très bas (bourse piégée, Price vous connaît), débutant (Price laisse partir).",
     "Nouvelle possibilité « follow » (Le suivre discrètement) : filature qui échoue, rencontre à la remise à filets, Price amusé par un débutant, ruelle hostile pour un karma bas (effet scared). Pas de dévoilement de lore.",
     "Possibilité « end » enrichie (agression pour niveau modéré, groupe qui s'écarte pour un karma élevé, agresseurs mis en fuite pour une attaque haute). Style : pas de discours direct, apostrophes droites, aucune destination supposée.",
-    "Relecture : vocabulaire simplifié (chaudrée, peu amène, denier, hématome, rutilante, s'accroche à l'addition), expressions fabriquées et phrases alambiquées réécrites (cliquetis, coup de manche, échanges), décor superflu retiré des issues ; réactions rendues plausibles (repas familier : prime partagée pour une caisse retrouvée ; repas karma élevé : course payée ; escorte karma élevé : marchand reconnaissant, Price renonce à son salaire ; Price qui ne voit pas le vol au lieu de hausser les épaules) ; conditions montrées (débutant, reconnu, geste vif) ; l'épée dans le rocher (+350) n'est plus réservée aux bas niveaux, rien dans le texte ne justifiant une récompense plus forte pour un joueur plus faible."
+    "Relecture : vocabulaire simplifié (chaudrée, peu amène, denier, hématome, rutilante, s'accroche à l'addition), expressions fabriquées et phrases alambiquées réécrites (cliquetis, coup de manche, échanges), décor superflu retiré des issues ; réactions rendues plausibles (repas familier : prime partagée pour une caisse retrouvée ; repas karma élevé : course payée ; escorte karma élevé : marchand reconnaissant, Price renonce à son salaire ; Price qui ne voit pas le vol au lieu de hausser les épaules) ; conditions montrées (débutant, reconnu, geste vif) ; l'épée dans le rocher (+350) n'est plus réservée aux bas niveaux, rien dans le texte ne justifiant une récompense plus forte pour un joueur plus faible.",
+    "Seuils : conditions de niveau et de statistiques recalées sur le barème des joueurs réguliers. Fort : attaque 700 pour les deux brigands mis à terre avant que Price dégaine. Correct : attaque 600 pour les agresseurs mis en fuite à la fin, vitesse 350 pour le vol d'un geste vif et pour la filature qui suit Price, défense 520 pour l'armure qui encaisse le coup. Débutant : niveau 30 au plus pour les conseils du repas et le vol maladroit. Encore faible : niveau 55 au plus pour la filature maladroite et la proie facile. Conditions de karma et de familier inchangées."
   ]
 }

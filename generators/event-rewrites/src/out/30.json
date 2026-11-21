@@ -92,7 +92,7 @@
      "2": {
       "requirements": {
        "level": {
-        "max": 25
+        "max": 30
        }
       },
       "effect": "jailed"
@@ -121,7 +121,7 @@
      "5": {
       "requirements": {
        "level": {
-        "min": 100
+        "min": 130
        }
       },
       "effect": "occupied",
@@ -198,7 +198,7 @@
      "6": {
       "requirements": {
        "level": {
-        "max": 25
+        "max": 55
        }
       },
       "effect": "occupied",
@@ -244,7 +244,7 @@
      "3": {
       "requirements": {
        "attack": {
-        "min": 250
+        "min": 700
        }
       },
       "effect": "occupied",
@@ -284,7 +284,7 @@
      "6": {
       "requirements": {
        "level": {
-        "min": 100
+        "min": 130
        }
       },
       "effect": "drunk",
@@ -299,7 +299,7 @@
      "0": {
       "requirements": {
        "speed": {
-        "max": 199
+        "max": 40
        }
       },
       "effect": "jailed",
@@ -316,7 +316,7 @@
      "3": {
       "requirements": {
        "speed": {
-        "min": 250
+        "min": 500
        }
       },
       "health": 10,
@@ -344,7 +344,7 @@
      "6": {
       "requirements": {
        "level": {
-        "max": 25
+        "max": 30
        }
       },
       "health": -10,
@@ -395,6 +395,7 @@
   "Ajout de 15 issues conditionnelles (21 sur 31) : niveau bas (compliment maladroit, bouquet de fleurs, glissade), niveau 100 et plus (récits des îles, toasts des nobles), karma haut ou bas (cadeau du duc, cueilleur complice, intendant méfiant, garde qui vous suit), attaque (bras de fer), vitesse (fuite ou arrestation), vie basse (buffet), Perroquet, Singe et Gorille (bananes).",
   "Karma négatif sur toutes les issues du vol (-3 en général, -1 si le cueilleur vous donne lui-même le régime, -2 pour la glissade) ; aucun karma sur la fête, qui n'est pas un choix moral.",
   "Style : pas de discours direct, typographie corrigée, issues entre 150 et 280 caractères environ, un seul détail d'ambiance par texte.",
-  "Relecture : vocabulaire simplifié (pavoisé, poterne, bananeraies, se pourlécher supprimés ; « régimes » remplacé par « bananes » ; « une pièce de sa collection » devient « un objet » pour ne pas évoquer l'argent), expression inventée retirée (Vexé jusqu'à la moustache), décor des issues réduit à ce qui sert l'action (talus vers la rivière, lanternes, grondement de la rivière), phrases longues coupées (une action par phrase), négation déroutante reformulée (Vous n'aurez pas vu le duc), scène peu crédible du singe que le duc veut acheter simplifiée ; les issues du duc qui écoute vos récits des îles et des nobles qui veulent entendre vos voyages passent de niveau 60 et 50 à niveau 100, pour qu'un vétéran soit bien un haut niveau."
+  "Relecture : vocabulaire simplifié (pavoisé, poterne, bananeraies, se pourlécher supprimés ; « régimes » remplacé par « bananes » ; « une pièce de sa collection » devient « un objet » pour ne pas évoquer l'argent), expression inventée retirée (Vexé jusqu'à la moustache), décor des issues réduit à ce qui sert l'action (talus vers la rivière, lanternes, grondement de la rivière), phrases longues coupées (une action par phrase), négation déroutante reformulée (Vous n'aurez pas vu le duc), scène peu crédible du singe que le duc veut acheter simplifiée ; les issues du duc qui écoute vos récits des îles et des nobles qui veulent entendre vos voyages passent de niveau 60 et 50 à niveau 100, pour qu'un vétéran soit bien un haut niveau.",
+  "Seuils : conditions de niveau et de statistiques calées sur les joueurs réguliers. Débutant (niveau 30 et moins) : compliment maladroit au duc et glissade sur la pelure (au lieu de 25). Encore faible (niveau 55 et moins) : bouquet de fleurs faute de mieux à offrir (au lieu de 25). Vétéran (niveau 130 et plus) : récits des îles au duc et toasts des nobles (au lieu de 100). Fort : bras de fer, attaque 700 (au lieu de 250) ; fuite des gardes, vitesse 500 (au lieu de 250). Encore faible : arrestation du voleur trop lent, vitesse 40 et moins (au lieu de 199). Vie 60 et moins pour le buffet inchangée. Karma, familiers et textes inchangés."
  ]
 }

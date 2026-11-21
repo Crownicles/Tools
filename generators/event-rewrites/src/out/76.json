@@ -57,7 +57,7 @@
           "0": {
             "requirements": {
               "attack": {
-                "min": 240
+                "min": 700
               }
             },
             "money": 150,
@@ -67,7 +67,7 @@
           "1": {
             "requirements": {
               "level": {
-                "max": 25
+                "max": 30
               }
             },
             "effect": "hurt",
@@ -92,7 +92,7 @@
           "4": {
             "requirements": {
               "speed": {
-                "min": 220
+                "min": 350
               }
             },
             "money": 60,
@@ -101,7 +101,7 @@
           "5": {
             "requirements": {
               "defense": {
-                "min": 210
+                "min": 520
               }
             },
             "effect": "occupied",
@@ -129,7 +129,7 @@
           "3": {
             "requirements": {
               "level": {
-                "min": 55
+                "min": 120
               }
             },
             "money": 35,
@@ -174,7 +174,7 @@
           "2": {
             "requirements": {
               "level": {
-                "min": 50
+                "min": 120
               }
             },
             "money": 120,
@@ -202,7 +202,7 @@
           "5": {
             "requirements": {
               "level": {
-                "max": 25
+                "max": 30
               }
             },
             "effect": "confounded"
@@ -230,7 +230,7 @@
           "3": {
             "requirements": {
               "speed": {
-                "min": 200
+                "min": 500
               }
             },
             "karma": 1
@@ -252,6 +252,7 @@
     "Les quatre choix et les onze issues d'origine sont conservés, du chat dans l'arbre creux à la porte claquée après l'interrogatoire.",
     "Les réactions varient avec les gestes du joueur, ce que les voyageurs racontent de lui et le familier qui l'accompagne. Un mage peut notamment apaiser la vibration de la pierre.",
     "L'heure de recherche de Minou et la demi-heure de questions ont leur durée en jeu ; rendre un bien ou le subtiliser influe sur le karma.",
-    "Relecture : phrases cryptiques réécrites pour se comprendre à la première lecture (sol qui tremble, bête de la cave, rues qui se fendent, tapis et planches, vision au mur) ; mots rares ou ambigus remplacés (éprouver, escamoter, cabinet, secrétaire, dépanner, chambranle, appui de fenêtre) ; scènes peu crédibles simplifiées (livre offert puis gardé, Parziter coincé dehors alors qu'il ouvre la porte, tasse sortie de nulle part) ; cache de question 2 différenciée de celle de l'escalier ; libellé au vouvoiement. Données inchangées."
+    "Relecture : phrases cryptiques réécrites pour se comprendre à la première lecture (sol qui tremble, bête de la cave, rues qui se fendent, tapis et planches, vision au mur) ; mots rares ou ambigus remplacés (éprouver, escamoter, cabinet, secrétaire, dépanner, chambranle, appui de fenêtre) ; scènes peu crédibles simplifiées (livre offert puis gardé, Parziter coincé dehors alors qu'il ouvre la porte, tasse sortie de nulle part) ; cache de question 2 différenciée de celle de l'escalier ; libellé au vouvoiement. Données inchangées.",
+    "Seuils : niveau et statistiques recalés sur les joueurs réguliers. Fort : attaque 700 (tonneau soulevé seul), vitesse 500 (tasse rattrapée au vol). Correct : vitesse 350 (dessins rattrapés), défense 520 (tuiles sur le bouclier), niveau 120 (marches testées, cache retrouvée). Débutant : niveau 30 au plus (tiroirs fouillés sans permission, vision qui étourdit). Vie, familier, classe et karma inchangés."
   ]
 }

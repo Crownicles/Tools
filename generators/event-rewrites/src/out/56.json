@@ -41,7 +41,7 @@
     "2": "Vous refusez de servir de cobaye, mais vous demandez à voir ses fioles. L'une d'elles vibre doucement entre vos doigts : vous savez qu'elle est bien dosée. Impressionné, Gruffo vous l'offre. Vous la buvez, et une légère chaleur vous redonne des forces.",
     "3": "Vous refusez son offre. Gruffo vous dévisage, méfiant : il a entendu parler de vous. Il vous demande de sortir et referme la toile de sa tente. Vous passez la nuit dehors sur la dune, à grelotter dans le vent de la mer.",
     "4": "Vous refusez, et Gruffo semble déçu. Vous discutez un moment avec lui et lui demandez qui lui a appris l'alchimie. Avec un peu d'amertume, il nomme son maître : Périssien, un ménestrel connu dans tout le pays. Il refuse de dire où le trouver.",
-    "5": "Vous refusez de servir de cobaye, alors Gruffo vous propose de préparer votre propre potion. Vous dosez les ingrédients d'une main sûre et buvez le mélange sans broncher. Un léger étourdissement vous oblige à vous asseoir un moment avant de reprendre la route."
+    "5": "Vous refusez de servir de cobaye, alors Gruffo vous propose de préparer votre propre potion. Vous avez vu bien des alchimistes au travail : vous dosez les ingrédients d'une main sûre et buvez le mélange. Un léger étourdissement vous oblige à vous asseoir un moment."
    }
   },
   "end": {
@@ -67,7 +67,7 @@
      "0": {
       "requirements": {
        "speed": {
-        "max": 249
+        "max": 349
        }
       },
       "money": -100
@@ -80,7 +80,7 @@
      "3": {
       "requirements": {
        "speed": {
-        "min": 250
+        "min": 350
        }
       },
       "karma": 2,
@@ -187,7 +187,7 @@
      "1": {
       "requirements": {
        "level": {
-        "max": 39
+        "max": 55
        }
       },
       "effect": "confounded"
@@ -215,7 +215,7 @@
      "5": {
       "requirements": {
        "level": {
-        "min": 40
+        "min": 130
        }
       },
       "effect": "occupied",
@@ -228,7 +228,7 @@
      "0": {
       "requirements": {
        "speed": {
-        "max": 249
+        "max": 349
        }
       },
       "effect": "confounded",
@@ -254,7 +254,7 @@
      "4": {
       "requirements": {
        "speed": {
-        "min": 250
+        "min": 350
        }
       }
      },
@@ -284,6 +284,7 @@
   "Cohérence texte et mécanique : feetHurt pour la cheville foulée, santé -10 pour le coup de l'end.0, objet rare en récompense de karma élevé, karma -3 pour la violence envers Gruffo et +2 pour le refus de la somme.",
   "Conservé : les cinq possibilités d'origine et leurs idées (bain et vol, crabes, pied foulé, potion noire, ivresse, refus, Périssien, fin sans réponse), ainsi que l'humour du charlatan et du joli crâne.",
   "Style : aucun discours direct, introduction sans points de suspension, tente et bourse retirées des issues quand aucune mécanique ne les portait.",
-  "Relecture : mots rares ou alambiqués remplacés (charbonné, tannée, cramoisi, monceau, apostropher, racorni, horde, gagner la mer à grandes brasses) ; incohérences corrigées (bain de nuit dans une mer « turquoise » devenue sombre, vacanciers et sauveteur remplacés par des pêcheurs qui vous reconnaissent, tente fermée « à double tour », mage qui gagnait de la vie sans rien boire, Gruffo qui hésitait alors qu'il fait confiance) ; phrases raccourcies (intro, potion ratée, carnet de dettes, Périssien), expression fabriquée retirée (la Résonance qui « tient ses promesses ») ; conditions désormais montrées (le voleur qu'on ne rattrape pas, la confiance de Gruffo en fin d'event) ; données inchangées."
+  "Relecture : mots rares ou alambiqués remplacés (charbonné, tannée, cramoisi, monceau, apostropher, racorni, horde, gagner la mer à grandes brasses) ; incohérences corrigées (bain de nuit dans une mer « turquoise » devenue sombre, vacanciers et sauveteur remplacés par des pêcheurs qui vous reconnaissent, tente fermée « à double tour », mage qui gagnait de la vie sans rien boire, Gruffo qui hésitait alors qu'il fait confiance) ; phrases raccourcies (intro, potion ratée, carnet de dettes, Périssien), expression fabriquée retirée (la Résonance qui « tient ses promesses ») ; conditions désormais montrées (le voleur qu'on ne rattrape pas, la confiance de Gruffo en fin d'event) ; données inchangées.",
+  "Seuils (barème des joueurs réguliers) : potion ratée au petit bonheur pour un joueur encore faible (niveau 55 et moins, 25 %) ; potion dosée d'une main sûre pour un joueur expérimenté (niveau 130 et plus, 10 %), avec une phrase sur les alchimistes vus sur la route pour montrer cette expérience ; voleur rattrapé sur la plage et gourdin esquivé pour un joueur correct en vitesse (350 et plus, 25 %), sans mot de force dans le texte, et leurs issues contraires à 349 et moins ; vie 100 inchangée (vie actuelle, hors barème) ; karma et classe Mage mystique gardés tels quels."
  ]
 }
