@@ -371,7 +371,7 @@
         $("eventList").innerHTML = EVENTS.map((e) => {
             const st = status(e);
             return `<li class="${e.id === current ? "active" : ""}"><a href="#${esc(e.id)}" title="${esc(st.text)}">
-                <div class="li-top"><span class="dot ${st.cls}"></span><b>#${esc(e.id)}</b> ${esc(e.place || "?")}</div>
+                <div class="li-top"><span class="dot ${st.cls}"></span><b title="ID de l'event dans le jeu">Event ${esc(e.id)}</b> · ${esc(e.place || "?")}</div>
                 <div class="li-sub">${esc(st.text)} · ${esc(figures(stats(e)))}</div>
                 ${isGithub() ? "" : `<div class="li-sub">${esc(e.rewrite?.model || e.model || "")}</div>`}</a></li>`;
         }).join("") || "<li class=\"muted small\">Aucun event à afficher.</li>";
@@ -585,7 +585,7 @@
         const origin = isGithub() ? `${DATA.base} → ${DATA.head}` : e.rewrite?.model || e.model || "?";
         return `<div class="page">
             <div class="event-head">
-                <h1>#${esc(e.id)} · ${esc(e.place)}</h1>
+                <h1>Event ${esc(e.id)} · ${esc(e.place)}</h1>
                 <p class="muted"><span class="dot ${st.cls}"></span>${esc(st.text)} · ${esc(head)} · ${esc(origin)}</p>
             </div>
             ${banner}
@@ -624,7 +624,7 @@
             const key = d.querySelector(":scope > summary .fold-title")?.textContent;
             if (openFolds.has(key)) d.open = true;
         });
-        document.title = id ? `Crownicles — Réécriture #${id} ${byId[id].place}` : "Crownicles — Réécriture des big events";
+        document.title = id ? `Crownicles — Event ${id} ${byId[id].place}` : "Crownicles — Réécriture des big events";
     }
 
     const rerender = () => {
