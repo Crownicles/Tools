@@ -743,6 +743,8 @@
     });
     document.querySelectorAll("#sourceMode button").forEach((b) => b.addEventListener("click", () => (b.dataset.mode === "local" ? useLocal() : useGithub())));
     if (!GH) $("source").hidden = true;
+    // Without the workshop bundle (as on GitHub Pages), only the branch comparison makes sense
+    if (!LOCAL) $("sourceMode").hidden = true;
 
     if (GH && params.get("base") && params.get("head")) {
         useGithub();

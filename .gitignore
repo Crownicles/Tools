@@ -8,3 +8,8 @@ generators/moderation-scanner.html
 scripts/class-pet-study/.work/
 scripts/class-pet-study/*.html
 !scripts/class-pet-study/comboPage.html
+
+# Event rewrite workshop: local working copies (the events live in the Crownicles branches, the viewer reads them from GitHub)
+generators/event-rewrites/data.js
+generators/event-rewrites/src/input/
+generators/event-rewrites/src/out/
