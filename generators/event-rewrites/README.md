@@ -17,19 +17,6 @@ Open `index.html` directly (no server needed). The comparison is shareable: `ind
 - **Profil de joueur** (sidebar, folded): set level, karma, stats, class, pet, cooking level, a full or empty material bag, the upgrade level and enchantment of the weapon and armor to grey out the outcomes this player cannot get. Possible outcomes show their odds (the game picks uniformly among them). The profile is saved in `localStorage`.
 - Below 1000 px the before/after columns are interleaved in a single column.
 
-## Rewrite workshop (`src/`)
+## Writing the events
 
-The tools used to write the events. The events themselves live in the Crownicles branches: `src/input/` and `src/out/` are local working copies, ignored by git.
-
-| Path | Content |
-|---|---|
-| `prepare.py <Crownicles dir> <id> [--draft-ref <commit>]` | Writes `input/<id>.json`: place, neighbours, city menu, canon block, triggers, develop's texts and mechanics, and optionally a draft (a contributor's, or the current branch version with `--draft-ref HEAD`) |
-| `brief.md`, `reference.md` | The writer brief and the data reference (fields, thresholds, materials, karma) |
-| `draft-rework.md` | Brief for reworking a contributor's draft |
-| `repasse.md` | Brief for reworking an event already rewritten before the current rules |
-| `out/<id>.json` | The rewrite: texts, `data` (mechanics and `requirements`), `icons`, `notes` |
-| `validate.py <id>` | Checks style, lengths, data, destinations and that every player profile has an outcome |
-| `apply.py <Crownicles dir> [ids]` | Writes the rewrites to the Crownicles branch (French texts, event files, icons) |
-| `pets.json`, `classes.json`, `materials.json` | Reference lists for the writers and the validator |
-
-Review the result with the viewer once the branch is pushed.
+The rules, the briefs given to the writers and the scripts that prepare, validate and apply a rewrite live in the Crownicles repository, in the `write-event-texts` skill (`.github/skills/write-event-texts/`). Review the result here once the branch is pushed.
