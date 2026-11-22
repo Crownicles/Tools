@@ -260,7 +260,10 @@ window.EventRewritesGithub = (() => {
         const petIds = Object.keys(data.pets);
         await pool(petIds, async (id) => {
             const pet = await getJson(raw(head, `Core/resources/pets/${id}.json`), `familier ${id}`).catch(() => null);
-            if (pet) data.pets[id].rarity = pet.rarity;
+            if (pet) {
+                data.pets[id].rarity = pet.rarity;
+                data.pets[id].tags = pet.tags || [];
+            }
         }, (done, total) => onProgress(`Lecture des familiers : ${done}/${total}`));
         const typeCache = {};
         const typeOf = async (mapId) => {

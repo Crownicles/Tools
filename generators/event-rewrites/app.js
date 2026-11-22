@@ -20,11 +20,18 @@
     const EFFECTS = {
         occupied: ["🕑", "occupé"], sleeping: ["😴", "endormi", 180], drunk: ["🥴", "ivre", 240], freezing: ["🥶", "gelé", 60],
         feetHurt: ["🦶", "pieds endoloris", 110], hurt: ["🤕", "blessé", 300], sick: ["🤢", "malade", 330], jailed: ["🔒", "emprisonné", 1440],
-        injured: ["🚑", "gravement blessé", 660], starving: ["🍽️", "affamé", 50], confounded: ["😵‍💫", "confus", 40], scared: ["😱", "effrayé", 15],
+        injured: ["🚑", "gravement blessé", 660], starving: ["🍽️", "affamé", 50], confounded: ["😵‍💫", "étourdi", 40], scared: ["😱", "effrayé", 15],
         lost: ["🌫️", "perdu", 270], fished: ["🎣", "pêché", 5], working: ["⚒️", "au travail", 75], burning: ["🔥", "brûlé", 25],
     };
     const RANGES = { level: "niveau", karma: "karma", health: "PV", attack: "attaque", defense: "défense", speed: "vitesse", petRarity: "rareté du familier",
-        cookingLevel: "cuisine", weaponLevel: "arme améliorée", armorLevel: "armure améliorée" };
+        cookingLevel: "cuisine", weaponLevel: "arme améliorée", armorLevel: "armure améliorée", money: "argent porté" };
+    const PET_TAGS = { flying: "vole", keenNose: "a du flair", mount: "monture", heavy: "très lourd", intimidating: "impressionnant",
+        aquatic: "aquatique", nocturnal: "nocturne", fire: "feu" };
+    const WEAPON_TAGS = { blunt: "arme lourde", fire: "arme de feu", ranged: "arme à distance", metallic: "arme en métal", holy: "arme sacrée" };
+    // Badges an event outcome may depend on (EVENT_OUTCOME_BADGES in Lib/src/types/Badge.ts)
+    const BADGES = { animal_lover: "ami des animaux", expert_expediteur: "expéditeur expert", legendary_pet: "familier légendaire",
+        master_chef: "chef cuisinier", sentimental_crafter: "relique reforgée", oracle_patron: "protecteur de l'Oracle",
+        mission_completer: "maître des quêtes", top_glory: "champion de gloire", powerful_guild: "guilde puissante", very_powerful_guild: "guilde très puissante" };
     const MATERIAL_TYPES = { metal: "métal", alloy: "alliage", nature: "plantes", spiritual: "objets spirituels", magic: "magie", leather: "cuir",
         rope: "cordes et tissus", poison: "poisons", explosive: "explosifs", wood: "bois" };
     const ENCHANT_TYPES = { damage: "attaque", defense: "défense", speed: "vitesse", health: "énergie", magic: "magie", other: "souffle" };
@@ -34,8 +41,9 @@
         baseBreath: ["Souffle de base", "other", "weapon", 2], maxBreath: ["Souffle max", "other", "armor", 1], burnedDamage: ["Aspect de feu", "magic", "weapon", 1],
         frozenDamage: ["Aspect de givre", "magic", "weapon", 1], poisonedDamage: ["Aspect de venin", "magic", "weapon", 1] };
     const ITEM_CATEGORIES = { 0: "arme", 1: "armure", 2: "potion", 3: "objet" };
-    const STATS = ["level", "karma", "health", "attack", "defense", "speed", "cookingLevel", "weaponLevel", "armorLevel"];
-    const TARGETS = { intro: [180, 420], choice: [8, 90], outcome: [150, 280] };
+    const STATS = ["level", "karma", "health", "attack", "defense", "speed", "cookingLevel", "weaponLevel", "armorLevel", "money"];
+    // Reasonable bounds, not targets: an outcome is as long as what it tells (write-event-texts skill)
+    const TARGETS = { intro: [180, 420], choice: [8, 90], outcome: [60, 420] };
 
     const nf = new Intl.NumberFormat("fr-FR");
     const num = (n) => nf.format(n).replace("-", "−");
@@ -125,12 +133,24 @@
             const names = req.validPetTypeIds.map(petName);
             parts.push({ short: `familier : ${shortList(names)}`, full: `familier : ${names.join(", ")}` });
         }
+        if (req.petTags) {
+            const names = req.petTags.map((t) => PET_TAGS[t] || t);
+            parts.push({ short: `familier : ${shortList(names)}`, full: `familier qui ${names.join(" ou ")}` });
+        }
+        if (req.weaponTags) {
+            const names = req.weaponTags.map((t) => WEAPON_TAGS[t] || t);
+            parts.push({ short: shortList(names), full: `arme équipée : ${names.join(" ou ")}` });
+        }
+        if (req.badges) {
+            const names = req.badges.map((b) => BADGES[b] || b);
+            parts.push({ short: `badge : ${shortList(names)}`, full: `badge : ${names.join(" ou ")}` });
+        }
         if (req.campaignCurrentMissionId !== undefined) parts.push({ short: `mission de campagne ${req.campaignCurrentMissionId}` });
         if (req.materials) parts.push(materialsText(req.materials));
-        if (outcome?.consumeMaterials) parts.push(materialsText({ ...outcome.consumeMaterials, quantity: { min: outcome.consumeMaterials.quantity } }));
+        for (const filter of consumedFilters(outcome)) parts.push(materialsText({ ...filter, quantity: { min: filter.quantity } }));
         if (req.enchantment) parts.push(enchantmentText(req.enchantment));
         for (const key of Object.keys(req)) {
-            if (!(key in RANGES) && !["validClassIds", "validPetTypeIds", "campaignCurrentMissionId", "materials", "enchantment"].includes(key)) {
+            if (!(key in RANGES) && !["validClassIds", "validPetTypeIds", "petTags", "weaponTags", "badges", "campaignCurrentMissionId", "materials", "enchantment"].includes(key)) {
                 parts.push({ short: `${key} : ${JSON.stringify(req[key])}` });
             }
         }
@@ -141,6 +161,13 @@
     }
 
     const isConditional = (o) => conditionParts(o).length > 0;
+
+    // consumeMaterials is one filter, or a list of filters that must all be satisfied
+    function consumedFilters(outcome) {
+        const c = outcome?.consumeMaterials;
+        if (!c) return [];
+        return Array.isArray(c) ? c : [c];
+    }
 
     function materialLabel(m) {
         const label = [...(m.ids || []).map((id) => (NAMES.materials || {})[id] || `matériau ${id}`), ...(m.type ? [MATERIAL_TYPES[m.type] || m.type] : [])];
@@ -206,13 +233,14 @@
         if (o.mapTypesDestination) items.push({ text: `🧭 vers : ${o.mapTypesDestination.map(mapType).join(", ")}` });
         if (o.mapTypesExcludeDestination) items.push({ text: `🚫 pas vers : ${o.mapTypesExcludeDestination.map(mapType).join(", ")}` });
         if (o.mapLink) items.push({ text: "🗺️ trajet imposé", title: JSON.stringify(o.mapLink) });
-        if (o.consumeMaterials) items.push({ text: `🧺 −${o.consumeMaterials.quantity} ${materialLabel(o.consumeMaterials)}`, cls: "neg", title: "matériaux consommés" });
+        for (const filter of consumedFilters(o)) items.push({ text: `🧺 −${filter.quantity} ${materialLabel(filter)}`, cls: "neg", title: "matériaux consommés" });
+        if (o.goBackToPreviousMap) items.push({ text: "↩️ demi-tour", title: "retour vers le lieu d'où vient le joueur ; sinon, la destination indiquée" });
         if (o.giveMaterials) items.push({ text: `🧺 +${o.giveMaterials.quantity} ${materialLabel(o.giveMaterials)}`, cls: "pos", title: "matériau donné (un seul, au hasard parmi ceux qui passent les filtres)" });
         if (o.forceStayInCity) items.push({ text: "🏙️ reste en ville" });
         if (o.forceLeaveCity) items.push({ text: "🚪 quitte la ville" });
         const known = new Set(["requirements", "condition", "oneshot", "health", "money", "lostTime", "effect", "karma", "randomItem", "energy", "gems", "tokens",
             "bonusExperience", "bonusPoints", "randomPet", "givePet", "nextEvent", "mapTypesDestination", "mapTypesExcludeDestination", "mapLink",
-            "forceStayInCity", "forceLeaveCity", "tags", "consumeMaterials", "giveMaterials"]);
+            "forceStayInCity", "forceLeaveCity", "tags", "consumeMaterials", "giveMaterials", "goBackToPreviousMap"]);
         for (const key of Object.keys(o)) {
             if (!known.has(key)) items.push({ text: `${key} : ${JSON.stringify(o[key])}`, cls: "bad", title: "champ inconnu" });
         }
@@ -228,9 +256,9 @@
 
     const PROFILE_KEY = "eventRewrites.profile";
     const profileInputs = { level: "pLevel", karma: "pKarma", attack: "pAttack", defense: "pDefense", speed: "pSpeed", health: "pHealth",
-        cookingLevel: "pCooking", weaponLevel: "pWeaponLevel", armorLevel: "pArmorLevel" };
+        cookingLevel: "pCooking", weaponLevel: "pWeaponLevel", armorLevel: "pArmorLevel", money: "pMoney" };
     const profile = { on: false, level: 50, karma: 0, attack: 200, defense: 200, speed: 200, health: 500, classId: "0", petId: "",
-        cookingLevel: 0, weaponLevel: 0, armorLevel: 0, hasMaterials: true, weaponEnchant: "", armorEnchant: "" };
+        cookingLevel: 0, weaponLevel: 0, armorLevel: 0, money: 30000, hasMaterials: true, weaponEnchant: "", armorEnchant: "", weaponTag: "", badges: [] };
     try {
         Object.assign(profile, JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}"));
     } catch {
@@ -253,8 +281,12 @@
             const r = req.petRarity;
             if (!pet || (r.min != null && pet.rarity < r.min) || (r.max != null && pet.rarity > r.max)) fails.push(rangeText(RANGES.petRarity, r));
         }
+        if (req.petTags && !(pet?.tags || []).some((t) => req.petTags.includes(t))) fails.push("familier");
+        if (req.weaponTags && !req.weaponTags.includes(profile.weaponTag)) fails.push("arme");
+        if (req.badges && !req.badges.some((b) => (profile.badges || []).includes(b))) fails.push("badge");
         if (req.campaignCurrentMissionId !== undefined) fails.push("mission de campagne");
-        for (const m of [req.materials, outcome?.consumeMaterials && { quantity: { min: outcome.consumeMaterials.quantity } }].filter(Boolean)) {
+        const consumed = consumedFilters(outcome).reduce((sum, filter) => sum + filter.quantity, 0);
+        for (const m of [req.materials, consumed && { quantity: { min: consumed } }].filter(Boolean)) {
             const q = m.quantity || { min: 1 };
             const owned = profile.hasMaterials ? Infinity : 0;
             if ((q.min != null && owned < q.min) || (q.max != null && owned > q.max)) fails.push("matériaux");
@@ -293,6 +325,11 @@
         $("pWeaponEnchant").value = profile.weaponEnchant;
         $("pArmorEnchant").value = profile.armorEnchant;
         $("pMaterials").value = profile.hasMaterials ? "1" : "0";
+        $("pWeaponTag").innerHTML = "<option value=\"\">Autre</option>" + Object.entries(WEAPON_TAGS)
+            .map(([id, label]) => `<option value="${id}">${esc(label)}</option>`).join("");
+        $("pWeaponTag").value = profile.weaponTag || "";
+        $("pBadges").innerHTML = Object.entries(BADGES).map(([id, label]) => `<option value="${id}">${esc(label)}</option>`).join("");
+        for (const option of $("pBadges").options) option.selected = (profile.badges || []).includes(option.value);
     }
 
     function setupProfile() {
@@ -312,6 +349,8 @@
             profile.weaponEnchant = $("pWeaponEnchant").value;
             profile.armorEnchant = $("pArmorEnchant").value;
             profile.hasMaterials = $("pMaterials").value === "1";
+            profile.weaponTag = $("pWeaponTag").value;
+            profile.badges = [...$("pBadges").selectedOptions].map((option) => option.value);
             sync();
             localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
             const scroll = content.scrollTop;
@@ -366,7 +405,8 @@
         }).join("") || "<li class=\"muted small\">Aucun event à afficher.</li>";
         const { total, changed } = DATA.counts;
         const fork = DATA.fork?.behind ? ` « Avant » est lu au point de divergence (${DATA.fork.sha.slice(0, 7)}) : ${DATA.base} a ${plural(DATA.fork.behind, "commit")} de plus depuis.` : "";
-        $("subtitle").textContent = `${DATA.base} → ${DATA.head} : ${plural(changed, "event modifié", "events modifiés")} sur ${total}.${fork}`;
+        const ahead = DATA.fork?.ahead !== undefined ? ` (${plural(DATA.fork.ahead, "commit")} d'avance)` : "";
+        $("subtitle").textContent = `${DATA.base} → ${DATA.head}${ahead} : ${plural(changed, "event modifié", "events modifiés")} sur ${total}.${fork}`;
         $("generated").textContent = `Chargé depuis GitHub le ${new Date(DATA.generatedAt).toLocaleString("fr-FR")}`;
     }
 
