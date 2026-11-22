@@ -42,7 +42,8 @@
     "2": "Xirtex a entendu du bien de vous et ne se méfie pas. Vous le frappez, puis le remords vous saisit aussitôt. Vous lui bandez la tête et restez à son chevet. Quand il se réveille, vous lui donnez des pièces pour vous faire pardonner.",
     "3": "Xirtex entend vos pas et se retourne. Il vous trouve devant ses coffres, une pierre à la main. Son poing vous fend la lèvre. Vous lâchez la pierre et quittez la tente sans demander votre reste.",
     "4": "Xirtex vous surprend en train de vider une coupelle pleine de pièces. Il vous chasse à coups de bâton, mais votre brassard arrête chaque coup. Vous lâchez la coupelle en fuyant, avec les pièces déjà glissées dans votre poche.",
-    "5": "Xirtex a entendu parler de vous. Il fait semblant de ne rien voir quand vous prenez la bourse posée près de ses coffres. Plus loin, vous la videz sur le sable et fouillez longtemps le tas : rien que des noyaux de dattes. Son rire vous parvient depuis la tente."
+    "5": "Xirtex a entendu parler de vous. Il fait semblant de ne rien voir quand vous prenez la bourse posée près de ses coffres. Plus loin, vous la videz sur le sable et fouillez longtemps le tas : rien que des noyaux de dattes. Son rire vous parvient depuis la tente.",
+    "6": "Vous frappez Xirtex par-derrière, mais le coup ne fait que l'étourdir. Il titube en se tenant la tête. Vous attrapez la première bourse à portée de main et quittez la tente en courant, avant qu'il reprenne ses esprits."
    }
   },
   "clearChannel": {
@@ -71,7 +72,7 @@
      "1": {
       "requirements": {
        "karma": {
-        "min": 65
+        "min": 50
        }
       },
       "health": 40
@@ -238,6 +239,16 @@
       "effect": "occupied",
       "lostTime": 15,
       "karma": -4
+     },
+     "6": {
+      "requirements": {
+       "attack": {
+        "min": 231,
+        "max": 699
+       }
+      },
+      "money": 220,
+      "karma": -16
      }
     }
    },
@@ -299,6 +310,7 @@
   "Ajoute une possibilité d'entraide autour de la rigole, à l'échelle de l'oasis. Chaque branche garde au moins une issue sans condition.",
   "Relecture : mots rares ou ambigus remplacés (gîte, montant, écuelle, passe, vasque, somme, maugréer, carnet de bêtes), phrases alambiquées découpées (ponctuer chaque péripétie, sur la foi des gens de passage, bol pour chacun), scènes rendues plus crédibles (fouille du sac au lieu des nœuds de la tente, bouillon et croquis mieux amenés, bourse de noyaux claire), décor superflu retiré du refus poli ; aucune donnée modifiée, les conditions collant déjà aux textes.",
   "Seuils : niveau et statistiques calés sur le barème des joueurs réguliers. Voyageur qui reconnaît le peyotl : vétéran, niveau 130 et plus (au lieu de 60), le texte le dit. Débutant qui suit de fausses traces ou trahit son vol par son ombre : niveau 30 et moins (au lieu de 25 et 30). Joueur encore faible à qui Xirtex fait la leçon : niveau 55 et moins (au lieu de 30). Coup qui assomme et dalle soulevée seul : joueur fort, attaque 700 (au lieu de 250 et 260). Brassard qui arrête les coups : défense correcte, 520 (au lieu de 220). Linge rattrapé de justesse : vitesse correcte, 350 (au lieu de 220). Karma, familiers et classe inchangés.",
-  "Intro : une demi-phrase rendue à l'original après relecture."
+  "Intro : une demi-phrase rendue à l'original après relecture.",
+  "Repasse paliers et karma : seuil de karma de accept 1 recalé de min 65 à min 50 (le texte dit déjà qu'il a entendu du bien de vous). Le vol est gradué sur l'attaque : faible, l'issue générale où Xirtex vous frappe ; moyenne (231 à 699), nouvelle issue steal 6 où le coup ne fait que l'étourdir et où vous fuyez avec une seule bourse ; forte (700), l'issue 0 inchangée avec la bourse pleine et l'objet. Le reste ne pénalise aucune force et ses gains de karma suivent des gestes du joueur."
  ]
 }

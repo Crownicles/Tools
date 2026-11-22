@@ -1,0 +1,494 @@
+{
+ "eventId": "15",
+ "model": "repasse",
+ "mapId": 23,
+ "place": "Claire de Ville",
+ "placeType": "ci",
+ "placeDescription": "Grande ville marchande et carrefour économique, Claire de Ville n'a pas toujours été aussi accueillante. Au début très pauvre, elle a su se développer rapidement grâce à ses nombreux commerces et hôtels offrant un large choix aux voyageurs de la région. Claire de Ville est aussi réputée pour son calme et son respect de l'ordre. Sous ses rues, les souterrains creusés au temps de sa misère serpentent encore dans la roche.",
+ "neighbours": [
+  {
+   "mapId": 24,
+   "name": "Route Grimpante",
+   "minutes": 60,
+   "type": "ro"
+  },
+  {
+   "mapId": 22,
+   "name": "Bois Hurlant",
+   "minutes": 240,
+   "type": "fo"
+  },
+  {
+   "mapId": 21,
+   "name": "Route des Merveilles",
+   "minutes": 240,
+   "type": "ro"
+  }
+ ],
+ "isCity": true,
+ "city": {
+  "homePriceMultiplier": 0.99,
+  "apartmentPrice": 12000,
+  "maps": [
+   23
+  ],
+  "services": [
+   "blacksmith"
+  ],
+  "shops": [
+   "generalShop",
+   "stockExchange",
+   "veterinarian"
+  ],
+  "inns": [
+   {
+    "id": "bravesStop",
+    "meals": [
+     {
+      "id": "potatoSoup",
+      "price": 37,
+      "energy": 210
+     },
+     {
+      "id": "friedEggs",
+      "price": 25,
+      "energy": 150
+     },
+     {
+      "id": "curryRice",
+      "price": 60,
+      "energy": 330
+     },
+     {
+      "id": "sushi",
+      "price": 100,
+      "energy": 500
+     },
+     {
+      "id": "bravesPanOfFood",
+      "price": 350,
+      "energy": 1750
+     }
+    ],
+    "rooms": [
+     {
+      "id": "simpleRoom",
+      "price": 550,
+      "health": 15
+     },
+     {
+      "id": "comfortableRoom",
+      "price": 1050,
+      "health": 35
+     },
+     {
+      "id": "luxuryRoom",
+      "price": 1550,
+      "health": 60
+     }
+    ]
+   }
+  ]
+ },
+ "canonBlock": "#### Claire de Ville · `23`\n\n- **Type :** ville (`ci`) ; biomes : cave\n- **Description du jeu :** « Grande ville marchande et carrefour économique, Claire de Ville n'a pas toujours été aussi accueillante. Au début très pauvre, elle a su se développer rapidement grâce à ses nombreux commerces et hôtels offrant un large choix aux voyageurs de la région. Claire de Ville est aussi réputée pour son calme et son respect de l'ordre. Sous ses rues, les souterrains creusés au temps de sa misère serpentent encore dans la roche. »\n- **Voisins :** Route Grimpante (1 h), Bois Hurlant (4 h), Route des Merveilles (4 h)\n- **Zones d'expédition des familiers :** les Souterrains Oubliés de Claire de Ville\n- **Auberge :** La Halte des Braves : « Qui n'a jamais entendu parler de la Halte des Braves ? C'est la plus vieille et la plus célèbre auberge de la région. Vous entrez dans une salle bondée, remplie de rires et de chants. Les murs sont couverts de trophées de chasse et d'armes anciennes. C'est l'endroit idéal pour rencontrer d'autres aventuriers. »\n  - au menu : Soupe de pommes de terre, Œufs au plat, Curry et riz, Sushi, Poêlon de nourriture des Braves ; chambres : Chambre Simple, Chambre Confortable, Chambre de Luxe\n- **En ville :** services : Aller chez le forgeron ; boutiques : Boutique générale, La Bourse, Le Vétérinaire\n- **Big events qui s'y déclenchent :**\n  - 13 : « Après avoir passé plusieurs semaines à marcher sans effectuer la moindre rencontre humaine, vous arpentez à présent les ruelles d'une petite bourgade plutôt animée. »\n  - 15 : « Alors que vous traversez une ville en passant par des ruelles, vous entrez dans ce qui vous semble être une petite boutique où un groupe d'hommes discute tranquillement. »\n  - 20 : « À votre arrivée dans un village, vous remarquez du coin de l'œil un garde volant une pauvre femme. »\n  - 41 : « Alors que vous continuez votre chemin, vous arrivez à une ville. »\n  - 68 : « En arrivant à Claire de Ville, votre regard est attiré par un bâtiment dont l'entrée est encadrée par deux statues de hiboux en pierre. »\n  - 72 : « Alors que vous arrivez aux abords de Claire de Ville, vous découvrez que bon nombre de ses habitants se sont déplacés à l'extérieur des grandes murailles : un tournoi… »\n- **Rattachés dans le graphe :** Comte de la région voisine, La bibliothécaire de Claire de Ville, La Halte des Braves, Le Forgeron, Le Vétérinaire, Le vétérinaire de la cour, Les Courtiers de la Bourse, Les frères Grimm, Lucya, Yseldia, Yvain\n",
+ "triggers": [
+  {
+   "mapId": 23
+  }
+ ],
+ "original": {
+  "possibilities": {
+   "end": {
+    "outcomes": {
+     "0": "Vous passez de longues minutes à bêtement les regarder installer leur bivouac, avant de reprendre vos esprits et continuer votre route."
+    }
+   },
+   "skip": {
+    "outcomes": {
+     "0": "Le chemin est encore long, pas le temps de s'arrêter !",
+     "1": "Vous continuez votre route sans perdre plus de temps !",
+     "2": "Vous continuez votre route sans vous arrêter.",
+     "3": "Vous continuez sans vous arrêter en sillonnant à travers petites rues. Au coin de l'une d'entre elles, vous vous faites sauvagement bousculer par un homme qui prend rapidement la fuite."
+    },
+    "text": "Continuer votre route sans perdre de temps."
+   },
+   "steal": {
+    "outcomes": {
+     "0": "Vous ramassez quelques pièces et fuyez aussi vite que possible sans éprouver le moindre remord.",
+     "1": "Malheureusement, il n'y a rien à voler. Par contre, votre tentative n'est pas passée inaperçue ! Honteux, vous dédommagez les propriétaires et reprenez la route.",
+     "2": "Pris la main dans le sac ! Face aux 5 hommes à la carrure imposante qui vous entourent, vous regrettez amèrement votre geste malheureux. Vous repartez groggy après avoir versé un dédommagement."
+    },
+    "text": "Prendre discrètement quelques pièces dans la caisse."
+   },
+   "trade": {
+    "outcomes": {
+     "0": "Vous discutez un moment avec ces sympathiques marchands qui décident de commercer avec vous !",
+     "1": "Malheureusement pour vous, le groupe de marchands n'a rien à vendre, vous passez donc votre chemin.",
+     "2": "Moins accueillant que vous ne l'espériez, le groupe d'hommes vous encercle rapidement et sous menace de coups, vous soulage de quelques sous avant de prendre la fuite !",
+     "3": "Vous auriez dû vous fier à votre intuition et refuser cette \"bonne affaire\"... La magnifique épée sertie de diamants que l'on vous a promis semble plutôt faite de mousse molle. Vous revenez rapidement sur vos pas mais la porte de l'échoppe semble définitivement fermée ! Jurant de ne plus jamais vous faire avoir, vous reprenez votre route."
+    },
+    "text": "Tenter de commercer avec eux."
+   }
+  },
+  "text": "Alors que vous traversez une ville en passant par des ruelles, vous entrez dans ce qui vous semble être une petite boutique où un groupe d'hommes discute tranquillement."
+ },
+ "outcomeData": {
+  "end": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 35
+   }
+  },
+  "skip": {
+   "0": {},
+   "1": {},
+   "2": {},
+   "3": {
+    "effect": "confounded",
+    "health": -5
+   }
+  },
+  "steal": {
+   "0": {
+    "money": 100
+   },
+   "1": {
+    "effect": "occupied",
+    "lostTime": 30,
+    "money": -200
+   },
+   "2": {
+    "effect": "confounded",
+    "health": -20
+   }
+  },
+  "trade": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 45,
+    "money": -200,
+    "randomItem": {},
+    "tags": [
+     "moneyUsage"
+    ]
+   },
+   "1": {
+    "effect": "occupied",
+    "lostTime": 10
+   },
+   "2": {
+    "money": -70
+   },
+   "3": {
+    "effect": "occupied",
+    "lostTime": 45,
+    "money": -200,
+    "tags": [
+     "moneyUsage"
+    ]
+   }
+  }
+ },
+ "draft": {
+  "author": "BastLast",
+  "lang": {
+   "possibilities": {
+    "trade": {
+     "outcomes": {
+      "0": "Les marchands vous accueillent avec chaleur et vous proposent leurs meilleures marchandises à un prix honnête. Vous ressortez satisfait de votre achat.",
+      "1": "Les marchands échangent un regard, puis vous proposent à voix basse des marchandises tombées d'on ne sait quel chariot, à prix bradé. Vous ressortez avec un objet d'origine douteuse, et vous ne posez pas de questions.",
+      "2": "Les marchands vous reconnaissent et menacent d'appeler les gardes : ils ne veulent pas d'ennuis avec les autorités. Vous n'achetez leur silence qu'au prix fort, et votre fierté en souffre autant que votre bourse.",
+      "3": "Les marchands savent à qui ils ont affaire et sortent de l'arrière-boutique leurs plus belles pièces. Après une présentation passionnée, ils vous en cèdent une à un prix raisonnable.",
+      "4": "Les marchands sourient de vous voir marchander si mal, et avec tant de sincérité. Amusés, ils vous cèdent l'objet que vous convoitiez pour une somme modique. Vous ressortez ravi de cette bonne affaire.",
+      "5": "Vous allez pour entrer, puis vous vous rappelez que votre familier ne passera jamais la porte. Vous restez sur le seuil, embarrassé, sous le regard amusé des marchands et de toute la ruelle."
+     },
+     "text": "Tenter de négocier avec les marchands."
+    },
+    "steal": {
+     "outcomes": {
+      "0": "Les marchands sont distraits. Votre main plonge dans la caisse et en ressort pleine, puis vous vous éclipsez dans les ruelles de Claire de Ville sans que personne n'ait rien vu.",
+      "1": "Les marchands vous reconnaissent et se figent. Vous vous servez dans leur caisse sans rencontrer la moindre résistance, et vous les laissez tremblants derrière leurs étals.",
+      "2": "Les marchands vous prennent la main dans la caisse. Ils vous rouent de coups et vous font rembourser bien plus que ce que vous espériez dérober.",
+      "3": "On vous saisit le poignet avant même que vous ayez touché une pièce. Les marchands, choqués, vous infligent une amende salée et leur mépris. Vous ressortez la tête basse, rongé par la culpabilité.",
+      "4": "Vous n'avez jamais volé, et cela se voit : vous êtes démasqué aussitôt. Furieux, les marchands vous infligent une correction dont vous sortez étourdi, la bourse et la dignité bien allégées.",
+      "5": "Vous n'avez rien d'un voleur, mais votre singe, lui, connaît son affaire. Il se faufile entre les étals et subtilise quelques pièces et un objet sans que personne ne s'en aperçoive, puis partage son butin avec vous au coin de la rue."
+     },
+     "text": "Tenter discrètement de dérober quelques pièces."
+    },
+    "observe": {
+     "outcomes": {
+      "0": "En voyageur expérimenté, vous analysez discrètement les techniques de vente et l'organisation de cette boutique. Votre patience vous permet de repérer le meilleur moment pour acquérir un objet peu cher qui vous intéressait.",
+      "1": "Un marchand pieux, à qui l'on a parlé de vos bonnes actions, vient vous trouver. Il vous glisse quelques pièces et vous encourage à continuer sur cette voie.",
+      "2": "Vous restez là sans rien dire, et l'atmosphère de la boutique s'apaise peu à peu : les marchands baissent le ton, les négociations s'adoucissent. Avant que vous ne sortiez, l'un d'eux vous glisse quelques pièces pour ce calme inhabituel.",
+      "3": "Vous observez les allées et venues de la boutique. Le ballet des clients et des marchandises finit par vous hypnotiser, et vous perdez la notion du temps."
+     },
+     "text": "Observer discrètement l'activité de la boutique."
+    },
+    "skip": {
+     "outcomes": {
+      "0": "Vous traversez la boutique sans vous attarder. Les marchands vous saluent poliment, et vous retrouvez les ruelles de Claire de Ville.",
+      "1": "Vous vous faufilez entre les clients et les étals sans ralentir, et vous avez retrouvé la ruelle avant que les commerçants aient eu le temps de vous interpeller.",
+      "2": "Dans votre hâte, vous trébuchez sur une caisse et renversez quelques objets. Un marchand mécontent exige réparation. Vous ressortez en boitant, le pied endolori."
+     },
+     "text": "Continuer votre route sans perdre de temps."
+    },
+    "end": {
+     "outcomes": {
+      "0": "Vous restez planté près de l'entrée sans oser avancer. Les marchands finissent par vous demander ce que vous voulez. Vous bredouillez quelques excuses et ressortez précipitamment, les laissant perplexes.",
+      "1": "Les marchands interrompent leurs affaires pour admirer votre compagnon et vous posent mille questions à son sujet. Vous ne faites aucune affaire, mais ce moment égaie leur journée et la vôtre."
+     }
+    }
+   },
+   "text": "Dans une ruelle de Claire de Ville, vous poussez la porte d'une petite boutique. Des marchands y négocient âprement autour d'étals chargés d'armes d'occasion, de bijoux clinquants et de provisions de voyage. À votre entrée, ils vous jaugent du regard."
+  },
+  "data": {
+   "possibilities": {
+    "trade": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "karma": {
+         "min": 0
+        }
+       },
+       "money": -120,
+       "randomItem": {},
+       "karma": 5
+      },
+      "1": {
+       "requirements": {
+        "karma": {
+         "min": -100,
+         "max": -1
+        }
+       },
+       "money": -80,
+       "randomItem": {},
+       "karma": -9
+      },
+      "2": {
+       "requirements": {
+        "karma": {
+         "max": -100
+        }
+       },
+       "money": -150,
+       "karma": -12
+      },
+      "3": {
+       "requirements": {
+        "level": {
+         "min": 80
+        },
+        "karma": {
+         "min": 50
+        }
+       },
+       "money": -200,
+       "randomItem": {
+        "rarity": {
+         "min": 3
+        }
+       },
+       "karma": 10
+      },
+      "4": {
+       "requirements": {
+        "level": {
+         "max": 30
+        }
+       },
+       "money": -60,
+       "randomItem": {},
+       "karma": 3
+      },
+      "5": {
+       "requirements": {
+        "validPetTypeIds": [
+         21,
+         43,
+         42,
+         31,
+         46,
+         48,
+         49,
+         50,
+         51,
+         61,
+         64,
+         65,
+         84,
+         88,
+         89,
+         98
+        ]
+       },
+       "karma": -2
+      }
+     }
+    },
+    "steal": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "speed": {
+         "min": 250
+        },
+        "karma": {
+         "max": 10
+        }
+       },
+       "money": 220,
+       "karma": -15
+      },
+      "1": {
+       "requirements": {
+        "karma": {
+         "max": -150
+        },
+        "attack": {
+         "min": 300
+        }
+       },
+       "money": 200,
+       "karma": -25
+      },
+      "2": {
+       "requirements": {
+        "speed": {
+         "max": 300
+        }
+       },
+       "money": -150,
+       "health": -15,
+       "karma": -20,
+       "effect": "hurt"
+      },
+      "3": {
+       "requirements": {
+        "karma": {
+         "min": 0
+        }
+       },
+       "money": -100,
+       "karma": -30
+      },
+      "4": {
+       "requirements": {
+        "karma": {
+         "min": -30
+        },
+        "level": {
+         "max": 80
+        }
+       },
+       "money": -200,
+       "health": -25,
+       "karma": -10,
+       "effect": "confounded"
+      },
+      "5": {
+       "requirements": {
+        "karma": {
+         "min": -30
+        },
+        "validPetTypeIds": [
+         24
+        ]
+       },
+       "money": 80,
+       "randomItem": {},
+       "karma": -3
+      }
+     }
+    },
+    "observe": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "level": {
+         "min": 60
+        }
+       },
+       "karma": 3,
+       "effect": "occupied",
+       "lostTime": 30
+      },
+      "1": {
+       "requirements": {
+        "karma": {
+         "min": 100
+        }
+       },
+       "money": 50,
+       "karma": 8,
+       "effect": "occupied",
+       "lostTime": 20
+      },
+      "2": {
+       "requirements": {
+        "validClassIds": [
+         14,
+         15,
+         21
+        ]
+       },
+       "karma": 5,
+       "money": 130
+      },
+      "3": {
+       "effect": "occupied",
+       "lostTime": 25
+      }
+     }
+    },
+    "skip": {
+     "outcomes": {
+      "0": {},
+      "1": {
+       "requirements": {
+        "speed": {
+         "min": 300
+        }
+       }
+      },
+      "2": {
+       "requirements": {
+        "speed": {
+         "max": 250
+        }
+       },
+       "health": -8,
+       "money": -30,
+       "effect": "feetHurt"
+      }
+     }
+    },
+    "end": {
+     "outcomes": {
+      "0": {
+       "effect": "occupied",
+       "lostTime": 3,
+       "karma": -1
+      },
+      "1": {
+       "requirements": {
+        "petRarity": {
+         "min": 4
+        }
+       },
+       "effect": "occupied",
+       "lostTime": 10,
+       "karma": 2
+      }
+     }
+    }
+   },
+   "triggers": [
+    {
+     "mapId": 23
+    }
+   ]
+  }
+ }
+}

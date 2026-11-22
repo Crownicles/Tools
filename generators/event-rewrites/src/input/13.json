@@ -1,0 +1,807 @@
+{
+ "eventId": "13",
+ "model": "repasse",
+ "mapId": 23,
+ "place": "Claire de Ville",
+ "placeType": "ci",
+ "placeDescription": "Grande ville marchande et carrefour économique, Claire de Ville n'a pas toujours été aussi accueillante. Au début très pauvre, elle a su se développer rapidement grâce à ses nombreux commerces et hôtels offrant un large choix aux voyageurs de la région. Claire de Ville est aussi réputée pour son calme et son respect de l'ordre. Sous ses rues, les souterrains creusés au temps de sa misère serpentent encore dans la roche.",
+ "neighbours": [
+  {
+   "mapId": 24,
+   "name": "Route Grimpante",
+   "minutes": 60,
+   "type": "ro"
+  },
+  {
+   "mapId": 22,
+   "name": "Bois Hurlant",
+   "minutes": 240,
+   "type": "fo"
+  },
+  {
+   "mapId": 21,
+   "name": "Route des Merveilles",
+   "minutes": 240,
+   "type": "ro"
+  }
+ ],
+ "isCity": true,
+ "city": {
+  "homePriceMultiplier": 0.99,
+  "apartmentPrice": 12000,
+  "maps": [
+   23
+  ],
+  "services": [
+   "blacksmith"
+  ],
+  "shops": [
+   "generalShop",
+   "stockExchange",
+   "veterinarian"
+  ],
+  "inns": [
+   {
+    "id": "bravesStop",
+    "meals": [
+     {
+      "id": "potatoSoup",
+      "price": 37,
+      "energy": 210
+     },
+     {
+      "id": "friedEggs",
+      "price": 25,
+      "energy": 150
+     },
+     {
+      "id": "curryRice",
+      "price": 60,
+      "energy": 330
+     },
+     {
+      "id": "sushi",
+      "price": 100,
+      "energy": 500
+     },
+     {
+      "id": "bravesPanOfFood",
+      "price": 350,
+      "energy": 1750
+     }
+    ],
+    "rooms": [
+     {
+      "id": "simpleRoom",
+      "price": 550,
+      "health": 15
+     },
+     {
+      "id": "comfortableRoom",
+      "price": 1050,
+      "health": 35
+     },
+     {
+      "id": "luxuryRoom",
+      "price": 1550,
+      "health": 60
+     }
+    ]
+   }
+  ]
+ },
+ "canonBlock": "#### Claire de Ville · `23`\n\n- **Type :** ville (`ci`) ; biomes : cave\n- **Description du jeu :** « Grande ville marchande et carrefour économique, Claire de Ville n'a pas toujours été aussi accueillante. Au début très pauvre, elle a su se développer rapidement grâce à ses nombreux commerces et hôtels offrant un large choix aux voyageurs de la région. Claire de Ville est aussi réputée pour son calme et son respect de l'ordre. Sous ses rues, les souterrains creusés au temps de sa misère serpentent encore dans la roche. »\n- **Voisins :** Route Grimpante (1 h), Bois Hurlant (4 h), Route des Merveilles (4 h)\n- **Zones d'expédition des familiers :** les Souterrains Oubliés de Claire de Ville\n- **Auberge :** La Halte des Braves : « Qui n'a jamais entendu parler de la Halte des Braves ? C'est la plus vieille et la plus célèbre auberge de la région. Vous entrez dans une salle bondée, remplie de rires et de chants. Les murs sont couverts de trophées de chasse et d'armes anciennes. C'est l'endroit idéal pour rencontrer d'autres aventuriers. »\n  - au menu : Soupe de pommes de terre, Œufs au plat, Curry et riz, Sushi, Poêlon de nourriture des Braves ; chambres : Chambre Simple, Chambre Confortable, Chambre de Luxe\n- **En ville :** services : Aller chez le forgeron ; boutiques : Boutique générale, La Bourse, Le Vétérinaire\n- **Big events qui s'y déclenchent :**\n  - 13 : « Après avoir passé plusieurs semaines à marcher sans effectuer la moindre rencontre humaine, vous arpentez à présent les ruelles d'une petite bourgade plutôt animée. »\n  - 15 : « Alors que vous traversez une ville en passant par des ruelles, vous entrez dans ce qui vous semble être une petite boutique où un groupe d'hommes discute tranquillement. »\n  - 20 : « À votre arrivée dans un village, vous remarquez du coin de l'œil un garde volant une pauvre femme. »\n  - 41 : « Alors que vous continuez votre chemin, vous arrivez à une ville. »\n  - 68 : « En arrivant à Claire de Ville, votre regard est attiré par un bâtiment dont l'entrée est encadrée par deux statues de hiboux en pierre. »\n  - 72 : « Alors que vous arrivez aux abords de Claire de Ville, vous découvrez que bon nombre de ses habitants se sont déplacés à l'extérieur des grandes murailles : un tournoi… »\n- **Rattachés dans le graphe :** Comte de la région voisine, La bibliothécaire de Claire de Ville, La Halte des Braves, Le Forgeron, Le Vétérinaire, Le vétérinaire de la cour, Les Courtiers de la Bourse, Les frères Grimm, Lucya, Yseldia, Yvain\n",
+ "triggers": [
+  {
+   "mapId": 23
+  }
+ ],
+ "original": {
+  "possibilities": {
+   "end": {
+    "outcomes": {
+     "0": "Vous visitez la ville pendant plusieurs heures, flânant d'une ruelle à l'autre sans vous presser."
+    }
+   },
+   "goAway": {
+    "outcomes": {
+     "0": "Vous traversez le petit bourg en une petite demi-heure et continuez votre route.",
+     "1": "Vous perdez une bonne heure à contourner la ville mais reprenez votre route tranquillement."
+    },
+    "text": "Repartir."
+   },
+   "goForge": {
+    "outcomes": {
+     "0": "Il n'y a rien d'intéressant dans cette forge... Vous quittez rapidement les lieux.",
+     "1": "En essayant une épée, vous brisez la fenêtre de la forge, le forgeron demande remboursement !",
+     "2": "Personne n'est présent dans la forge qui semble abandonnée depuis des années. Avant de ressortir vous remarquez cependant un objet qui pourrait vous servir pour la suite de votre aventure...",
+     "3": "La forge semble abandonnée depuis des années. Vous ressortez donc bredouille.",
+     "4": "Vous entrez et saluez le forgeron. Après une rapide inspection de son travail vous comprenez que vous ne trouverez rien d'intéressant ici. Vous échangez quelques mots et ressortez."
+    },
+    "text": "Aller à la forge."
+   },
+   "goInn": {
+    "outcomes": {
+     "0": "Après avoir discuté pendant 2 heures avec l'aubergiste, vous finissez par apprendre qu'il n'y a aucune chambre disponible pour la nuit ! Vous ressortez de l'auberge, frustré de ne pas avoir pu profiter d'une bonne nuit de repos.",
+     "1": "Vous payez une chambre pour la nuit et tombez effondré sur le lit. Il faudra dormir avant de pouvoir reprendre l'aventure.",
+     "2": "L'auberge semble abandonnée depuis plusieurs années... Vous ressortez sans vous poser plus de questions."
+    },
+    "text": "Aller à l'auberge."
+   },
+   "goMarket": {
+    "outcomes": {
+     "0": "Vous explorez le marché en 30 minutes avant de découvrir un petit objet au sol qui pourrait vous être utile...",
+     "1": "Après avoir perdu 60 minutes à vous balader dans les étals, vous finissez par quitter le marché sans avoir pu trouver quoi que ce soit d'intéressant.",
+     "2": "Alors que votre vigilance était au plus bas sur le marché, vous recevez un coup violent derrière la tête et vous vous effondrez à terre... Après ce moment, plus aucun souvenir. Il faudra vous soigner avant de pouvoir reprendre l'aventure !"
+    },
+    "text": "Aller au marché."
+   }
+  },
+  "text": "Après avoir passé plusieurs semaines à marcher sans effectuer la moindre rencontre humaine, vous arpentez à présent les ruelles d'une petite bourgade plutôt animée."
+ },
+ "outcomeData": {
+  "end": {
+   "0": {
+    "forceStayInCity": true,
+    "effect": "occupied",
+    "lostTime": 200
+   }
+  },
+  "goAway": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 25,
+    "mapTypesDestination": [
+     "ro"
+    ]
+   },
+   "1": {
+    "effect": "occupied",
+    "lostTime": 70,
+    "mapTypesDestination": [
+     "ro"
+    ]
+   }
+  },
+  "goForge": {
+   "0": {
+    "forceStayInCity": true
+   },
+   "1": {
+    "forceStayInCity": true,
+    "effect": "occupied",
+    "lostTime": 40,
+    "money": -300
+   },
+   "2": {
+    "forceStayInCity": true,
+    "randomItem": {}
+   },
+   "3": {
+    "forceStayInCity": true
+   },
+   "4": {
+    "forceStayInCity": true,
+    "effect": "occupied",
+    "lostTime": 20
+   }
+  },
+  "goInn": {
+   "0": {
+    "forceStayInCity": true,
+    "effect": "occupied",
+    "lostTime": 120
+   },
+   "1": {
+    "forceStayInCity": true,
+    "effect": "sleeping",
+    "health": 15,
+    "money": -70,
+    "tags": [
+     "moneyUsage"
+    ]
+   },
+   "2": {
+    "forceStayInCity": true
+   }
+  },
+  "goMarket": {
+   "0": {
+    "forceStayInCity": true,
+    "effect": "occupied",
+    "lostTime": 30,
+    "randomItem": {}
+   },
+   "1": {
+    "forceStayInCity": true,
+    "effect": "occupied",
+    "lostTime": 60
+   },
+   "2": {
+    "forceStayInCity": true,
+    "effect": "injured",
+    "health": -60
+   }
+  }
+ },
+ "draft": {
+  "author": "BastLast",
+  "lang": {
+   "possibilities": {
+    "visitForge": {
+     "outcomes": {
+      "0": "Le forgeron, un homme robuste aux mains calleuses, vous accueille avec chaleur : on lui a dit du bien de vous. Il vous montre ses plus belles pièces et vous offre un petit objet de sa fabrication en guise de bienvenue.",
+      "1": "Le maître-forgeron vous jauge d'un coup d'œil et vous tend ses dernières créations à essayer. Vos remarques lui plaisent : il vous remet l'une de ses pièces, d'artisan à combattant.",
+      "2": "Le forgeron vous toise : il sait qui vous êtes. Malgré votre or sonnant et trébuchant, il refuse de vous vendre la moindre pièce de sa vitrine et vous montre la porte.",
+      "3": "Le forgeron a entendu parler de vos méfaits et refuse de vous servir. Vous haussez le ton, il soulève son marteau sans cesser de vous regarder. Vous ressortez de la forge, humilié.",
+      "4": "Vous soupesez une épée bien forgée, qui vous échappe des mains et fracasse une vitrine d'exposition. Rouge de colère, le forgeron exige réparation sur-le-champ.",
+      "5": "Un coup d'œil vous suffit : rien dans la vitrine n'égale ce que vous portez déjà. Le forgeron en convient de bonne grâce, et vous ressortez sans rien acheter.",
+      "6": "La forge résonne du martèlement de l'enclume, et le forgeron est trop occupé pour vous accorder un regard. Vous patientez un moment, puis ressortez bredouille."
+     },
+     "text": "Visiter la forge réputée."
+    },
+    "visitInn": {
+     "outcomes": {
+      "0": "L'aubergiste vous reconnaît : votre nom est de ceux qu'on accueille volontiers. Il vous offre sa meilleure chambre et un repas copieux. Au matin, toute votre fatigue a disparu.",
+      "1": "L'aubergiste de la Halte des Braves vous accueille chaleureusement. Vous négociez un prix raisonnable pour une chambre confortable et profitez d'une nuit réparatrice bien méritée.",
+      "2": "L'aubergiste vous reconnaît et hésite, nerveux. Il finit par vous proposer une chambre à un prix exorbitant, en prétextant que votre présence risque de faire fuir ses autres clients.",
+      "3": "La Halte des Braves affiche complet : une caravane de marchands a pris tous les lits avant vous. Vous patientez une bonne heure dans la salle commune avant qu'une place se libère.",
+      "4": "L'aubergiste voit à votre allure que vous avez de la route derrière vous. Contre une modeste contribution, il vous confie ce qu'il sait des chemins des environs.",
+      "5": "La Halte des Braves est bondée, comme toujours. Il ne reste qu'un réduit sous les combles, que l'aubergiste vous cède à prix réduit en s'excusant du manque de confort.",
+      "6": "L'aubergiste, grand amoureux des animaux, fond devant votre compagnon à quatre pattes. Il vous offre le gîte et le couvert à tous les deux.",
+      "7": "Vous entrez à la Halte des Braves, et votre T-Rex vous suit en bon compagnon. C'est la panique dans toute l'auberge. Croyant à une attaque, l'aubergiste vous apporte la caisse et vous supplie de ressortir."
+     },
+     "text": "Chercher refuge à l'auberge La Halte des Braves."
+    },
+    "exploreMarket": {
+     "outcomes": {
+      "0": "Au marché, on vous connaît pour un voyageur honnête. Les marchands vous montrent leurs meilleures marchandises, et l'un d'eux vous offre un objet rare en gage d'amitié.",
+      "1": "Le marché de Claire de Ville grouille d'activité. Vous savez marchander, et vous dénichez quelques bonnes affaires parmi les étals colorés.",
+      "2": "Les marchands vous observent avec méfiance : on leur a parlé de vous. Les prix grimpent dès que vous approchez, et certains refusent même de vous servir.",
+      "3": "Un pickpocket novice glisse la main vers votre bourse. Vous lui saisissez le poignet avant qu'il ne l'atteigne, et récupérez au passage quelques pièces volées à d'autres.",
+      "4": "Dans la cohue du marché, vous baissez votre garde un instant. Un voleur expérimenté en profite pour vous soulager d'une partie de votre bourse.",
+      "5": "Des brigands qui ont des comptes à régler avec vous vous tombent dessus entre deux étals. Le temps que la garde accoure, vous les avez repoussés, non sans quelques blessures.",
+      "6": "Les trouble-fêtes habituels du marché vous regardent passer et préfèrent s'occuper de quelqu'un d'autre. Vous déambulez tranquillement entre les étals.",
+      "7": "En aidant spontanément un marchand âgé à porter ses marchandises, vous gagnez sa reconnaissance. Il partage avec vous quelques pièces et des informations utiles sur la région.",
+      "8": "Entre les étals, un mendiant vous demande une pièce. À peine avez-vous sorti votre bourse qu'il vous l'arrache et disparaît dans la foule.",
+      "9": "Entre les étals, un mendiant vous demande une pièce. À peine avez-vous sorti votre bourse qu'il vous l'arrache et détale. Vous le rattrapez en quelques enjambées et lui flanquez une correction dont vous n'êtes pas très fier."
+     },
+     "text": "Explorer le marché."
+    },
+    "seekInformation": {
+     "outcomes": {
+      "0": "Les habitants vous reconnaissent et se pressent autour de vous. Chacun y va de son conseil sur les dangers des routes, et vous quittez la ville mieux informé que quiconque.",
+      "1": "Vous savez quelles questions poser. Les habitants finissent par vous indiquer une route discrète, qui évite les bandits du Bois Hurlant.",
+      "2": "Vous prenez le temps d'écouter, et cela paie : un vieil homme vous indique une cache d'objets abandonnée par d'anciens aventuriers.",
+      "3": "Les habitants se méfient de vous. Ils vous donnent quelques renseignements sans importance et gardent le reste pour eux.",
+      "4": "Les conversations s'arrêtent à votre approche. Personne n'accepte de vous adresser la parole, et quelqu'un file prévenir les gardes.",
+      "5": "Un informateur louche vous aborde dans une ruelle. Il prétend détenir des renseignements précieux, et vous les fait payer au prix fort.",
+      "6": "Une veuve âgée, touchée que vous preniez le temps de l'écouter, vous raconte l'histoire tragique du Bois Hurlant et vous met en garde contre ses dangers.",
+      "7": "Un homme encapuchonné vous tire dans une ruelle et prétend détenir des informations pour quelqu'un de votre espèce. Vous flairez l'arnaque et le livrez aux gardes. L'homme était recherché, et ils vous remercient, non sans vous regarder de travers."
+     },
+     "text": "Chercher des informations auprès des habitants."
+    },
+    "helpCityGuards": {
+     "outcomes": {
+      "0": "Le capitaine de la garde a entendu parler de vous. Il vous confie une patrouille rémunérée et, à la fin de votre service, vous remet un équipement de qualité.",
+      "1": "Vous passez la journée à aider les gardes à maintenir l'ordre dans Claire de Ville. Les autorités vous versent une gratification et vous remercient officiellement.",
+      "2": "En patrouille avec les gardes, vous aidez à arrêter un voleur récidiviste. La municipalité vous félicite et vous verse une prime.",
+      "3": "Les gardes déclinent poliment votre offre. Ils apprécient votre bonne volonté, mais estiment pouvoir assurer seuls la sécurité de leur ville.",
+      "4": "Les gardes vous regardent avec suspicion : votre nom leur dit quelque chose. Ils vous conseillent fermement de ne pas vous mêler de leurs affaires.",
+      "5": "Les gardes reconnaissent votre visage sur un avis de recherche et tentent de vous arrêter. S'ensuit une course-poursuite dans les rues de Claire de Ville, que vous gagnez haut la main.",
+      "6": "Les gardes reconnaissent votre visage sur un avis de recherche et se lancent à vos trousses. Une dague vous entaille le dos, et la douleur vous donne des ailes : vous finissez par les semer, hagard.",
+      "7": "Les gardes se méfient de vous, mais l'un d'eux, pris de pitié, vous laisse une chance de vous racheter. Vous travaillez à ses côtés et, malgré vos maladresses, vous lui rendez service. En chemin, il vous confie qu'il doit sa patience aux leçons de Sir Rowan."
+     },
+     "text": "Proposer votre aide aux gardes."
+    },
+    "restAndObserve": {
+     "outcomes": {
+      "0": "Vous trouvez un banc paisible sur la place centrale et observez la vie trépidante de Claire de Ville. Cette pause contemplative vous permet de récupérer un peu d'énergie.",
+      "1": "Vous avez vu assez de villes pour remarquer ce qui distingue celle-ci. Depuis votre banc, vous observez avec intérêt les habitudes et les traditions des habitants de Claire de Ville.",
+      "2": "Pendant que vous vous reposez sur la place, un mendiant vient s'asseoir près de vous et vous raconte ce qu'il sait des personnages importants de la ville.",
+      "3": "Pendant votre pause, vous assistez à un spectacle de rue divertissant qui vous remonte le moral et vous donne envie de continuer votre aventure.",
+      "4": "Les enfants du quartier s'attroupent autour de votre familier, émerveillés. Il se laisse admirer de bonne grâce, et ce moment de joie vous réchauffe le cœur."
+     },
+     "text": "Se reposer et observer l'animation."
+    },
+    "end": {
+     "outcomes": {
+      "0": "Vous faites rapidement le tour de Claire de Ville. La cité est prospère, mais rien ne retient vraiment votre attention aujourd'hui.",
+      "1": "Intimidé par l'agitation de cette grande ville marchande, vous préférez ne pas vous mêler aux habitants et repartez discrètement après une visite superficielle."
+     }
+    }
+   },
+   "text": "Vous voici à Claire de Ville, la grande cité marchande de la région. Les caravanes se croisent sous les portes fortifiées, les marteaux des forges résonnent jusque dans les ruelles, et l'odeur des auberges se mêle aux épices du grand marché."
+  },
+  "data": {
+   "possibilities": {
+    "visitForge": {
+     "outcomes": {
+      "0": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "min": 50
+        }
+       },
+       "randomItem": {},
+       "karma": 3
+      },
+      "1": {
+       "forceStayInCity": true,
+       "requirements": {
+        "level": {
+         "min": 60
+        },
+        "attack": {
+         "min": 300
+        }
+       },
+       "randomItem": {},
+       "karma": 5
+      },
+      "2": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "max": -30
+        }
+       },
+       "karma": -5
+      },
+      "3": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "max": -50
+        },
+        "attack": {
+         "max": 200
+        }
+       },
+       "karma": -8
+      },
+      "4": {
+       "forceStayInCity": true,
+       "requirements": {
+        "level": {
+         "max": 30
+        }
+       },
+       "money": -250,
+       "karma": -3
+      },
+      "5": {
+       "forceStayInCity": true,
+       "requirements": {
+        "level": {
+         "min": 80
+        }
+       }
+      },
+      "6": {
+       "forceStayInCity": true,
+       "effect": "occupied",
+       "lostTime": 45
+      }
+     }
+    },
+    "visitInn": {
+     "outcomes": {
+      "0": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "min": 100
+        }
+       },
+       "health": 20,
+       "karma": 5
+      },
+      "1": {
+       "forceStayInCity": true,
+       "health": 15,
+       "money": -80,
+       "effect": "sleeping"
+      },
+      "2": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "max": -20
+        }
+       },
+       "health": 10,
+       "money": -150,
+       "karma": -2,
+       "effect": "sleeping"
+      },
+      "3": {
+       "forceStayInCity": true,
+       "effect": "occupied",
+       "lostTime": 90
+      },
+      "4": {
+       "forceStayInCity": true,
+       "requirements": {
+        "level": {
+         "min": 50
+        }
+       },
+       "money": -40,
+       "karma": 2
+      },
+      "5": {
+       "forceStayInCity": true,
+       "health": 8,
+       "money": -30,
+       "effect": "sleeping"
+      },
+      "6": {
+       "forceStayInCity": true,
+       "requirements": {
+        "validPetTypeIds": [
+         1
+        ]
+       },
+       "health": 15,
+       "karma": 8
+      },
+      "7": {
+       "forceStayInCity": true,
+       "requirements": {
+        "validPetTypeIds": [
+         65
+        ]
+       },
+       "money": 400,
+       "karma": -40
+      }
+     }
+    },
+    "exploreMarket": {
+     "outcomes": {
+      "0": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "min": 80
+        }
+       },
+       "randomItem": {},
+       "karma": 10
+      },
+      "1": {
+       "forceStayInCity": true,
+       "requirements": {
+        "level": {
+         "min": 40
+        }
+       },
+       "money": 50,
+       "karma": 1
+      },
+      "2": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "max": -30
+        }
+       },
+       "money": -100,
+       "karma": -5
+      },
+      "3": {
+       "forceStayInCity": true,
+       "requirements": {
+        "speed": {
+         "min": 200
+        }
+       },
+       "money": 75,
+       "karma": 5
+      },
+      "4": {
+       "forceStayInCity": true,
+       "requirements": {
+        "speed": {
+         "max": 199
+        }
+       },
+       "money": -120
+      },
+      "5": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "max": -80
+        }
+       },
+       "health": -25,
+       "money": -50,
+       "karma": -10,
+       "effect": "hurt"
+      },
+      "6": {
+       "forceStayInCity": true,
+       "requirements": {
+        "attack": {
+         "min": 250
+        }
+       },
+       "karma": 3
+      },
+      "7": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "min": 20
+        }
+       },
+       "money": 30,
+       "karma": 8
+      },
+      "8": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "min": 100
+        },
+        "speed": {
+         "max": 199
+        }
+       },
+       "money": -250
+      },
+      "9": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "min": 100
+        },
+        "speed": {
+         "min": 200
+        }
+       },
+       "karma": -10
+      }
+     }
+    },
+    "seekInformation": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "karma": {
+         "min": 150
+        }
+       },
+       "karma": 15,
+       "mapTypesDestination": [
+        "ro"
+       ]
+      },
+      "1": {
+       "requirements": {
+        "level": {
+         "min": 70
+        }
+       },
+       "karma": 5,
+       "mapTypesDestination": [
+        "ro"
+       ]
+      },
+      "2": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "min": 30
+        },
+        "level": {
+         "min": 50
+        }
+       },
+       "randomItem": {},
+       "karma": 12
+      },
+      "3": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "max": -10
+        }
+       },
+       "karma": 1
+      },
+      "4": {
+       "requirements": {
+        "karma": {
+         "max": -100
+        }
+       },
+       "karma": -15
+      },
+      "5": {
+       "forceStayInCity": true,
+       "money": -150,
+       "karma": 3
+      },
+      "6": {
+       "forceStayInCity": true,
+       "karma": 8
+      },
+      "7": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "max": -50
+        },
+        "level": {
+         "min": 80
+        }
+       },
+       "karma": 20
+      }
+     }
+    },
+    "helpCityGuards": {
+     "outcomes": {
+      "0": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "min": 100
+        },
+        "level": {
+         "min": 60
+        }
+       },
+       "effect": "working",
+       "money": 200,
+       "randomItem": {},
+       "karma": 20
+      },
+      "1": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "min": 50
+        }
+       },
+       "effect": "working",
+       "money": 120,
+       "karma": 15
+      },
+      "2": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "min": 20
+        },
+        "attack": {
+         "min": 200
+        }
+       },
+       "money": 80,
+       "karma": 10
+      },
+      "3": {
+       "forceStayInCity": true
+      },
+      "4": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "max": -10
+        }
+       },
+       "karma": -5
+      },
+      "5": {
+       "requirements": {
+        "karma": {
+         "max": -50
+        },
+        "speed": {
+         "min": 250
+        }
+       },
+       "effect": "occupied",
+       "lostTime": 120,
+       "karma": -20
+      },
+      "6": {
+       "requirements": {
+        "karma": {
+         "max": -50
+        },
+        "speed": {
+         "max": 249
+        }
+       },
+       "karma": -20,
+       "health": -20,
+       "effect": "confounded"
+      },
+      "7": {
+       "forceStayInCity": true,
+       "requirements": {
+        "karma": {
+         "max": -30
+        },
+        "level": {
+         "max": 50
+        }
+       },
+       "effect": "working",
+       "karma": 20
+      }
+     }
+    },
+    "restAndObserve": {
+     "outcomes": {
+      "0": {
+       "forceStayInCity": true,
+       "health": 5,
+       "effect": "occupied",
+       "lostTime": 60
+      },
+      "1": {
+       "forceStayInCity": true,
+       "requirements": {
+        "level": {
+         "min": 50
+        }
+       },
+       "karma": 3,
+       "effect": "occupied",
+       "lostTime": 45
+      },
+      "2": {
+       "forceStayInCity": true,
+       "karma": 2,
+       "effect": "occupied",
+       "lostTime": 30
+      },
+      "3": {
+       "forceStayInCity": true,
+       "karma": 5,
+       "effect": "occupied",
+       "lostTime": 40
+      },
+      "4": {
+       "forceStayInCity": true,
+       "requirements": {
+        "petRarity": {
+         "min": 4
+        }
+       },
+       "karma": 12,
+       "effect": "occupied",
+       "lostTime": 20
+      }
+     }
+    },
+    "end": {
+     "outcomes": {
+      "0": {
+       "forceStayInCity": true,
+       "effect": "occupied",
+       "lostTime": 5
+      },
+      "1": {
+       "effect": "occupied",
+       "lostTime": 3,
+       "karma": -1
+      }
+     }
+    }
+   },
+   "triggers": [
+    {
+     "mapId": 23
+    }
+   ]
+  }
+ }
+}

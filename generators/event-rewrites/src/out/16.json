@@ -1,0 +1,292 @@
+{
+ "eventId": "16",
+ "model": "repasse",
+ "text": "Après de longues heures à suivre la Rivière aux Crabes, vous découvrez un vieux château au bord de l'eau. Le lierre couvre ses murs, des corneilles nichent dans ses tours éventrées, et un ponton pourri s'avance encore dans le courant. Aucune fumée ne monte des cheminées : le lieu semble abandonné.",
+ "possibilities": {
+  "enterCastle": {
+   "text": "Entrer pour fouiller le château.",
+   "outcomes": {
+    "0": "Vous traversez des salles vides et finissez par trouver l'ancienne armurerie. Presque tout y a rouillé, mais un objet a tenu bon. Vous le ramassez et ressortez sans traîner, pressé de quitter ces murs.",
+    "1": "À peine entré, vous entendez des pas dans les étages, puis une porte qui grince quelque part au fond. Le château est moins abandonné qu'il n'y paraît. Peu rassuré, vous ressortez aussitôt et reprenez votre route.",
+    "2": "Dans la grande salle, un morceau du plafond se détache juste au-dessus de vous. Votre armure légère n'arrête rien : les pierres vous frappent de plein fouet. Vous ressortez du château en boitant, couvert de poussière et de sang.",
+    "3": "Dans la grande salle, un morceau du plafond se détache juste au-dessus de vous. Votre armure encaisse le plus gros, mais une pierre vous entaille l'épaule. Vous ressortez du château en vous tenant le bras.",
+    "4": "Un escalier effondré descend vers les caves. Vous attachez une corde à un pilier et vous laissez glisser dans le noir. En bas, un coffre a échappé aux pillards. Vous en tirez un bel objet, puis remontez à la force des bras en laissant la corde nouée au pilier.",
+    "5": "Des voix montent d'une salle : des brigands ont fait du château leur repaire. Leur chef vous reconnaît et vous invite à leur feu comme un vieux camarade. Vous acceptez votre part de leur dernier butin sans poser de questions."
+   }
+  },
+  "walkAround": {
+   "text": "Faire le tour du château par l'extérieur.",
+   "outcomes": {
+    "0": "Vous faites lentement le tour des remparts. Brèches colmatées, pierres noircies, fossé comblé : le château a connu un siège, il y a bien longtemps. Vous ne trouvez rien d'autre, et ce tour vous a pris un bon moment.",
+    "1": "Le tour des murs ne vous apprend pas grand-chose sur le château. En revanche, de petites pièces d'or brillent un peu partout dans l'herbe, au pied des remparts. Vous passez un long moment à les ramasser une à une.",
+    "2": "Le long du mur nord, l'herbe haute cache un trou. Vous marchez droit dedans et tombez lourdement au fond. Vous en sortez à grand-peine, la jambe en sang. Il faudra la soigner avant d'aller plus loin.",
+    "3": "Le long du mur nord, l'herbe haute cache un trou. Votre pied s'y enfonce d'un coup. Vous vous rattrapez de justesse, mais votre cheville se tord, et vous finissez le tour en boitant.",
+    "4": "Près des remparts, votre chien se met à gratter la terre avec ardeur. Vous l'aidez à creuser et dégagez un petit coffret enterré, rongé par la rouille. À l'intérieur, quelques pièces d'or attendaient depuis longtemps.",
+    "5": "Dans les douves asséchées gisent les restes du pont-levis. Sous une grosse poutre, vous apercevez un coffre écrasé. Vous soulevez la poutre à bout de bras, le temps d'en tirer un objet resté intact."
+   }
+  },
+  "searchRiver": {
+   "text": "Fouiller les berges près du château.",
+   "outcomes": {
+    "0": "En longeant la berge, vous tombez sur les restes d'un moulin à eau. Des pièces se sont coincées entre les dents rouillées des engrenages. Vous passez un moment à les extraire avec la pointe de votre lame.",
+    "1": "Vous vous penchez au bord de l'eau pour fouiller sous les racines. Les pierres sont glissantes, et vous basculez dans la rivière. Le courant vous emporte, et vous regagnez la berge quelques mètres plus loin, trempé et transi.",
+    "2": "Sous le vieux ponton, une forme sombre repose au fond de l'eau. Vous avez fouillé assez de ruines pour reconnaître une barge coulée. Vous plongez plusieurs fois et remontez de l'épave une bourse et un objet.",
+    "3": "Votre hippopotame se jette dans la rivière dans une grande gerbe d'eau. Vous le rejoignez, et la baignade vous fait du bien. Il refait surface un peu plus loin, un objet brillant entre les dents, et le laisse tomber à vos pieds.",
+    "4": "En aval, la berge se perd dans les vasières où grouillent les crabes. Vous en attrapez une poignée et les faites griller sur un petit feu, avec les herbes de la rive qui relèvent leur goût. Ce repas improvisé vous redonne des forces."
+   }
+  },
+  "skip": {
+   "text": "Continuer votre route.",
+   "outcomes": {
+    "0": "Vous laissez le château à ses corneilles et continuez à suivre la rivière. Leurs cris vous accompagnent un moment, puis le bruit de l'eau finit par les couvrir.",
+    "1": "Sur le chemin qui longe la rivière, vous croisez des poissonniers de Claire de Ville et leurs charrettes. L'un d'eux vous reconnaît et prévient les autres. Ils vous barrent le passage, et vous devez faire un long détour par les vasières.",
+    "2": "Sur le chemin qui longe la rivière, vous croisez des poissonniers de Claire de Ville. L'un d'eux vous reconnaît et insiste pour vous offrir un poisson fumé. Vous le mangez en marchant, et la route vous paraît plus courte.",
+    "3": "Au bord des vasières, votre crabe s'arrête net devant les crabes qui grouillent dans la boue. Il semble tenté de les rejoindre. Il vous faut un bon moment pour le récupérer et reprendre la route."
+   }
+  },
+  "end": {
+   "outcomes": {
+    "0": "Vous restez un moment immobile face au château, à suivre le vol des corneilles autour des tours. Rien d'autre ne bouge. Vous finissez par reprendre votre route sans y être entré.",
+    "1": "Assis sur une pierre de la berge, vous imaginez les fêtes que ce château a dû connaître. Vous perdez la notion du temps, et il faut le cri d'une corneille pour vous tirer de votre rêverie.",
+    "2": "Pendant que vous contemplez le château, votre alien disparaît par une fenêtre basse. Vous le retrouvez dans la grande salle, penché sur un coffre éventré. Il semble fasciné par les quelques pièces d'or restées au fond, et vous l'aidez à les ramasser."
+   }
+  }
+ },
+ "data": {
+  "triggers": [
+   {
+    "mapId": 25
+   }
+  ],
+  "possibilities": {
+   "enterCastle": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 25,
+      "randomItem": {}
+     },
+     "1": {
+      "effect": "occupied",
+      "lostTime": 10
+     },
+     "2": {
+      "requirements": {
+       "defense": {
+        "max": 180
+       }
+      },
+      "effect": "hurt",
+      "health": -35
+     },
+     "3": {
+      "requirements": {
+       "defense": {
+        "min": 181,
+        "max": 519
+       }
+      },
+      "effect": "hurt",
+      "health": -15
+     },
+     "4": {
+      "consumeMaterials": {
+       "ids": [
+        12,
+        47,
+        49
+       ],
+       "quantity": 1
+      },
+      "effect": "occupied",
+      "lostTime": 35,
+      "randomItem": {
+       "rarity": {
+        "min": 3
+       }
+      }
+     },
+     "5": {
+      "requirements": {
+       "karma": {
+        "max": -30
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 20,
+      "money": 150,
+      "karma": -3
+     }
+    }
+   },
+   "walkAround": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 60
+     },
+     "1": {
+      "effect": "occupied",
+      "lostTime": 80,
+      "money": 250
+     },
+     "2": {
+      "requirements": {
+       "speed": {
+        "max": 40
+       }
+      },
+      "effect": "hurt",
+      "health": -20
+     },
+     "3": {
+      "requirements": {
+       "speed": {
+        "min": 41,
+        "max": 349
+       }
+      },
+      "effect": "feetHurt",
+      "health": -8
+     },
+     "4": {
+      "requirements": {
+       "validPetTypeIds": [
+        1
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 15,
+      "money": 180
+     },
+     "5": {
+      "requirements": {
+       "attack": {
+        "min": 600
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 30,
+      "randomItem": {}
+     }
+    }
+   },
+   "searchRiver": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 45,
+      "money": 80
+     },
+     "1": {
+      "requirements": {
+       "speed": {
+        "max": 40
+       }
+      },
+      "effect": "freezing",
+      "health": -10
+     },
+     "2": {
+      "requirements": {
+       "level": {
+        "min": 120
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 80,
+      "money": 100,
+      "randomItem": {}
+     },
+     "3": {
+      "requirements": {
+       "validPetTypeIds": [
+        31
+       ]
+      },
+      "health": 10,
+      "randomItem": {}
+     },
+     "4": {
+      "requirements": {
+       "cookingLevel": {
+        "min": 70
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 30,
+      "health": 15
+     }
+    }
+   },
+   "skip": {
+    "outcomes": {
+     "0": {},
+     "1": {
+      "requirements": {
+       "karma": {
+        "max": -30
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 30
+     },
+     "2": {
+      "requirements": {
+       "karma": {
+        "min": 50
+       }
+      },
+      "health": 10
+     },
+     "3": {
+      "requirements": {
+       "validPetTypeIds": [
+        86
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 15
+     }
+    }
+   },
+   "end": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 15
+     },
+     "1": {
+      "effect": "occupied",
+      "lostTime": 30
+     },
+     "2": {
+      "requirements": {
+       "validPetTypeIds": [
+        70
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 25,
+      "money": 150
+     }
+    }
+   }
+  }
+ },
+ "icons": {
+  "searchRiver": "🌊",
+  "end": {
+   "2": "👽"
+  }
+ },
+ "notes": [
+  "Retiré : la possibilité restAndObserve, reprise de l'event 13 et absente d'original (ermite à l'objet béni, pèlerins, rêverie sans effet), et son emoji. enterCastle passe de 13 à 6 issues : dragon, serpent, diplodocus, chevaliers, réfugiés, gardes qui vous poursuivent, terreur du débutant et recrutement par les brigands sont écartés. walkAround passe de 7 à 6, skip et end perdent leurs doublons de décor (deux skip vides, deux contemplations quasi identiques).",
+  "Gardé de l'original : l'armurerie et son objet, les bruits qui font ressortir, le plafond qui s'effondre, les pièces d'or au pied des remparts, le trou dans l'herbe, le tour sans trouvaille et la contemplation en deux durées (15 et 30 minutes). Gardé du draft : searchRiver (moulin, barge coulée, chute à l'eau, hippopotame), le chien qui déterre un coffret, le pont-levis, les brigands, l'alien.",
+  "Paliers : le plafond se gradue sur la défense (faible -35 PV, moyenne -15, forte rien) et le trou sur la vitesse (faible -20 PV, moyenne cheville tordue, forte rien) ; la chute dans la rivière ne touche qu'un joueur faible, le cas général étant traité sans condition.",
+  "Recalé : niveaux 42, 50, 60, 69, 70 de l'ancien barème remplacés par niveau min 120 (assez de ruines fouillées pour reconnaître une épave) ; vitesse max 500 qui punissait presque tout le monde, attaque 300 nommée réflexe de combattant, vitesse 150 et 250 alignées sur l'échelle (40, 41-349, attaque forte 600).",
+  "Karma : seuils -280, -100 et 20 supprimés ; il reste max -30 (brigands qui vous reconnaissent, poissonniers qui vous barrent la route) et min 50 (poissonnier qui vous offre un poisson). Plus de karma pour une trouvaille, un familier ou un spectacle (+15 de l'alien, +1 du familier au soleil, +3 du chien, +5 de la cache) : seul accepter le butin des brigands coûte -3. L'alien rapporte 150 pièces au lieu de 700.",
+  "Matériaux et cuisine : une corde (ids 12, 47, 49, consumeMaterials) permet de descendre dans les caves et rapporte un objet de rareté 3 au moins, la corde restant nouée au pilier ; un bon cuisinier (cookingLevel min 70) grille les crabes des vasières, en lien avec le canon du lieu. Les poissonniers de Claire de Ville et un familier Crabe donnent du sens à skip.",
+  "Style : introduction recentrée sur l'original (la rivière suivie des heures, le château qui semble abandonné) avec deux détails concrets ; plus de « ! », d'objet béni, de lecture dans la tête des animaux ni de « encore une fois » ; chaque texte suit sa mécanique (feetHurt pour la cheville, freezing pour le bain forcé, occupied pour chaque détour)."
+ ]
+}

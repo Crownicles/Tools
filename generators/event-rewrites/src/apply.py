@@ -39,7 +39,11 @@ def icons_block(event_id, icons, indent="\t\t"):
     items = sorted(icons.items())
     for i, (name, value) in enumerate(items):
         comma = "," if i < len(items) - 1 else ""
-        if isinstance(value, dict):
+        if isinstance(value, dict) and len(value) == 1:
+            # The repository's lint wants a short single-property object on one line
+            (outcome, emoji), = value.items()
+            lines.append(f"{indent}\t{name}: {{ {outcome}: \"{emoji}\" }}{comma}")
+        elif isinstance(value, dict):
             lines.append(f"{indent}\t{name}: {{")
             ends = sorted(value.items(), key=lambda kv: int(kv[0]))
             for j, (outcome, emoji) in enumerate(ends):

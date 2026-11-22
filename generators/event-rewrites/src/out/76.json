@@ -138,7 +138,7 @@
           "4": {
             "requirements": {
               "karma": {
-                "max": -40
+                "max": -30
               }
             },
             "money": 22,
@@ -196,8 +196,7 @@
               }
             },
             "effect": "occupied",
-            "lostTime": 20,
-            "karma": 2
+            "lostTime": 20
           },
           "5": {
             "requirements": {
@@ -254,6 +253,7 @@
     "L'heure de recherche de Minou et la demi-heure de questions ont leur durée en jeu ; rendre un bien ou le subtiliser influe sur le karma.",
     "Relecture : phrases cryptiques réécrites pour se comprendre à la première lecture (sol qui tremble, bête de la cave, rues qui se fendent, tapis et planches, vision au mur) ; mots rares ou ambigus remplacés (éprouver, escamoter, cabinet, secrétaire, dépanner, chambranle, appui de fenêtre) ; scènes peu crédibles simplifiées (livre offert puis gardé, Parziter coincé dehors alors qu'il ouvre la porte, tasse sortie de nulle part) ; cache de question 2 différenciée de celle de l'escalier ; libellé au vouvoiement. Données inchangées.",
     "Seuils : niveau et statistiques recalés sur les joueurs réguliers. Fort : attaque 700 (tonneau soulevé seul), vitesse 500 (tasse rattrapée au vol). Correct : vitesse 350 (dessins rattrapés), défense 520 (tuiles sur le bouclier), niveau 120 (marches testées, cache retrouvée). Débutant : niveau 30 au plus (tiroirs fouillés sans permission, vision qui étourdit). Vie, familier, classe et karma inchangés.",
-    "Intro : rallongée après relecture pour garder ce que l'original posait et que les choix utilisent."
+    "Intro : rallongée après relecture pour garder ce que l'original posait et que les choix utilisent.",
+    "Repasse paliers et karma : seuil de karma de explore 4 recalé de max -40 à max -30 ; gain de karma retiré de question 4, déclenchée par le familier et sans choix moral. Pas de seuil binaire à graduer : les malus réservés aux débutants (tiroirs fouillés, vision) restent légers à côté d'une issue générale, et aucune issue ne pénalise une force."
   ]
 }

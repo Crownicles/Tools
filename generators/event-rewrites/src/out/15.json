@@ -1,0 +1,270 @@
+{
+  "eventId": "15",
+  "model": "repasse",
+  "text": "Dans une ruelle de Claire de Ville, vous poussez la porte d'une petite boutique. Quelques hommes y discutent tranquillement entre des étals d'armes d'occasion et de bijoux clinquants. Sur le comptoir, la caisse est restée entrouverte. À votre entrée, ils se taisent et vous jaugent du regard.",
+  "possibilities": {
+    "trade": {
+      "text": "Tenter de commercer avec eux.",
+      "outcomes": {
+        "0": "Les marchands vous font bon accueil. Après une longue discussion, ils vous cèdent un objet à un prix honnête. Vous ressortez satisfait de votre achat, et ils vous saluent jusqu'à la porte.",
+        "1": "Les marchands échangent un regard, puis baissent la voix. L'un d'eux sort de sous le comptoir un objet tombé d'on ne sait quel chariot, cédé à bas prix. Vous payez sans poser de questions.",
+        "2": "Les marchands vous vantent une épée sertie de pierres, et vous la payez cher. Au coin de la rue, la lame plie sous votre pouce : elle est en mousse peinte. Vous revenez sur vos pas, mais la porte de la boutique reste close.",
+        "3": "Moins accueillants que prévu, les hommes vous encerclent. Sous la menace de leurs poings, vous leur abandonnez quelques pièces. Ils filent aussitôt par une porte de derrière.",
+        "4": "Les marchands s'intéressent moins à votre bourse qu'à votre sac. Ils examinent le cuir que vous transportez et vous en rachètent quelques morceaux. Le marché est vite conclu, et vous ressortez avec une poignée de pièces.",
+        "5": "Vous marchandez si mal, et avec tant de sérieux, que les marchands finissent par en rire. Amusés, ils vous laissent l'objet qui vous plaisait pour une petite somme. Vous ressortez ravi.",
+        "6": "Les marchands remarquent vos armes usées par les combats et votre équipement rapiécé. L'un d'eux va chercher dans l'arrière-boutique ses plus belles pièces et vous en cède une, à un prix élevé mais juste."
+      }
+    },
+    "steal": {
+      "text": "Puiser discrètement dans la caisse.",
+      "outcomes": {
+        "0": "Les hommes sont absorbés par leur discussion. Votre main se glisse dans la caisse et en ressort avec quelques pièces. Vous quittez la boutique d'un pas tranquille, sans vous retourner.",
+        "1": "Votre main traîne une seconde de trop au-dessus de la caisse. Cinq hommes à la carrure imposante vous entourent aussitôt. La correction est rapide, et vous ressortez groggy dans la ruelle.",
+        "2": "Vous ouvrez la caisse : elle est presque vide. Un des hommes se retourne à ce moment-là. Honteux, vous devez dédommager les propriétaires et subir un long sermon avant de pouvoir repartir.",
+        "3": "Vous attendez que les hommes se penchent sur un étal. D'un geste vif, vous videz une bonne partie de la caisse. Vous êtes déjà dans la ruelle quand l'un d'eux relève la tête.",
+        "4": "Sur un signe de votre part, votre singe bondit sur le comptoir. Il plonge la main dans la caisse, attrape au passage un bibelot sur un étal et vous rejoint dehors. Les cris des marchands arrivent trop tard.",
+        "5": "Un des hommes vous attrape le poignet, puis vous dévisage. Il a entendu parler de vous, et en bien. Plus déçu que fâché, il vous fait la leçon un long moment, puis vous laisse partir sans appeler la garde."
+      }
+    },
+    "skip": {
+      "text": "Continuer votre route sans vous attarder.",
+      "outcomes": {
+        "0": "Vous saluez les hommes d'un signe de tête et ressortez aussitôt. Personne ne cherche à vous retenir, et vous retrouvez le calme des ruelles de Claire de Ville.",
+        "1": "Au coin de la ruelle, un homme pressé vous percute de plein fouet et s'enfuit sans un mot. Vous tombez lourdement sur les pavés et restez un long moment étourdi.",
+        "2": "Au coin de la ruelle, un homme pressé vous bouscule en passant et s'enfuit sans s'excuser. Votre épaule heurte un mur, et vous restez un instant sonné.",
+        "3": "Au coin de la ruelle, un homme pressé fonce droit sur vous. Vous l'évitez d'un pas de côté, et il disparaît dans la foule. Vous poursuivez votre chemin sans vous retourner."
+      }
+    },
+    "end": {
+      "outcomes": {
+        "0": "Vous restez planté sur le seuil sans oser avancer. Les hommes finissent par vous demander ce que vous voulez. Vous bredouillez une excuse et ressortez, leurs regards dans votre dos.",
+        "1": "Les hommes oublient leur discussion pour admirer votre familier. Ils vous posent mille questions à son sujet, et le temps file. Vous ne faites aucune affaire, mais vous repartez de bonne humeur.",
+        "2": "L'un des hommes vous reconnaît. Sans un mot, il referme la caisse et se poste devant le comptoir, les bras croisés. Vous comprenez le message et ressortez aussitôt dans la ruelle."
+      }
+    }
+  },
+  "data": {
+    "triggers": [
+      {
+        "mapId": 23
+      }
+    ],
+    "possibilities": {
+      "trade": {
+        "outcomes": {
+          "0": {
+            "requirements": {
+              "karma": {
+                "min": 0
+              }
+            },
+            "money": -120,
+            "randomItem": {},
+            "effect": "occupied",
+            "lostTime": 30,
+            "tags": [
+              "moneyUsage"
+            ]
+          },
+          "1": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            },
+            "money": -80,
+            "randomItem": {},
+            "karma": -3,
+            "tags": [
+              "moneyUsage"
+            ]
+          },
+          "2": {
+            "money": -200,
+            "effect": "occupied",
+            "lostTime": 45,
+            "tags": [
+              "moneyUsage"
+            ]
+          },
+          "3": {
+            "requirements": {
+              "attack": {
+                "max": 230
+              }
+            },
+            "money": -70
+          },
+          "4": {
+            "consumeMaterials": {
+              "type": "leather",
+              "quantity": 2
+            },
+            "money": 80
+          },
+          "5": {
+            "requirements": {
+              "level": {
+                "max": 30
+              }
+            },
+            "money": -60,
+            "randomItem": {},
+            "effect": "occupied",
+            "lostTime": 20,
+            "tags": [
+              "moneyUsage"
+            ]
+          },
+          "6": {
+            "requirements": {
+              "level": {
+                "min": 130
+              }
+            },
+            "money": -250,
+            "randomItem": {
+              "rarity": {
+                "min": 3
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 30,
+            "tags": [
+              "moneyUsage"
+            ]
+          }
+        }
+      },
+      "steal": {
+        "outcomes": {
+          "0": {
+            "money": 100,
+            "karma": -5
+          },
+          "1": {
+            "requirements": {
+              "speed": {
+                "max": 40
+              }
+            },
+            "health": -20,
+            "effect": "confounded",
+            "karma": -5
+          },
+          "2": {
+            "requirements": {
+              "speed": {
+                "min": 41,
+                "max": 349
+              }
+            },
+            "money": -150,
+            "effect": "occupied",
+            "lostTime": 30,
+            "karma": -5
+          },
+          "3": {
+            "requirements": {
+              "speed": {
+                "min": 350
+              }
+            },
+            "money": 200,
+            "karma": -5
+          },
+          "4": {
+            "requirements": {
+              "validPetTypeIds": [
+                24
+              ]
+            },
+            "money": 80,
+            "randomItem": {},
+            "karma": -5
+          },
+          "5": {
+            "requirements": {
+              "karma": {
+                "min": 50
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 15,
+            "karma": -5
+          }
+        }
+      },
+      "skip": {
+        "outcomes": {
+          "0": {},
+          "1": {
+            "requirements": {
+              "speed": {
+                "max": 40
+              }
+            },
+            "health": -8,
+            "effect": "confounded"
+          },
+          "2": {
+            "requirements": {
+              "speed": {
+                "min": 41,
+                "max": 349
+              }
+            },
+            "health": -4,
+            "effect": "confounded"
+          },
+          "3": {
+            "requirements": {
+              "speed": {
+                "min": 350
+              }
+            }
+          }
+        }
+      },
+      "end": {
+        "outcomes": {
+          "0": {
+            "effect": "occupied",
+            "lostTime": 20
+          },
+          "1": {
+            "requirements": {
+              "petRarity": {
+                "min": 4
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 15
+          },
+          "2": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "icons": {
+    "end": {
+      "1": "🕑",
+      "2": "🚪"
+    }
+  },
+  "notes": [
+    "Retiré : la possibilité observe, du pur remplissage absent de l'original (marchand pieux, voyageur « expérimenté » au niveau 60, achat raconté sans mécanique) ; l'issue du familier trop gros pour la porte et la chute sur une caisse en ressortant, qui n'ajoutaient rien ; le karma gagné en achetant, en admirant un familier ou en hésitant sur le seuil (ni choix moral ni geste).",
+    "Recalé : karma sur les seuils autorisés (max -30 au lieu de -1/-100, min 50 au lieu de -30, plus de max 10 ni -150) ; niveaux 80 et 30 devenus vétéran min 130 (armes usées par les combats) et débutant max 30 ; vol à -5 karma partout (petit larcin, même quand le singe s'en charge) au lieu de -10 à -30 ; achat d'objets volés -3.",
+    "Paliers : le vol se gradue sur la vitesse (max 40 correction et vertige, 41-349 caisse presque vide et dédommagement, min 350 caisse vidée), avec une issue sans condition qui garde une chance de succès pour tous ; la bousculade en ressortant aussi (-8 PV, -4 PV, esquive).",
+    "Gardé : l'accueil honnête pour karma ≥ 0 (texte sans réputation, même prix, karma retiré, temps passé et tag moneyUsage ajoutés), les objets tombés du chariot pour le joueur mal famé, le débutant amusant, le singe voleur, le familier rare admiré.",
+    "Rendu à l'original : l'épée en mousse de l'arnaque (issue sans condition), le racket sous la menace des poings (réservé aux joueurs à l'attaque faible), l'homme pressé qui vous bouscule, les cinq hommes à la carrure imposante.",
+    "Ajouté : la revente de cuir (consumeMaterials, 2 cuirs contre une poignée de pièces), qui donne un vrai sens à « commercer » ; le joueur à bon karma pris la main dans la caisse, sermonné mais relâché ; le joueur mal famé qu'on éconduit en silence s'il ne répond pas.",
+    "Canon : Claire de Ville nommée, petite boutique de ruelle sans fonction en jeu qui ne contredit ni la Boutique générale ni la Halte des Braves ; la caisse posée dans l'intro pour le choix steal ; pas de forceStayInCity (rien n'y invite, et le vol se termine en fuite ou en sermon)."
+  ]
+}

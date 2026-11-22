@@ -1,0 +1,375 @@
+{
+ "eventId": "2",
+ "model": "repasse",
+ "mapId": 9,
+ "place": "Grande Rue",
+ "placeType": "ro",
+ "placeDescription": "La Grande Rue était autrefois une artère vitale du commerce, permettant aux marchands, voyageurs et caravanes de relier rapidement le Berceau à Ville Forte. Cette route a vu passer des générations de négociants, de soldats et d’aventuriers. Mais aujourd’hui, elle n’est plus que l’ombre d’elle-même : les guerres, le temps et l’abandon l’ont laissée à l’état de vestige. Il ne subsiste que quelques vieux pavés ébréchés, témoins silencieux d’un passé prospère.",
+ "neighbours": [
+  {
+   "mapId": 10,
+   "name": "Ville Forte",
+   "minutes": 60,
+   "type": "vi"
+  },
+  {
+   "mapId": 3,
+   "name": "Le Berceau",
+   "minutes": 180,
+   "type": "pl"
+  },
+  {
+   "mapId": 11,
+   "name": "Grand Axe",
+   "minutes": 180,
+   "type": "ro"
+  }
+ ],
+ "isCity": false,
+ "city": null,
+ "canonBlock": "#### Grande Rue · `9`\n\n- **Type :** route (`ro`) ; biomes : plains, ruins\n- **Description du jeu :** « Ancienne grande route commerciale reliant le Berceau et Ville forte, il ne reste de la Grande Rue que de vieux pavés ébréchés. »\n- **Voisins :** Ville Forte (1 h), Le Berceau (3 h), Grand Axe (3 h)\n- **Zones d'expédition des familiers :** les Bas-côtés de la Grande Rue, les Pavés Anciens de la Grande Rue\n- **Big events qui s'y déclenchent :**\n  - 2 : « Devant vous, un chien arrive et tourne autour de vous. »\n  - 38 : « Faisant route, vous croisez un marchand itinérant, qui vous interpelle. »\n",
+ "triggers": [
+  {
+   "mapId": 9
+  }
+ ],
+ "original": {
+  "possibilities": {
+   "end": {
+    "outcomes": {
+     "0": "Vous avez pris la décision de ne pas bouger, cela ne semble pas plaire au chien puisque celui-ci mord sauvagement avant de s'enfuir !"
+    }
+   },
+   "followDog": {
+    "outcomes": {
+     "0": "Vous perdez la trace du chien au bout de quelques minutes, il allait trop vite ! Vous décidez de reprendre votre chemin mais vous rendez vite compte que vous n'aviez pas fait attention à votre orientation... Vous voilà perdu !",
+     "1": "Vous perdez la trace du chien au bout de quelques minutes à côté d'un arbre. En regardant autour de vous vous découvrez plein de petites pièces disséminées un peu partout !"
+    },
+    "text": "Suivre le chien."
+   },
+   "skip": {
+    "outcomes": {
+     "0": "Après 15 minutes de poursuite vous parvenez à semer le chien, il ne semblait pas très amical !",
+     "1": "Vous continuez sans vous soucier du chien. Celui-ci n'insiste pas.",
+     "2": "En voulant fuir, vous tombez brutalement dans un fossé, la blessure est profonde... Il faudra vous soigner avant de continuer !"
+    },
+    "text": "Continuer sans se préoccuper du chien."
+   }
+  },
+  "text": "Devant vous, un chien arrive et tourne autour de vous. Il semble vouloir que vous le suiviez !"
+ },
+ "outcomeData": {
+  "end": {
+   "0": {
+    "health": -10
+   }
+  },
+  "followDog": {
+   "0": {
+    "effect": "lost"
+   },
+   "1": {
+    "money": 176
+   }
+  },
+  "skip": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 15
+   },
+   "1": {},
+   "2": {
+    "effect": "hurt",
+    "health": -15
+   }
+  }
+ },
+ "draft": {
+  "author": "BastLast",
+  "lang": {
+   "possibilities": {
+    "followDog": {
+     "outcomes": {
+      "0": "Vous vous élancez derrière le chien, mais il file trop vite pour vous. Après quelques minutes de course dans les vestiges de l'auberge, vous perdez sa trace entre les poutres effondrées. Essoufflé, vous ne savez plus par où vous êtes entré.",
+      "1": "Vous suivez le chien de poutre en poutre jusqu'aux caves effondrées de l'auberge, où brillent quelques pièces oubliées par les derniers clients. L'animal vous regarde les ramasser, puis disparaît entre les solives calcinées.",
+      "2": "À sa façon d'attendre devant chaque porte, vous comprenez que ce chien était celui de l'aubergiste. Il vous conduit à l'ancienne réserve, où un coffre dort sous les gravats : les économies du tenancier, et un objet de valeur.",
+      "3": "Le chien vous fait fête comme à un habitué et vous mène à la cuisine effondrée, où une petite somme est restée cachée dans l'âtre. Il vous conduit ensuite au vieux puits de l'auberge, dont l'eau claire vous remet d'aplomb.",
+      "4": "Le chien tacheté et votre compagnon canin se flairent, puis filent ensemble dans un concert d'aboiements. Ils s'arrêtent sous la salle commune et grattent le sol jusqu'à dégager le magot de l'aubergiste, dissimulé sous les fondations.",
+      "5": "Le chien couche les oreilles en vous voyant approcher, puis détale. Vous le traquez quand même de chambre en chambre, jusqu'à le perdre de vue. Au milieu des décombres, vous ne retrouvez plus la sortie.",
+      "6": "Près de l'ancien foyer, votre chat et le chien se jaugent un long moment, puis s'ignorent poliment. Rassuré, le chien vous mène derrière le comptoir, où quelques pièces brillent encore dans un pot de grès brisé.",
+      "7": "Attiré par les aboiements, votre rongeur sort de votre besace et file dans les décombres. Vous laissez partir le chien pour ne pas perdre votre compagnon, que vous récupérez sain et sauf sous une table renversée."
+     },
+     "text": "Suivre le chien."
+    },
+    "intimidateDog": {
+     "outcomes": {
+      "0": "Vous posez la main sur votre arme et faites un pas vers lui. Le chien recule, oreilles basses et queue entre les pattes, puis disparaît entre les poutres de la salle commune. Plus rien ne vous retient ici.",
+      "1": "Vous criez et agitez les bras, sans grand effet. Le chien vous mord la jambe, puis s'enfuit en aboyant vers les chambres écroulées. La blessure est douloureuse, et votre fierté n'en sort pas indemne.",
+      "2": "Le chien détale sous vos cris, et un mendiant sort des décombres où il s'abritait. Il vous reconnaît, blêmit, et vous jette les quelques pièces de sa bourse avant de fuir vers les ruines de la cuisine.",
+      "3": "Sur le seuil brisé de l'auberge, votre familier vient se placer à vos côtés. Le chien le regarde, comprend qu'il vaut mieux ne pas insister, et s'éloigne sans hâte vers les vestiges de l'écurie.",
+      "4": "Vous gesticulez et criez, ce qui amuse beaucoup le chien : il vous tourne autour en aboyant joyeusement. Au bout de quelques minutes, lassé du jeu, il s'éloigne vers la salle commune, et vous reprenez votre route."
+     },
+     "text": "Essayer de faire fuir le chien."
+    },
+    "skip": {
+     "outcomes": {
+      "0": "Vous enjambez les poutres effondrées et traversez les ruines de l'auberge avant que le chien n'ait fait trois pas. Il vous regarde filer, puis renonce à vous suivre.",
+      "1": "Vous passez sans un regard, et le chien se jette sur vous. Ses crocs glissent sur votre armure sans trouver de prise. Vous le repoussez d'un revers, et il file vers les ruines de l'auberge.",
+      "2": "Vous pressez le pas, et vos pieds se prennent dans les gravats de l'ancienne salle commune. Vous roulez sur les pavés de la cour effondrée et vous relevez couvert de contusions.",
+      "3": "Le chien vous observe un instant près des vestiges de l'auberge, puis semble comprendre que vous n'êtes pas celui qu'il cherchait. Il s'éloigne de lui-même et disparaît dans l'ancienne écurie.",
+      "4": "D'un battement d'ailes, votre compagnon survole les ruines et entraîne le chien à sa suite. Vous en profitez pour poursuivre votre chemin le long de la Grande Rue, fier de votre familier.",
+      "5": "Vous passez sans un regard, et le chien se jette sur vous. Il vous mord au bras et ne lâche prise que lorsque vous parvenez à le repousser. Il file alors vers les ruines de l'auberge, et vous repartez en serrant votre bras blessé.",
+      "6": "Vous passez sans un regard, et le chien se jette sur vous. Rien ne protège vos jambes : il vous mord au mollet, encore et encore, avant que vous ne parveniez à le chasser. Vous repartez en boitant, la jambe en sang."
+     },
+     "text": "Continuer votre route en ignorant le chien."
+    },
+    "end": {
+     "outcomes": {
+      "0": "Vous restez planté là, et le chien s'impatiente. Il finit par vous mordre les mollets, de plus en plus fort. Vous le repoussez avec peine avant qu'il ne vous blesse davantage.",
+      "1": "Vous ne bougez pas, et le chien s'énerve pour de bon. Sa morsure est profonde : vous restez pantelant au milieu des pavés.",
+      "2": "Gêné, votre chien regarde l'autre s'agiter, puis file le rejoindre. Vous les écoutez jouer d'une oreille, jusqu'à ce qu'un concert d'aboiements vous tire de vos pensées : en grattant l'herbe, ils ont déterré un bibelot."
+     }
+    }
+   },
+   "text": "Sur les pavés brisés de la Grande Rue, un chien efflanqué au pelage tacheté surgit des ruines d'un ancien comptoir. Il tourne autour de vous, aboie, file vers une auberge effondrée, puis revient en gémissant. Il semble vouloir que vous le suiviez !"
+  },
+  "data": {
+   "possibilities": {
+    "followDog": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "speed": {
+         "max": 40
+        }
+       },
+       "effect": "lost"
+      },
+      "1": {
+       "money": 120
+      },
+      "2": {
+       "requirements": {
+        "level": {
+         "min": 130
+        }
+       },
+       "randomItem": {
+        "rarity": {
+         "min": 3
+        }
+       },
+       "money": 200,
+       "karma": 4
+      },
+      "3": {
+       "requirements": {
+        "karma": {
+         "min": 50
+        }
+       },
+       "health": 15,
+       "money": 65,
+       "karma": 1
+      },
+      "4": {
+       "requirements": {
+        "validPetTypeIds": [
+         1,
+         2,
+         28
+        ]
+       },
+       "randomItem": {
+        "rarity": {
+         "min": 4
+        }
+       },
+       "money": 300,
+       "karma": 6
+      },
+      "5": {
+       "requirements": {
+        "karma": {
+         "max": -30
+        }
+       },
+       "effect": "lost",
+       "karma": -3
+      },
+      "6": {
+       "requirements": {
+        "validPetTypeIds": [
+         3,
+         4
+        ]
+       },
+       "money": 150,
+       "karma": 5
+      },
+      "7": {
+       "requirements": {
+        "validPetTypeIds": [
+         5,
+         6,
+         93
+        ]
+       },
+       "karma": 3
+      }
+     }
+    },
+    "intimidateDog": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "karma": {
+         "max": -30
+        },
+        "attack": {
+         "min": 600
+        }
+       },
+       "karma": -5
+      },
+      "1": {
+       "requirements": {
+        "attack": {
+         "max": 230
+        }
+       },
+       "health": -20,
+       "effect": "hurt",
+       "karma": -6
+      },
+      "2": {
+       "requirements": {
+        "karma": {
+         "max": -50
+        }
+       },
+       "money": 13,
+       "karma": -15
+      },
+      "3": {
+       "requirements": {
+        "validPetTypeIds": [
+         21,
+         28,
+         56,
+         57,
+         60,
+         64,
+         65,
+         42,
+         77
+        ]
+       },
+       "karma": -1
+      },
+      "4": {
+       "effect": "occupied",
+       "lostTime": 10,
+       "karma": -2
+      }
+     }
+    },
+    "skip": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "speed": {
+         "min": 350
+        }
+       }
+      },
+      "1": {
+       "requirements": {
+        "defense": {
+         "min": 520
+        }
+       },
+       "health": -3
+      },
+      "2": {
+       "requirements": {
+        "speed": {
+         "max": 40
+        }
+       },
+       "health": -25,
+       "effect": "hurt",
+       "karma": -3
+      },
+      "3": {
+       "requirements": {
+        "karma": {
+         "min": 50
+        }
+       },
+       "karma": 2
+      },
+      "4": {
+       "requirements": {
+        "validPetTypeIds": [
+         58,
+         95
+        ]
+       },
+       "karma": 5
+      },
+      "5": {
+       "requirements": {
+        "defense": {
+         "min": 181,
+         "max": 519
+        }
+       },
+       "health": -12
+      },
+      "6": {
+       "requirements": {
+        "defense": {
+         "max": 180
+        }
+       },
+       "health": -25,
+       "effect": "hurt"
+      }
+     }
+    },
+    "end": {
+     "outcomes": {
+      "0": {
+       "health": -15,
+       "effect": "hurt"
+      },
+      "1": {
+       "requirements": {
+        "defense": {
+         "max": 180
+        }
+       },
+       "health": -30,
+       "effect": "hurt"
+      },
+      "2": {
+       "requirements": {
+        "validPetTypeIds": [
+         1,
+         2
+        ]
+       },
+       "randomItem": {}
+      }
+     }
+    }
+   },
+   "triggers": [
+    {
+     "mapId": 9
+    }
+   ]
+  }
+ }
+}

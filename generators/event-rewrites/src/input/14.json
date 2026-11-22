@@ -1,0 +1,453 @@
+{
+ "eventId": "14",
+ "model": "repasse",
+ "mapId": 12,
+ "place": "L'Étendue",
+ "placeType": "pl",
+ "placeDescription": "Une grande plaine vide nordique sans grand intérêt.",
+ "neighbours": [
+  {
+   "mapId": 11,
+   "name": "Grand Axe",
+   "minutes": 180,
+   "type": "ro"
+  },
+  {
+   "mapId": 13,
+   "name": "Route Marécageuse",
+   "minutes": 240,
+   "type": "ro"
+  },
+  {
+   "mapId": 14,
+   "name": "Lac Mirage",
+   "minutes": 360,
+   "type": "la"
+  },
+  {
+   "mapId": 15,
+   "name": "Mont Célestrum",
+   "minutes": 600,
+   "type": "mo"
+  }
+ ],
+ "isCity": false,
+ "city": null,
+ "canonBlock": "#### L'Étendue · `12`\n\n- **Type :** plaine (`pl`) ; biomes : plains\n- **Description du jeu :** « Une grande plaine vide nordique sans grand intérêt. »\n- **Voisins :** Grand Axe (3 h), Route Marécageuse (4 h), Lac Mirage (6 h), Mont Célestrum (10 h)\n- **Zones d'expédition des familiers :** les Plaines de l'Étendue\n- **Big events qui s'y déclenchent :**\n  - 14 : « Alors que la fatigue commence à vous assaillir, vous découvrez une petite prairie où se tient une petite maison. »\n  - 62 : « Un paysan vous hèle au devant de sa ferme située aux abords de l'Étendue. »\n- **Rattachés dans le graphe :** Le paysan à la fourche\n",
+ "triggers": [
+  {
+   "mapId": 12
+  }
+ ],
+ "original": {
+  "possibilities": {
+   "chatWorker": {
+    "outcomes": {
+     "0": "L'homme vous aperçoit et vous propose de vous fabriquer un objet avec lui. Après près d'une heure, votre création est terminée. L'homme vous l'offre en récompense !",
+     "1": "Vous regardez l'ouvrier fabriquer une hache pendant une dizaine de minutes avant de vous décider à reprendre la route.",
+     "2": "L'ouvrier vous aperçoit et vous propose de vous fabriquer une épée avec lui. Enthousiasmé à l'idée d'obtenir une nouvelle arme, vous acceptez. Maladroit, vous ne mettez pas longtemps à échapper votre lourde création sur le pied. Gravement blessé, vous abandonnez l'idée de créer votre propre arme."
+    },
+    "text": "Discuter avec l'ouvrier."
+   },
+   "end": {
+    "outcomes": {
+     "0": "Vous contournez la maison et continuez votre route."
+    }
+   },
+   "goAway": {
+    "outcomes": {
+     "0": "Vous partez sans perdre de temps.",
+     "1": "Vous continuez votre route en contournant la prairie.",
+     "2": "Vous décidez de continuer à marcher malgré la fatigue. Après quelques kilomètres, vous vous écroulez au bord du chemin."
+    },
+    "text": "Pas de temps à perdre ! Il faut continuer votre route !"
+   },
+   "stayNight": {
+    "outcomes": {
+     "0": "Après avoir discuté rapidement avec l'homme, ce dernier accepte de vous héberger pour la nuit. Épuisé, vous vous écroulez de fatigue sur le lit.",
+     "1": "L'homme vous avoue rapidement ne pas pouvoir vous héberger pour la nuit mais vous propose de partager son repas. Vous refusez poliment et reprenez votre route.",
+     "2": "Vous n'obtenez en réponse qu'un simple grognement. Les habitants de la région semblent ne pas apprécier les étrangers.",
+     "3": "L'homme vous refuse rapidement le partage de sa couche mais vous propose de partager son souper. Affamé et épuisé, vous acceptez son offre."
+    },
+    "text": "Demander à rester là durant la nuit pour vous reposer et reprendre des forces."
+   }
+  },
+  "text": "Alors que la fatigue commence à vous assaillir, vous découvrez une petite prairie où se tient une petite maison. Vous vous en approchez et découvrez un homme occupé à travailler une pièce métallique incandescente."
+ },
+ "outcomeData": {
+  "chatWorker": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 60,
+    "randomItem": {}
+   },
+   "1": {
+    "effect": "occupied",
+    "lostTime": 10
+   },
+   "2": {
+    "effect": "injured",
+    "health": -70
+   }
+  },
+  "end": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 30
+   }
+  },
+  "goAway": {
+   "0": {},
+   "1": {
+    "effect": "occupied",
+    "lostTime": 20
+   },
+   "2": {
+    "effect": "sleeping",
+    "health": -20
+   }
+  },
+  "stayNight": {
+   "0": {
+    "effect": "sleeping",
+    "health": 10
+   },
+   "1": {
+    "effect": "occupied",
+    "lostTime": 5
+   },
+   "2": {},
+   "3": {
+    "effect": "occupied",
+    "health": 5,
+    "lostTime": 100
+   }
+  }
+ },
+ "draft": {
+  "author": "BastLast",
+  "lang": {
+   "possibilities": {
+    "chatWorker": {
+     "outcomes": {
+      "0": "Le forgeron a entendu parler de vous, et il vous le dit sans détour. Il vous garde la journée à sa forge, vous montre quelques tours de main, et vous repartez avec la pièce forgée ensemble et une bourse pour la route.",
+      "1": "Le forgeron détaille vos cicatrices et vos armes, puis vous lance un défi : forger une lame à quatre mains. À la fin de la journée, il vous la remet avec un hochement de tête approbateur.",
+      "2": "Le forgeron vous observe un moment, puis baisse la voix : il connaît des techniques... particulières. Vous forgez ensemble une lame qu'il vaut mieux ne pas montrer, et il vous paie largement votre discrétion.",
+      "3": "Le forgeron pose son marteau en voyant votre tigre. Ancien dresseur, il vous raconte ses années auprès des fauves tout en façonnant un petit objet inspiré de votre compagnon, qu'il vous offre.",
+      "4": "Vous vous approchez trop près du feu et attrapez un outil encore chaud. Le forgeron soigne vos brûlures en vous grondant gentiment sur les dangers de la forge.",
+      "5": "Le forgeron reconnaît en vous un vétéran et vous demande votre avis sur l'équilibrage d'une arme. Vos conseils lui conviennent : il vous récompense généreusement pour ce coup de main.",
+      "6": "Vous passez un moment agréable avec le forgeron, échangeant sur vos voyages respectifs. Sa compagnie réchauffe votre cœur autant que sa forge réchauffe vos membres fatigués."
+     },
+     "text": "Engager la conversation avec le forgeron."
+    },
+    "stayNight": {
+     "outcomes": {
+      "0": "Le forgeron vous connaît de réputation et insiste pour vous recevoir. Il vous cède son propre lit et sert un festin digne d'un roi. Au matin, vous avez retrouvé toutes vos forces.",
+      "1": "Le forgeron accepte de vous héberger contre une contribution équitable. Sa maison rustique mais chaleureuse vous offre un repos bien mérité, loin des vents glacés de L'Étendue.",
+      "2": "Le forgeron vous reconnaît et se place en travers de sa porte. Il refuse de vous laisser approcher de sa maison, et menace d'alerter les autorités si vous insistez.",
+      "3": "Le forgeron, qui a longtemps eu un molosse, s'attendrit devant votre chien. Il vous accueille tous les deux avec joie et partage ses meilleures provisions avec votre compagnon.",
+      "4": "Le forgeron regarde votre armure et vous propose un marché : une nuit au chaud contre quelques pièces, et la promesse de défendre sa maison si des bandits se montrent.",
+      "5": "Touché par votre air épuisé, le forgeron vous laisse dormir dans son atelier. Tout en préparant une paillasse de fortune, il vous raconte l'histoire de quelques objets qu'il a forgés.",
+      "6": "Bien que réticent, le forgeron finit par céder à vos demandes répétées. Il vous installe dans un coin de son atelier, près de la chaleur rassurante de la forge qui se refroidit."
+     },
+     "text": "Demander l'hospitalité pour la nuit."
+    },
+    "inspectForge": {
+     "outcomes": {
+      "0": "Vous reconnaissez un travail de grande qualité, et vous le dites. Flatté, le forgeron vous montre quelques-uns de ses tours de main et vous offre l'une de ses pièces les plus abouties.",
+      "1": "Le forgeron est absorbé par son travail. Vous glissez dans votre sac un objet qui traîne à portée de main, et vous êtes déjà loin quand il relève la tête.",
+      "2": "Vous touchez sans permission un outil encore chaud et vous brûlez cruellement. Le forgeron vous soigne en secouant la tête.",
+      "3": "Vous vous y connaissez en armes à distance, et le forgeron s'en aperçoit vite. Il vous demande votre avis sur plusieurs pièces et vous paie cette consultation improvisée.",
+      "4": "Affolée par les étincelles et le vacarme, votre chauve-souris sème la pagaille dans l'atelier. Le temps de la rattraper, vous avez mis la forge sens dessus dessous. Le forgeron ne rit pas, et vous demande de partir.",
+      "5": "Vous observez avec fascination le travail minutieux du forgeron, impressionné par sa dextérité et son savoir-faire. Il vous explique les différentes étapes de la fabrication d'une arme. Vous prenez congé après cette leçon riche en enseignements."
+     },
+     "text": "Examiner de plus près la forge et les créations."
+    },
+    "goAway": {
+     "outcomes": {
+      "0": "Plein d'énergie, vous saluez poliment le forgeron et reprenez votre route d'un pas assuré à travers L'Étendue, profitant de cette belle journée.",
+      "1": "Épuisé mais déterminé, vous forcez le passage. Malheureusement, vos forces vous abandonnent quelques kilomètres plus loin et vous vous effondrez au bord du chemin.",
+      "2": "Vous êtes tenté de vous arrêter, mais le forgeron semble très occupé et vous ne voulez pas le déranger. Vous continuez votre route en vous promettant de revenir plus tard.",
+      "3": "Vous traversez d'un bon pas les terrains accidentés de L'Étendue, non sans jeter au passage un regard curieux au forgeron à l'ouvrage."
+     },
+     "text": "Continuer votre chemin sans vous arrêter."
+    },
+    "end": {
+     "outcomes": {
+      "0": "Intimidé par cette rencontre inattendue au milieu de nulle part, vous préférez observer de loin avant de contourner discrètement la propriété, vous demandant ce qu'un forgeron peut bien faire seul dans ces plaines désolées."
+     }
+    }
+   },
+   "text": "Au milieu de L'Étendue, une maisonnette de pierre se niche au creux d'un vallon abrité du vent. Le marteau y sonne clair sur l'enclume : un homme trapu, les avant-bras marqués par les étincelles, façonne une pièce incandescente sans lever les yeux."
+  },
+  "data": {
+   "possibilities": {
+    "chatWorker": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "karma": {
+         "min": 50
+        },
+        "level": {
+         "min": 130
+        }
+       },
+       "effect": "working",
+       "randomItem": {
+        "rarity": {
+         "min": 4
+        }
+       },
+       "karma": 6,
+       "money": 75
+      },
+      "1": {
+       "requirements": {
+        "attack": {
+         "min": 350
+        }
+       },
+       "effect": "working",
+       "randomItem": {},
+       "karma": 3
+      },
+      "2": {
+       "requirements": {
+        "karma": {
+         "max": -30
+        },
+        "level": {
+         "min": 40
+        }
+       },
+       "effect": "working",
+       "randomItem": {},
+       "money": 150,
+       "karma": -15
+      },
+      "3": {
+       "requirements": {
+        "validPetTypeIds": [
+         56
+        ]
+       },
+       "randomItem": {},
+       "karma": 8
+      },
+      "4": {
+       "requirements": {
+        "level": {
+         "max": 50
+        }
+       },
+       "effect": "burning",
+       "health": -5,
+       "karma": -5
+      },
+      "5": {
+       "requirements": {
+        "validClassIds": [
+         17,
+         23
+        ]
+       },
+       "effect": "occupied",
+       "lostTime": 15,
+       "karma": 5,
+       "randomItem": {},
+       "money": 100
+      },
+      "6": {
+       "effect": "occupied",
+       "lostTime": 45,
+       "karma": 2
+      }
+     }
+    },
+    "stayNight": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "karma": {
+         "min": 80
+        }
+       },
+       "effect": "sleeping",
+       "health": 25,
+       "karma": 2
+      },
+      "1": {
+       "requirements": {
+        "karma": {
+         "min": 0
+        }
+       },
+       "effect": "sleeping",
+       "health": 20,
+       "money": -120
+      },
+      "2": {
+       "requirements": {
+        "karma": {
+         "max": -40
+        }
+       },
+       "karma": -8
+      },
+      "3": {
+       "requirements": {
+        "validPetTypeIds": [
+         1
+        ]
+       },
+       "effect": "sleeping",
+       "health": 30,
+       "karma": 4
+      },
+      "4": {
+       "requirements": {
+        "defense": {
+         "min": 250
+        }
+       },
+       "effect": "sleeping",
+       "health": 15,
+       "money": -80
+      },
+      "5": {
+       "requirements": {
+        "level": {
+         "max": 40
+        }
+       },
+       "effect": "sleeping",
+       "karma": 2,
+       "health": 10
+      },
+      "6": {
+       "effect": "sleeping",
+       "karma": -1,
+       "health": 8
+      }
+     }
+    },
+    "inspectForge": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "attack": {
+         "min": 300
+        },
+        "karma": {
+         "min": 10
+        }
+       },
+       "randomItem": {
+        "rarity": {
+         "min": 3
+        }
+       },
+       "karma": 5
+      },
+      "1": {
+       "requirements": {
+        "speed": {
+         "min": 350
+        },
+        "karma": {
+         "max": 10
+        }
+       },
+       "randomItem": {},
+       "money": 80,
+       "karma": -20
+      },
+      "2": {
+       "requirements": {
+        "level": {
+         "min": 25
+        },
+        "speed": {
+         "max": 530
+        }
+       },
+       "effect": "burning",
+       "health": -20
+      },
+      "3": {
+       "requirements": {
+        "validClassIds": [
+         8,
+         9,
+         10,
+         11,
+         20
+        ]
+       },
+       "money": 60,
+       "randomItem": {},
+       "karma": 3
+      },
+      "4": {
+       "requirements": {
+        "validPetTypeIds": [
+         27
+        ]
+       },
+       "karma": -4
+      },
+      "5": {
+       "effect": "occupied",
+       "lostTime": 20
+      }
+     }
+    },
+    "goAway": {
+     "outcomes": {
+      "0": {},
+      "1": {
+       "requirements": {
+        "health": {
+         "max": 40
+        }
+       },
+       "effect": "sleeping",
+       "health": -25
+      },
+      "2": {
+       "requirements": {
+        "karma": {
+         "min": 60
+        }
+       },
+       "karma": 1
+      },
+      "3": {
+       "requirements": {
+        "speed": {
+         "min": 200
+        }
+       },
+       "effect": "occupied",
+       "lostTime": 15
+      }
+     }
+    },
+    "end": {
+     "outcomes": {
+      "0": {
+       "effect": "occupied",
+       "lostTime": 30
+      }
+     }
+    }
+   },
+   "triggers": [
+    {
+     "mapId": 12
+    }
+   ]
+  }
+ }
+}

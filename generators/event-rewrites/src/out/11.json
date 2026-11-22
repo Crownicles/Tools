@@ -1,0 +1,284 @@
+{
+ "eventId": "11",
+ "model": "repasse",
+ "text": "À l'orée du Bois Hurlant, dont les collines cachent des grottes à brigands, une femme encapuchonnée vous aborde. Elle vous déconseille le sentier principal et vous indique un chemin par l'ouest, plus court et plus sûr selon elle. Elle parle vite et évite votre regard.",
+ "possibilities": {
+  "followHint": {
+   "text": "Suivre les conseils de l'inconnue.",
+   "outcomes": {
+    "0": "L'inconnue disait vrai. Le chemin de l'ouest longe les collines à l'écart des grottes, et vous traversez le Bois Hurlant sans croiser personne. Pour une fois, le raccourci en était bien un.",
+    "1": "C'était un piège. Au premier virage, des brigands surgissent des fourrés. Vous vous défendez à peine. Ils vous rouent de coups, vident votre bourse et vous laissent évanoui au pied d'un arbre.",
+    "2": "C'était un piège. Des brigands surgissent des fourrés. Vous en repoussez deux, mais les autres vous entourent et une lame vous entaille le bras. Vous leur jetez votre bourse et filez sans demander votre reste.",
+    "3": "C'était un piège. Des brigands surgissent des fourrés et le regrettent vite. Après quelques coups bien placés, toute la bande détale vers les grottes. L'un d'eux a perdu sa bourse dans sa fuite.",
+    "4": "Des brigands surgissent des fourrés, l'arme au poing. Leur chef vous dévisage, puis leur fait signe de ranger leurs lames : il vous a reconnu. Entre gens du métier, on ne se dépouille pas. Ils vous laissent passer.",
+    "5": "À mi-chemin, votre familier s'arrête net et grogne vers les fourrés. Une lame brille entre les feuilles. Vous quittez le chemin de l'ouest et faites un long détour par les sous-bois pour éviter le guet-apens."
+   }
+  },
+  "questionStranger": {
+   "text": "Interroger l'inconnue.",
+   "outcomes": {
+    "0": "Il vous faut un bon moment pour la faire se contredire : le chemin de l'ouest devient un sentier, puis une piste, puis plus rien. Elle rabat les voyageurs vers un guet-apens. Vous la laissez plantée là et reprenez votre route.",
+    "1": "L'inconnue baisse son capuchon : on dit du bien de vous à Claire de Ville. Gênée, elle avoue qu'on la paie pour envoyer les voyageurs vers l'ouest. Elle vous guide par un sentier sûr et partage son pain avec vous.",
+    "2": "L'inconnue vous dévisage, puis se détend : elle vous a reconnu. Elle avoue qu'elle rabat les voyageurs vers une bande du bois. Pour que vous ne chassiez pas sur ses terres, elle vous glisse une part de la dernière prise.",
+    "3": "Vos questions sont précises : quel gué, quelle grotte, quel signal. Elle finit par avouer qu'elle renseigne à la fois la garde de Claire de Ville et les brigands, selon qui paie. Pour acheter votre silence, elle vous remet un objet.",
+    "4": "Vos questions la font sourire. Elle répond à tout avec aplomb, et vous voilà rassuré. Sur le chemin de l'ouest, deux brigands vous attendent. Ils vous prennent votre bourse sans même sortir leurs lames, puis disparaissent."
+   }
+  },
+  "forest": {
+   "text": "Traverser quand même par le sentier principal.",
+   "outcomes": {
+    "0": "Vous ignorez le conseil et prenez le sentier principal. Il se divise sans cesse entre les collines, et vous tournez en rond pendant des heures avant de retrouver la lisière, épuisé mais sans une égratignure.",
+    "1": "La traversée est longue : vous avancez avec prudence et faites plusieurs détours pour éviter les grottes. Près de la lisière, dans les cendres d'un vieux camp, vous ramassez un objet oublié par ses occupants.",
+    "2": "Votre pied se prend dans un piège à loups caché sous les feuilles. Les mâchoires de fer s'enfoncent dans votre cheville. Vous mettez un long moment à vous dégager, puis vous pansez la blessure de votre mieux.",
+    "3": "Un déclic sous les feuilles : vous retirez le pied juste avant que le piège à loups se referme. Une dent de fer vous entaille quand même la cheville. Vous pansez la plaie et repartez en boitant un peu.",
+    "4": "Une branche cassée, un feu mal éteint, un piège à loups sous les feuilles : vous lisez les traces des brigands au fil du sentier. Vous évitez chaque danger et traversez le Bois Hurlant sans un bruit.",
+    "5": "Vous faites craquer chaque branche et vous trompez trois fois de piste. Les brigands qui vous observent depuis les collines ne prennent même pas la peine de vous tendre une embuscade. Vous tournez en rond un bon moment."
+   }
+  },
+  "oppositeSide": {
+   "text": "Contourner le bois par l'est.",
+   "outcomes": {
+    "0": "Par méfiance, vous contournez le Bois Hurlant par l'est. Le détour s'allonge de colline en colline, les sentiers se ressemblent tous, et vous finissez par ne plus savoir où vous êtes. Au moins, personne ne vous a attaqué.",
+    "1": "En longeant le bois par l'est, vous croisez une patrouille de gardes de Claire de Ville. Leur sergent vous reconnaît et vous salue. Ses hommes vous font un bout de chemin et partagent leurs rations avec vous.",
+    "2": "En longeant le bois par l'est, vous croisez une patrouille de gardes de Claire de Ville. Leur sergent vous reconnaît et fronce les sourcils. Ses hommes fouillent votre sac de fond en comble avant de vous laisser repartir.",
+    "3": "Le détour est long. Vous avez vu assez de ruines pour reconnaître, sous les ronces, un ancien poste de garde. Sous une dalle descellée, une cache a tenu bon. Vous en sortez un objet encore utilisable.",
+    "4": "Votre familier prend son envol et tourne au-dessus des collines. Il se pose un peu plus loin, puis encore plus loin, comme pour vous montrer la route. Le détour reste long, mais en le suivant, vous ne vous perdez pas."
+   }
+  },
+  "end": {
+   "outcomes": {
+    "0": "Vous ne répondez rien, et l'inconnue en profite pour parler. Elle vous raconte d'où le Bois Hurlant tient son nom, puis d'autres histoires, puis d'autres encore. Quand vous parvenez à repartir, le soleil a bien baissé.",
+    "1": "Votre silence semble la vexer. Elle insiste, détaille chaque chemin, chaque grotte et chaque bande qui y vit, et se fâche dès que vous faites mine de partir. Vous ne parvenez à vous libérer qu'à la tombée de la nuit.",
+    "2": "L'inconnue aperçoit votre chat noir et recule d'un pas. Elle fait un geste pour conjurer le mauvais sort, marmonne qu'elle s'est trompée de voyageur et s'éloigne en hâte. Vous restez un instant seul à l'orée du bois."
+   }
+  }
+ },
+ "data": {
+  "triggers": [
+   {
+    "mapId": 22
+   }
+  ],
+  "possibilities": {
+   "followHint": {
+    "outcomes": {
+     "0": {},
+     "1": {
+      "requirements": {
+       "attack": {
+        "max": 230
+       }
+      },
+      "effect": "hurt",
+      "health": -40,
+      "money": -200
+     },
+     "2": {
+      "requirements": {
+       "attack": {
+        "min": 231,
+        "max": 599
+       }
+      },
+      "effect": "hurt",
+      "health": -15,
+      "money": -100
+     },
+     "3": {
+      "requirements": {
+       "attack": {
+        "min": 600
+       }
+      },
+      "money": 50
+     },
+     "4": {
+      "requirements": {
+       "karma": {
+        "max": -50
+       }
+      }
+     },
+     "5": {
+      "requirements": {
+       "validPetTypeIds": [
+        1,
+        28
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 40
+     }
+    }
+   },
+   "questionStranger": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 20
+     },
+     "1": {
+      "requirements": {
+       "karma": {
+        "min": 50
+       }
+      },
+      "health": 5
+     },
+     "2": {
+      "requirements": {
+       "karma": {
+        "max": -50
+       }
+      },
+      "money": 100
+     },
+     "3": {
+      "requirements": {
+       "level": {
+        "min": 120
+       }
+      },
+      "randomItem": {}
+     },
+     "4": {
+      "requirements": {
+       "level": {
+        "max": 30
+       }
+      },
+      "money": -80
+     }
+    }
+   },
+   "forest": {
+    "outcomes": {
+     "0": {
+      "effect": "lost"
+     },
+     "1": {
+      "effect": "occupied",
+      "lostTime": 130,
+      "randomItem": {}
+     },
+     "2": {
+      "requirements": {
+       "level": {
+        "max": 55
+       }
+      },
+      "effect": "hurt",
+      "health": -25
+     },
+     "3": {
+      "requirements": {
+       "level": {
+        "min": 56,
+        "max": 119
+       }
+      },
+      "effect": "hurt",
+      "health": -10
+     },
+     "4": {
+      "requirements": {
+       "level": {
+        "min": 120
+       }
+      }
+     },
+     "5": {
+      "requirements": {
+       "level": {
+        "max": 30
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 60
+     }
+    }
+   },
+   "oppositeSide": {
+    "outcomes": {
+     "0": {
+      "effect": "lost"
+     },
+     "1": {
+      "requirements": {
+       "karma": {
+        "min": 50
+       }
+      },
+      "health": 5
+     },
+     "2": {
+      "requirements": {
+       "karma": {
+        "max": -50
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 60
+     },
+     "3": {
+      "requirements": {
+       "level": {
+        "min": 120
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 120,
+      "randomItem": {}
+     },
+     "4": {
+      "requirements": {
+       "validPetTypeIds": [
+        58,
+        95
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 90
+     }
+    }
+   },
+   "end": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 45
+     },
+     "1": {
+      "effect": "occupied",
+      "lostTime": 60
+     },
+     "2": {
+      "requirements": {
+       "validPetTypeIds": [
+        4
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 10
+     }
+    }
+   }
+  }
+ },
+ "icons": {
+  "questionStranger": "🕵️",
+  "end": {
+   "1": "🕑",
+   "2": "🐈‍⬛"
+  }
+ },
+ "notes": [
+  "Retiré : les issues de remplissage du brouillon (la progression silencieuse et la cache abandonnée du chemin de l'ouest, le sauvetage de voyageurs et le pillage des victimes en forêt) ; suivre l'inconnue passe de 8 à 6 issues et ne raconte plus que ce que le libellé annonce : un vrai raccourci ou un guet-apens.",
+  "Recalé : karma sur min 50 / max -50 (au lieu de 150, -150, -25, 5, -50 en min) ; niveaux sur l'échelle (débutant max 30, faible max 55, joueur qui a voyagé min 120, au lieu de 40, 45, 50, 70, 90, 100) ; la vitesse 200 qui suffisait à faire du chemin un vrai raccourci disparaît, le raccourci redevient le cas général sans condition comme dans l'original.",
+  "Paliers : l'embuscade se gradue sur l'attaque (max 230 : -40 PV et -200 pièces, valeurs d'origine ; 231-599 : -15 PV et -100 ; min 600 : la bande détale) et le piège à loups sur le niveau (-25 PV, -10 PV, rien), au lieu des plages qui se recouvraient (attaque max 250 et max 400).",
+  "Karma : plus aucun gain ou perte (+20 pour avoir rançonné des brigands, -35, -15, -8, +12, +1), car aucune de ces issues n'est un choix moral du joueur ; le karma se montre seulement par des gens qui reconnaissent le joueur (le chef des brigands, l'inconnue, le sergent de la garde).",
+  "Inconnue : son double jeu (elle renseigne la garde comme les brigands) explique pourquoi son conseil est tantôt vrai, tantôt un piège (R3). Interroger l'inconnue est gardé ; le débutant se fait duper, le joueur mal famé est pris pour un complice.",
+  "Géographie gardée : aucune issue ne suppose la destination suivante (pas de « bon port »), aucun mapTypesDestination ; l'est et l'ouest ne désignent que des chemins autour du bois. L'effet lost de l'original revient pour le contournement et la forêt.",
+  "Ajouts rares : un Chien ou un Loup flaire le guet-apens, un Aigle ou un Corbeau guide le détour, un Chat noir fait fuir l'inconnue superstitieuse (issue de end). Style : plus de « coupe-jarrets », de « laissé pour mort » ni de libellés longs ; intro qui nomme le lieu et ses grottes à brigands."
+ ]
+}

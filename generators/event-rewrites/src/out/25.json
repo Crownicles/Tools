@@ -22,8 +22,7 @@
         "3": "Les soldats vous regardent de travers, mais vous laissent faire. Vous avez vu assez de champs de bataille pour distinguer d'un coup d'œil un mort d'un blessé. Vous en tirez trois de sous les corps, et les soldats finissent par vous remercier.",
         "4": "Les soldats vous reconnaissent avant même que vous ayez parlé. Ils refusent votre aide et pointent leurs épées vers vous : ils ne laisseront pas un pilleur approcher de leurs morts. Vous reculez lentement, puis vous vous éloignez.",
         "5": "Votre familier renifle l'air, puis file entre les corps. Il s'arrête chaque fois près d'un soldat encore vivant. Grâce à lui, vous en sauvez près d'une dizaine. Les soldats font une collecte et vous remettent une bourse bien remplie.",
-        "6": "Pendant vos recherches, votre familier s'éloigne et s'immobilise près d'un soldat couché dans l'herbe. L'homme gémit encore. Vous surmontez votre dégoût devant sa plaie et lui donnez les premiers soins. Les soldats partagent ensuite leur repas avec vous.",
-        "7": "En fouillant le terrain, vous surprenez un pilleur penché sur un blessé. Il se jette sur vous et vous frappe au visage. Encore sonné, vous le repoussez, et il s'enfuit à travers champs avant que les soldats n'arrivent."
+        "6": "En fouillant le terrain, vous surprenez un pilleur penché sur un blessé. Il se jette sur vous et vous frappe au visage. Encore sonné, vous le repoussez, et il s'enfuit à travers champs avant que les soldats n'arrivent."
       }
     },
     "steal": {
@@ -165,18 +164,6 @@
           },
           "6": {
             "requirements": {
-              "validPetTypeIds": [
-                62,
-                63
-              ]
-            },
-            "health": 12,
-            "karma": 8,
-            "effect": "occupied",
-            "lostTime": 20
-          },
-          "7": {
-            "requirements": {
               "attack": {
                 "min": 231,
                 "max": 599
@@ -313,6 +300,7 @@
     "Mécanique : effet « confused » corrigé en « confounded » (le joueur est sonné) ; seuils sur l'échelle des joueurs réguliers (niveau max 55 pour le novice, min 130 pour l'habitué des champs de bataille, karma max -30/-50 et min 80) ; le novice du pillage bande le blessé avec un tissu de son sac (consumeMaterials tissu ou coton) ; liste de familiers à flair réduite aux animaux qui pistent (chiens, renard, loup, ours, blaireau).",
     "Lore et canon : l'introduction nomme le Croisement des Destins et sa place à l'ouest du Mont Célestrum ; les mercenaires au brassard rouge renvoient discrètement à la Compagnie du Fer-Rouge face à des brigands, sans en faire le sujet. Aucune destination supposée.",
     "Style : textes resserrés (150 à 280 caractères), sans discours direct, sans montant ni durée chiffrée, apostrophes droites, un seul détail concret par issue.",
-    "Paliers : les malus et bonus liés à une stat passent de deux à trois paliers (faible, moyen, fort) pour qu'un joueur moyen ne subisse pas longtemps le malus le plus lourd."
+    "Paliers : les malus et bonus liés à une stat passent de deux à trois paliers (faible, moyen, fort) pour qu'un joueur moyen ne subisse pas longtemps le malus le plus lourd.",
+    "Proposer son aide : issue de la Colombe et de la Licorne retirée pour rester à 7 issues ; le flair des familiers garde l'idée."
   ]
 }

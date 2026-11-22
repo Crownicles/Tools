@@ -1,0 +1,361 @@
+{
+  "eventId": "19",
+  "model": "repasse",
+  "text": "Au Croisement des Destins, là où se rejoignent les grands chemins de l'ouest, un renard gît au pied du poteau indicateur. Il semble mort depuis peu : pas de sang, pas de blessure, quelques mouches seulement. Voilà des jours que vous mangez mal, et votre ventre se met à gargouiller.",
+  "possibilities": {
+    "butch": {
+      "text": "Dépecer le renard pour vendre sa peau.",
+      "outcomes": {
+        "0": "Votre couteau accroche et déchire la peau à plusieurs endroits. Un marchand ambulant qui passe au carrefour retourne la fourrure trouée en grimaçant. Il vous en donne quelques pièces, sans plus.",
+        "1": "Vous dépecez le renard sans trop abîmer la peau. Un marchand ambulant s'arrête au carrefour, examine la fourrure et vous en propose un prix correct. Vous acceptez.",
+        "2": "D'une main sûre, vous retirez la peau d'un seul tenant. Le premier marchand qui passe au carrefour la palpe, siffle entre ses dents et vous en offre une belle somme.",
+        "3": "Un marchand ambulant vous reconnaît : on lui a dit que vous étiez honnête en affaires. Plutôt que des pièces, il vous propose d'échanger la fourrure contre un objet de sa charrette. Vous acceptez sans hésiter.",
+        "4": "Le marchand qui passe au carrefour vous dévisage. On décrit votre visage dans les auberges, et il vous soupçonne d'avoir volé cette peau. Il finit par la prendre pour une poignée de pièces, à prendre ou à laisser.",
+        "5": "Vous attendez un acheteur au bord du chemin, la peau sur l'épaule. Personne ne passe. La peau se met à sentir, les mouches arrivent, et vous la jetez trop tard : vous vous sentez mal pour le reste de la journée."
+      }
+    },
+    "cook": {
+      "text": "Faire cuire le renard.",
+      "outcomes": {
+        "0": "Vous allumez un petit feu de brindilles et faites rôtir quelques morceaux. La viande est dure et forte en goût, ce n'est pas un festin. Mais elle est chaude, et elle calme votre faim.",
+        "1": "Vous n'avez jamais vraiment appris à cuisiner. La viande, noire dehors et crue dedans, ne passe pas. Moins d'une heure plus tard, vous êtes plié en deux au bord du chemin.",
+        "2": "Vous découpez la bête proprement et laissez la viande cuire à feu doux, le temps qu'il faut. Elle est tendre et bien dorée. Ce repas imprévu vous rend des forces.",
+        "3": "Vous frottez la viande d'herbes cueillies au bord du chemin et la faites rôtir lentement. Le renard, d'ordinaire dur et fort en goût, devient un vrai repas. Vous repartez requinqué.",
+        "4": "Le feu allumé, vous soulevez le renard par les pattes. Le corps est pris d'un dernier spasme et vous échappe des mains. En reculant, vous trébuchez et posez la main en plein dans les braises.",
+        "5": "Votre familier s'assoit près du feu et ne quitte plus la broche des yeux. Vous finissez par lui lancer quelques morceaux. Vous mangez un peu moins, mais le repas, partagé, vous fait du bien à tous les deux."
+      }
+    },
+    "inspectCarcass": {
+      "text": "Examiner la dépouille.",
+      "outcomes": {
+        "0": "Vous retournez la bête avec précaution. Ni plaie, ni bave, ni trace de maladie : le renard semble mort de froid ou de vieillesse. Vous y avez passé un moment, mais vous savez à quoi vous en tenir.",
+        "1": "En soulevant le corps, vous découvrez un petit sac de cuir enfoncé dans la boue. Un voyageur a dû le perdre en passant au carrefour. À l'intérieur, un objet que vous décidez de garder.",
+        "2": "Votre serpent se dresse près de la gueule du renard et siffle sans s'arrêter. En regardant mieux, vous voyez des restes de viande verdâtre entre ses crocs : un appât empoisonné. Vous laissez la bête où elle est.",
+        "3": "Vous manipulez le corps à mains nues. Les puces quittent la bête refroidie et trouvent en vous un nouvel hôte. Vous passez un long moment à vous gratter au bord du chemin avant de pouvoir repartir."
+      }
+    },
+    "buryCarcass": {
+      "text": "Enterrer le renard.",
+      "outcomes": {
+        "0": "Avec une pierre plate, vous creusez un trou au bord du chemin, à l'écart du passage. Le sol est dur et le travail prend du temps. Vous couvrez le renard de terre et posez quelques pierres dessus contre les charognards.",
+        "1": "Vous attaquez la terre à grands coups, sans reprendre votre souffle. En peu de temps, le trou est assez profond pour que les bêtes ne viennent pas le rouvrir. Vous couvrez le renard et reprenez la route.",
+        "2": "Vous sortez une planche de votre sac et vous en servez comme d'une pelle. Le bois finit par se fendre, mais le trou est vite creusé. Vous couvrez le renard et repartez sans avoir perdu trop de temps.",
+        "3": "Votre renard reste assis près du trou pendant que vous creusez. Quand la terre recouvre le corps, il gratte un peu le monticule, puis vient se coller contre vos jambes. Vous repartez plus tard que prévu.",
+        "4": "Un voyageur qui passe au carrefour vous reconnaît : on parle de vous en bien sur les routes. Il pose son sac et vous aide à creuser. Le travail fini, il partage avec vous son pain et un morceau de fromage."
+      }
+    },
+    "skip": {
+      "text": "Passer votre chemin.",
+      "outcomes": {
+        "0": "Mieux vaut ne pas manger une bête trouvée morte dont on ne sait rien. Vous passez à côté du renard sans vous arrêter et reprenez la route d'un bon pas, le ventre vide.",
+        "1": "Au moment où vous passez près du renard, son corps est pris d'un violent spasme. Surpris, vous reculez d'un bond et heurtez de plein dos le poteau indicateur. Le choc vous coupe le souffle.",
+        "2": "Au moment où vous passez près du renard, son corps est pris d'un spasme. Vous reculez d'un bond et vous cognez contre le poteau indicateur. Votre armure encaisse une partie du choc, mais votre épaule vous lance.",
+        "3": "Au moment où vous passez près du renard, son corps est pris d'un spasme. Vous reculez et heurtez le poteau indicateur, mais votre armure épaisse prend presque tout le choc. Le poteau, lui, penche un peu plus qu'avant.",
+        "4": "Votre renard s'arrête net devant la dépouille et la renifle longuement. Il semble ne pas vouloir la quitter. Après plusieurs appels sans effet, vous le prenez dans vos bras pour reprendre la route."
+      }
+    },
+    "end": {
+      "outcomes": {
+        "0": "Vous restez un moment devant le renard, sans savoir quoi en faire. Votre ventre gargouille, mais l'idée de manger une bête trouvée morte ne vous dit rien. Vous finissez par reprendre la route.",
+        "1": "Votre loup renifle longuement le renard, puis s'assoit à côté sans bouger. Vous l'appelez plusieurs fois. Il ne se relève qu'au bout d'un long moment, et vous reprenez la route ensemble.",
+        "2": "Vous tournez autour du renard en vous demandant comment on prépare une telle bête. Faute de réponse, vous le laissez là. Un peu plus loin, la faim vous tord l'estomac et vous fait tourner la tête.",
+        "3": "Pendant que vous hésitez, votre T-Rex se jette sur le renard et l'avale d'une seule bouchée. Il trottine ensuite à vos côtés en se léchant les babines. La question est réglée."
+      }
+    }
+  },
+  "data": {
+    "triggers": [
+      {
+        "mapId": 8
+      }
+    ],
+    "possibilities": {
+      "butch": {
+        "outcomes": {
+          "0": {
+            "requirements": {
+              "attack": {
+                "max": 230
+              }
+            },
+            "money": 100,
+            "effect": "occupied",
+            "lostTime": 60
+          },
+          "1": {
+            "requirements": {
+              "attack": {
+                "min": 231,
+                "max": 599
+              }
+            },
+            "money": 300,
+            "effect": "occupied",
+            "lostTime": 60
+          },
+          "2": {
+            "requirements": {
+              "attack": {
+                "min": 600
+              }
+            },
+            "money": 500,
+            "effect": "occupied",
+            "lostTime": 40
+          },
+          "3": {
+            "requirements": {
+              "karma": {
+                "min": 50
+              }
+            },
+            "randomItem": {},
+            "effect": "occupied",
+            "lostTime": 15
+          },
+          "4": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            },
+            "money": 50,
+            "effect": "occupied",
+            "lostTime": 60
+          },
+          "5": {
+            "effect": "sick"
+          }
+        }
+      },
+      "cook": {
+        "outcomes": {
+          "0": {
+            "health": 5,
+            "effect": "occupied",
+            "lostTime": 30
+          },
+          "1": {
+            "requirements": {
+              "cookingLevel": {
+                "max": 0
+              }
+            },
+            "effect": "sick"
+          },
+          "2": {
+            "requirements": {
+              "cookingLevel": {
+                "min": 40,
+                "max": 69
+              }
+            },
+            "health": 12,
+            "effect": "occupied",
+            "lostTime": 40
+          },
+          "3": {
+            "requirements": {
+              "cookingLevel": {
+                "min": 70
+              }
+            },
+            "health": 20,
+            "effect": "occupied",
+            "lostTime": 40
+          },
+          "4": {
+            "health": -20
+          },
+          "5": {
+            "requirements": {
+              "validPetTypeIds": [
+                1,
+                21,
+                28,
+                56,
+                57,
+                60
+              ]
+            },
+            "health": 8,
+            "effect": "occupied",
+            "lostTime": 40
+          }
+        }
+      },
+      "inspectCarcass": {
+        "outcomes": {
+          "0": {
+            "effect": "occupied",
+            "lostTime": 15
+          },
+          "1": {
+            "randomItem": {},
+            "effect": "occupied",
+            "lostTime": 20
+          },
+          "2": {
+            "requirements": {
+              "validPetTypeIds": [
+                15
+              ]
+            },
+            "effect": "occupied",
+            "lostTime": 10
+          },
+          "3": {
+            "requirements": {
+              "level": {
+                "max": 30
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 40
+          }
+        }
+      },
+      "buryCarcass": {
+        "outcomes": {
+          "0": {
+            "karma": 2,
+            "effect": "occupied",
+            "lostTime": 40
+          },
+          "1": {
+            "requirements": {
+              "attack": {
+                "min": 600
+              }
+            },
+            "karma": 2,
+            "effect": "occupied",
+            "lostTime": 20
+          },
+          "2": {
+            "consumeMaterials": {
+              "ids": [
+                2,
+                84
+              ],
+              "quantity": 1
+            },
+            "karma": 2,
+            "effect": "occupied",
+            "lostTime": 20
+          },
+          "3": {
+            "requirements": {
+              "validPetTypeIds": [
+                20
+              ]
+            },
+            "karma": 2,
+            "effect": "occupied",
+            "lostTime": 45
+          },
+          "4": {
+            "requirements": {
+              "karma": {
+                "min": 50
+              }
+            },
+            "health": 10,
+            "karma": 2,
+            "effect": "occupied",
+            "lostTime": 30
+          }
+        }
+      },
+      "skip": {
+        "outcomes": {
+          "0": {},
+          "1": {
+            "requirements": {
+              "defense": {
+                "max": 180
+              }
+            },
+            "health": -20
+          },
+          "2": {
+            "requirements": {
+              "defense": {
+                "min": 181,
+                "max": 519
+              }
+            },
+            "health": -10
+          },
+          "3": {
+            "requirements": {
+              "defense": {
+                "min": 520
+              }
+            },
+            "health": -3
+          },
+          "4": {
+            "requirements": {
+              "validPetTypeIds": [
+                20
+              ]
+            },
+            "effect": "occupied",
+            "lostTime": 10
+          }
+        }
+      },
+      "end": {
+        "outcomes": {
+          "0": {
+            "effect": "occupied",
+            "lostTime": 10
+          },
+          "1": {
+            "requirements": {
+              "validPetTypeIds": [
+                28
+              ]
+            },
+            "effect": "occupied",
+            "lostTime": 15
+          },
+          "2": {
+            "requirements": {
+              "cookingLevel": {
+                "max": 0
+              }
+            },
+            "effect": "starving"
+          },
+          "3": {
+            "requirements": {
+              "validPetTypeIds": [
+                65
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "icons": {
+    "inspectCarcass": "🔍",
+    "buryCarcass": "⚰️",
+    "end": {
+      "1": "🐺",
+      "2": "😵",
+      "3": "🦖"
+    }
+  },
+  "notes": [
+    "Retiré : la morale finale (la mort fait partie du cycle naturel), la religion (prière pour l'âme, bénédiction, chapelain et l'issue réservée aux Paladins), les tournures IA (émotions contradictoires, logique implacable du voyage, cœur endurci, banale scène de mortalité, temps précieux, Miracle !) et le renard qui se relève pour mordre, dans skip comme dans inspectCarcass.",
+    "Allégé : de 10, 8, 7, 5, 4 et 4 issues à 6, 6, 4, 5, 5 et 4. Supprimés : les doublons (deux façons d'ignorer, deux renards apprivoisés dans butch), l'issue du chien qui gémit, le cynisme au karma bas dans end et l'objet trouvé dans l'estomac.",
+    "Karma : il ne récompense plus que le choix d'enterrer le renard (+2). Dépecer, ignorer ou hésiter ne sont pas des fautes, et le karma n'est plus de la chance : seuls un marchand (butch) et un voyageur (buryCarcass) réagissent à la réputation, avec les seuils min 50 et max -30.",
+    "Cuisine : cook repose sur cookingLevel (max 0 malade, comme l'original ; 40 à 69 bon repas ; min 70 repas requinquant). L'issue du niveau 80 qui tombait malade malgré sa maîtrise est supprimée ; end gagne une issue où le joueur qui ne sait pas cuisiner laisse le renard et finit affamé.",
+    "Paliers : la vente de la peau suit l'attaque (max 230 / 231-599 / min 600) et le spasme de skip suit la défense (-20, -10, -3), à la place des anciens seuils (attaque 250 et 320, niveau 25, 50, 78, 100, vitesse 400).",
+    "Remis d'aplomb : le spasme de skip garde l'idée de l'original (-20 PV) en faisant heurter le poteau indicateur, posé dans l'introduction ; celui de cook fait tomber la main dans les braises. L'introduction retrouve la faim de l'original, qui motive cuisine et dépeçage.",
+    "Gardé : les cinq possibilités, la vente à un marchand ambulant et l'échange contre un objet, la peau qui pourrit, le sac perdu sous le corps, le serpent qui flaire l'appât empoisonné, le renard apprivoisé, le loup et le T-Rex ; une planche du sac (consumeMaterials) sert de pelle pour enterrer."
+  ]
+}

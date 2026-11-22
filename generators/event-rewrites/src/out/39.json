@@ -7,11 +7,12 @@
       "text": "Le payer pour vous escorter jusqu'à votre prochaine destination.",
       "outcomes": {
         "0": "Contre quelques pièces, Price accepte de vous accompagner. En chemin, vous trouvez une épée brillante plantée dans un rocher. Vous tirez de toutes vos forces, sans succès. Price essaie à son tour et la dégage. Sans vous, il ne serait jamais passé par là : il vous donne bien plus que son salaire.",
-        "1": "Contre quelques pièces, Price vous escorte. En chemin, votre familier s'arrête net, puis file vers un fossé où traîne une sacoche abandonnée. Vous en partagez le contenu avec Price : vous gardez une bonne somme et un objet qui pourra vous servir.",
+        "1": "Contre quelques pièces, Price vous escorte. En chemin, votre familier s'arrête net et fixe un fourré. Prévenu, Price contourne l'embuscade et surprend les brigands, qui s'enfuient en laissant leur sac. Vous en partagez le contenu : une bonne somme et un objet.",
         "2": "Contre quelques pièces, Price vous escorte. Le trajet est calme, à part quelques voleurs qui surgissent d'un fourré. Price en met un à terre et les autres s'enfuient. Vous vous quittez ensuite, la bourse allégée de son salaire.",
         "3": "Price accepte, mais il a entendu parler de vous : un client comme vous n'ira pas se plaindre à la garde. Le soir, au campement, un bruit de pièces vous réveille. Price vide votre bourse. Vous vous jetez sur lui, il vous sonne d'un coup de poing à la tempe et s'enfuit avec votre argent.",
         "4": "Sur la route, un marchand vous reconnaît, vous salue chaleureusement et tient à vous offrir quelques pièces pour un service passé. Impressionné, Price refuse d'être payé pour l'escorte : il préfère rester dans les bonnes grâces d'un client comme vous.",
-        "5": "Contre quelques pièces, Price vous escorte. Trois brigands vous barrent la route. Vous en mettez deux à terre avant que Price ait dégainé, et le troisième s'enfuit. Price fouille leurs poches et vous laisse la plus grosse part, bien plus que son salaire."
+        "5": "Contre quelques pièces, Price vous escorte. Trois brigands vous barrent la route. Vous en mettez deux à terre avant que Price ait dégainé, et le troisième s'enfuit. Price fouille leurs poches et vous laisse la plus grosse part, bien plus que son salaire.",
+        "6": "Contre quelques pièces, Price vous escorte. Trois brigands vous barrent la route. Vous en tenez un en respect pendant que Price met les deux autres en fuite. Impressionné, il ne vous réclame qu'une partie de son salaire."
       }
     },
     "meal": {
@@ -32,7 +33,8 @@
         "2": "En passant près de Price dans la foule du port, vous lui prenez sa bourse d'un geste vif. Il ne s'aperçoit de rien et s'éloigne en sifflotant. À l'abri d'une ruelle, vous comptez votre butin.",
         "3": "Price vous a reconnu avant même que vous leviez la main. Avec un sourire las, il détache une bourse et vous la lance. À l'intérieur, quelques pièces et beaucoup de jetons de plomb : il la garde exprès pour les voleurs de votre genre.",
         "4": "Pendant que vous occupez Price avec vos questions, votre familier se glisse jusqu'à sa ceinture et revient avec sa bourse. Price ne remarque rien et vous quitte sur une poignée de main. Un peu plus loin, vous comptez le butin.",
-        "5": "Price vous surprend la main sur sa bourse et vous frappe aux côtes. Votre armure encaisse le plus gros du coup. Price secoue sa main endolorie et n'insiste pas. Vous repartez avec un bleu, et sans une pièce de plus."
+        "5": "Price vous surprend la main sur sa bourse et vous frappe aux côtes. Votre armure encaisse le plus gros du coup. Price secoue sa main endolorie et n'insiste pas. Vous repartez avec un bleu, et sans une pièce de plus.",
+        "6": "Vous attrapez la bourse de Price en passant, mais il sent le geste et se retourne. Vous filez dans la foule du port, et il renonce à vous suivre. Dans votre course, la bourse s'est ouverte : il n'y reste que quelques pièces."
       }
     },
     "follow": {
@@ -49,7 +51,8 @@
         "0": "Vous restez quelques minutes à discuter avec Price, de la marée, des contrats et du prix des escortes, avant de le laisser retourner à ses affaires.",
         "1": "Vous vous séparez après quelques mots. Quelques rues plus loin, une bande vous encercle dans une ruelle du port. Vous semblez une proie facile : sous la menace de leurs gourdins, vous leur cédez une bonne partie de votre argent.",
         "2": "Vous discutez quelques minutes avec Price, puis vous vous séparez. Quelques rues plus loin, une bande vous barre la route. L'un d'eux vous reconnaît et fait signe aux autres de s'écarter. Ils vous laissent passer sans un mot.",
-        "3": "Vous vous séparez après une brève discussion. Quelques rues plus loin, une bande vous encercle. Vous mettez à terre le premier qui lève la main sur vous, et les autres s'enfuient. L'un d'eux a perdu sa bourse : vous la ramassez."
+        "3": "Vous vous séparez après une brève discussion. Quelques rues plus loin, une bande vous encercle. Vous mettez à terre le premier qui lève la main sur vous, et les autres s'enfuient. L'un d'eux a perdu sa bourse : vous la ramassez.",
+        "4": "Vous vous séparez après quelques mots. Quelques rues plus loin, une bande vous encercle dans une ruelle du port. Vous leur tenez tête, et ils hésitent. Ils se contentent finalement de quelques pièces avant de filer."
       }
     }
   },
@@ -126,6 +129,21 @@
             "mapTypesDestination": [
               "ro"
             ]
+          },
+          "6": {
+            "requirements": {
+              "attack": {
+                "min": 231,
+                "max": 699
+              }
+            },
+            "money": -50,
+            "tags": [
+              "moneyUsage"
+            ],
+            "mapTypesDestination": [
+              "ro"
+            ]
           }
         }
       },
@@ -137,7 +155,6 @@
                 "min": 0
               }
             },
-            "karma": 1,
             "forceStayInCity": true,
             "effect": "occupied",
             "lostTime": 120
@@ -229,6 +246,16 @@
             },
             "karma": -5,
             "health": -6
+          },
+          "6": {
+            "requirements": {
+              "speed": {
+                "min": 41,
+                "max": 349
+              }
+            },
+            "money": 50,
+            "karma": -5
           }
         }
       },
@@ -300,6 +327,15 @@
             "money": 60,
             "effect": "occupied",
             "lostTime": 10
+          },
+          "4": {
+            "requirements": {
+              "level": {
+                "min": 56,
+                "max": 119
+              }
+            },
+            "money": -100
           }
         }
       }
@@ -309,7 +345,8 @@
     "follow": "🕵️",
     "end": {
       "2": "🤨",
-      "3": "💪"
+      "3": "💪",
+      "4": "💸"
     }
   },
   "notes": [
@@ -321,6 +358,7 @@
     "Nouvelle possibilité « follow » (Le suivre discrètement) : filature qui échoue, rencontre à la remise à filets, Price amusé par un débutant, ruelle hostile pour un karma bas (effet scared). Pas de dévoilement de lore.",
     "Possibilité « end » enrichie (agression pour niveau modéré, groupe qui s'écarte pour un karma élevé, agresseurs mis en fuite pour une attaque haute). Style : pas de discours direct, apostrophes droites, aucune destination supposée.",
     "Relecture : vocabulaire simplifié (chaudrée, peu amène, denier, hématome, rutilante, s'accroche à l'addition), expressions fabriquées et phrases alambiquées réécrites (cliquetis, coup de manche, échanges), décor superflu retiré des issues ; réactions rendues plausibles (repas familier : prime partagée pour une caisse retrouvée ; repas karma élevé : course payée ; escorte karma élevé : marchand reconnaissant, Price renonce à son salaire ; Price qui ne voit pas le vol au lieu de hausser les épaules) ; conditions montrées (débutant, reconnu, geste vif) ; l'épée dans le rocher (+350) n'est plus réservée aux bas niveaux, rien dans le texte ne justifiant une récompense plus forte pour un joueur plus faible.",
-    "Seuils : conditions de niveau et de statistiques recalées sur le barème des joueurs réguliers. Fort : attaque 700 pour les deux brigands mis à terre avant que Price dégaine. Correct : attaque 600 pour les agresseurs mis en fuite à la fin, vitesse 350 pour le vol d'un geste vif et pour la filature qui suit Price, défense 520 pour l'armure qui encaisse le coup. Débutant : niveau 30 au plus pour les conseils du repas et le vol maladroit. Encore faible : niveau 55 au plus pour la filature maladroite et la proie facile. Conditions de karma et de familier inchangées."
+    "Seuils : conditions de niveau et de statistiques recalées sur le barème des joueurs réguliers. Fort : attaque 700 pour les deux brigands mis à terre avant que Price dégaine. Correct : attaque 600 pour les agresseurs mis en fuite à la fin, vitesse 350 pour le vol d'un geste vif et pour la filature qui suit Price, défense 520 pour l'armure qui encaisse le coup. Débutant : niveau 30 au plus pour les conseils du repas et le vol maladroit. Encore faible : niveau 55 au plus pour la filature maladroite et la proie facile. Conditions de karma et de familier inchangées.",
+    "Repasse paliers, prévisibilité et karma. Trois seuils binaires gradués : escorte (convoy.6, attaque 231 à 699, vous aidez Price contre les brigands et ne payez qu'une partie de son salaire, entre le salaire entier et le butin du joueur fort à 700) ; vol (steal.6, vitesse 41 à 349, bourse attrapée mais presque vide, entre l'échec et le vol réussi à 350) ; bande de la fin (end.4, niveau 56 à 119, quelques pièces cédées au lieu de la grosse somme du joueur encore faible, rien au-delà ; emoji 💸). Prévisibilité : la sacoche trouvée par le familier (convoy.1), deuxième trouvaille sans rapport avec l'escorte après l'épée, devient une embuscade flairée par le familier, même mécanique. Karma : le +1 du repas accepté (meal.0) est retiré, ce n'est pas un choix moral et il dépendait de la réponse de Price."
   ]
 }

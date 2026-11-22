@@ -1,0 +1,287 @@
+{
+ "eventId": "14",
+ "model": "repasse",
+ "text": "La fatigue commence à vous peser quand, au milieu de la plaine vide de L'Étendue, vous apercevez une petite maison de pierre au bord d'une prairie. Devant la porte, un forgeron trapu bat sur l'enclume une pièce de métal rougie au feu. Contre le mur s'entassent des fers à cheval et des outils de ferme à réparer.",
+ "possibilities": {
+  "chatWorker": {
+   "text": "Discuter avec le forgeron.",
+   "outcomes": {
+    "0": "Le forgeron vous propose de mettre la main à la pâte. Vous passez un long moment à tirer le soufflet et à tenir la pièce pendant qu'il frappe. Quand elle a refroidi, il vous la tend : elle est à vous, pour votre peine.",
+    "1": "Le forgeron répond à vos questions sans cesser de frapper. Vous le regardez donner forme à une hache, coup après coup. Quand il la plonge dans l'eau dans un nuage de vapeur, vous le saluez et reprenez la route.",
+    "2": "Le forgeron vous propose de forger une épée avec lui, et vous acceptez avec joie. Mais la lame est bien plus lourde que prévu. En la sortant du feu, elle vous échappe et vous tombe sur le pied. Vous repartez en boitant, sans épée.",
+    "3": "Le forgeron vous confie le marteau pour finir une lame. Vous frappez assez fort, mais pas toujours au bon endroit, et un coup mal placé vous écrase le pouce. Il termine la lame lui-même pendant que vous secouez la main.",
+    "4": "Curieux de voir ce que vous valez, le forgeron vous tend le marteau. Vos coups tombent lourds et réguliers, et la lame prend forme plus vite qu'il ne l'aurait cru. Impressionné, il vous offre l'une de ses plus belles pièces.",
+    "5": "Quand vous posez votre arme près de l'enclume, la lame se met à vibrer doucement. Le forgeron a déjà entendu dire que certains métaux chantent, sans jamais l'avoir vu. Il l'examine un long moment, puis vous glisse quelques pièces pour votre patience."
+   }
+  },
+  "stayNight": {
+   "text": "Demander l'hospitalité pour la nuit.",
+   "outcomes": {
+    "0": "Le forgeron accepte de vous loger. Il n'a pas de chambre à vous offrir, mais il installe une paillasse dans l'atelier, près de la forge encore tiède. Épuisé, vous vous endormez à peine allongé.",
+    "1": "Le forgeron n'a pas de place pour vous loger, mais il vous invite à partager son souper. Affamé, vous acceptez. Vous mangez au coin du feu en l'écoutant parler des fermes de la plaine, puis vous reprenez la route.",
+    "2": "Le forgeron pose son marteau et vous dévisage. Il a entendu parler de vous, et pas en bien. Pour toute réponse, il grogne et vous montre le chemin du menton. Vous n'insistez pas et vous éloignez de la maison.",
+    "3": "En entendant votre nom, le forgeron sourit : des voyageurs de passage lui ont dit du bien de vous. Il vous cède son propre lit et vous sert un ragoût épais. Vous dormez d'une traite et vous réveillez en pleine forme.",
+    "4": "Le forgeron s'accroupit devant votre chien et lui gratte les oreilles : il en a eu un pendant des années. Il vous loge tous les deux près de la forge et partage son souper avec votre compagnon. Vous dormez bien au chaud.",
+    "5": "Le forgeron n'a pas de place pour vous loger, mais il vous invite à partager son souper. Son ragoût est fade. Avec sa permission, vous prenez la marmite en main. Il se ressert deux fois et vous laisse les meilleurs morceaux."
+   }
+  },
+  "inspectForge": {
+   "text": "Examiner la forge et ses créations.",
+   "outcomes": {
+    "0": "Vous faites le tour de l'atelier : des lames alignées, des pinces, une meule usée. Le forgeron vous explique chaque étape de son travail, de la chauffe à la trempe. Vous prenez congé un moment plus tard, la tête pleine de ses explications.",
+    "1": "Sans réfléchir, vous attrapez une pince posée près du feu pour la regarder de plus près. Elle est brûlante. Vous la lâchez en criant, et le forgeron vous plonge la main dans son seau d'eau en secouant la tête.",
+    "2": "En voyant les lames, vous pensez au fer et à l'acier qui alourdissent votre sac. Le forgeron soupèse ce que vous lui montrez et hoche la tête. Il vous l'échange volontiers contre l'une de ses pièces.",
+    "3": "Dans un coin attendent des pointes de flèche, des billes de fronde et quelques boulets. Vous les examinez en connaisseur, et le forgeron le remarque vite. Il vous demande votre avis sur leur poids et leur forme, et vous paie pour ces conseils.",
+    "4": "Affolée par les étincelles et le bruit du marteau, votre Chauve-souris s'envole dans l'atelier et renverse les outils. Le temps de la rattraper, tout est sens dessus dessous. Le forgeron ne rit pas, et il vous demande de partir.",
+    "5": "Le forgeron remarque votre arme, reprise plusieurs fois chez un forgeron de ville, et la regarde longuement. Content de parler métier avec quelqu'un qui connaît le travail bien fait, il vous offre l'une de ses meilleures pièces."
+   }
+  },
+  "goAway": {
+   "text": "Continuer votre chemin sans vous arrêter.",
+   "outcomes": {
+    "0": "Vous saluez le forgeron d'un signe de la main et passez votre chemin. Il vous répond d'un hochement de tête sans lâcher son marteau. Bientôt, le bruit de l'enclume se perd dans le vent de la plaine.",
+    "1": "Pour ne pas déranger le forgeron, vous faites un large détour autour de la prairie. Le sol y est plus mou que prévu, et vous perdez un moment à chercher un passage sec avant de retrouver la route.",
+    "2": "Vous refusez de vous arrêter malgré la fatigue. Votre pas se fait de plus en plus lourd. Quelques kilomètres plus loin, vous vous effondrez au bord du chemin et vous endormez là où vous êtes tombé, écorché par la chute.",
+    "3": "Vous serrez les dents et continuez malgré la fatigue. Vous tenez bon, mais vos pieds ne suivent plus. À la halte suivante, ils sont couverts d'ampoules, et chaque pas vous fait grimacer.",
+    "4": "Le forgeron lève les yeux, vous reconnaît et vous fait signe d'attendre. Il vous lance une gourde d'eau fraîche et un quignon de pain pour la route. Vous mangez en marchant, et la fatigue se fait un peu moins sentir."
+   }
+  },
+  "end": {
+   "outcomes": {
+    "0": "Trop fatigué pour vous décider, vous restez un moment au bord de la prairie à regarder voler les étincelles. Le forgeron ne vous a pas remarqué. Vous finissez par contourner la maison et reprendre votre route."
+   }
+  }
+ },
+ "data": {
+  "triggers": [
+   {
+    "mapId": 12
+   }
+  ],
+  "possibilities": {
+   "chatWorker": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 60,
+      "randomItem": {}
+     },
+     "1": {
+      "effect": "occupied",
+      "lostTime": 10
+     },
+     "2": {
+      "requirements": {
+       "attack": {
+        "max": 230
+       }
+      },
+      "effect": "injured",
+      "health": -50
+     },
+     "3": {
+      "requirements": {
+       "attack": {
+        "min": 231,
+        "max": 599
+       }
+      },
+      "health": -15
+     },
+     "4": {
+      "requirements": {
+       "attack": {
+        "min": 600
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 60,
+      "randomItem": {
+       "rarity": {
+        "min": 3
+       }
+      }
+     },
+     "5": {
+      "requirements": {
+       "enchantment": {
+        "slot": "weapon",
+        "types": [
+         "magic"
+        ]
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 40,
+      "money": 80
+     }
+    }
+   },
+   "stayNight": {
+    "outcomes": {
+     "0": {
+      "effect": "sleeping",
+      "health": 10
+     },
+     "1": {
+      "effect": "occupied",
+      "lostTime": 100,
+      "health": 5
+     },
+     "2": {
+      "requirements": {
+       "karma": {
+        "max": -30
+       }
+      }
+     },
+     "3": {
+      "requirements": {
+       "karma": {
+        "min": 50
+       }
+      },
+      "effect": "sleeping",
+      "health": 25
+     },
+     "4": {
+      "requirements": {
+       "validPetTypeIds": [
+        1,
+        2
+       ]
+      },
+      "effect": "sleeping",
+      "health": 20
+     },
+     "5": {
+      "requirements": {
+       "cookingLevel": {
+        "min": 70
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 100,
+      "health": 20
+     }
+    }
+   },
+   "inspectForge": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 20
+     },
+     "1": {
+      "requirements": {
+       "level": {
+        "max": 55
+       }
+      },
+      "effect": "burning",
+      "health": -15
+     },
+     "2": {
+      "consumeMaterials": {
+       "ids": [
+        70,
+        81,
+        16
+       ],
+       "quantity": 2
+      },
+      "randomItem": {}
+     },
+     "3": {
+      "requirements": {
+       "validClassIds": [
+        8,
+        9,
+        10,
+        11,
+        20
+       ]
+      },
+      "money": 60
+     },
+     "4": {
+      "requirements": {
+       "validPetTypeIds": [
+        27
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 30
+     },
+     "5": {
+      "requirements": {
+       "weaponLevel": {
+        "min": 3
+       }
+      },
+      "randomItem": {
+       "rarity": {
+        "min": 3
+       }
+      }
+     }
+    }
+   },
+   "goAway": {
+    "outcomes": {
+     "0": {},
+     "1": {
+      "effect": "occupied",
+      "lostTime": 20
+     },
+     "2": {
+      "requirements": {
+       "speed": {
+        "max": 40
+       }
+      },
+      "effect": "sleeping",
+      "health": -20
+     },
+     "3": {
+      "requirements": {
+       "speed": {
+        "min": 41,
+        "max": 349
+       }
+      },
+      "effect": "feetHurt"
+     },
+     "4": {
+      "requirements": {
+       "karma": {
+        "min": 50
+       }
+      },
+      "health": 10
+     }
+    }
+   },
+   "end": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 30
+     }
+    }
+   }
+  }
+ },
+ "icons": {
+  "inspectForge": "🧐"
+ },
+ "notes": [
+  "Karma : les 11 gains ou pertes du brouillon sont retirés. Aucun ne venait d'un choix moral du joueur (trouvaille, réaction de familier, brûlure, chauve-souris, simple conversation). Les seuils hors barème (10, 60, -40) deviennent min 50 et max -30, et le karma ne sert plus qu'à montrer comment le forgeron traite le joueur (lit et ragoût, gourde pour la route, porte fermée).",
+  "Retiré : le vol d'objet réservé aux joueurs rapides au karma bas (acte grave que le joueur ne choisit pas, imprévisible pour « examiner la forge »), la lame louche payée pour la discrétion, le forgeron ancien dresseur de tigres, la nuit payante, le marché de l'armure, le joueur qui ne veut pas déranger et la vitesse min 200 qui faisait perdre du temps aux joueurs rapides (une force pénalisée).",
+  "Seuils recalés : niveau min 25, 40 ou 130 et max 40 ou 50, attaque min 300 ou 350, défense min 250, vitesse min 200 ou 350 et max 530 remplacés par les paliers du skill. Forger avec le forgeron se gradue par l'attaque (faible : l'épée tombe sur le pied, moyenne : pouce écrasé, forte : belle pièce) ; marcher malgré la fatigue par la vitesse (faible : effondrement, moyenne : ampoules, forte : rien).",
+  "Original restauré : la fatigue dans l'introduction (elle motive la nuit et l'effondrement), la prairie et la petite maison, la hache qu'on regarde forger, l'épée lâchée sur le pied (blessure grave, ramenée à -50 et réservée aux bras faibles), le souper partagé faute de lit, le grognement (motivé par le karma) et le détour autour de la prairie.",
+  "Forge : conditions d'équipement et de sac ajoutées là où elles vont de soi. Une arme à enchantement magique vibre près de l'enclume (lien discret avec la Résonance), une arme reprise chez un forgeron de ville (weaponLevel min 3) vaut une belle pièce, et l'on peut échanger deux morceaux de fer ou d'acier (consumeMaterials sur Fer brut, Acier, Acier au carbone) contre un objet.",
+  "Gardé du brouillon : la possibilité inspectForge et son emoji, la leçon du forgeron, la brûlure (réservée aux joueurs encore faibles), les tireurs consultés sur leurs munitions, la Chauve-souris affolée (temps perdu au lieu de karma), le chien (Chien et Caniche) et l'accueil des joueurs bien vus. Ajout : un bon cuisinier (cookingLevel min 70) relève le ragoût du souper.",
+  "Style : 6 issues au plus par possibilité (7 dans le brouillon), plus de festin digne d'un roi, de cœur réchauffé ni de promesse de revenir ; mots simples, phrases courtes, pas de montant ni de durée chiffrée. Un lien discret avec le canon : le forgeron répare les fers et les outils des fermes de la plaine (event 62)."
+ ]
+}

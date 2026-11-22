@@ -1,0 +1,291 @@
+{
+  "eventId": "18",
+  "model": "repasse",
+  "text": "Au détour d'une ruelle de Mergagnan, vous tombez sur un chantier à l'abandon : poutres noircies, échafaudages qui grincent, outils rouillés. Le baron Almerac y faisait bâtir une halle de pierre. Il est mort en laissant des intérêts impayés, les ouvriers sont partis, et jusqu'aux registres sont restés sur place.",
+  "possibilities": {
+    "searchScaffolding": {
+      "text": "Grimper aux échafaudages.",
+      "outcomes": {
+        "0": "Vous grimpez de plancher en plancher jusqu'au sommet des échafaudages. Il n'y a rien à prendre là-haut, mais la vue s'étend sur les toits de Mergagnan jusqu'à la Plage Sentinelle. Vous restez un long moment à la regarder avant de redescendre.",
+        "1": "Du haut des échafaudages, vous repérez quelque chose qui brille dans un tas de gravats, au pied du mur. Vous redescendez le chercher : c'est un objet oublié par les ouvriers, encore en bon état. Vous l'emportez.",
+        "2": "À mi-hauteur, un barreau de l'échelle casse sous votre pied. Vous n'avez pas le temps de vous rattraper et tombez lourdement sur les pavés. Étourdi, vous mettez un long moment à reprendre vos esprits.",
+        "3": "Une planche pourrie cède sous votre pied. Vous vous rattrapez de justesse à une poutre, mais le bois rugueux vous écorche les mains. Vous redescendez prudemment, en soufflant sur vos paumes.",
+        "4": "Vous montez vite et sans un faux pas jusqu'au dernier plancher, où plus personne ne grimpe depuis le départ des ouvriers. Entre deux poutres, l'un d'eux avait caché une petite bourse et un objet. Vous emportez les deux.",
+        "5": "Votre singe bondit de perche en perche, bien plus vite que vous. Il fouille un recoin hors de votre portée, puis redescend avec un objet oublié par les ouvriers et vous le tend. Il a l'air très fier de lui."
+      }
+    },
+    "searchSite": {
+      "text": "Fouiller le chantier.",
+      "outcomes": {
+        "0": "En fouillant le chantier, vous trouvez une caisse de ferrures coincée sous une poutre effondrée. Vous tirez de toutes vos forces, mais la poutre ne bouge pas. Vous finissez par abandonner, les bras fatigués et les mains vides.",
+        "1": "En fouillant le chantier, vous trouvez une caisse de ferrures coincée sous une poutre effondrée. Vous soulevez la poutre de quelques doigts, juste assez pour glisser la main dans la caisse et en tirer un morceau de métal.",
+        "2": "En fouillant le chantier, vous trouvez une caisse de ferrures coincée sous une poutre effondrée. Vous soulevez la poutre et la faites rouler sur le côté. Le métal de la caisse est encore bon : vous en emportez une bonne charge.",
+        "3": "Vous retournez les caisses et soulevez les bâches moisies une à une. Sous la dernière, un coffre de charpentier a échappé aux pilleurs. Il y reste un objet utile, que vous emportez après une longue fouille.",
+        "4": "Vous plongez la main dans une caisse à outils sans regarder. Une pince rouillée vous entaille profondément la paume. Le sang coule, et il vous faut un bon moment pour bander la plaie.",
+        "5": "Pendant que vous fouillez, votre castor s'attaque à une pile de poutres tombées. Il ronge et tire le bois avec application. Quand vous revenez, quelques bons morceaux sont empilés à ses pieds. Vous les rangez dans votre sac."
+      }
+    },
+    "investigate": {
+      "text": "Enquêter sur l'abandon du chantier.",
+      "outcomes": {
+        "0": "Vous feuilletez les registres restés sur une table. Comptes, salaires, livraisons de pierre : tout s'arrête net à la mort du baron Almerac. Sur les dernières pages, il n'est plus question que d'intérêts impayés à un prêteur dont le nom a été gratté.",
+        "1": "Vous passez un long moment sur les registres, mais l'humidité a effacé la moitié des pages. Les chiffres qui restent se contredisent. Vous refermez le dernier cahier sans en savoir plus sur l'abandon du chantier.",
+        "2": "Une vieille femme vous regarde lire les registres. Elle vous reconnaît et vient vous parler : son fils était maçon ici, et le baron payait en retard, puis plus du tout. Elle vous donne un outil qu'il a laissé sur place.",
+        "3": "Un voisin vous surprend penché sur les registres. Il vous reconnaît, vous prend pour un envoyé des créanciers et appelle toute la rue. Vous perdez un moment à vous expliquer avant qu'on vous laisse partir."
+      }
+    },
+    "skip": {
+      "text": "Passer son chemin.",
+      "outcomes": {
+        "0": "Ce chantier ne vous regarde pas. Vous reprenez votre chemin dans les ruelles. Quelques pas plus loin, l'odeur de poisson grillé de l'auberge Au Coin du Feu vous fait déjà oublier les échafaudages.",
+        "1": "Vous coupez à travers le chantier sans regarder où vous mettez les pieds. Vous heurtez une pioche laissée au sol, et le fer vous entaille la cheville. Vous repartez en boitant.",
+        "2": "Vous longez le chantier quand un habitant vous reconnaît. Il ne vous quitte plus des yeux et vous suit jusqu'au bout de la rue, pour être sûr que vous ne touchez à rien. Vous faites un détour pour vous en débarrasser.",
+        "3": "Au moment de repartir, votre chat file sur une poutre de l'échafaudage. Il s'installe tout en haut et ne semble pas pressé de redescendre. Vous perdez un bon moment à l'attirer jusqu'à vous."
+      }
+    },
+    "end": {
+      "outcomes": {
+        "0": "Vous restez un moment devant le chantier, à écouter grincer les échafaudages. Personne ne vient, rien ne bouge : il n'y a manifestement rien à tirer de cet endroit. Vous finissez par vous éloigner.",
+        "1": "Votre oiseau s'envole soudain et se pose sur une poutre du chantier. Il fouille un recoin du bec, puis revient près de vous avec un petit objet brillant. Vous le lui prenez avec un sourire.",
+        "2": "Sans prévenir, votre gorille se met à frapper un pan de mur à coups de poing. Une pierre mal scellée se détache et vous tombe sur la tête. Vous le grondez en vous frottant le crâne."
+      }
+    }
+  },
+  "data": {
+    "triggers": [
+      {
+        "mapId": 26
+      }
+    ],
+    "possibilities": {
+      "searchScaffolding": {
+        "outcomes": {
+          "0": {
+            "effect": "occupied",
+            "lostTime": 30
+          },
+          "1": {
+            "randomItem": {},
+            "effect": "occupied",
+            "lostTime": 15
+          },
+          "2": {
+            "requirements": {
+              "speed": {
+                "max": 40
+              }
+            },
+            "effect": "confounded",
+            "health": -30
+          },
+          "3": {
+            "requirements": {
+              "speed": {
+                "min": 41,
+                "max": 349
+              }
+            },
+            "health": -10
+          },
+          "4": {
+            "requirements": {
+              "speed": {
+                "min": 350
+              }
+            },
+            "randomItem": {},
+            "money": 60,
+            "effect": "occupied",
+            "lostTime": 15
+          },
+          "5": {
+            "requirements": {
+              "validPetTypeIds": [
+                24,
+                90
+              ]
+            },
+            "randomItem": {},
+            "effect": "occupied",
+            "lostTime": 10
+          }
+        }
+      },
+      "searchSite": {
+        "outcomes": {
+          "0": {
+            "requirements": {
+              "attack": {
+                "max": 230
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 30
+          },
+          "1": {
+            "requirements": {
+              "attack": {
+                "min": 231,
+                "max": 599
+              }
+            },
+            "giveMaterials": {
+              "ids": [
+                70,
+                81,
+                16
+              ],
+              "quantity": 1
+            },
+            "effect": "occupied",
+            "lostTime": 25
+          },
+          "2": {
+            "requirements": {
+              "attack": {
+                "min": 600
+              }
+            },
+            "giveMaterials": {
+              "ids": [
+                70,
+                81,
+                16
+              ],
+              "quantity": 3
+            },
+            "effect": "occupied",
+            "lostTime": 20
+          },
+          "3": {
+            "randomItem": {},
+            "effect": "occupied",
+            "lostTime": 40
+          },
+          "4": {
+            "effect": "hurt",
+            "health": -20
+          },
+          "5": {
+            "requirements": {
+              "validPetTypeIds": [
+                38
+              ]
+            },
+            "giveMaterials": {
+              "ids": [
+                2,
+                18,
+                84
+              ],
+              "quantity": 2
+            },
+            "effect": "occupied",
+            "lostTime": 30
+          }
+        }
+      },
+      "investigate": {
+        "outcomes": {
+          "0": {
+            "effect": "occupied",
+            "lostTime": 45
+          },
+          "1": {
+            "effect": "occupied",
+            "lostTime": 90
+          },
+          "2": {
+            "requirements": {
+              "karma": {
+                "min": 50
+              }
+            },
+            "randomItem": {},
+            "effect": "occupied",
+            "lostTime": 30
+          },
+          "3": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 30
+          }
+        }
+      },
+      "skip": {
+        "outcomes": {
+          "0": {},
+          "1": {
+            "effect": "feetHurt",
+            "health": -10
+          },
+          "2": {
+            "requirements": {
+              "karma": {
+                "max": -30
+              }
+            },
+            "effect": "occupied",
+            "lostTime": 15
+          },
+          "3": {
+            "requirements": {
+              "validPetTypeIds": [
+                3,
+                4
+              ]
+            },
+            "effect": "occupied",
+            "lostTime": 20
+          }
+        }
+      },
+      "end": {
+        "outcomes": {
+          "0": {
+            "effect": "occupied",
+            "lostTime": 15
+          },
+          "1": {
+            "requirements": {
+              "validPetTypeIds": [
+                58,
+                95
+              ]
+            },
+            "randomItem": {}
+          },
+          "2": {
+            "requirements": {
+              "validPetTypeIds": [
+                91
+              ]
+            },
+            "effect": "hurt",
+            "health": -12
+          }
+        }
+      }
+    }
+  },
+  "icons": {
+    "investigate": "🕵️",
+    "end": {
+      "1": "🕑",
+      "2": "🕑"
+    }
+  },
+  "notes": [
+    "Retiré : 12 issues d'escalade ramenées à 6 et 7 issues de fouille à 6. Écartés : les doublons de trouvaille (vétéran, cupidité, joueur costaud, débutant prudent, chien qui flaire une cache), la tuile qui tombe sur le joueur prudent avec sa morale finale, et l'abri du castor avec sommeil réparateur, hors sujet pour une fouille.",
+    "Le cas général d'abord : chaque possibilité garde des issues sans condition. Plus aucune force ne pénalise : la chute réservée aux bonnes défenses, la main entaillée réservée aux joueurs rapides et la planche qui plie sous les grosses défenses disparaissent ; l'entaille redevient un risque pour tous, comme dans l'original.",
+    "Paliers : l'escalade se gradue par la vitesse (max 40 chute et étourdissement, 41 à 349 mains écorchées, min 350 cache des ouvriers avec objet et bourse) ; la caisse de ferrures sous la poutre se gradue par l'attaque (max 230 rien, 231 à 599 un métal, min 600 trois). Les anciens seuils (niveau 30, 35, 40, 60, 90, vitesse 180 à 500, attaque 300 et 344, défense 200 à 250) sont retirés.",
+    "Karma : les seuils hors barème (max -20, max 75) sont retirés et les gains pour une trouvaille ou un familier aussi (+1, +3), comme les pertes sans vrai choix moral (-2 à -20). Le karma ne sert plus qu'à montrer les gens qui reconnaissent le joueur : la mère d'un maçon qui lui fait confiance (min 50), un voisin qui le prend pour un envoyé des créanciers (max -30), un habitant qui le surveille (max -30).",
+    "Matériaux : la caisse de ferrures donne du métal (fer brut, acier, acier au carbone) et le castor, qui ronge les poutres tombées, des planches et du bois de cèdre, via giveMaterials.",
+    "Lore et religion : le billet sur la fièvre venue du port et sa prière sont retirés (religion, et une épidémie qui contredirait la ville paisible). Les intérêts impayés passent dans l'introduction, et les registres parlent d'un prêteur au nom gratté : le Grand Livre reste sous-entendu sans être nommé. Mergagnan n'est plus déserte, et l'auberge Au Coin du Feu apparaît sous son nom.",
+    "Style : mots rares retirés (faîte, palan, solive, panne faîtière, bavette, madrier, doloire, huche, échafaud), ainsi que les morales (on ne brave pas impunément, même la sagesse, la chance sourit), le brocanteur peu regardant et les phrases trop longues. Gardés : la vue sur la Plage Sentinelle, le singe fier de sa trouvaille, le coffre de charpentier, l'oiseau et le gorille de la fin, la pioche qui entaille le pied."
+  ]
+}

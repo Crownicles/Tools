@@ -22,7 +22,8 @@
         "2": "Vous traversez la voie sans vous arrêter. Deux gardes vous reconnaissent et ne cherchent pas à comprendre : ils vous arrêtent pour outrage à la Garde et vous jettent en cellule.",
         "3": "Vous heurtez un soldat, qui lève le poing. Vous lui saisissez le bras et le plaquez au sol. Des rires parcourent la colonne. Amusé, le roi Aubéric vous fait remettre une belle somme, puis vous ordonne de dégager la voie.",
         "4": "Vous traversez devant les chevaux. Un garde vous donne un coup de lance, mais votre bouclier arrête l'essentiel du choc. Vous filez parmi les passants avant qu'on vous attrape, le bras un peu douloureux.",
-        "5": "Un garde remarque votre armure de chevalier et vous salue. Il vous demande poliment d'attendre au bord de la voie. Vous n'insistez pas et patientez quelques minutes, le temps que la colonne passe."
+        "5": "Un garde remarque votre armure de chevalier et vous salue. Il vous demande poliment d'attendre au bord de la voie. Vous n'insistez pas et patientez quelques minutes, le temps que la colonne passe.",
+        "6": "Vous traversez devant les chevaux. Un garde vous donne un coup de lance dans les côtes. Le souffle coupé, vous filez parmi les passants avant qu'on vous attrape. Vous marchez un moment plié en deux, une main sur le flanc."
       }
     },
     "bow": {
@@ -44,7 +45,8 @@
         "2": "Dans une ruelle déserte, des hommes parlent d'attaquer le carrosse. Vous leur foncez dessus seul, arme au poing. Ils sont trop nombreux et vous laissent à terre, gravement blessé. Alertée par le bruit, la Garde les arrête peu après.",
         "3": "Vous contournez la procession par une rue voisine. À un étal que vous connaissez bien, vous achetez un repas chaud et une pièce d'équipement à bon prix. Le repas vous remet d'aplomb avant de reprendre votre chemin.",
         "4": "Dans une ruelle calme, des voix passent sous une porte. Vous saisissez quelques mots : des marchandises, un passage. Parmi les voix, vous reconnaissez celle du mercenaire Price. Vous préférez ne pas vous en mêler et poursuivez votre chemin.",
-        "5": "Votre chien s'arrête net et grogne devant une porte entrouverte. À l'intérieur, un homme charge une arbalète. Vous prévenez la Garde, qui l'arrête aussitôt. Un officier vous remercie avec quelques pièces."
+        "5": "Votre chien s'arrête net et grogne devant une porte entrouverte. À l'intérieur, un homme charge une arbalète. Vous prévenez la Garde, qui l'arrête aussitôt. Un officier vous remercie avec quelques pièces.",
+        "6": "Dans une ruelle déserte, des hommes parlent d'attaquer le carrosse. Vous leur barrez la route, arme au poing. Vous en mettez un à terre, mais les autres vous rouent de coups. Le bruit attire la Garde, qui les arrête."
       }
     },
     "end": {
@@ -161,6 +163,14 @@
             },
             "effect": "occupied",
             "lostTime": 10
+          },
+          "6": {
+            "requirements": {
+              "defense": {
+                "max": 519
+              }
+            },
+            "health": -15
           }
         }
       },
@@ -285,6 +295,16 @@
             },
             "money": 100,
             "karma": 3
+          },
+          "6": {
+            "requirements": {
+              "level": {
+                "min": 56,
+                "max": 119
+              }
+            },
+            "health": -40,
+            "karma": 3
           }
         }
       },
@@ -327,6 +347,7 @@
     "Des variantes montrent les effets de la réputation, des aptitudes, de la classe et des familiers, avec une issue accessible à tous pour chaque choix.",
     "Le roi peut récompenser une prise sans adoubement ni obligation de quitter la ville, absente des données d'origine.",
     "Relecture : montants chiffrés retirés (le jeu les affiche) ; mots rares ou flous remplacés (hampe, reflue, interlocuteurs, contusions) ; phrases découpées et pronoms clarifiés (bourse du voisin, porteur de l'arbalète) ; conditions montrées dans le texte (gardes qui reconnaissent un joueur mal vu, réflexe d'un joueur rapide, signaux connus des soldats, novice seul à s'agenouiller) ; scène de la princesse ramenée à l'idée d'origine (sa main entrevue redonne courage) ; décor superflu retiré des issues de fin.",
-    "Seuils (barème des joueurs réguliers) : novice qui s'agenouille seul au niveau 30 au plus (débutant) ; joueur volé, frappé par un garde ou battu en ruelle au niveau 55 au plus (encore faible) ; voleur rattrapé en quelques pas à la vitesse 500 (fort) ; course pour prévenir les gardes et geste vif à la vitesse 350 (correct) ; soldat plaqué au sol à l'attaque 700 (fort) ; coup de lance arrêté par le bouclier à la défense 520 (correct) ; habitué de l'étal au niveau 120 (correct). Conditions de karma, de familier et de classe gardées telles quelles."
+    "Seuils (barème des joueurs réguliers) : novice qui s'agenouille seul au niveau 30 au plus (débutant) ; joueur volé, frappé par un garde ou battu en ruelle au niveau 55 au plus (encore faible) ; voleur rattrapé en quelques pas à la vitesse 500 (fort) ; course pour prévenir les gardes et geste vif à la vitesse 350 (correct) ; soldat plaqué au sol à l'attaque 700 (fort) ; coup de lance arrêté par le bouclier à la défense 520 (correct) ; habitué de l'étal au niveau 120 (correct). Conditions de karma, de familier et de classe gardées telles quelles.",
+    "Repasse paliers : dans ignore, seul un joueur bien défendu (défense 520) pouvait recevoir le coup de lance, ce qui pénalisait l'armure ; nouvelle issue ignore 6 où les autres (défense 519 au plus) le prennent dans les côtes (-15 PV), l'issue 4 restant la version amortie (-5). Dans otherAlley, la bagarre passait de -100 PV et blessure grave (niveau 55 au plus) à rien ; nouvelle issue otherAlley 6 pour le niveau 56 à 119, qui tient un moment puis se fait rouer de coups (-40 PV, même karma) ; les joueurs de niveau 120 et plus n'ont pas de malus. Karma et prévisibilité déjà conformes."
   ]
 }

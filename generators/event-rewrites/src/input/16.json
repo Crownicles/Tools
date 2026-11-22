@@ -1,0 +1,538 @@
+{
+ "eventId": "16",
+ "model": "repasse",
+ "mapId": 25,
+ "place": "Rivière aux Crabes",
+ "placeType": "ri",
+ "placeDescription": "Tout est dans le nom. Une rivière très appréciée des poissonniers de Claire de Ville. En aval, ses rives se perdent en vasières boueuses où pullulent les crabes.",
+ "neighbours": [
+  {
+   "mapId": 13,
+   "name": "Route Marécageuse",
+   "minutes": 180,
+   "type": "ro"
+  },
+  {
+   "mapId": 14,
+   "name": "Lac Mirage",
+   "minutes": 300,
+   "type": "la"
+  },
+  {
+   "mapId": 24,
+   "name": "Route Grimpante",
+   "minutes": 300,
+   "type": "ro"
+  }
+ ],
+ "isCity": false,
+ "city": null,
+ "canonBlock": "#### Rivière aux Crabes · `25`\n\n- **Type :** rivière (`ri`) ; biomes : coast, swamp\n- **Description du jeu :** « Tout est dans le nom. Une rivière très appréciée des poissonniers de Claire de Ville. En aval, ses rives se perdent en vasières boueuses où pullulent les crabes. »\n- **Voisins :** Route Marécageuse (3 h), Lac Mirage (5 h), Route Grimpante (5 h)\n- **Zones d'expédition des familiers :** les Méandres de la Rivière aux Crabes, les Vasières de la Rivière aux Crabes\n- **Big events qui s'y déclenchent :**\n  - 16 : « Après avoir suivi pendant de longues heures une rivière, vous découvrez un vieux château qui semble abandonné au bord de l'eau. »\n  - 57 : « Vous marchez sous un ciel bleu azur. »\n  - 84 : « Alors que vous déambulez sur les quais bruyants, vous remarquez un homme trapu à la barbe rousse, juché sur une caisse retournée, qui harangue les passants : il promet… »\n",
+ "triggers": [
+  {
+   "mapId": 25
+  }
+ ],
+ "original": {
+  "possibilities": {
+   "end": {
+    "outcomes": {
+     "0": "Après avoir admiré le bâtiment pendant une quinzaine de minute, vous reprenez votre route.",
+     "1": "Vous vous délectez de la vue du château... Puis finissez par vous souvenir de votre quête et reprenez votre route."
+    }
+   },
+   "enterCastle": {
+    "outcomes": {
+     "0": "Peu après être rentré dans le château, vous vous rendez compte de l'insalubrité des lieux. Abandonnée depuis des années, la bâtisse est totalement délabrée. Après quelques minutes d'exploration, alors que vous entrez dans une grande salle délabrée, un immense morceau du plafond se décroche sur vous ! Avec beaucoup de difficultés, vous parvenez à ressortir du bâtiment, blessé.",
+     "1": "Vous entrez dans le château et parcourez rapidement les lieux. Au bout de quelques minutes, vous trouvez une pièce qui semble être l'ancienne armurerie. Pressé de ressortir du bâtiment, vous ramassez le premier objet qui vous tombe sous la main et ressortez en pressant le pas.",
+     "2": "Il semblerait que ce château soit moins abandonné qu'il en a l'air ! Peu après votre entrée, vous entendez de nombreux bruits en provenance de différentes salles. Peu rassuré, vous préférez reprendre votre route."
+    },
+    "text": "Entrer pour fouiller le château."
+   },
+   "skip": {
+    "outcomes": {
+     "0": "Vous continuez votre route sans prêter plus d'attention à ce château."
+    },
+    "text": "Continuer votre route."
+   },
+   "walkAround": {
+    "outcomes": {
+     "0": "Vous faites le tour du château mais vous ne trouvez rien. Estimant avoir perdu suffisamment de temps, vous continuez votre chemin.",
+     "1": "Cette ronde ne vous en apprendra pas beaucoup sur la grande bâtisse. Cependant, vous découvrez tout au long de celle-ci un grand nombre de petites pièces d'or disséminées autour du château. Heureux de votre découverte, vous reprenez votre route.",
+     "2": "Alors que vous commenciez à faire le tour du château, vous tombez par accident dans un trou. Blessé à la jambe, il faudra vous soigner avant de continuer !"
+    },
+    "text": "Faire le tour du château par l'extérieur."
+   }
+  },
+  "text": "Après avoir suivi pendant de longues heures une rivière, vous découvrez un vieux château qui semble abandonné au bord de l'eau."
+ },
+ "outcomeData": {
+  "end": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 15
+   },
+   "1": {
+    "effect": "occupied",
+    "lostTime": 30
+   }
+  },
+  "enterCastle": {
+   "0": {
+    "effect": "hurt",
+    "health": -35
+   },
+   "1": {
+    "effect": "occupied",
+    "lostTime": 25,
+    "randomItem": {}
+   },
+   "2": {
+    "effect": "occupied",
+    "lostTime": 10
+   }
+  },
+  "skip": {
+   "0": {}
+  },
+  "walkAround": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 80
+   },
+   "1": {
+    "effect": "occupied",
+    "lostTime": 80,
+    "money": 450
+   },
+   "2": {
+    "effect": "hurt",
+    "health": -20
+   }
+  }
+ },
+ "draft": {
+  "author": "BastLast",
+  "lang": {
+   "possibilities": {
+    "enterCastle": {
+     "outcomes": {
+      "0": "Vous progressez en testant chaque plancher avant d'y poser le pied, par vieille habitude. Dans l'ancienne armurerie, une pierre sonne creux : derrière elle, une cache que personne n'a ouverte depuis des décennies.",
+      "1": "Vous sautez par-dessus les planchers crevés et les marches manquantes. Dans les anciens quartiers des gardes, vous découvrez un objet de valeur que le temps a épargné.",
+      "2": "Vous avancez sans méfiance, et un plancher vermoulu cède sous votre poids. Vous chutez lourdement dans les caves humides. Vous parvenez à remonter, blessé et secoué.",
+      "3": "Dans un couloir sombre, un pan de plafond s'effondre. Vous bondissez en arrière, par réflexe de combattant, et évitez le pire, mais les gravats vous blessent tout de même. Vous battez en retraite.",
+      "4": "Le château n'est pas si abandonné : des brigands en ont fait leur repaire. Ils vous reconnaissent, vous accueillent en camarade et partagent avec vous une partie de leur dernier butin.",
+      "5": "Les brigands installés dans le château vous reconnaissent aussitôt, et leur chef vous propose de rejoindre la bande. Vous déclinez poliment, et repartez avec quelques pièces d'or offertes en signe de respect.",
+      "6": "Une famille de réfugiés s'abrite dans le château. Vous partagez vos provisions avec eux. En retour, ils vous indiquent une cache d'objets qu'ils ont découverte et n'osaient pas toucher.",
+      "7": "À peine le seuil franchi, des gardes surgissent de leur cachette : ils ont reconnu votre visage. La poursuite dure de longues minutes, d'étage en étage, avant que vous ne parveniez à les semer.",
+      "8": "Les flammes de votre dragon éclairent les couloirs comme en plein jour. Aucun plancher pourri ne vous échappe, et vous dénichez plusieurs objets que l'obscurité cachait.",
+      "9": "Par une fissure du mur, votre serpent se glisse et disparaît. Quelques minutes plus tard, il en ressort avec une pièce d'or ancienne entre les crocs : il a trouvé une cache oubliée depuis des siècles.",
+      "10": "Enthousiaste, votre diplodocus entre dans le château, et toute la structure tremble. Un pan de plafond s'effondre dans un fracas épouvantable, dévoilant une chambre secrète et son trésor. Vous vous en tirez avec une pierre reçue sur l'épaule.",
+      "11": "En franchissant le seuil, vous êtes saisi d'une terreur inexplicable. Chaque craquement, chaque ombre vous fait sursauter. Vous fuyez vers la sortie, le cœur battant la chamade.",
+      "12": "Vous connaissez le plan des forteresses comme on vous l'a enseigné, et vous retrouvez sans peine l'ancienne armurerie. Parmi les armes rouillées, une pièce d'équipement est restée en bon état."
+     },
+     "text": "Pénétrer dans le château en ruine pour l'explorer."
+    },
+    "walkAround": {
+     "outcomes": {
+      "0": "En faisant le tour du château, vous reconnaissez les traces d'un ancien siège : brèches colmatées, pierres noircies, fossés comblés. Vous ne trouvez rien de valeur, mais vous en savez un peu plus sur l'histoire des lieux.",
+      "1": "En faisant le tour du château, vous repérez plusieurs cachettes dans les fondations. D'anciens défenseurs y avaient glissé en hâte des bourses d'or, que le temps a oubliées.",
+      "2": "Vous fouillez les décombres des anciennes écuries quand le sol se dérobe : une fosse dissimulée, sans doute un vieux piège défensif. La chute est rude, et vous vous entaillez la jambe sur les pierres.",
+      "3": "Alors que vous contournez prudemment le château, votre fidèle chien déterre près des remparts un coffret enterré contenant des pièces d'or ! Votre compagnon à quatre pattes vous a encore une fois rendu un fier service.",
+      "4": "Attiré par les lézardes chaudes des murs exposés au soleil, votre reptile découvre une fissure qui mène à une petite réserve. Les anciens habitants y avaient dissimulé quelques objets de valeur.",
+      "5": "Dans les douves asséchées gisent les restes d'un pont-levis. Son mécanisme abritait une cache d'outils et de pièces, que vous récupérez avant de poursuivre votre chemin.",
+      "6": "Les corneilles qui nichent dans les tours vous repèrent et se mettent à crier. Si quelqu'un occupe les lieux, il sait maintenant que vous êtes là. Par précaution, vous vous éloignez sans attendre."
+     },
+     "text": "Contourner le château pour l'examiner depuis l'extérieur."
+    },
+    "searchRiver": {
+     "outcomes": {
+      "0": "Vous savez où chercher : sous l'ancien embarcadère du château, une barge coulée repose encore sur le fond. Vous plongez et remontez quelques objets de valeur de l'épave.",
+      "1": "En longeant la rivière près du château, vous découvrez les vestiges d'un ancien moulin à eau. Les mécanismes rouillés recèlent encore quelques pièces coincées dans les engrenages que vous parvenez à extraire.",
+      "2": "En longeant la berge, vous découvrez une grotte dissimulée sous les fondations du château, sans doute une issue de secours des anciens seigneurs. Vous y trouvez des provisions encore comestibles et un objet oublié.",
+      "3": "En vous penchant vers la rivière pour boire, vous glissez sur les pierres humides et tombez à l'eau ! Le courant vous emporte quelques mètres plus loin. Vous parvenez à regagner la berge, trempé et frigorifié.",
+      "4": "Tout à sa joie, votre hippopotame se jette dans la rivière, et vous le rejoignez pour une baignade rafraîchissante. Il remonte du fond avec un objet brillant, qu'il vous rapporte fièrement."
+     },
+     "text": "Explorer les berges de la rivière près du château."
+    },
+    "restAndObserve": {
+     "outcomes": {
+      "0": "Vous vous installez face au château et laissez votre esprit vagabonder. Vous imaginez la forteresse au temps de sa grandeur, et cette pause vous rend un peu d'énergie.",
+      "1": "À force d'observer le château, vous reconnaissez son style de construction et parvenez à dater l'édifice, à quelques décennies près. Vous en apprenez un peu plus sur l'histoire de la région.",
+      "2": "Un vieil ermite sort des buissons pendant que vous contemplez les ruines. Il a entendu parler de vous : il vous raconte ce qu'on dit du château dans la région et vous offre un petit objet béni en signe d'amitié.",
+      "3": "Un groupe de pèlerins s'arrête près de vous et vous demande conseil sur la route à suivre. Vous les renseignez de votre mieux, et ils vous offrent quelques pièces et des provisions en remerciement.",
+      "4": "Alors que vous contemplez paisiblement les ruines, votre animal de compagnie se met à jouer avec les reflets du soleil sur les pierres humides. Ce moment de pure joie réchauffe votre cœur et vous redonne de l'entrain pour continuer votre périple."
+     },
+     "text": "S'arrêter pour contempler et se reposer face au château."
+    },
+    "skip": {
+     "outcomes": {
+      "0": "Pressé par votre quête, vous décidez de ne pas vous attarder devant ces ruines. Votre détermination vous pousse à poursuivre votre route sans un regard en arrière.",
+      "1": "Méfiant envers les lieux abandonnés qui peuvent cacher des dangers, vous préférez éviter le château et continuer votre chemin en longeant prudemment la rivière."
+     },
+     "text": "Ignorer le château et poursuivre votre route."
+    },
+    "end": {
+     "outcomes": {
+      "0": "Vous passez de longues minutes à admirer les détails sculptés du château. Les gargouilles semblent vous observer tandis que vous imaginez la vie qui animait autrefois ces murs. Vous reprenez enfin votre route, cette image en tête.",
+      "1": "La silhouette du château éveille en vous des rêves de grandeur. Vous imaginez les banquets et les tournois qui se tenaient entre ces murs, et vous perdez la notion du temps.",
+      "2": "Pendant que vous contemplez le château, votre alien, curieux de tout ce qui est humain, s'éclipse. Vous le retrouvez dans l'ancienne salle du trône, en arrêt devant les emblèmes royaux et devant une cache pleine de pièces d'or."
+     }
+    }
+   },
+   "text": "Au détour d'un méandre de la Rivière aux Crabes, les ruines d'un château se dressent sur un promontoire rocheux. Le lierre ronge ses murs gris, des corneilles nichent dans les créneaux brisés, et le vent siffle dans les ouvertures béantes."
+  },
+  "data": {
+   "possibilities": {
+    "enterCastle": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "level": {
+         "min": 70
+        }
+       },
+       "randomItem": {},
+       "money": 200,
+       "karma": 5
+      },
+      "1": {
+       "requirements": {
+        "speed": {
+         "min": 250
+        }
+       },
+       "randomItem": {},
+       "karma": 2
+      },
+      "2": {
+       "requirements": {
+        "level": {
+         "max": 69
+        }
+       },
+       "health": -30,
+       "effect": "hurt"
+      },
+      "3": {
+       "requirements": {
+        "attack": {
+         "min": 300
+        }
+       },
+       "health": -15,
+       "effect": "hurt"
+      },
+      "4": {
+       "requirements": {
+        "karma": {
+         "max": -30
+        }
+       },
+       "money": 150,
+       "randomItem": {},
+       "karma": -5
+      },
+      "5": {
+       "requirements": {
+        "karma": {
+         "max": -280
+        },
+        "level": {
+         "min": 50
+        }
+       },
+       "money": 300,
+       "karma": -5
+      },
+      "6": {
+       "requirements": {
+        "karma": {
+         "min": 50
+        }
+       },
+       "randomItem": {},
+       "karma": 6
+      },
+      "7": {
+       "requirements": {
+        "karma": {
+         "max": -100
+        },
+        "speed": {
+         "min": 200
+        }
+       },
+       "effect": "occupied",
+       "lostTime": 35,
+       "karma": -5
+      },
+      "8": {
+       "requirements": {
+        "validPetTypeIds": [
+         64
+        ]
+       },
+       "randomItem": {
+        "rarity": {
+         "min": 2,
+         "max": 7
+        }
+       },
+       "money": 150,
+       "karma": 1
+      },
+      "9": {
+       "requirements": {
+        "validPetTypeIds": [
+         15
+        ]
+       },
+       "money": 280,
+       "karma": 3
+      },
+      "10": {
+       "requirements": {
+        "validPetTypeIds": [
+         84
+        ]
+       },
+       "randomItem": {
+        "rarity": {
+         "min": 3,
+         "max": 7
+        }
+       },
+       "money": 400,
+       "health": -10
+      },
+      "11": {
+       "requirements": {
+        "level": {
+         "max": 30
+        }
+       },
+       "effect": "scared"
+      },
+      "12": {
+       "requirements": {
+        "validClassIds": [
+         12,
+         13,
+         14,
+         15,
+         21
+        ]
+       },
+       "randomItem": {
+        "rarity": {
+         "min": 2
+        }
+       },
+       "karma": 5
+      }
+     }
+    },
+    "walkAround": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "level": {
+         "min": 60
+        }
+       },
+       "effect": "occupied",
+       "lostTime": 45,
+       "karma": 3
+      },
+      "1": {
+       "requirements": {
+        "level": {
+         "min": 42
+        }
+       },
+       "effect": "occupied",
+       "lostTime": 60,
+       "money": 350
+      },
+      "2": {
+       "requirements": {
+        "speed": {
+         "max": 500
+        }
+       },
+       "health": -20,
+       "effect": "hurt"
+      },
+      "3": {
+       "requirements": {
+        "validPetTypeIds": [
+         1
+        ]
+       },
+       "effect": "occupied",
+       "lostTime": 10,
+       "money": 180,
+       "karma": 3
+      },
+      "4": {
+       "requirements": {
+        "validPetTypeIds": [
+         15,
+         16
+        ]
+       },
+       "effect": "occupied",
+       "lostTime": 40,
+       "randomItem": {},
+       "karma": 2
+      },
+      "5": {
+       "randomItem": {
+        "rarity": {
+         "max": 2
+        }
+       },
+       "money": 120
+      },
+      "6": {}
+     }
+    },
+    "searchRiver": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "level": {
+         "min": 50
+        }
+       },
+       "effect": "occupied",
+       "lostTime": 80,
+       "randomItem": {},
+       "money": 100
+      },
+      "1": {
+       "effect": "occupied",
+       "lostTime": 60,
+       "money": 80
+      },
+      "2": {
+       "requirements": {
+        "karma": {
+         "min": 20
+        }
+       },
+       "randomItem": {},
+       "karma": 1
+      },
+      "3": {
+       "requirements": {
+        "speed": {
+         "max": 150
+        }
+       },
+       "health": -10,
+       "effect": "freezing"
+      },
+      "4": {
+       "requirements": {
+        "validPetTypeIds": [
+         31
+        ]
+       },
+       "health": 10,
+       "randomItem": {},
+       "karma": 2
+      }
+     }
+    },
+    "restAndObserve": {
+     "outcomes": {
+      "0": {
+       "health": 5,
+       "effect": "occupied",
+       "lostTime": 45
+      },
+      "1": {
+       "requirements": {
+        "level": {
+         "min": 60
+        }
+       },
+       "effect": "occupied",
+       "lostTime": 30,
+       "karma": 1
+      },
+      "2": {
+       "requirements": {
+        "karma": {
+         "min": 80
+        }
+       },
+       "randomItem": {},
+       "karma": 8,
+       "effect": "occupied",
+       "lostTime": 25
+      },
+      "3": {
+       "requirements": {
+        "karma": {
+         "min": 0
+        }
+       },
+       "money": 50,
+       "health": 3,
+       "karma": 5,
+       "effect": "occupied",
+       "lostTime": 40
+      },
+      "4": {
+       "requirements": {
+        "petRarity": {
+         "min": 2
+        }
+       },
+       "karma": 1,
+       "effect": "occupied",
+       "lostTime": 20
+      }
+     }
+    },
+    "skip": {
+     "outcomes": {
+      "0": {},
+      "1": {}
+     }
+    },
+    "end": {
+     "outcomes": {
+      "0": {
+       "effect": "occupied",
+       "lostTime": 40
+      },
+      "1": {
+       "effect": "occupied",
+       "lostTime": 60
+      },
+      "2": {
+       "requirements": {
+        "validPetTypeIds": [
+         70
+        ]
+       },
+       "money": 700,
+       "karma": 15,
+       "effect": "occupied",
+       "lostTime": 25
+      }
+     }
+    }
+   },
+   "triggers": [
+    {
+     "mapId": 25
+    }
+   ]
+  }
+ }
+}

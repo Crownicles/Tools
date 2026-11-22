@@ -1,0 +1,456 @@
+{
+	"eventId": "13",
+	"model": "repasse",
+	"text": "Après des semaines de route sans croiser âme qui vive, vous entrez dans Claire de Ville. La grande cité marchande grouille de monde, mais tout y reste calme : des gardes veillent aux carrefours. Une forge résonne, l'enseigne de la Halte des Braves se balance au vent, et les cris du marché vous parviennent.",
+	"possibilities": {
+		"goAway": {
+			"text": "Repartir.",
+			"outcomes": {
+				"0": "Vous traversez Claire de Ville sans vous attarder. Les rues sont bien tenues, et la foule s'écarte sans difficulté devant vous. Vous franchissez les portes en un rien de temps et reprenez la première route venue.",
+				"1": "Une longue caravane bloque la grande rue, et les gardes font patienter tout le monde. Plutôt que d'attendre, vous faites le tour de la ville par l'extérieur des murailles. Le détour vous prend du temps, puis vous reprenez la route.",
+				"2": "À la porte, un garde vous reconnaît et vous fait signe d'approcher. Il fouille votre sac de fond en comble et n'y trouve rien à redire. Il vous laisse enfin partir, sans vous quitter des yeux, et vous reprenez la route.",
+				"3": "Un charretier qui a entendu parler de vous en bien vous propose de monter à l'arrière de sa charrette. Il vous fait traverser la ville sans détour et vous dépose aux portes. Vous le remerciez et reprenez la route."
+			}
+		},
+		"goForge": {
+			"text": "Aller à la forge.",
+			"outcomes": {
+				"0": "Vous entrez dans la forge et saluez le forgeron. Ses pièces sont solides, mais aucune ne vaut mieux que votre équipement. Vous échangez quelques mots avec lui pendant qu'il travaille, puis vous ressortez.",
+				"1": "Le forgeron vous laisse essayer une épée. Elle est plus lourde que prévu : au premier moulinet, elle vous échappe des mains et brise la fenêtre. Furieux, le forgeron exige d'être remboursé, et vous l'aidez à ramasser les éclats de verre.",
+				"2": "Le forgeron vous laisse essayer une épée. Vous la maniez correctement, mais un moulinet trop large accroche un casque exposé. Il roule au sol, cabossé. Le forgeron grommelle et vous fait payer la réparation.",
+				"3": "Le forgeron vous laisse essayer une épée. Vous enchaînez quelques mouvements nets, et il vous demande de tester d'autres lames pour lui. Vous en essayez toute une rangée. Pour vous remercier, il vous laisse choisir une pièce dans sa réserve.",
+				"4": "Le forgeron vous dévisage, puis sourit : des voyageurs lui ont dit du bien de vous. Il sort de sous son comptoir une pièce qu'il ne montre pas à tout le monde, et vous la cède à prix d'ami.",
+				"5": "Le forgeron vous reconnaît. Il garde son marteau à portée de main et vous interdit de toucher à ses lames. Il ne vous quitte pas des yeux de toute la visite, et vous préférez ressortir sans traîner."
+			}
+		},
+		"goInn": {
+			"text": "Aller à la Halte des Braves.",
+			"outcomes": {
+				"0": "Vous payez une chambre à la Halte des Braves. Les chants de la salle montent jusqu'à l'étage, mais à peine allongé, vous tombez de sommeil. Il faudra dormir un bon moment avant de reprendre l'aventure.",
+				"1": "La Halte des Braves affiche complet : une caravane de marchands a pris tous les lits. Vous attendez longtemps dans la salle bondée qu'une chambre se libère, en vain. Vous ressortez fatigué, sans avoir pu vous reposer.",
+				"2": "L'aubergiste vous reconnaît : on parle de vous en bien dans sa salle. Il refuse votre argent, vous installe dans une belle chambre et vous fait monter un repas chaud. Vous dormez d'une traite.",
+				"3": "L'aubergiste vous reconnaît et se crispe. Il accepte de vous loger, mais au double du prix : selon lui, votre présence risque de faire fuir ses clients. Trop fatigué pour discuter, vous payez et allez dormir.",
+				"4": "Votre T-Rex passe la tête par la porte de la Halte des Braves, et la salle se vide en un instant. Tremblant, l'aubergiste vous offre sa plus belle chambre, à condition que la bête dorme dans la cour. Vous acceptez volontiers."
+			}
+		},
+		"goMarket": {
+			"text": "Aller au marché.",
+			"outcomes": {
+				"0": "Vous flânez un moment entre les étals du marché. Au pied d'une charrette, vous ramassez un petit objet tombé là, que personne ne vient réclamer. Il pourrait bien vous servir pour la suite.",
+				"1": "Vous faites le tour du marché, d'un étal à l'autre. Les marchands crient leurs prix, la foule vous bouscule, et rien ne vous tente vraiment. Vous ressortez les mains vides, après avoir perdu un long moment.",
+				"2": "Vous vous attardez devant un étal, la bourse bien en vue. Vous ne voyez pas venir le coup : on vous frappe derrière la tête, et vous vous effondrez. Des passants vous relèvent, le crâne en sang. Il faudra vous soigner.",
+				"3": "Une main se glisse vers votre bourse. Vous attrapez le poignet du voleur avant qu'il ne l'atteigne. La garde l'emmène, et une marchande qu'il venait de dépouiller vous remercie d'une poignée de pièces.",
+				"4": "Les marchands vous reconnaissent et échangent des regards. Les prix grimpent dès que vous approchez d'un étal. Vous finissez par acheter un objet qui vous plaît, en le payant bien plus cher qu'il ne vaut.",
+				"5": "Une vieille marchande vous reconnaît et vous demande de garder son étal le temps d'une course. À son retour, rien ne manque. Pour vous remercier, elle vous laisse choisir un objet parmi sa marchandise."
+			}
+		},
+		"seekInformation": {
+			"text": "Interroger les habitants.",
+			"outcomes": {
+				"0": "Vous interrogez les passants sur les environs. Une marchande pressée vous met en garde contre le Bois Hurlant : des brigands se cachent dans les grottes de ses collines. Vous la remerciez et retenez ses conseils.",
+				"1": "Un homme vous aborde dans une ruelle et prétend tout savoir des routes de la région. Il se fait payer d'avance. Ses précieux renseignements, vous les entendez ensuite répéter gratuitement à chaque coin de rue.",
+				"2": "À votre approche, les conversations s'arrêtent : on vous a reconnu. Personne ne vous répond, et quelqu'un file prévenir la garde. Un garde vient vous poser quelques questions, puis vous laisse aller.",
+				"3": "Vous savez quelles questions poser, et à qui. Un vieux charretier vous indique la route la plus sûre pour quitter la ville et les passages où se méfier des brigands. Vous reprenez la route sans attendre.",
+				"4": "Un vieil homme vous parle des souterrains creusés sous la ville au temps de sa misère. Il vous confie l'entrée d'une galerie où des aventuriers ont laissé du matériel. Vous y descendez et remontez avec un objet."
+			}
+		},
+		"helpCityGuards": {
+			"text": "Proposer votre aide aux gardes.",
+			"outcomes": {
+				"0": "Les gardes vous remercient poliment, mais Claire de Ville est calme et ils suffisent à la tâche. Ils vous souhaitent un bon séjour et reprennent leur ronde.",
+				"1": "Les gardes sourient devant votre équipement encore neuf. L'un d'eux, un vieil homme patient, vous emmène tout de même sur sa ronde et vous montre la ville. Il vous confie qu'il tient sa patience de Sir Rowan, qui l'a formé autrefois.",
+				"2": "Le capitaine de la garde a entendu parler de vous et vous confie une patrouille avec deux de ses hommes. Vous aidez à séparer des ivrognes devant la Halte des Braves. À la fin du service, il vous remet une bourse pour votre peine.",
+				"3": "Un garde compare votre visage à un avis de recherche, puis siffle ses collègues. Vous tentez de fuir, mais ils vous rattrapent au premier carrefour. On vous interroge longuement au poste, puis on vous relâche, faute de preuves.",
+				"4": "Un garde compare votre visage à un avis de recherche, puis siffle ses collègues. Vous détalez dans les ruelles et finissez par les semer, mais en sautant un muret, vous vous tordez la cheville.",
+				"5": "Un garde compare votre visage à un avis de recherche, puis siffle ses collègues. Le temps qu'ils réagissent, vous avez déjà disparu dans une ruelle. Vous les semez sans peine et attendez que le calme revienne."
+			}
+		},
+		"end": {
+			"outcomes": {
+				"0": "Vous visitez Claire de Ville pendant des heures, d'une rue à l'autre, sans vous presser. Vous vous arrêtez devant les vitrines, écoutez les marchands et regardez passer les caravanes.",
+				"1": "Vous n'avez jamais vu une ville aussi grande. Les rues se ressemblent toutes, et vous vous perdez entre les entrepôts et les hôtels. Vous tournez en rond des heures, jusqu'à ce qu'un passant vous ramène vers le centre.",
+				"2": "Vous connaissez Claire de Ville par cœur. Vous allez droit aux rues qui vous intéressent, saluez quelques visages familiers, puis vous vous installez sur une place pour souffler un moment."
+			}
+		}
+	},
+	"data": {
+		"triggers": [
+			{
+				"mapId": 23
+			}
+		],
+		"possibilities": {
+			"goAway": {
+				"outcomes": {
+					"0": {
+						"effect": "occupied",
+						"lostTime": 25,
+						"mapTypesDestination": [
+							"ro"
+						]
+					},
+					"1": {
+						"effect": "occupied",
+						"lostTime": 70,
+						"mapTypesDestination": [
+							"ro"
+						]
+					},
+					"2": {
+						"requirements": {
+							"karma": {
+								"max": -30
+							}
+						},
+						"effect": "occupied",
+						"lostTime": 45,
+						"mapTypesDestination": [
+							"ro"
+						]
+					},
+					"3": {
+						"requirements": {
+							"karma": {
+								"min": 80
+							}
+						},
+						"mapTypesDestination": [
+							"ro"
+						]
+					}
+				}
+			},
+			"goForge": {
+				"outcomes": {
+					"0": {
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 20
+					},
+					"1": {
+						"requirements": {
+							"attack": {
+								"max": 230
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 40,
+						"money": -300
+					},
+					"2": {
+						"requirements": {
+							"attack": {
+								"min": 231,
+								"max": 599
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 20,
+						"money": -60
+					},
+					"3": {
+						"requirements": {
+							"attack": {
+								"min": 600
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 30,
+						"randomItem": {}
+					},
+					"4": {
+						"requirements": {
+							"karma": {
+								"min": 50
+							}
+						},
+						"forceStayInCity": true,
+						"money": -100,
+						"randomItem": {},
+						"tags": [
+							"moneyUsage"
+						]
+					},
+					"5": {
+						"requirements": {
+							"karma": {
+								"max": -30
+							}
+						},
+						"forceStayInCity": true
+					}
+				}
+			},
+			"goInn": {
+				"outcomes": {
+					"0": {
+						"forceStayInCity": true,
+						"effect": "sleeping",
+						"health": 15,
+						"money": -70,
+						"tags": [
+							"moneyUsage"
+						]
+					},
+					"1": {
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 120
+					},
+					"2": {
+						"requirements": {
+							"karma": {
+								"min": 80
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "sleeping",
+						"health": 30
+					},
+					"3": {
+						"requirements": {
+							"karma": {
+								"max": -30
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "sleeping",
+						"health": 15,
+						"money": -140,
+						"tags": [
+							"moneyUsage"
+						]
+					},
+					"4": {
+						"requirements": {
+							"validPetTypeIds": [
+								65
+							]
+						},
+						"forceStayInCity": true,
+						"effect": "sleeping",
+						"health": 30
+					}
+				}
+			},
+			"goMarket": {
+				"outcomes": {
+					"0": {
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 30,
+						"randomItem": {}
+					},
+					"1": {
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 60
+					},
+					"2": {
+						"requirements": {
+							"speed": {
+								"max": 40
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "injured",
+						"health": -60
+					},
+					"3": {
+						"requirements": {
+							"speed": {
+								"min": 350
+							}
+						},
+						"forceStayInCity": true,
+						"money": 80
+					},
+					"4": {
+						"requirements": {
+							"karma": {
+								"max": -30
+							}
+						},
+						"forceStayInCity": true,
+						"money": -150,
+						"randomItem": {},
+						"tags": [
+							"moneyUsage"
+						]
+					},
+					"5": {
+						"requirements": {
+							"karma": {
+								"min": 50
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 20,
+						"randomItem": {}
+					}
+				}
+			},
+			"seekInformation": {
+				"outcomes": {
+					"0": {
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 30
+					},
+					"1": {
+						"forceStayInCity": true,
+						"money": -150
+					},
+					"2": {
+						"requirements": {
+							"karma": {
+								"max": -30
+							}
+						},
+						"effect": "occupied",
+						"lostTime": 30
+					},
+					"3": {
+						"requirements": {
+							"level": {
+								"min": 120
+							}
+						},
+						"mapTypesDestination": [
+							"ro"
+						]
+					},
+					"4": {
+						"requirements": {
+							"karma": {
+								"min": 50
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 60,
+						"randomItem": {}
+					}
+				}
+			},
+			"helpCityGuards": {
+				"outcomes": {
+					"0": {
+						"forceStayInCity": true
+					},
+					"1": {
+						"requirements": {
+							"level": {
+								"max": 55
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "working",
+						"karma": 2
+					},
+					"2": {
+						"requirements": {
+							"karma": {
+								"min": 50
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "working",
+						"money": 150,
+						"karma": 3
+					},
+					"3": {
+						"requirements": {
+							"karma": {
+								"max": -50
+							},
+							"speed": {
+								"max": 40
+							}
+						},
+						"effect": "occupied",
+						"lostTime": 180
+					},
+					"4": {
+						"requirements": {
+							"karma": {
+								"max": -50
+							},
+							"speed": {
+								"min": 41,
+								"max": 349
+							}
+						},
+						"effect": "feetHurt",
+						"health": -10
+					},
+					"5": {
+						"requirements": {
+							"karma": {
+								"max": -50
+							},
+							"speed": {
+								"min": 350
+							}
+						},
+						"effect": "occupied",
+						"lostTime": 20
+					}
+				}
+			},
+			"end": {
+				"outcomes": {
+					"0": {
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 200
+					},
+					"1": {
+						"requirements": {
+							"level": {
+								"max": 30
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "lost"
+					},
+					"2": {
+						"requirements": {
+							"level": {
+								"min": 120
+							}
+						},
+						"forceStayInCity": true,
+						"effect": "occupied",
+						"lostTime": 40
+					}
+				}
+			}
+		}
+	},
+	"icons": {
+		"goAway": "🚶",
+		"goForge": "🔨",
+		"goInn": "🏠",
+		"goMarket": "🎪",
+		"seekInformation": "🕵️",
+		"helpCityGuards": "🛡️",
+		"end": {
+			"1": "🗺️",
+			"2": "🧭"
+		}
+	},
+	"notes": [
+		"Retiré : la possibilité restAndObserve (remplissage absent de develop, avec du karma pour un spectacle ou un familier admiré) et son emoji ; 48 issues ramenées à 35, de 3 à 6 par possibilité. Écartés : les doublons de karma (mendiant voleur, brigands, veuve, informateur encapuchonné), le petit réduit sous les combles, les conseils payés à l'aubergiste, le Chien de l'auberge.",
+		"Noms des possibilités : visitForge, visitInn et exploreMarket reprennent les clés de develop (goForge, goInn, goMarket), et goAway, que le brouillon avait perdu, revient avec ses deux issues d'origine (traverser la ville, contourner les murailles). Seules seekInformation et helpCityGuards restent nouvelles ; les emojis des clés de develop sont repris pour que apply.py les réécrive.",
+		"Karma recalé : seuils min 50/80 et max -30/-50 seulement (plus de 150, 100, 30, 20, -10, -20, -80, -100). Il ne bouge plus que pour un vrai geste, aider les gardes (+2 et +3) ; plus de -40 pour le T-Rex, de -5 pour un refus du forgeron ni de +5 pour un spectacle. Un karma bas se montre par des gens qui vous reconnaissent (fouille à la porte, prix doublés, avis de recherche).",
+		"Seuils de niveau et de stats recalés sur l'échelle : débutant level max 30, joueur encore faible max 55, joueur qui connaît la ville min 120 ; essai d'épée gradué en trois paliers d'attaque (fenêtre brisée, casque cabossé, lames testées pour le forgeron), fuite devant la garde en trois paliers de vitesse, et le vol du marché réservé aux plus lents avec, en face, le voleur rattrapé par les plus rapides.",
+		"Canon et menu : la forge n'est plus abandonnée et ne refuse plus de vous servir (le forgeron mal disposé vous surveille seulement), la Halte des Braves peut être complète sans être introuvable, les brigands sont ceux des grottes du Bois Hurlant, les souterrains de la ville servent de cachette au matériel d'anciens aventuriers. mapTypesDestination ne vise que ro, présent chez les voisins.",
+		"Gardé du brouillon : l'intro qui nomme la ville, le lien discret avec Sir Rowan (le vieux garde patient, maintenant visible des joueurs encore faibles au lieu d'un karma négatif rare), le T-Rex qui vide l'auberge (devenu une belle chambre offerte si la bête dort dans la cour, sans extorsion), le pickpocket rattrapé, l'informateur qui vend ce que tout le monde sait.",
+		"Style : plus de discours direct ni de « dit-il », plus de durées ou de montants dans le texte, phrases courtes, issues de 150 à 280 caractères ; end garde l'idée d'origine (flâner des heures) et gagne un débutant qui se perd et un habitué qui va droit au but."
+	]
+}

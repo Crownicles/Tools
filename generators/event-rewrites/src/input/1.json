@@ -1,0 +1,229 @@
+{
+ "eventId": "1",
+ "model": "repasse",
+ "mapId": 4,
+ "place": "Forêt Du Vieillard",
+ "placeType": "fo",
+ "placeDescription": "Immense forêt au sud du Berceau. On raconte que beaucoup de voyageurs s'y sont perdus.",
+ "neighbours": [
+  {
+   "mapId": 5,
+   "name": "Chemin du Dédale",
+   "minutes": 180,
+   "type": "ro"
+  },
+  {
+   "mapId": 3,
+   "name": "Le Berceau",
+   "minutes": 240,
+   "type": "pl"
+  }
+ ],
+ "isCity": false,
+ "city": null,
+ "canonBlock": "#### Forêt Du Vieillard · `4`\n\n- **Type :** forêt (`fo`) ; biomes : forest\n- **Description du jeu :** « Immense forêt au sud du Berceau. On raconte que beaucoup de voyageurs s'y sont perdus. »\n- **Voisins :** Chemin du Dédale (3 h), Le Berceau (4 h)\n- **Zones d'expédition des familiers :** les Profondeurs de la Forêt du Vieillard\n- **Big events qui s'y déclenchent :**\n  - 1 : « Un arbre est tombé sur le chemin et bloque le passage ! »\n  - 32 : « Vous continuez votre chemin tranquillement dans une forêt, lorsque vous entendez un cri. »\n  - 69 : « Alors que vous traversez la Forêt du Vieillard, une femme magnifique s'approche en courant. »\n- **Rattachés dans le graphe :** Donia\n",
+ "triggers": [
+  {
+   "mapId": 4
+  }
+ ],
+ "original": {
+  "possibilities": {
+   "cutTree": {
+    "outcomes": {
+     "0": "Couper cet arbre aura pris 30 minutes !"
+    },
+    "text": "Couper l'arbre et continuer."
+   },
+   "end": {
+    "outcomes": {
+     "0": "L'arbre a bien été coupé et la route est dégagée, mais malheureusement, des pillards ont volé quasiment tout ce que vous aviez récolté depuis votre dernier voyage !"
+    }
+   },
+   "otherWay": {
+    "outcomes": {
+     "0": "Passer par un autre chemin semblait être une bonne solution, vous n'avez pas perdu de temps !",
+     "1": "Passer par un autre chemin semblait être une bonne solution, mais malheureusement, vous vous êtes blessé en marchant."
+    },
+    "text": "Passer par un autre chemin."
+   }
+  },
+  "text": "Un arbre est tombé sur le chemin et bloque le passage !"
+ },
+ "outcomeData": {
+  "cutTree": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 30
+   }
+  },
+  "end": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 100
+   }
+  },
+  "otherWay": {
+   "0": {},
+   "1": {
+    "effect": "occupied",
+    "health": -5,
+    "lostTime": 30
+   }
+  }
+ },
+ "draft": {
+  "author": "BastLast",
+  "lang": {
+   "possibilities": {
+    "chopTree": {
+     "outcomes": {
+      "0": "Après de longs efforts, vous parvenez à couper l'arbre avec vos outils de fortune. Les copeaux de bois sentent bon la résine, et vous dégagez enfin le passage. Votre persévérance a payé !",
+      "1": "En coupant l'arbre, vous découvrez qu'il était creux et abritait une petite cache laissée par un autre voyageur. Vous y trouvez un objet qui vous sera utile pour votre périple.",
+      "2": "L'arbre est plus coriace que prévu. Vos efforts acharnés finissent par porter leurs fruits, mais vous vous êtes épuisé dans l'opération. Il faudra vous reposer avant de continuer.",
+      "3": "Vous décidez d'utiliser votre arme pour couper l'arbre mais la lame n'est pas assez aiguisée. Après plusieurs tentatives infructueuses, vous finissez par abandonner et vous reposez un moment pour reprendre des forces.",
+      "4": "Vous attaquez le tronc avec votre arme, qui n'en fait qu'une bouchée. L'obstacle est vite dégagé et vous reprenez votre aventure."
+     },
+     "text": "Couper l'arbre pour dégager le passage."
+    },
+    "turnBack": {
+     "text": "Rebrousser chemin.",
+     "outcomes": {
+      "0": "Inutile de vous acharner sur ce chêne. Vous faites demi-tour et ressortez de la Forêt Du Vieillard par le premier sentier qui s'offre à vous. Tant pis pour cette route : vous en prendrez une autre.",
+      "1": "Vous faites demi-tour, mais le sentier serpente plus que dans votre souvenir. Le temps de retrouver la lisière de la forêt, la journée est bien avancée. Vous repartez par la première route venue.",
+      "2": "Vous faites demi-tour. Le nez au sol, votre chien retrouve sans hésiter vos propres traces et vous ramène à la lisière de la forêt en un rien de temps. Vous repartez par la première route venue."
+     }
+    },
+    "findPath": {
+     "outcomes": {
+      "0": "En explorant les alentours, vous découvrez un ancien sentier de bûcherons qui contourne l'obstacle. Ce chemin discret vous mène rapidement de l'autre côté.",
+      "1": "Vous trouvez un passage entre les racines de l'arbre déraciné. C'est étroit, mais vous parvenez à vous faufiler sans trop de difficultés.",
+      "2": "Vous cherchez un autre chemin et vous égarez dans les fourrés. Après avoir tourné en rond, vous retrouvez le sentier principal, mais vous avez perdu un temps précieux.",
+      "3": "En cherchant un passage, vous vous enfoncez dans des sous-bois où les ronces vous griffent. Vous les contournez à leur tour, et vous ne retrouvez plus votre chemin. Il vous faudra du temps pour regagner le sentier principal."
+     },
+     "text": "Chercher un chemin pour contourner l'obstacle."
+    },
+    "end": {
+     "outcomes": {
+      "0": "Découragé par l'obstacle, vous montez un campement au pied du chêne. Très vite, des bruits suspects montent des fourrés. Quand vous revenez à votre sac, il a été fouillé et plusieurs objets de valeur ont disparu."
+     }
+    }
+   },
+   "text": "Dans la pénombre de la Forêt Du Vieillard, un chêne déraciné barre le sentier. Son tronc fait bien deux mètres de diamètre, ses branches emmêlées forment un mur, et la terre encore fraîche sur ses racines dit que sa chute est récente."
+  },
+  "data": {
+   "possibilities": {
+    "chopTree": {
+     "outcomes": {
+      "0": {
+       "effect": "occupied",
+       "lostTime": 30
+      },
+      "1": {
+       "effect": "occupied",
+       "lostTime": 10,
+       "randomItem": {}
+      },
+      "2": {
+       "requirements": {
+        "level": {
+         "max": 30
+        }
+       },
+       "effect": "sleeping"
+      },
+      "3": {
+       "requirements": {
+        "attack": {
+         "max": 230
+        }
+       },
+       "effect": "sleeping"
+      },
+      "4": {
+       "requirements": {
+        "attack": {
+         "min": 600
+        }
+       }
+      }
+     }
+    },
+    "turnBack": {
+     "outcomes": {
+      "0": {
+       "mapTypesDestination": [
+        "ro",
+        "pl"
+       ]
+      },
+      "1": {
+       "requirements": {
+        "speed": {
+         "max": 40
+        }
+       },
+       "effect": "occupied",
+       "lostTime": 40,
+       "mapTypesDestination": [
+        "ro",
+        "pl"
+       ]
+      },
+      "2": {
+       "requirements": {
+        "validPetTypeIds": [
+         1,
+         2,
+         28
+        ]
+       },
+       "mapTypesDestination": [
+        "ro",
+        "pl"
+       ]
+      }
+     }
+    },
+    "findPath": {
+     "outcomes": {
+      "0": {
+       "requirements": {
+        "level": {
+         "min": 120
+        }
+       }
+      },
+      "1": {},
+      "2": {
+       "effect": "lost"
+      },
+      "3": {
+       "requirements": {
+        "level": {
+         "max": 55
+        }
+       },
+       "health": -4,
+       "effect": "lost"
+      }
+     }
+    },
+    "end": {
+     "outcomes": {
+      "0": {
+       "money": -300,
+       "effect": "occupied",
+       "lostTime": 60
+      }
+     }
+    }
+   },
+   "triggers": [
+    {
+     "mapId": 4
+    }
+   ]
+  }
+ }
+}

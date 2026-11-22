@@ -10,7 +10,8 @@
     "1": "En marchant dans les rochers, vous tombez sur des dizaines de petits crabes qui courent en tous sens : cette plage en est pleine. Vous les regardez filer sous les pierres à votre approche, puis vous reprenez le chemin du retour.",
     "2": "Vous n'avez rien mangé de la journée. Vous soulevez une pierre pour chercher des crabes, quand un grand oiseau plonge et attrape le bernard-l'ermite que vous visiez. Surpris, vous reculez, votre pied glisse sur la roche et vous vous tordez la cheville.",
     "3": "Vous laissez vos affaires sur le sable et partez nager. En revenant, vous voyez un gamin s'enfuir avec votre sac. Vous le rattrapez avant les rochers, reprenez votre bien et le laissez partir. Il vous faut quelques minutes pour retrouver votre souffle.",
-    "4": "Sur la plage, des pêcheurs remontent leurs filets. Ils vous reconnaissent, rangent leurs paniers et ne vous quittent plus des yeux. L'un d'eux vous suit jusqu'aux rochers pour s'assurer que vous partez. Vous perdez une vingtaine de minutes à les contourner."
+    "4": "Sur la plage, des pêcheurs remontent leurs filets. Ils vous reconnaissent, rangent leurs paniers et ne vous quittent plus des yeux. L'un d'eux vous suit jusqu'aux rochers pour s'assurer que vous partez. Vous perdez une vingtaine de minutes à les contourner.",
+    "5": "Vous laissez vos affaires sur le sable et partez nager. En revenant, vous voyez une silhouette filer avec votre sac. Vous la rattrapez presque, et elle le lâche pour courir plus vite. Il y manque tout de même quelques pièces."
    }
   },
   "drinkBlack": {
@@ -51,7 +52,8 @@
     "2": "Devant votre incapacité à vous décider, Gruffo n'insiste pas et vous offre une tasse de thé noir. Vous discutez de longues minutes de tout, sauf d'alchimie. Vous reprenez votre chemin alors que la lune éclaire timidement la plage.",
     "3": "Gruffo vous fait confiance et ne vous force pas la main. Il vous prête un coin de sa tente et une couverture. Vous vous endormez vite, au son des vagues, et cette nuit de repos vous fait le plus grand bien.",
     "4": "Pendant que Gruffo prépare sa décoction, vous examinez un alambic. Derrière vous, quelque chose remue. Vous vous retournez à temps pour esquiver le gourdin d'un voleur, qui s'enfuit sur la plage les mains vides.",
-    "5": "Comme vous ne répondez pas, Gruffo vous regarde de plus près et semble vous reconnaître. Il range ses fioles une à une sans vous quitter des yeux, puis vous montre la sortie. Vous passez la nuit dehors sur la dune, transi par le vent."
+    "5": "Comme vous ne répondez pas, Gruffo vous regarde de plus près et semble vous reconnaître. Il range ses fioles une à une sans vous quitter des yeux, puis vous montre la sortie. Vous passez la nuit dehors sur la dune, transi par le vent.",
+    "6": "Pendant que Gruffo prépare sa décoction, vous examinez un alambic. Derrière vous, quelque chose remue. Vous vous retournez un peu tard : le gourdin d'un voleur vous frappe à l'épaule, puis il s'enfuit sur la plage les mains vides."
    }
   }
  },
@@ -67,7 +69,7 @@
      "0": {
       "requirements": {
        "speed": {
-        "max": 349
+        "max": 40
        }
       },
       "money": -100
@@ -83,7 +85,6 @@
         "min": 350
        }
       },
-      "karma": 2,
       "effect": "occupied",
       "lostTime": 10
      },
@@ -95,6 +96,15 @@
       },
       "effect": "occupied",
       "lostTime": 20
+     },
+     "5": {
+      "requirements": {
+       "speed": {
+        "min": 41,
+        "max": 349
+       }
+      },
+      "money": -40
      }
     }
    },
@@ -140,12 +150,10 @@
       "money": 200,
       "tags": [
        "drinkAlcohol"
-      ],
-      "karma": -3
+      ]
      },
      "1": {
-      "health": 10,
-      "karma": 2
+      "health": 10
      },
      "2": {
       "effect": "occupied",
@@ -153,8 +161,7 @@
      },
      "3": {
       "effect": "freezing",
-      "health": -20,
-      "karma": -1
+      "health": -20
      },
      "4": {
       "requirements": {
@@ -228,7 +235,7 @@
      "0": {
       "requirements": {
        "speed": {
-        "max": 349
+        "max": 40
        }
       },
       "effect": "confounded",
@@ -265,6 +272,15 @@
        }
       },
       "effect": "freezing"
+     },
+     "6": {
+      "requirements": {
+       "speed": {
+        "min": 41,
+        "max": 349
+       }
+      },
+      "health": -5
      }
     }
    }
@@ -274,7 +290,8 @@
   "end": {
    "3": "😴",
    "4": "🏃",
-   "5": "🥶"
+   "5": "🥶",
+   "6": "🤕"
   }
  },
  "notes": [
@@ -285,6 +302,7 @@
   "Conservé : les cinq possibilités d'origine et leurs idées (bain et vol, crabes, pied foulé, potion noire, ivresse, refus, Périssien, fin sans réponse), ainsi que l'humour du charlatan et du joli crâne.",
   "Style : aucun discours direct, introduction sans points de suspension, tente et bourse retirées des issues quand aucune mécanique ne les portait.",
   "Relecture : mots rares ou alambiqués remplacés (charbonné, tannée, cramoisi, monceau, apostropher, racorni, horde, gagner la mer à grandes brasses) ; incohérences corrigées (bain de nuit dans une mer « turquoise » devenue sombre, vacanciers et sauveteur remplacés par des pêcheurs qui vous reconnaissent, tente fermée « à double tour », mage qui gagnait de la vie sans rien boire, Gruffo qui hésitait alors qu'il fait confiance) ; phrases raccourcies (intro, potion ratée, carnet de dettes, Périssien), expression fabriquée retirée (la Résonance qui « tient ses promesses ») ; conditions désormais montrées (le voleur qu'on ne rattrape pas, la confiance de Gruffo en fin d'event) ; données inchangées.",
-  "Seuils (barème des joueurs réguliers) : potion ratée au petit bonheur pour un joueur encore faible (niveau 55 et moins, 25 %) ; potion dosée d'une main sûre pour un joueur expérimenté (niveau 130 et plus, 10 %), avec une phrase sur les alchimistes vus sur la route pour montrer cette expérience ; voleur rattrapé sur la plage et gourdin esquivé pour un joueur correct en vitesse (350 et plus, 25 %), sans mot de force dans le texte, et leurs issues contraires à 349 et moins ; vie 100 inchangée (vie actuelle, hors barème) ; karma et classe Mage mystique gardés tels quels."
+  "Seuils (barème des joueurs réguliers) : potion ratée au petit bonheur pour un joueur encore faible (niveau 55 et moins, 25 %) ; potion dosée d'une main sûre pour un joueur expérimenté (niveau 130 et plus, 10 %), avec une phrase sur les alchimistes vus sur la route pour montrer cette expérience ; voleur rattrapé sur la plage et gourdin esquivé pour un joueur correct en vitesse (350 et plus, 25 %), sans mot de force dans le texte, et leurs issues contraires à 349 et moins ; vie 100 inchangée (vie actuelle, hors barème) ; karma et classe Mage mystique gardés tels quels.",
+  "Repasse paliers et karma. Deux seuils binaires de vitesse (349 / 350) gradués en trois paliers : sac volé sur la plage (beach.0 limité à la vitesse 40 au plus, ajout de beach.5 pour 41 à 349, le voleur lâche le sac et il manque quelques pièces, puis beach.3 à 350 sans perte) ; gourdin du voleur à la fin (end.0 limité à 40 au plus, ajout de end.6 pour 41 à 349, coup à l'épaule plus léger, emoji 🤕, puis l'esquive de end.4 à 350). Karma retiré là où il ne venait pas d'un choix moral : gamin laissé partir après une course réussie (beach.3, +2) et réactions tirées au hasard d'une potion (drinkRandom.0 -3, .1 +2, .3 -1). Textes existants inchangés."
  ]
 }
