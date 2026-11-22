@@ -1,13 +1,11 @@
 (() => {
-    const LOCAL = window.EVENT_REWRITES && Array.isArray(window.EVENT_REWRITES.events) ? window.EVENT_REWRITES : null;
     const GH = window.EventRewritesGithub;
     const $ = (id) => document.getElementById(id);
     const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c]));
     const content = $("content");
 
-    // Current data: the workshop bundle (data.js) or a comparison of two GitHub branches (github.js).
+    // Current data: a comparison of two GitHub branches (github.js).
     let DATA = null, PETS = {}, CLASSES = {}, NAMES = {}, EVENTS = [], byId = {};
-    const isGithub = () => DATA?.mode === "github";
 
     function setData(data) {
         DATA = data;
@@ -347,15 +345,7 @@
         same: { cls: "pending", text: "identique" },
     };
 
-    function status(e) {
-        if (isGithub()) return DIFFS[e.diff] || DIFFS.same;
-        if (e.rewriteError) return { cls: "err", text: "JSON invalide" };
-        if (!e.rewrite) return { cls: "pending", text: "en cours" };
-        const v = e.validation || { errors: [], warnings: [] };
-        if (v.errors.length) return { cls: "err", text: plural(v.errors.length, "erreur") };
-        if (v.warnings.length) return { cls: "warn", text: `réécrit · ${plural(v.warnings.length, "avertissement")}` };
-        return { cls: "ok", text: "réécrit" };
-    }
+    const status = (e) => DIFFS[e.diff] || DIFFS.same;
 
     function figures(s) {
         return s.after === null ? plural(s.orig, "issue") : `${s.orig} → ${s.after} issues · ${pct(s.conditional, s.after)} % cond.`;
@@ -372,19 +362,12 @@
             const st = status(e);
             return `<li class="${e.id === current ? "active" : ""}"><a href="#${esc(e.id)}" title="${esc(st.text)}">
                 <div class="li-top"><span class="dot ${st.cls}"></span><b title="ID de l'event dans le jeu">Event ${esc(e.id)}</b> · ${esc(e.place || "?")}</div>
-                <div class="li-sub">${esc(st.text)} · ${esc(figures(stats(e)))}</div>
-                ${isGithub() ? "" : `<div class="li-sub">${esc(e.rewrite?.model || e.model || "")}</div>`}</a></li>`;
+                <div class="li-sub">${esc(st.text)} · ${esc(figures(stats(e)))}</div></a></li>`;
         }).join("") || "<li class=\"muted small\">Aucun event à afficher.</li>";
-        if (isGithub()) {
-            const { total, changed } = DATA.counts;
-            const fork = DATA.fork?.behind ? ` « Avant » est lu au point de divergence (${DATA.fork.sha.slice(0, 7)}) : ${DATA.base} a ${plural(DATA.fork.behind, "commit")} de plus depuis.` : "";
-            $("subtitle").textContent = `${DATA.base} → ${DATA.head} : ${plural(changed, "event modifié", "events modifiés")} sur ${total}.${fork}`;
-            $("generated").textContent = `Chargé depuis GitHub le ${new Date(DATA.generatedAt).toLocaleString("fr-FR")}`;
-            return;
-        }
-        const done = EVENTS.filter((e) => e.rewrite).length;
-        $("subtitle").textContent = `${plural(EVENTS.length, "event")}, ${plural(done, "réécrit")}${done < EVENTS.length ? `, ${EVENTS.length - done} en cours` : ""}.`;
-        $("generated").textContent = `data.js généré le ${new Date(DATA.generatedAt).toLocaleString("fr-FR")}`;
+        const { total, changed } = DATA.counts;
+        const fork = DATA.fork?.behind ? ` « Avant » est lu au point de divergence (${DATA.fork.sha.slice(0, 7)}) : ${DATA.base} a ${plural(DATA.fork.behind, "commit")} de plus depuis.` : "";
+        $("subtitle").textContent = `${DATA.base} → ${DATA.head} : ${plural(changed, "event modifié", "events modifiés")} sur ${total}.${fork}`;
+        $("generated").textContent = `Chargé depuis GitHub le ${new Date(DATA.generatedAt).toLocaleString("fr-FR")}`;
     }
 
     // --- event sheet ----------------------------------------------------------------
@@ -422,9 +405,7 @@
             city = fold("🏙️ Menu de la ville", esc(sub), body);
         }
 
-        const source = isGithub()
-            ? `<h4>Branches</h4><p>${esc(DATA.base)} → ${esc(DATA.head)}</p>`
-            : `<h4>Modèle d'IA</h4><p>${esc(e.rewrite?.model || e.model || "?")}</p>`;
+        const source = `<h4>Branches</h4><p>${esc(DATA.base)} → ${esc(DATA.head)}</p>`;
         const body = `
             ${e.placeDescription ? `<blockquote>${esc(e.placeDescription)}</blockquote>` : ""}
             <div class="ctx-grid">
@@ -448,7 +429,7 @@
             <h2>Introduction</h2>
             <div class="pair ${single ? "single" : ""}">
                 <div class="side-head">Avant <span class="muted small">${before.length} car.</span></div>
-                ${single ? "" : `<div class="side-head after">Après <span class="muted small">${(after || "").length} car.</span> ${lengthWarning(after, "intro")}${isGithub() && before && after !== before ? " <span class=\"badge changed\">modifiée</span>" : ""}</div>`}
+                ${single ? "" : `<div class="side-head after">Après <span class="muted small">${(after || "").length} car.</span> ${lengthWarning(after, "intro")}${before && after !== before ? " <span class=\"badge changed\">modifiée</span>" : ""}</div>`}
                 <div class="cell" data-side="Avant"><p class="prose">${formatText(before)}</p></div>
                 ${single ? "" : `<div class="cell" data-side="Après"><p class="prose">${after ? formatText(after) : "<span class=\"bad\">introduction manquante</span>"}</p></div>`}
             </div></section>`;
@@ -515,7 +496,7 @@
             if (!single) {
                 const exists = rw?.outcomes?.[id] !== undefined || rwData[id] !== undefined;
                 const added = !isNew && !origIds.includes(id);
-                const changed = isGithub() && !added && !isNew
+                const changed = !added && !isNew
                     && (rw?.outcomes?.[id] !== orig?.outcomes?.[id] || stableJson(rwData[id] || {}) !== stableJson(e.outcomeData?.[name]?.[id] || {}));
                 cells.push(exists
                     ? outcomeCell("Après", id, rw?.outcomes?.[id], rwData[id], {
@@ -533,31 +514,6 @@
         </section>`;
     }
 
-    function renderReview(e) {
-        if (isGithub() || (!e.rewrite && !e.rewriteError)) return "";
-        const notes = e.rewrite?.notes;
-        const noteList = Array.isArray(notes) ? notes : notes ? [notes] : [];
-        const notesFold = fold("📝 Notes de l'agent", plural(noteList.length, "puce"),
-            noteList.length ? `<ul class="notes">${noteList.map((x) => `<li>${formatText(x)}</li>`).join("")}</ul>` : "<p class=\"muted\">Aucune note.</p>");
-
-        const v = e.validation;
-        const list = (items, cls) => `<ul class="${cls}">${items.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
-        let sub, body = "";
-        if (e.rewriteError) {
-            sub = `<span class="bad">${esc(e.rewriteError)}</span>`;
-        } else {
-            const subParts = [v.errors.length ? `<span class="bad">${plural(v.errors.length, "erreur")}</span>` : "<span class=\"ok\">aucune erreur</span>"];
-            subParts.push(v.warnings.length ? `<span class="warn">${plural(v.warnings.length, "avertissement")}</span>` : "aucun avertissement");
-            sub = subParts.join(" · ");
-            if (v.errors.length) body += `<h4 class="bad">Erreurs</h4>${list(v.errors, "errors")}`;
-            if (v.warnings.length) body += `<h4 class="warn">Avertissements</h4>${list(v.warnings, "warnings")}`;
-            if (!v.errors.length && !v.warnings.length) body += "<p>Le validateur ne signale rien.</p>";
-            if (v.summary) body += `<p class="muted">${esc(v.summary)}</p>`;
-            if (v.raw) body += `<pre>${esc(v.raw)}</pre>`;
-        }
-        return `<section class="block review">${e.rewrite ? notesFold : ""}${fold("🔎 Validation", sub, body || "<p class=\"muted\">Pas de sortie.</p>")}</section>`;
-    }
-
     function possibilityOrder(e) {
         const names = [];
         const add = (n) => { if (n !== "end" && !names.includes(n)) names.push(n); };
@@ -572,17 +528,13 @@
         const s = stats(e), st = status(e);
         const order = possibilityOrder(e);
         const nav = order.map((n) => `<a href="#${esc(e.id)}" data-scroll="p-${esc(n)}">${esc(n === "end" ? "sans réponse" : n)}</a>`).join("");
-        const banner = isGithub()
-            ? { added: `<p class="banner">Cet event n'existe pas sur <code>${esc(DATA.base)}</code> : tout est nouveau.</p>`,
-                removed: `<p class="banner">Cet event n'existe plus sur <code>${esc(DATA.head)}</code> : seule la version de <code>${esc(DATA.base)}</code> est affichée.</p>`,
-                same: "<p class=\"banner\">Cet event est identique sur les deux branches.</p>" }[e.diff] || ""
-            : e.rewrite ? "" : e.rewriteError
-                ? `<p class="banner">La réécriture existe mais n'est pas lisible : <span class="bad">${esc(e.rewriteError)}</span>. Seule la version d'origine est affichée.</p>`
-                : `<p class="banner">⏳ Réécriture en cours : seule la version d'origine est affichée. Relancez <code>python3 build.py</code> quand <code>out/${esc(e.id)}.json</code> sera prêt.</p>`;
+        const banner = { added: `<p class="banner">Cet event n'existe pas sur <code>${esc(DATA.base)}</code> : tout est nouveau.</p>`,
+            removed: `<p class="banner">Cet event n'existe plus sur <code>${esc(DATA.head)}</code> : seule la version de <code>${esc(DATA.base)}</code> est affichée.</p>`,
+            same: "<p class=\"banner\">Cet event est identique sur les deux branches.</p>" }[e.diff] || "";
         const head = s.after === null
             ? plural(s.orig, "issue")
             : `${s.orig} → ${s.after} issues · ${s.conditional} conditionnelles (${pct(s.conditional, s.after)} %)`;
-        const origin = isGithub() ? `${DATA.base} → ${DATA.head}` : e.rewrite?.model || e.model || "?";
+        const origin = `${DATA.base} → ${DATA.head}`;
         return `<div class="page">
             <div class="event-head">
                 <h1>Event ${esc(e.id)} · ${esc(e.place)}</h1>
@@ -593,7 +545,6 @@
             ${renderIntro(e)}
             <nav class="jump">Possibilités : ${nav}</nav>
             ${order.map((n, i) => renderPossibility(e, n, i)).join("")}
-            ${renderReview(e)}
         </div>`;
     }
 
@@ -617,9 +568,8 @@
         }
         const id = currentId();
         renderList(id);
-        content.innerHTML = id ? renderEvent(byId[id]) : `<div class="page"><p>${isGithub()
-            ? "Aucune différence entre ces deux branches. Cochez « Inclure les events identiques » pour tout afficher."
-            : "Aucun event dans data.js."}</p></div>`;
+        content.innerHTML = id ? renderEvent(byId[id])
+            : "<div class=\"page\"><p>Aucune différence entre ces deux branches. Cochez « Inclure les events identiques » pour tout afficher.</p></div>";
         content.querySelectorAll("details.fold").forEach((d) => {
             const key = d.querySelector(":scope > summary .fold-title")?.textContent;
             if (openFolds.has(key)) d.open = true;
@@ -645,7 +595,7 @@
         content.scrollTop = 0;
     });
 
-    // --- source: the workshop bundle or two GitHub branches ---------------------------
+    // --- source: two GitHub branches ---------------------------------------------------
 
     const SOURCE_KEY = "eventRewrites.github";
     let saved = {};
@@ -659,11 +609,6 @@
     const ghStatus = (html) => { $("ghStatus").innerHTML = html; };
     const showMessage = (html) => { content.innerHTML = `<div class="page">${html}</div>`; };
 
-    function showMode(mode) {
-        document.querySelectorAll("#sourceMode button").forEach((b) => b.classList.toggle("active", b.dataset.mode === mode));
-        $("ghForm").hidden = mode !== "github";
-    }
-
     async function loadBranchList() {
         if (branchesLoaded) return;
         branchesLoaded = true;
@@ -676,20 +621,9 @@
         }
     }
 
-    function useLocal() {
-        loadToken++;
-        showMode("local");
-        history.replaceState(null, "", location.pathname + location.hash);
-        setData(LOCAL);
-        if (LOCAL) render();
-        else showMessage("<h1>Pas de données locales</h1><p>Lancez <code>python3 build.py</code> pour générer <code>data.js</code>, ou comparez deux branches GitHub.</p>");
-    }
-
-    function useGithub() {
-        showMode("github");
+    function showIntro() {
         loadBranchList();
-        if (!isGithub()) {
-            setData(null);
+        if (!DATA) {
             render();
             showMessage("<h1>Comparer deux branches</h1><p>Choisissez la branche « Avant » et la branche « Après » dans la colonne de gauche, puis cliquez sur <b>Comparer</b>. Seuls les events qui diffèrent sont affichés.</p>");
         }
@@ -710,7 +644,7 @@
         const progress = (text) => { if (token === loadToken) ghStatus(esc(text)); };
         $("ghLoad").disabled = true;
         try {
-            const data = await GH.loadComparison({ base, head, all, fallback: LOCAL || {}, onProgress: progress });
+            const data = await GH.loadComparison({ base, head, all, onProgress: progress });
             if (token !== loadToken) return;
             setData(data);
             openFolds.clear();
@@ -719,7 +653,10 @@
             const shown = plural(data.events.length, "event affiché", "events affichés");
             progress(`${shown}. Chargement des voisins…`);
             GH.loadPlaces(data, progress)
-                .then(() => progress(`${shown}.`))
+                .then(() => {
+                    fillProfileOptions();
+                    progress(`${shown}.`);
+                })
                 .catch((err) => {
                     data.events.forEach((e) => { if (e.neighbours === null) e.neighbours = []; });
                     if (token === loadToken) ghStatus(`${esc(shown)} <span class="warn">Voisins indisponibles : ${esc(err.message)}</span>`);
@@ -741,17 +678,6 @@
         ev.preventDefault();
         compareBranches();
     });
-    document.querySelectorAll("#sourceMode button").forEach((b) => b.addEventListener("click", () => (b.dataset.mode === "local" ? useLocal() : useGithub())));
-    if (!GH) $("source").hidden = true;
-    // Without the workshop bundle (as on GitHub Pages), only the branch comparison makes sense
-    if (!LOCAL) $("sourceMode").hidden = true;
-
-    if (GH && params.get("base") && params.get("head")) {
-        useGithub();
-        compareBranches();
-    } else if (LOCAL || !GH) {
-        useLocal();
-    } else {
-        useGithub();
-    }
+    showIntro();
+    if (params.get("base") && params.get("head")) compareBranches();
 })();

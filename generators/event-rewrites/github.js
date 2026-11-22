@@ -100,9 +100,8 @@ window.EventRewritesGithub = (() => {
         }
     }
 
-    function langNames(commands, models, fallback) {
-        const names = { inns: {}, meals: {}, rooms: {}, shops: {}, services: {}, ...structuredClone(fallback || {}) };
-        names.mapTypes = { ...(names.mapTypes || {}) };
+    function langNames(commands, models) {
+        const names = { inns: {}, meals: {}, rooms: {}, shops: {}, services: {}, mapTypes: {} };
         const city = commands?.report?.city;
         if (city) {
             names.inns = city.inns?.names || names.inns;
@@ -137,7 +136,7 @@ window.EventRewritesGithub = (() => {
      * Loads both branches and returns { mode: "github", base, head, events, names, classes, ... }.
      * Only events whose texts or mechanics differ are kept, unless `all` is set.
      */
-    async function loadComparison({ base, head, all = false, fallback = {}, onProgress = () => {} }) {
+    async function loadComparison({ base, head, all = false, onProgress = () => {} }) {
         onProgress("Recherche du point de divergence…");
         const fork = await mergeBase(base, head);
         const baseRef = fork.sha || base;
@@ -232,7 +231,13 @@ window.EventRewritesGithub = (() => {
             };
         });
 
-        const classes = models?.classes ? Object.fromEntries(Object.entries(models.classes).filter(([k]) => /^\d+$/.test(k))) : fallback.classes;
+        const classes = Object.fromEntries(Object.entries(models?.classes || {}).filter(([k]) => /^\d+$/.test(k)));
+        // Pet names come from the male form ("24_male"); their rarity is filled in the background by loadPlaces
+        const pets = {};
+        for (const [key, name] of Object.entries(models?.pets || {})) {
+            const match = key.match(/^(\d+)_male$/);
+            if (match && match[1] !== "0") pets[match[1]] = { name };
+        }
         return {
             mode: "github",
             base,
@@ -241,17 +246,22 @@ window.EventRewritesGithub = (() => {
             all,
             generatedAt: new Date().toISOString(),
             counts: { total: ids.length, changed: ids.filter((id) => diffs[id] !== "same").length },
-            pets: fallback.pets || {},
-            classes: classes || {},
-            names: langNames(commands, models, fallback.names),
+            pets,
+            classes,
+            names: langNames(commands, models),
             locations: models?.map_locations || {},
             events,
         };
     }
 
-    /** Fills place types and neighbours in the background (one listing call, then raw files). */
+    /** Fills place types, neighbours and pet rarities in the background (one listing call, then raw files). */
     async function loadPlaces(data, onProgress = () => {}) {
         const { head } = data;
+        const petIds = Object.keys(data.pets);
+        await pool(petIds, async (id) => {
+            const pet = await getJson(raw(head, `Core/resources/pets/${id}.json`), `familier ${id}`).catch(() => null);
+            if (pet) data.pets[id].rarity = pet.rarity;
+        }, (done, total) => onProgress(`Lecture des familiers : ${done}/${total}`));
         const typeCache = {};
         const typeOf = async (mapId) => {
             if (!(mapId in typeCache)) {

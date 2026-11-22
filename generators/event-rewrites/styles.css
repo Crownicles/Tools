@@ -243,38 +243,10 @@ select {
     margin-top: 18px;
 }
 
-/* --- source: workshop or two GitHub branches --- */
+/* --- source: two GitHub branches --- */
 
 #source {
     margin-bottom: 18px;
-}
-
-.seg {
-    display: flex;
-    border: 1px solid #475569;
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.seg button {
-    flex: 1;
-    padding: 6px 8px;
-    border: 0;
-    background: #0f172a;
-    color: #cbd5e1;
-    font: inherit;
-    font-size: 0.82rem;
-    cursor: pointer;
-}
-
-.seg button + button {
-    border-left: 1px solid #475569;
-}
-
-.seg button.active {
-    background: #334155;
-    color: #fff;
-    font-weight: 600;
 }
 
 #ghForm input[type="text"] {
@@ -694,34 +666,6 @@ pre {
 .c.tag {
     background: transparent;
     color: #64748b;
-}
-
-/* --- review --- */
-
-.review {
-    margin-top: 48px;
-}
-
-ul.notes,
-ul.errors,
-ul.warnings {
-    margin: 4px 0;
-    padding-left: 18px;
-    max-width: 90ch;
-}
-
-ul.notes li,
-ul.errors li,
-ul.warnings li {
-    margin-bottom: 6px;
-}
-
-ul.errors li {
-    color: #f87171;
-}
-
-ul.warnings li {
-    color: #fbbf24;
 }
 
 /* --- narrow screens: one column, before/after interleaved --- */
