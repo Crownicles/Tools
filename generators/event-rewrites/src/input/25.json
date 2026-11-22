@@ -1,0 +1,477 @@
+{
+ "eventId": "25",
+ "model": "rework of Gabrielre14's draft",
+ "mapId": 8,
+ "place": "Croisement des Destins",
+ "placeType": "ro",
+ "placeDescription": "Un très grand carrefour qui relie les principaux chemins à l'ouest du Mont Célestrum.",
+ "neighbours": [
+  {
+   "mapId": 10,
+   "name": "Ville Forte",
+   "minutes": 120,
+   "type": "vi"
+  },
+  {
+   "mapId": 15,
+   "name": "Mont Célestrum",
+   "minutes": 420,
+   "type": "mo"
+  },
+  {
+   "mapId": 7,
+   "name": "Vallée des Rois",
+   "minutes": 480,
+   "type": "de"
+  }
+ ],
+ "isCity": false,
+ "city": null,
+ "canonBlock": "#### Croisement des Destins · `8`\n\n- **Type :** route (`ro`) ; biomes : plains\n- **Description du jeu :** « Un très grand carrefour qui relie les principaux chemins à l'ouest du Mont Célestrum. »\n- **Voisins :** Ville Forte (2 h), Mont Célestrum (7 h), Vallée des Rois (8 h)\n- **Zones d'expédition des familiers :** les Passages Mystiques du Croisement des Destins\n- **Big events qui s'y déclenchent :**\n  - 19 : « Après de longs jours sans avoir pu vous sustenter, vous voyez sur le bord du chemin un cadavre de renard, semblant tout frais. »\n  - 25 : « Après plusieurs jours de voyage sans encombre, vous finissez par arriver sur les lieux d'une petite escarmouche entre deux groupes armés. »\n",
+ "triggers": [
+  {
+   "mapId": 8
+  }
+ ],
+ "original": {
+  "possibilities": {
+   "dontHelp": {
+    "outcomes": {
+     "0": "Vous ne prêtez pas attention au massacre qui a eu lieu, et allez vous reposer un peu plus loin.",
+     "1": "Pas de temps à perdre ! Vous continuez votre route.",
+     "2": "Pressé de continuer votre route, vous trébuchez sur un corps sans vie, et vous vous blessez."
+    },
+    "text": "Ne pas les aider."
+   },
+   "end": {
+    "outcomes": {
+     "0": "Ayant jeté un rapide coup d'œil aux soldats occupés par leurs fouilles, vous décidez de reprendre votre route.",
+     "1": "Fatigué, vous tombez raide et vous endormez au sol."
+    }
+   },
+   "help": {
+    "outcomes": {
+     "0": "Vous décidez d'aller voir les soldats et leur proposez votre aide pour chercher des survivants. Après 45 minutes d'aide, un soldat vous offre un peu d'argent pour vous remercier de votre aide si précieuse.",
+     "1": "En allant chercher des survivants, vous vous faites attaquer par une personne étant en train de piller des corps ! Après vous être débattu, vous fuyez et continuez votre route."
+    },
+    "text": "Proposer son aide."
+   },
+   "steal": {
+    "outcomes": {
+     "0": "Vous décidez de contourner les soldats et allez piller les corps des pauvres défunts pour tenter de vous enrichir un petit peu.",
+     "1": "En pillant les corps, vous vous faites attraper brusquement par un soldat. Celui-ci profite de votre situation pour vous détrousser avant de vous sommer de continuer votre route rapidement."
+    },
+    "text": "Piller les corps."
+   }
+  },
+  "text": "Après plusieurs jours de voyage sans encombre, vous finissez par arriver sur les lieux d'une petite escarmouche entre deux groupes armés. Les esprits semblent cependant s'être calmés et vous remarquez plusieurs soldats affairés à rechercher des éventuels survivants."
+ },
+ "outcomeData": {
+  "dontHelp": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 30
+   },
+   "1": {},
+   "2": {
+    "effect": "hurt",
+    "health": -15
+   }
+  },
+  "end": {
+   "0": {},
+   "1": {
+    "effect": "sleeping",
+    "health": -25
+   }
+  },
+  "help": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 45,
+    "money": 100
+   },
+   "1": {
+    "effect": "occupied",
+    "health": -10,
+    "lostTime": 15,
+    "money": -30
+   }
+  },
+  "steal": {
+   "0": {
+    "effect": "occupied",
+    "lostTime": 15,
+    "money": 50
+   },
+   "1": {
+    "effect": "occupied",
+    "lostTime": 25,
+    "money": -100
+   }
+  }
+ },
+ "draft": {
+  "author": "Gabrielre14",
+  "lang": {
+   "possibilities": {
+    "dontHelp": {
+     "text": "Ne pas les aider.",
+     "outcomes": {
+      "0": "Vous ne prêtez pas attention au massacre qui a eu lieu, et allez vous reposer un peu plus loin.",
+      "1": "Pas de temps à perdre ! Vous continuez votre route.",
+      "2": "Pressé de continuer votre route et maladroit comme vous l'êtes, vous trébuchez sur un corps sans vie, et vous vous blessez.",
+      "3": "Vous passez sans porter un seul regard de pitié envers ces pauvres soldats tombés au combat, mais vous croisez des pilleurs de cadavre. Ceux-ci reconnaissent en vous un des leurs et vous offrent même un objet trouvé sur un soldat.",
+      "4": "Vous tentez de reprendre votre route mais votre familier, complètement terrorisé par cette horrible scène, s'accroche à votre jambe en tremblant. Ému de compassion, vous réconfortez votre stupide et faible compagnon comme vous pouvez avant de reprendre votre route."
+     }
+    },
+    "help": {
+     "text": "Proposer son aide.",
+     "outcomes": {
+      "0": "Vous décidez d'aller voir les soldats et leur proposez votre aide pour chercher des survivants. Après 45 minutes d'aide, un soldat vous offre un peu d'argent pour vous remercier de votre aide si précieuse.",
+      "1": "En allant chercher des survivants, vous vous faites attaquer par une personne étant en train de piller des corps ! Après vous être débattu, vous parvenez à le vaincre et vous le livrez aux soldats, qui vous aident à panser vos blessures.",
+      "2": "En allant chercher des survivants, vous vous faites attaquer par une personne étant en train de piller des corps ! Vous vous débattez du mieux que vous pouvez mais votre adversaire est trop fort pour vous.",
+      "3": "Vous proposez votre aide aux soldats, mais ceux-ci semblent méfiants à votre égard. Cependant, votre expertise des lieux mal famés et des scènes de crime vous permet de différencier au premier coup d'oeil les blessés et les morts. Vous parvenez ainsi à sauver plusieurs soldats qui vous remercient chaleureusement.",
+      "4": "Vous proposez votre aide aux soldats, mais ceux-ci semblent méfiants à votre égard. Vous participez activement à la recherche de survivants mais vous ne repérez que des corps sans vie. Vous finissez par abandonner et reprenez votre route.",
+      "5": "Vous proposez votre aide aux soldats, qui la refusent. Connaissant votre réputation, ils vous menacent de leurs épées pour que vous quittiez les lieux, afin de protéger l'honneur de ces soldats morts au combat : ils ne méritent pas d'être pillés.",
+      "6": "Vous arpentez le champ de bataille à la recherche de survivants, votre Colombe sur l'épaule. Soudain, celle-ci s'envole et se pose sur un soldat. Celui-ci gémissait et sa plaie à l'abdomen vous donne la nausée, mais vous prenez sur vous et parvenez à lui donner les premiers soins. Les soldats vous offrent votre dîner pour vous remercier de votre aide.",
+      "7": "A l'aide de son flair, votre familier vous guide entre les cadavres vers les soldats encore en vie. Vous parvenez ainsi à en secourir près d'une dizaine, qui vous remercient chaleureusement. Vous reprenez votre route le sourire aux lèvres... et les poches pleines de cadeaux !",
+      "8": "Vous arpentez le champ de bataille à la recherche de survivants, suivi par votre Licorne. Celle-ci, à l'aide de ses immenses pouvoirs, parvient à soulager la douleur des blessés, ce qui vous vaut les plus amples remerciements. Les soldats vous offrent votre dîner pour vous remercier de votre aide.",
+      "9": "Vous décidez d'aller voir les soldats, leur proposez votre aide pour chercher des survivants et ceux-ci vous font immédiatement confiance, connaissant votre réputation. Cependant, vous apercevez vous la veste d'un soldat une bourse qui semble bien remplie. Ayant le sens des priorités, vous vous empressez de la récupérer et continuez votre route."
+     }
+    },
+    "steal": {
+     "text": "Piller les corps.",
+     "outcomes": {
+      "0": "Vous décidez de contourner les soldats et allez piller les corps des pauvres défunts pour tenter de vous enrichir un petit peu.",
+      "1": "En pillant les corps, vous vous faites attraper brusquement par un soldat. Celui-ci profite de votre situation pour vous détrousser avant de vous sommer de continuer votre route rapidement.",
+      "2": "En pillant les corps, vous vous faites attraper brusquement par un soldat. Celui-ci, voyant votre Chat Noir, vous prend pour un sorcier cherchant à faire des cadavres vos marionnettes afin de semer le chaos. Son sens du devoir le conduit à vous exécuter sur-le-champ avant que vous ne puissiez vous justifier.",
+      "3": "En pillant les corps, vous vous faites attraper brusquement par un soldat. Celui-ci tente de vous détrousser mais vous décidez de l'attaquer pour défendre ce qui compte le plus à vos yeux : l'argent ! Vous parvenez à désarmer votre adversaire et exigez le prix de sa vie.",
+      "4": "En pillant les corps, vous vous faites attraper brusquement par un soldat. Celui-ci tente de vous détrousser mais vous décidez de défendre ce qui compte le plus à vos yeux : l'argent ! Vous êtes cependant incapable de protéger à la fois votre bourse et votre corps. Votre adversaire parvient alors à vous blesser gravement et vous laisse à demi mort.",
+      "5": "Vous décidez de contourner les soldats et allez piller les corps des pauvres défunts pour tenter de vous enrichir un peu. C'est alors que, à cause de votre manque d'expérience, vous retournez un soldat qui s'avère être encore en vie. Confus, vous bredouillez une excuse et décidez de l'aider.",
+      "6": "Vous pilliez discrètement les corps lorsqu'un soldat vous interpelle. Maître de vous grâce à votre expérience, vous restez naturel et le laissez s'approcher, pensant le duper aisément. Mais c'est sans compter sur votre fidèle Singe qui ressort de sous un cadavre avec un étincelant bijou : le soldat comprend alors vos réelles intentions et vous devez prendre la fuite.",
+      "7": "Vous arpentez le champ de bataille à la recherche d'objets de valeurs, sans succès. Heureusement que votre Singe est là pour compenser votre incompétence !",
+      "8": "Vous pilliez discrètement les corps lorsqu'un soldat vous interpelle. Maître de vous grâce à votre expérience, vous restez naturel et le laissez s'approcher, pensant le duper aisément. Mais c'est sans compter sur votre fidèle Raton-laveur qui ressort de sous un cadavre avec un étincelant bijou : le soldat comprend alors vos réelles intentions et vous devez prendre la fuite.",
+      "9": "Vous arpentez le champs de bataille à la recherche d'objets de valeurs, sans succès. Heureusement que votre Raton-laveur est là pour compenser votre incompétence !"
+     }
+    },
+    "end": {
+     "outcomes": {
+      "0": "Ayant jeté un rapide coup d'œil aux soldats occupés par leurs fouilles, vous décidez de reprendre votre route.",
+      "1": "Les soldats vous aperçoivent au loin et reconnaissent en vous un aventurier fiable et serviable. Ils vous interpellent mais vous ne réagissez pas, encore sous le choc.",
+      "2": "Vous restez stupéfait devant cette effroyable vision. Vous voyez alors les soldats s'assembler en cercle et décidez d'aller voir ce qu'il se passe : ils se tiennent autour d'un soldat au bord de la mort. C'est alors que votre Chat se précipite sur le soldat, ronronnant à tel point que le pauvre homme s'éteint le sourire aux lèvres.",
+      "3": "Vous restez stupéfait devant cette effroyable vision, alors que votre Alien commence à disséquer le cadavre le plus proche afin d'étudier l'espèce humaine. Horrifié, vous vous empressez de l'arrêter et reprenez votre route.",
+      "4": "Vous observez le champ de bataille sans qu'une once de pitié n'apparaisse dans vos yeux. Les soldats vous surveillent, connaissant votre réputation, mais vous laissent en paix. Vous reprenez votre route, sans que l'ombre d'une émotion ne soit apparue dans votre esprit, et récupérez un objet sur un cadavre pour rendre hommage à votre image."
+     }
+    }
+   },
+   "text": "Après plusieurs jours de voyage sans encombre, vous finissez par arriver sur les lieux d'une petite escarmouche entre deux groupes armés. Les esprits semblent cependant s'être calmés et vous remarquez plusieurs soldats affairés à rechercher des éventuels survivants."
+  },
+  "data": {
+   "possibilities": {
+    "dontHelp": {
+     "outcomes": {
+      "0": {
+       "karma": -2,
+       "effect": "occupied",
+       "lostTime": 30
+      },
+      "1": {
+       "karma": -2
+      },
+      "2": {
+       "requirements": {
+        "level": {
+         "max": 40
+        }
+       },
+       "karma": -2,
+       "effect": "hurt",
+       "health": -15
+      },
+      "3": {
+       "requirements": {
+        "karma": {
+         "max": -100
+        }
+       },
+       "karma": -5,
+       "randomItem": {}
+      },
+      "4": {
+       "requirements": {
+        "validPetTypeIds": [
+         43
+        ]
+       },
+       "effect": "occupied",
+       "lostTime": 15
+      }
+     }
+    },
+    "help": {
+     "outcomes": {
+      "0": {
+       "money": 100,
+       "karma": 10,
+       "effect": "occupied",
+       "lostTime": 45
+      },
+      "1": {
+       "requirements": {
+        "attack": {
+         "min": 250
+        }
+       },
+       "effect": "confused",
+       "health": -10,
+       "karma": 4
+      },
+      "2": {
+       "requirements": {
+        "attack": {
+         "max": 249
+        }
+       },
+       "effect": "hurt",
+       "health": -35
+      },
+      "3": {
+       "requirements": {
+        "karma": {
+         "max": -20
+        },
+        "level": {
+         "min": 60
+        }
+       },
+       "karma": 8,
+       "effect": "occupied",
+       "lostTime": 30
+      },
+      "4": {
+       "requirements": {
+        "karma": {
+         "max": -20
+        },
+        "level": {
+         "max": 59
+        }
+       },
+       "karma": 1,
+       "effect": "occupied",
+       "lostTime": 30
+      },
+      "5": {
+       "requirements": {
+        "karma": {
+         "max": -100
+        }
+       }
+      },
+      "6": {
+       "requirements": {
+        "validPetTypeIds": [
+         62
+        ]
+       },
+       "health": 12,
+       "karma": 8,
+       "effect": "occupied",
+       "lostTime": 15
+      },
+      "7": {
+       "requirements": {
+        "validPetTypeIds": [
+         1,
+         2,
+         20,
+         21,
+         28,
+         37,
+         42,
+         56,
+         57,
+         60,
+         64,
+         65
+        ]
+       },
+       "karma": 10,
+       "money": 244,
+       "effect": "occupied",
+       "lostTime": 25
+      },
+      "8": {
+       "requirements": {
+        "validPetTypeIds": [
+         63
+        ]
+       },
+       "health": 12,
+       "karma": 10,
+       "effect": "occupied",
+       "lostTime": 25
+      },
+      "9": {
+       "requirements": {
+        "karma": {
+         "min": 80
+        }
+       },
+       "karma": -10,
+       "money": 420
+      }
+     }
+    },
+    "steal": {
+     "outcomes": {
+      "0": {
+       "karma": -8,
+       "money": 100
+      },
+      "1": {
+       "karma": -5,
+       "money": -160
+      },
+      "2": {
+       "requirements": {
+        "validPetTypeIds": [
+         4
+        ]
+       },
+       "oneshot": true
+      },
+      "3": {
+       "requirements": {
+        "attack": {
+         "min": 180
+        }
+       },
+       "money": 340,
+       "karma": -10,
+       "effect": "occupied",
+       "lostTime": 10
+      },
+      "4": {
+       "requirements": {
+        "defense": {
+         "max": 250
+        }
+       },
+       "karma": -5,
+       "effect": "injured",
+       "health": -80
+      },
+      "5": {
+       "requirements": {
+        "level": {
+         "max": 50
+        }
+       },
+       "karma": 2,
+       "effect": "occupied",
+       "lostTime": 20
+      },
+      "6": {
+       "requirements": {
+        "validPetTypeIds": [
+         24
+        ],
+        "level": {
+         "min": 70
+        }
+       },
+       "karma": -5
+      },
+      "7": {
+       "requirements": {
+        "validPetTypeIds": [
+         24
+        ],
+        "level": {
+         "max": 69
+        }
+       },
+       "karma": -7,
+       "money": 120
+      },
+      "8": {
+       "requirements": {
+        "validPetTypeIds": [
+         35
+        ],
+        "level": {
+         "min": 70
+        }
+       },
+       "karma": -5
+      },
+      "9": {
+       "requirements": {
+        "validPetTypeIds": [
+         35
+        ],
+        "level": {
+         "max": 69
+        }
+       },
+       "karma": -7,
+       "money": 120
+      }
+     }
+    },
+    "end": {
+     "outcomes": {
+      "0": {
+       "effect": "occupied",
+       "lostTime": 5
+      },
+      "1": {
+       "requirements": {
+        "karma": {
+         "min": 100
+        }
+       },
+       "karma": -1,
+       "effect": "scared"
+      },
+      "2": {
+       "requirements": {
+        "validPetTypeIds": [
+         3
+        ]
+       },
+       "karma": 5
+      },
+      "3": {
+       "requirements": {
+        "validPetTypeIds": [
+         70
+        ]
+       },
+       "karma": -4
+      },
+      "4": {
+       "requirements": {
+        "karma": {
+         "max": -120
+        }
+       },
+       "effect": "occupied",
+       "lostTime": 5,
+       "karma": -5,
+       "randomItem": {}
+      }
+     }
+    }
+   },
+   "triggers": [
+    {
+     "mapId": 8,
+     "oncePer": "day"
+    }
+   ]
+  }
+ }
+}

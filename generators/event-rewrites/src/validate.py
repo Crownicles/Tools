@@ -70,7 +70,8 @@ for p, v in tp.items():
 
 # --- data ---
 data = out.get("data") or {}
-if data.get("triggers") != inp["triggers"]: errors.append("data.triggers must equal input.triggers")
+expected_triggers = (inp.get("draft") or {}).get("data", {}).get("triggers", inp["triggers"])
+if data.get("triggers") != expected_triggers: errors.append("data.triggers must equal the triggers of the input (or of the draft when there is one)")
 dp = data.get("possibilities", {})
 if set(dp) != set(tp): errors.append(f"text/data possibilities differ: {sorted(set(dp) ^ set(tp))}")
 neighbour_types = {n["type"] for n in inp["neighbours"]}

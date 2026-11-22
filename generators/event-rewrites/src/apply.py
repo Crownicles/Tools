@@ -63,7 +63,7 @@ def parse_icons(block):
     return icons
 
 
-def update_icons(path, event_id, new_icons):
+def update_icons(path, event_id, new_icons, possibilities):
     lines = path.read_text().split("\n")
     # The second "events: {" block holds the big events (the first one is the type declaration)
     start = [i for i, line in enumerate(lines) if line == "\tevents: {"][1]
@@ -75,6 +75,10 @@ def update_icons(path, event_id, new_icons):
             icons.setdefault(name, {}).update({str(k): v for k, v in value.items()})
         else:
             icons[name] = value
+    # Drop the emoji of possibilities and "end" outcomes the event no longer has
+    icons = {name: value for name, value in icons.items() if name in possibilities}
+    if isinstance(icons.get("end"), dict):
+        icons["end"] = {k: v for k, v in icons["end"].items() if k in possibilities["end"]["outcomes"]}
     block = icons_block(event_id, icons)
     block[-1] += "," if lines[tail].endswith(",") else ""
     lines[head:tail + 1] = block
@@ -91,8 +95,7 @@ def main():
         lang[event_id] = lang_entry(out)
         event_path = crownicles / f"Core/resources/events/{event_id}.json"
         write_json(event_path, {"possibilities": out["data"]["possibilities"], "triggers": out["data"]["triggers"]})
-        if out.get("icons"):
-            update_icons(crownicles / "Lib/src/CrowniclesIcons.ts", event_id, out["icons"])
+        update_icons(crownicles / "Lib/src/CrowniclesIcons.ts", event_id, out.get("icons") or {}, out["data"]["possibilities"])
         print(f"{event_id}: applied")
     write_json(lang_path, lang)
 

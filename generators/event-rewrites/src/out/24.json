@@ -1,0 +1,296 @@
+{
+ "eventId": "24",
+ "model": "rework of Gabrielre14's draft",
+ "text": "Du haut d'une colline, vous apercevez Mergagnan : des lumières dansent sur le port et de la musique monte jusqu'à vous. C'est jour de fête. Une foire de passage s'est installée le long des quais, entre les bateaux de pêche, avec ses stands de nourriture, de jeux et d'objets en tous genres. Curieux, vous pressez le pas vers la ville.",
+ "possibilities": {
+  "end": {
+   "outcomes": {
+    "0": "Vous faites le tour de la foire et jetez quelques coups d'œil aux étals, mais aucun ne vous retient. Vous laissez la musique derrière vous et vous éloignez des quais sans avoir dépensé une pièce.",
+    "1": "Vous n'achetez rien, mais vous flânez longuement entre les stands. La musique, l'odeur de friture et le vent du large vous détendent. Vous repartez reposé, un peu plus tard que prévu.",
+    "2": "Vous flânez longuement entre les stands. Sur votre passage, des habitants vous saluent avec le sourire, et une marchande de beignets insiste pour vous en offrir un. Vous repartez détendu, le ventre content.",
+    "3": "Entre deux stands, un jeune homme vous arrête et vous serre la main. Sur la Voie champêtre, il vous a vu mettre en fuite des brigands qui détroussaient des voyageurs. Il tient à vous remercier et vous glisse une bourse bien garnie.",
+    "4": "Autour de vous, les fêtards s'écartent : votre familier leur fait peur. Vous le faites asseoir au milieu de la foule et le laissez renifler une main tendue. Bientôt, des enfants osent le caresser, et la fête reprend autour de vous.",
+    "5": "Un forain aperçoit votre compagnon tout noir et y voit un mauvais présage. Des fêtards superstitieux vous bousculent, et l'un d'eux vous frappe d'un coup de bâton. Vous menacez de jeter un sort au suivant : le groupe recule, et vous quittez la foire en vous tenant l'épaule."
+   }
+  },
+  "foodStand": {
+   "text": "Aller à un stand de nourriture.",
+   "outcomes": {
+    "0": "Vous achetez une part de dindon rôti à la peau croustillante. Vous n'avez jamais rien mangé d'aussi bon. Vous prenez le temps de la finir à une table, au milieu des rires, et repartez revigoré.",
+    "1": "Vous achetez une galette au fromage à un stand bondé. Elle est correcte, sans plus. Vous la mangez en marchant entre les étals, et vous en avez oublié le goût avant d'arriver au bout des quais.",
+    "2": "Le cuisinier vous reconnaît, et son regard se durcit. Il vous sert sans un mot, avec un drôle de sourire. Dès les premières bouchées, la tête vous tourne et votre ventre se tord. Vous recrachez ce que vous pouvez, mais vous voilà malade.",
+    "3": "Vous allez entamer votre assiette quand votre Licorne la renverse d'un coup de corne. Vous êtes sur le point de la gronder quand votre voisin de table se tord de douleur : la viande était avariée. Confus, le cuisinier vous rembourse largement.",
+    "4": "Vous goûtez le ragoût du stand : la viande est trop cuite et la sauce manque de sel. Le cuisinier est débordé ; vous lui proposez votre aide, puis prenez sa place aux fourneaux. Le soir, la file s'étire sur le quai. Ravi, le gérant vous paie bien.",
+    "5": "Vous vous installez avec votre assiette à une longue table. De jeunes gens du port vous demandent d'où vous venez. Vous avez de quoi raconter, et vos récits les captivent tant qu'ils paient votre repas, puis un second. Vous repartez rassasié."
+   }
+  },
+  "gameStand": {
+   "text": "Aller à un stand de jeu.",
+   "outcomes": {
+    "0": "Au stand des anneaux, il faut en lancer trois autour du goulot d'une bouteille. Vous rejouez encore et encore, sans jamais y arriver. Dépité, vous réglez toutes vos parties au gérant et vous éloignez.",
+    "1": "Vous enchaînez les parties de lancer d'anneaux sans la moindre chance. Entre deux lancers, vous sympathisez avec le gérant. Au moment de payer, il refuse vos pièces, et vous partez en le remerciant chaleureusement.",
+    "2": "Trois anneaux, trois lancers, et tous tombent autour du goulot de la bouteille. Le gérant n'en revient pas. Il vous remet le gros lot, une bourse bien garnie, et vous repartez à travers la foule le sourire aux lèvres.",
+    "3": "Le gérant remarque votre air de débutant et vous offre quelques lancers pour vous encourager. À sa grande surprise, et à la vôtre, chaque anneau tombe autour du goulot. Beau joueur, il vous remet le gros lot.",
+    "4": "Un gérant au sourire narquois fait glisser trois gobelets sur sa table : il faut trouver celui qui cache la bille. Votre Éléphant suit chaque mouvement des yeux et pose sa trompe sur le bon gobelet, partie après partie. Le gérant finit par vous payer pour que vous partiez.",
+    "5": "Devant le stand, une voix couvre le gérant d'injures. Outré, il se tourne vers vous. Vous jurez que vous n'y êtes pour rien, mais les insultes recommencent, et il vous chasse. Ce n'est qu'au bout du quai que votre Perroquet revient se poser sur votre épaule."
+   }
+  },
+  "itemStand": {
+   "text": "Aller à un stand de vente d'objets.",
+   "outcomes": {
+    "0": "Vous cherchez un objet bien précis. Vous passez des heures à fouiller chaque étal de la foire, en vain. Plutôt que d'acheter quelque chose d'inutile, vous préférez repartir les mains vides.",
+    "1": "Le voici. L'objet que vous cherchez depuis des jours est posé sur l'étal d'un marchand. Vous le payez sans même discuter le prix, de peur qu'un autre client ne vous le prenne, et repartez ravi.",
+    "2": "Un objet attire votre regard. Le marchand en annonce un prix exagéré, mais vous avez fréquenté assez de marchés pour ne pas vous laisser faire. Après une longue discussion, il vous le cède à un prix honnête.",
+    "3": "Le marchand vous dévisage, puis son visage se ferme : il sait ce qu'on raconte de vous. Il tire un couteau de sa ceinture et se jette sur vous. Vous n'avez que le temps de lever le bras, et la lame s'y enfonce. Vous fuyez en serrant votre blessure.",
+    "4": "Le marchand vous dévisage, puis son visage se ferme : il sait ce qu'on raconte de vous. Il tire un couteau et se jette sur vous. Vous esquivez d'un bond, et la lame ne fait que vous effleurer le bras. Vous filez entre les stands avant qu'il ne revienne à la charge.",
+    "5": "Pendant que vous examinez l'étal, votre Paon fait la roue devant le stand. Les passants s'attroupent pour l'admirer, et le marchand vend plus en un instant qu'en toute une matinée. Ravi, il vous offre l'objet que vous regardiez."
+   }
+  }
+ },
+ "data": {
+  "triggers": [
+   {
+    "mapId": 26
+   }
+  ],
+  "possibilities": {
+   "end": {
+    "outcomes": {
+     "0": {},
+     "1": {
+      "effect": "occupied",
+      "health": 5,
+      "lostTime": 40
+     },
+     "2": {
+      "requirements": {
+       "karma": {
+        "min": 50
+       }
+      },
+      "effect": "occupied",
+      "health": 10,
+      "lostTime": 40
+     },
+     "3": {
+      "requirements": {
+       "level": {
+        "min": 130
+       }
+      },
+      "money": 300
+     },
+     "4": {
+      "requirements": {
+       "validPetTypeIds": [
+        21,
+        42,
+        48,
+        56,
+        57,
+        60,
+        64,
+        65
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 30,
+      "karma": 3
+     },
+     "5": {
+      "requirements": {
+       "validPetTypeIds": [
+        4,
+        95
+       ]
+      },
+      "health": -15,
+      "karma": -2
+     }
+    }
+   },
+   "foodStand": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "health": 75,
+      "lostTime": 30,
+      "money": -20,
+      "tags": [
+       "moneyUsage"
+      ]
+     },
+     "1": {
+      "money": -20,
+      "tags": [
+       "moneyUsage"
+      ]
+     },
+     "2": {
+      "requirements": {
+       "karma": {
+        "max": -50
+       }
+      },
+      "effect": "sick",
+      "health": -100,
+      "money": -20,
+      "tags": [
+       "moneyUsage"
+      ]
+     },
+     "3": {
+      "requirements": {
+       "validPetTypeIds": [
+        63
+       ]
+      },
+      "money": 120
+     },
+     "4": {
+      "requirements": {
+       "cookingLevel": {
+        "min": 70
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 180,
+      "money": 300
+     },
+     "5": {
+      "requirements": {
+       "level": {
+        "min": 120
+       }
+      },
+      "effect": "occupied",
+      "health": 40,
+      "lostTime": 40
+     }
+    }
+   },
+   "gameStand": {
+    "outcomes": {
+     "0": {
+      "money": -200,
+      "tags": [
+       "moneyUsage"
+      ]
+     },
+     "1": {
+      "requirements": {
+       "karma": {
+        "min": 0
+       }
+      },
+      "effect": "occupied",
+      "lostTime": 30
+     },
+     "2": {
+      "money": 200
+     },
+     "3": {
+      "requirements": {
+       "level": {
+        "max": 30
+       }
+      },
+      "money": 240
+     },
+     "4": {
+      "requirements": {
+       "validPetTypeIds": [
+        46
+       ]
+      },
+      "money": 150
+     },
+     "5": {
+      "requirements": {
+       "validPetTypeIds": [
+        54
+       ]
+      },
+      "karma": -2
+     }
+    }
+   },
+   "itemStand": {
+    "outcomes": {
+     "0": {
+      "effect": "occupied",
+      "lostTime": 240
+     },
+     "1": {
+      "money": -200,
+      "randomItem": {},
+      "tags": [
+       "moneyUsage"
+      ]
+     },
+     "2": {
+      "requirements": {
+       "level": {
+        "min": 120
+       }
+      },
+      "money": -100,
+      "randomItem": {},
+      "tags": [
+       "moneyUsage"
+      ]
+     },
+     "3": {
+      "requirements": {
+       "karma": {
+        "max": -50
+       },
+       "speed": {
+        "max": 349
+       }
+      },
+      "effect": "hurt",
+      "health": -50
+     },
+     "4": {
+      "requirements": {
+       "karma": {
+        "max": -50
+       },
+       "speed": {
+        "min": 350
+       }
+      },
+      "health": -10
+     },
+     "5": {
+      "requirements": {
+       "validPetTypeIds": [
+        53
+       ]
+      },
+      "effect": "occupied",
+      "lostTime": 20,
+      "randomItem": {}
+     }
+    }
+   }
+  }
+ },
+ "icons": {
+  "end": {
+   "2": "😊",
+   "3": "🤝",
+   "4": "🐾",
+   "5": "🧙"
+  }
+ },
+ "notes": [
+  "Intro : Mergagnan est nommée comme une ville (plus de « bourgade ») avec deux détails du canon, le port et ses bateaux de pêche ; on garde la colline, les lumières, la musique et l'élan vers la fête. La foire est de passage : ses stands ne contredisent ni Au Coin du Feu ni les boutiques du menu.",
+  "Gardé de Gabriel : le chef qui reprend les fourneaux (passé d'une condition de niveau à cookingLevel min 70, bon cuisinier), la Licorne qui renverse le plat avarié, l'empoisonnement réservé au joueur mal famé (karma max -50), les récits qui font payer le repas, le débutant encouragé au jeu, l'Éléphant (devenu le jeu des gobelets), le Perroquet qui insulte le gérant, le marchand au couteau avec l'esquive selon la vitesse, le familier majestueux (le Paon qui fait la roue), le familier impressionnant qu'on rassure, le chat noir ou le corbeau pris pour un mauvais présage, l'accueil chaleureux d'un joueur bienveillant, le jeune homme reconnaissant envers un vétéran.",
+  "Écarté : la défaite de l'expert trop sûr de lui et le gérant vexé par un familier rare (ils pénalisaient une force), le scandale du cuisinier insulté (même condition que le chef, il le punissait), l'extorsion par le familier (acte grave peu crédible pour un joueur qui ne choisit rien, dans une ville paisible), le Chien, le Kangourou, le Gorille et le Canard écarlate, ainsi que plusieurs issues de karma redondantes, pour revenir à 6 issues par possibilité.",
+  "Seuils recalés sur l'échelle : vétéran level min 130, joueur qui a roulé sa bosse min 120, débutant max 30, karma min 0/50 et max -50 (au lieu de -20, -45, -70), vitesse 349/350 complémentaires dans le cas du marchand. Le karma n'apparaît plus que sur des gestes (rassurer la foule +3, menacer d'un sort -2, insultes du Perroquet -2).",
+  "Mécanique : toutes les issues d'origine sont gardées avec leurs valeurs (repas 75 PV, empoisonnement -100 PV, gros lot, recherche de plusieurs heures). Le Stitch est retiré de la liste des familiers impressionnants, qui doivent pouvoir renifler une main tendue.",
+  "Style : textes resserrés à 180-275 caractères, plus de discours direct, de durées ou de montants chiffrés, de « ! » en série ni de « village » ; apostrophes droites et accords corrigés."
+ ]
+}
