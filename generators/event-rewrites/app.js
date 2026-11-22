@@ -24,7 +24,10 @@
         lost: ["🌫️", "perdu", 270], fished: ["🎣", "pêché", 5], working: ["⚒️", "au travail", 75], burning: ["🔥", "brûlé", 25],
     };
     const RANGES = { level: "niveau", karma: "karma", health: "PV", attack: "attaque", defense: "défense", speed: "vitesse", petRarity: "rareté du familier",
-        cookingLevel: "cuisine", weaponLevel: "arme améliorée", armorLevel: "armure améliorée", money: "argent porté" };
+        cookingLevel: "cuisine", weaponLevel: "arme améliorée", armorLevel: "armure améliorée", money: "argent porté",
+        energyPercent: "énergie (%)" };
+    // Monsters an outcome may fight (Core/resources/monsters, those without island)
+    const MONSTERS = { bandit: "bandit" };
     const PET_TAGS = { flying: "vole", keenNose: "a du flair", mount: "monture", heavy: "très lourd", intimidating: "impressionnant",
         aquatic: "aquatique", nocturnal: "nocturne", fire: "feu" };
     const WEAPON_TAGS = { blunt: "arme lourde", fire: "arme de feu", ranged: "arme à distance", metallic: "arme en métal", holy: "arme sacrée" };
@@ -41,7 +44,7 @@
         baseBreath: ["Souffle de base", "other", "weapon", 2], maxBreath: ["Souffle max", "other", "armor", 1], burnedDamage: ["Aspect de feu", "magic", "weapon", 1],
         frozenDamage: ["Aspect de givre", "magic", "weapon", 1], poisonedDamage: ["Aspect de venin", "magic", "weapon", 1] };
     const ITEM_CATEGORIES = { 0: "arme", 1: "armure", 2: "potion", 3: "objet" };
-    const STATS = ["level", "karma", "health", "attack", "defense", "speed", "cookingLevel", "weaponLevel", "armorLevel", "money"];
+    const STATS = ["level", "karma", "health", "attack", "defense", "speed", "cookingLevel", "weaponLevel", "armorLevel", "money", "energyPercent"];
     // Reasonable bounds, not targets: an outcome is as long as what it tells (write-event-texts skill)
     const TARGETS = { intro: [180, 420], choice: [8, 90], outcome: [60, 420] };
 
@@ -238,9 +241,13 @@
         if (o.giveMaterials) items.push({ text: `🧺 +${o.giveMaterials.quantity} ${materialLabel(o.giveMaterials)}`, cls: "pos", title: "matériau donné (un seul, au hasard parmi ceux qui passent les filtres)" });
         if (o.forceStayInCity) items.push({ text: "🏙️ reste en ville" });
         if (o.forceLeaveCity) items.push({ text: "🚪 quitte la ville" });
+        if (o.fight) {
+            items.push({ text: `⚔️ combat : ${MONSTERS[o.fight.monster] || o.fight.monster} niv. ${o.fight.level}`, cls: MONSTERS[o.fight.monster] ? "" : "bad",
+                title: "combat lancé après le texte ; la destination se choisit après le combat" });
+        }
         const known = new Set(["requirements", "condition", "oneshot", "health", "money", "lostTime", "effect", "karma", "randomItem", "energy", "gems", "tokens",
             "bonusExperience", "bonusPoints", "randomPet", "givePet", "nextEvent", "mapTypesDestination", "mapTypesExcludeDestination", "mapLink",
-            "forceStayInCity", "forceLeaveCity", "tags", "consumeMaterials", "giveMaterials", "goBackToPreviousMap"]);
+            "forceStayInCity", "forceLeaveCity", "tags", "consumeMaterials", "giveMaterials", "goBackToPreviousMap", "fight"]);
         for (const key of Object.keys(o)) {
             if (!known.has(key)) items.push({ text: `${key} : ${JSON.stringify(o[key])}`, cls: "bad", title: "champ inconnu" });
         }
@@ -256,9 +263,9 @@
 
     const PROFILE_KEY = "eventRewrites.profile";
     const profileInputs = { level: "pLevel", karma: "pKarma", attack: "pAttack", defense: "pDefense", speed: "pSpeed", health: "pHealth",
-        cookingLevel: "pCooking", weaponLevel: "pWeaponLevel", armorLevel: "pArmorLevel", money: "pMoney" };
+        cookingLevel: "pCooking", weaponLevel: "pWeaponLevel", armorLevel: "pArmorLevel", money: "pMoney", energyPercent: "pEnergy" };
     const profile = { on: false, level: 50, karma: 0, attack: 200, defense: 200, speed: 200, health: 500, classId: "0", petId: "",
-        cookingLevel: 0, weaponLevel: 0, armorLevel: 0, money: 30000, hasMaterials: true, weaponEnchant: "", armorEnchant: "", weaponTag: "", badges: [] };
+        cookingLevel: 0, weaponLevel: 0, armorLevel: 0, money: 30000, energyPercent: 100, hasMaterials: true, weaponEnchant: "", armorEnchant: "", weaponTag: "", badges: [] };
     try {
         Object.assign(profile, JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}"));
     } catch {
@@ -497,7 +504,23 @@
             <div class="o-meta">${meta.join("")}</div>
             <p class="prose" title="${(text || "").length} caractères">${text ? formatText(text) : "<span class=\"bad\">texte manquant</span>"}</p>
             ${renderConsequences(mech)}
+            ${renderFight(mech?.fight, opts.fightTexts)}
         </div>`;
+    }
+
+    // The consequences of a fight side, with its experience shown like the bonus experience of an outcome
+    function fightConsequences(side) {
+        const { experience, ...rest } = side || {};
+        return experience ? { ...rest, bonusExperience: experience } : rest;
+    }
+
+    // The texts told once the fight of an outcome is won or lost, with what each side gives or takes
+    function renderFight(fight, texts) {
+        if (!fight) return "";
+        return [["won", "⚔️ Victoire"], ["lost", "⚔️ Défaite"]].map(([side, label]) => `<div class="fight">
+            <p class="prose" title="${(texts?.[side] || "").length} caractères"><b>${label}</b> — ${texts?.[side] ? formatText(texts[side]) : "<span class=\"bad\">texte manquant</span>"}</p>
+            ${renderConsequences(fightConsequences(fight[side]))}
+        </div>`).join("");
     }
 
     function renderPossibility(e, name, index) {
@@ -541,7 +564,7 @@
                 cells.push(exists
                     ? outcomeCell("Après", id, rw?.outcomes?.[id], rwData[id], {
                         profile: profile.on, possibleCount, showAlways: true, checkLength: true,
-                        icon: endIcons[id], added, changed,
+                        icon: endIcons[id], added, changed, fightTexts: rw?.fights?.[id],
                     })
                     : outcomeCell("Après", id));
             }
