@@ -657,6 +657,11 @@ pre {
     color: #f87171;
 }
 
+.c.fightchip {
+    color: #fbbf24;
+    outline: 1px solid #fbbf2480;
+}
+
 .c.bad {
     color: #f87171;
     outline: 1px solid #f8717180;

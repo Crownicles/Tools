@@ -26,8 +26,10 @@
     const RANGES = { level: "niveau", karma: "karma", health: "PV", attack: "attaque", defense: "défense", speed: "vitesse", petRarity: "rareté du familier",
         cookingLevel: "cuisine", weaponLevel: "arme améliorée", armorLevel: "armure améliorée", money: "argent porté",
         energyPercent: "énergie (%)" };
-    // Monsters an outcome may fight (Core/resources/monsters, those without island)
-    const MONSTERS = { bandit: "bandit" };
+    // Monsters an outcome may fight (Core/resources/monsters): the event ones (without island) and the island ones reused
+    const MONSTERS = { bandit: ["🥷", "bandit"], corruptGuard: ["💂", "garde corrompu"], mercenary: ["🤺", "mercenaire"], boar: ["🐗", "sanglier"],
+        giantFish: ["🐟", "poisson géant"], skeleton: ["💀", "squelette"], spider: ["🕷️", "araignée"], forestTroll: ["🧌", "troll de la forêt"],
+        whiteWolf: ["🐺", "loup blanc"], crocodile: ["🐊", "crocodile"] };
     const PET_TAGS = { flying: "vole", keenNose: "a du flair", mount: "monture", heavy: "très lourd", intimidating: "impressionnant",
         aquatic: "aquatique", nocturnal: "nocturne", fire: "feu" };
     const WEAPON_TAGS = { blunt: "arme lourde", fire: "arme de feu", ranged: "arme à distance", metallic: "arme en métal", holy: "arme sacrée" };
@@ -242,7 +244,8 @@
         if (o.forceStayInCity) items.push({ text: "🏙️ reste en ville" });
         if (o.forceLeaveCity) items.push({ text: "🚪 quitte la ville" });
         if (o.fight) {
-            items.push({ text: `⚔️ combat : ${MONSTERS[o.fight.monster] || o.fight.monster} niv. ${o.fight.level}`, cls: MONSTERS[o.fight.monster] ? "" : "bad",
+            const [emoji, name] = MONSTERS[o.fight.monster] || ["❓", o.fight.monster];
+            items.push({ text: `⚔️ combat : ${emoji} ${name} niv. ${o.fight.level}`, cls: MONSTERS[o.fight.monster] ? "fightchip" : "bad",
                 title: "combat lancé après le texte ; la destination se choisit après le combat" });
         }
         const known = new Set(["requirements", "condition", "oneshot", "health", "money", "lostTime", "effect", "karma", "randomItem", "energy", "gems", "tokens",
@@ -373,15 +376,16 @@
     function stats(e) {
         const orig = Object.values(e.original?.possibilities || {}).reduce((n, p) => n + Object.keys(p.outcomes || {}).length, 0);
         const rw = e.rewrite?.data?.possibilities;
-        if (!rw) return { orig, after: null, conditional: 0 };
-        let after = 0, conditional = 0;
+        if (!rw) return { orig, after: null, conditional: 0, fights: 0 };
+        let after = 0, conditional = 0, fights = 0;
         for (const p of Object.values(rw)) {
             for (const o of Object.values(p.outcomes || {})) {
                 after++;
                 if (isConditional(o)) conditional++;
+                if (o.fight) fights++;
             }
         }
-        return { orig, after, conditional };
+        return { orig, after, conditional, fights };
     }
 
     const DIFFS = {
@@ -394,7 +398,8 @@
     const status = (e) => DIFFS[e.diff] || DIFFS.same;
 
     function figures(s) {
-        return s.after === null ? plural(s.orig, "issue") : `${s.orig} → ${s.after} issues · ${pct(s.conditional, s.after)} % cond.`;
+        return s.after === null ? plural(s.orig, "issue")
+            : `${s.orig} → ${s.after} issues · ${pct(s.conditional, s.after)} % cond.${s.fights ? ` · ⚔️ ${s.fights}` : ""}`;
     }
 
     function renderList(current) {
