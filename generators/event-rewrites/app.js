@@ -402,6 +402,15 @@
             : `${s.orig} → ${s.after} issues · ${pct(s.conditional, s.after)} % cond.${s.fights ? ` · ⚔️ ${s.fights}` : ""}`;
     }
 
+    // ✅ an event the owner reviewed and validated, ⚠️ when it changed since (write-event-texts skill, reviewed.json)
+    function reviewMark(e) {
+        if (!e.review) return "";
+        const date = new Date(e.review.date).toLocaleDateString("fr-FR");
+        return e.review.changed
+            ? ` <span class="review changed" title="Relu et validé le ${esc(date)}, modifié depuis : à relire">⚠️ à relire</span>`
+            : ` <span class="review" title="Relu et validé le ${esc(date)}">✅ relu</span>`;
+    }
+
     function renderList(current) {
         if (!DATA) {
             $("eventList").innerHTML = "";
@@ -412,7 +421,7 @@
         $("eventList").innerHTML = EVENTS.map((e) => {
             const st = status(e);
             return `<li class="${e.id === current ? "active" : ""}"><a href="#${esc(e.id)}" title="${esc(st.text)}">
-                <div class="li-top"><span class="dot ${st.cls}"></span><b title="ID de l'event dans le jeu">Event ${esc(e.id)}</b> · ${esc(e.place || "?")}</div>
+                <div class="li-top"><span class="dot ${st.cls}"></span><b title="ID de l'event dans le jeu">Event ${esc(e.id)}</b> · ${esc(e.place || "?")}${reviewMark(e)}</div>
                 <div class="li-sub">${esc(st.text)} · ${esc(figures(stats(e)))}</div></a></li>`;
         }).join("") || "<li class=\"muted small\">Aucun event à afficher.</li>";
         const { total, changed } = DATA.counts;
@@ -605,7 +614,7 @@
         const origin = `${DATA.base} → ${DATA.head}`;
         return `<div class="page">
             <div class="event-head">
-                <h1>Event ${esc(e.id)} · ${esc(e.place)}</h1>
+                <h1>Event ${esc(e.id)} · ${esc(e.place)}${reviewMark(e)}</h1>
                 <p class="muted"><span class="dot ${st.cls}"></span>${esc(st.text)} · ${esc(head)} · ${esc(origin)}</p>
             </div>
             ${banner}

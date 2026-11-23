@@ -136,6 +136,23 @@ window.EventRewritesGithub = (() => {
      * Loads both branches and returns { mode: "github", base, head, events, names, classes, ... }.
      * Only events whose texts or mechanics differ are kept, unless `all` is set.
      */
+    // FNV-1a hash (32 bits) of the texts and mechanics of an event, the same as review.mjs of the write-event-texts skill
+    function eventFingerprint(lang, data) {
+        const text = stableJson({ lang, data });
+        let hash = 0x811c9dc5;
+        for (let i = 0; i < text.length; i++) {
+            hash ^= text.charCodeAt(i);
+            hash = Math.imul(hash, 0x01000193) >>> 0;
+        }
+        return hash.toString(16).padStart(8, "0");
+    }
+
+    // The owner's review of an event (reviewed.json): its date, and whether the event changed since
+    function reviewOf(mark, lang, data) {
+        if (!mark) return null;
+        return { date: mark.date, changed: !data || mark.fingerprint !== eventFingerprint(lang ?? null, data) };
+    }
+
     async function loadComparison({ base, head, all = false, onProgress = () => {} }) {
         onProgress("Recherche du point de divergence…");
         const fork = await mergeBase(base, head);
@@ -149,12 +166,13 @@ window.EventRewritesGithub = (() => {
 
         onProgress("Lecture des textes…");
         const optional = (p) => p.catch(() => null);
-        const [baseLang, headLang, models, commands, iconsTs] = await Promise.all([
+        const [baseLang, headLang, models, commands, iconsTs, reviewed] = await Promise.all([
             getJson(raw(baseRef, "Lang/fr/events.json"), `textes de ${base}`),
             getJson(raw(head, "Lang/fr/events.json"), `textes de ${head}`),
             optional(getJson(raw(head, "Lang/fr/models.json"), "noms des lieux")),
             optional(getJson(raw(head, "Lang/fr/commands.json"), "noms des villes")),
             optional(request(raw(head, "Lib/src/CrowniclesIcons.ts"), "icônes").then((r) => r.text())),
+            optional(getJson(raw(head, ".github/skills/write-event-texts/reviewed.json"), "events relus")),
         ]);
         const icons = iconsTs ? parseEventIcons(iconsTs) : {};
 
@@ -228,6 +246,7 @@ window.EventRewritesGithub = (() => {
                 } : null,
                 rewriteError: null,
                 validation: null,
+                review: reviewOf(reviewed?.[id], headLang[id], headRes),
             };
         });
 

@@ -756,3 +756,14 @@ pre {
     padding-top: 6px;
     border-top: 1px dashed var(--border, #ccc);
 }
+
+.review {
+    font-size: 0.75em;
+    font-weight: 600;
+    color: #4ade80;
+    white-space: nowrap;
+}
+
+.review.changed {
+    color: #fbbf24;
+}
