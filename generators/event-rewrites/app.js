@@ -30,8 +30,9 @@
     const MONSTERS = { bandit: ["🥷", "bandit"], corruptGuard: ["💂", "garde corrompu"], mercenary: ["🤺", "mercenaire"], boar: ["🐗", "sanglier"],
         giantFish: ["🐟", "poisson géant"], skeleton: ["💀", "squelette"], spider: ["🕷️", "araignée"], forestTroll: ["🧌", "troll de la forêt"],
         whiteWolf: ["🐺", "loup blanc"], crocodile: ["🐊", "crocodile"] };
-    const PET_TAGS = { flying: "vole", keenNose: "a du flair", mount: "monture", heavy: "très lourd", intimidating: "impressionnant",
-        aquatic: "aquatique", nocturnal: "nocturne", fire: "feu" };
+    // Fallback labels of the pet tags, read from the petTags block of Lang/fr/models.json when it exists
+    const PET_TAGS = { flying: "vole", keenNose: "a du flair", mount: "peut vous porter", heavy: "très lourd", intimidating: "impressionnant",
+        aquatic: "à l'aise dans l'eau", nocturnal: "voit dans le noir", fire: "maîtrise le feu", climber: "grimpe aux arbres", grazer: "broute l'herbe" };
     const WEAPON_TAGS = { blunt: "arme lourde", fire: "arme de feu", ranged: "arme à distance", metallic: "arme en métal", holy: "arme sacrée" };
     // Badges an event outcome may depend on (EVENT_OUTCOME_BADGES in Lib/src/types/Badge.ts)
     const BADGES = { animal_lover: "ami des animaux", expert_expediteur: "expéditeur expert", legendary_pet: "familier légendaire",
@@ -61,6 +62,7 @@
     const plural = (n, word, many = `${word}s`) => `${n} ${n > 1 ? many : word}`;
     const mapType = (t) => (NAMES.mapTypes || {})[t] || t;
     const petName = (id) => PETS[id]?.name || `familier ${id}`;
+    const petTagName = (tag) => (NAMES.petTags || {})[tag] || PET_TAGS[tag] || tag;
     const className = (id) => CLASSES[id] || `classe ${id}`;
     const byNumKey = (obj) => Object.keys(obj || {}).sort((a, b) => (+a - +b) || a.localeCompare(b));
     const pct = (a, b) => (b ? Math.round((100 * a) / b) : 0);
@@ -123,7 +125,8 @@
 
     const shortList = (names, max = 2) => (names.length <= max ? names.join(", ") : `${names.slice(0, max).join(", ")} +${names.length - max}`);
 
-    // One short line per outcome; the full list goes in the tooltip.
+    // One short line per outcome; the full list goes in the tooltip. An `except` part only hides the outcome from a few
+    // players (a pet of the hunted species): the outcome stays a general one, as in validate.mjs of the write-event-texts skill.
     function conditionParts(outcome) {
         const req = outcome?.requirements || {};
         const parts = [];
@@ -139,8 +142,8 @@
             parts.push({ short: `familier : ${shortList(names)}`, full: `familier : ${names.join(", ")}` });
         }
         if (req.petTags) {
-            const names = req.petTags.map((t) => PET_TAGS[t] || t);
-            parts.push({ short: `familier : ${shortList(names)}`, full: `familier qui ${names.join(" ou ")}` });
+            const names = req.petTags.map(petTagName);
+            parts.push({ short: `familier : ${shortList(names)}`, full: `familier : ${names.join(" ou ")}` });
         }
         if (req.weaponTags) {
             const names = req.weaponTags.map((t) => WEAPON_TAGS[t] || t);
@@ -154,10 +157,15 @@
         if (req.materials) parts.push(materialsText(req.materials));
         for (const filter of consumedFilters(outcome)) parts.push(materialsText({ ...filter, quantity: { min: filter.quantity } }));
         if (req.enchantment) parts.push(enchantmentText(req.enchantment));
+        if (outcome?.useBed) parts.push({ short: "lit disponible", full: "lit disponible : aucun lit (maison, logis, chambre d'auberge) utilisé depuis 24 h" });
         for (const key of Object.keys(req)) {
-            if (!(key in RANGES) && !["validClassIds", "validPetTypeIds", "petTags", "weaponTags", "badges", "campaignCurrentMissionId", "materials", "enchantment"].includes(key)) {
+            if (!(key in RANGES) && !["validClassIds", "validPetTypeIds", "excludedPetTypeIds", "petTags", "weaponTags", "badges", "campaignCurrentMissionId", "materials", "enchantment"].includes(key)) {
                 parts.push({ short: `${key} : ${JSON.stringify(req[key])}` });
             }
+        }
+        if (req.excludedPetTypeIds) {
+            const names = req.excludedPetTypeIds.map(petName);
+            parts.push({ short: `sauf familier : ${shortList(names)}`, full: `masquée pour un familier de la même espèce : ${names.join(", ")}`, except: true });
         }
         if (outcome?.condition) {
             parts.push({ short: outcome.condition.canAcceptPet ? "peut accueillir un familier" : `condition : ${JSON.stringify(outcome.condition)}` });
@@ -165,7 +173,7 @@
         return parts;
     }
 
-    const isConditional = (o) => conditionParts(o).length > 0;
+    const isConditional = (o) => conditionParts(o).some((p) => !p.except);
 
     // consumeMaterials is one filter, or a list of filters that must all be satisfied
     function consumedFilters(outcome) {
@@ -217,6 +225,7 @@
         } else if (o.effect) {
             items[items.length - 1].title = "altération : occupé";
         }
+        if (o.useBed) items.push({ text: "🛏️ dort dans un lit", title: "lance la recharge de 24 h partagée par tous les lits : maison, logis et chambres d'auberge" });
         if (o.karma) items.push({ text: `⚖️ karma ${signed(o.karma)}`, cls: pn(o.karma) });
         if (o.randomItem) {
             const details = [];
@@ -250,7 +259,7 @@
         }
         const known = new Set(["requirements", "condition", "oneshot", "health", "money", "lostTime", "effect", "karma", "randomItem", "energy", "gems", "tokens",
             "bonusExperience", "bonusPoints", "randomPet", "givePet", "nextEvent", "mapTypesDestination", "mapTypesExcludeDestination", "mapLink",
-            "forceStayInCity", "forceLeaveCity", "tags", "consumeMaterials", "giveMaterials", "goBackToPreviousMap", "fight"]);
+            "forceStayInCity", "forceLeaveCity", "tags", "consumeMaterials", "giveMaterials", "goBackToPreviousMap", "fight", "useBed"]);
         for (const key of Object.keys(o)) {
             if (!known.has(key)) items.push({ text: `${key} : ${JSON.stringify(o[key])}`, cls: "bad", title: "champ inconnu" });
         }
@@ -268,7 +277,7 @@
     const profileInputs = { level: "pLevel", karma: "pKarma", attack: "pAttack", defense: "pDefense", speed: "pSpeed", health: "pHealth",
         cookingLevel: "pCooking", weaponLevel: "pWeaponLevel", armorLevel: "pArmorLevel", money: "pMoney", energyPercent: "pEnergy" };
     const profile = { on: false, level: 50, karma: 0, attack: 200, defense: 200, speed: 200, health: 500, classId: "0", petId: "",
-        cookingLevel: 0, weaponLevel: 0, armorLevel: 0, money: 30000, energyPercent: 100, hasMaterials: true, weaponEnchant: "", armorEnchant: "", weaponTag: "", badges: [] };
+        cookingLevel: 0, weaponLevel: 0, armorLevel: 0, money: 30000, energyPercent: 100, hasMaterials: true, bedAvailable: true, weaponEnchant: "", armorEnchant: "", weaponTag: "", badges: [] };
     try {
         Object.assign(profile, JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}"));
     } catch {
@@ -287,6 +296,7 @@
         if (req.validClassIds && !req.validClassIds.map(String).includes(String(profile.classId))) fails.push("classe");
         const pet = profile.petId !== "" ? PETS[profile.petId] : null;
         if (req.validPetTypeIds && (!pet || !req.validPetTypeIds.map(String).includes(String(profile.petId)))) fails.push("familier");
+        if (req.excludedPetTypeIds && pet && req.excludedPetTypeIds.map(String).includes(String(profile.petId))) fails.push("familier de la même espèce");
         if (req.petRarity) {
             const r = req.petRarity;
             if (!pet || (r.min != null && pet.rarity < r.min) || (r.max != null && pet.rarity > r.max)) fails.push(rangeText(RANGES.petRarity, r));
@@ -295,6 +305,7 @@
         if (req.weaponTags && !req.weaponTags.includes(profile.weaponTag)) fails.push("arme");
         if (req.badges && !req.badges.some((b) => (profile.badges || []).includes(b))) fails.push("badge");
         if (req.campaignCurrentMissionId !== undefined) fails.push("mission de campagne");
+        if (outcome?.useBed && !profile.bedAvailable) fails.push("lit en recharge");
         const consumed = consumedFilters(outcome).reduce((sum, filter) => sum + filter.quantity, 0);
         for (const m of [req.materials, consumed && { quantity: { min: consumed } }].filter(Boolean)) {
             const q = m.quantity || { min: 1 };
@@ -335,6 +346,7 @@
         $("pWeaponEnchant").value = profile.weaponEnchant;
         $("pArmorEnchant").value = profile.armorEnchant;
         $("pMaterials").value = profile.hasMaterials ? "1" : "0";
+        $("pBed").value = profile.bedAvailable ? "1" : "0";
         $("pWeaponTag").innerHTML = "<option value=\"\">Autre</option>" + Object.entries(WEAPON_TAGS)
             .map(([id, label]) => `<option value="${id}">${esc(label)}</option>`).join("");
         $("pWeaponTag").value = profile.weaponTag || "";
@@ -359,6 +371,7 @@
             profile.weaponEnchant = $("pWeaponEnchant").value;
             profile.armorEnchant = $("pArmorEnchant").value;
             profile.hasMaterials = $("pMaterials").value === "1";
+            profile.bedAvailable = $("pBed").value === "1";
             profile.weaponTag = $("pWeaponTag").value;
             profile.badges = [...$("pBadges").selectedOptions].map((option) => option.value);
             sync();
@@ -499,18 +512,20 @@
     function outcomeCell(side, id, text, mech, opts = {}) {
         if (text === undefined && mech === undefined) return `<div class="cell empty" data-side="${side}"></div>`;
         const parts = conditionParts(mech);
+        const conds = parts.filter((p) => !p.except), excepts = parts.filter((p) => p.except);
         const fails = opts.profile ? failedConditions(mech) : [];
         const impossible = fails.length > 0;
         const meta = [`<span class="oid">#${esc(id)}</span>`];
         if (opts.icon) meta.push(`<span class="o-icon">${esc(opts.icon)}</span>`);
         if (opts.added) meta.push("<span class=\"badge\">nouvelle</span>");
         if (opts.changed) meta.push("<span class=\"badge changed\">modifiée</span>");
-        if (parts.length) {
-            const full = parts.map((p) => p.full || p.short).join(" · ");
-            meta.push(`<span class="cond" title="${esc(`Condition : ${full}`)}">si ${esc(parts.map((p) => p.short).join(" · "))}</span>`);
-        } else if (opts.showAlways) {
+        if (conds.length) {
+            const full = conds.map((p) => p.full || p.short).join(" · ");
+            meta.push(`<span class="cond" title="${esc(`Condition : ${full}`)}">si ${esc(conds.map((p) => p.short).join(" · "))}</span>`);
+        } else if (opts.showAlways && !excepts.length) {
             meta.push("<span class=\"always\">toujours possible</span>");
         }
+        for (const p of excepts) meta.push(`<span class="except" title="${esc(p.full || p.short)}">${esc(p.short)}</span>`);
         if (impossible) meta.push("<span class=\"impossible-tag\">impossible pour ce profil</span>");
         else if (opts.profile && opts.possibleCount) meta.push(`<span class="chance" title="tirage uniforme parmi les issues possibles">🎲 1 sur ${opts.possibleCount}</span>`);
         if (opts.checkLength) meta.push(lengthWarning(text, "outcome"));

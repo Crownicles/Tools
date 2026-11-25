@@ -611,6 +611,14 @@ pre {
     color: #64748b;
 }
 
+.except {
+    color: #fca5a5;
+    border: 1px dashed #7f1d1d;
+    border-radius: 999px;
+    padding: 0 8px;
+    cursor: help;
+}
+
 .chance {
     color: #94a3b8;
 }

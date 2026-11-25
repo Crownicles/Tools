@@ -116,6 +116,7 @@ window.EventRewritesGithub = (() => {
             if (v?.name) names.mapTypes[k] = v.name;
         }
         if (models?.materials) names.materials = models.materials;
+        if (models?.petTags) names.petTags = models.petTags;
         return names;
     }
 

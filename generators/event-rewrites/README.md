@@ -13,9 +13,10 @@ Open `index.html` directly (no server needed). The comparison is shareable: `ind
 ## Features
 
 - By default only the texts are shown: introduction, then for each choice its label and its outcomes, each with a short condition tag and one line of consequences. Outcomes with the same id sit on the same row.
+- An outcome hidden from a pet of the hunted or cooked species (`excludedPetTypeIds`) gets a separate "sauf familier" tag and still counts as a general outcome, as in the `validate.mjs` script of the skill. An outcome where the player sleeps in a bed (`useBed`) shows the "lit disponible" condition and the 🛏️ consequence (the 24 h cooldown shared by every bed). Pet tag labels come from `Lang/fr/models.json`.
 - The place context is folded, with a one-line summary: game description, neighbours and travel times, city menu, triggers.
 - The sidebar lists the events with their status (modified / new / removed), outcome counts before → after and the share of conditional outcomes.
-- **Profil de joueur** (sidebar, folded): set level, karma, stats, class, pet, cooking level, a full or empty material bag, the upgrade level and enchantment of the weapon and armor, the coins carried, the weapon type and the in-game badges to grey out the outcomes this player cannot get. Possible outcomes show their odds (the game picks uniformly among them). The profile is saved in `localStorage`.
+- **Profil de joueur** (sidebar, folded): set level, karma, stats, class, pet, cooking level, a full or empty material bag, the upgrade level and enchantment of the weapon and armor, the coins carried, the weapon type, whether a bed is available and the in-game badges to grey out the outcomes this player cannot get. Possible outcomes show their odds (the game picks uniformly among them). The profile is saved in `localStorage`.
 - Below 1000 px the before/after columns are interleaved in a single column.
 
 ## Writing the events
